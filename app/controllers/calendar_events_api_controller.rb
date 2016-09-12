@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2012 - present Instructure, Inc.
+# Copyright (C) 2011 - 2014 Instructure, Inc.
 #
 # This file is part of Canvas.
 #
@@ -152,11 +152,6 @@ require 'atom'
 #           "example": false,
 #           "type": "boolean"
 #         },
-#         "participant_type": {
-#           "description": "The type of participant to sign up for a slot: 'User' or 'Group'",
-#           "example": "User",
-#           "type": "string"
-#         },
 #         "participants_per_appointment": {
 #           "description": "If the event is a time slot, this is the participant limit",
 #           "type": "integer"
@@ -266,10 +261,10 @@ require 'atom'
 class CalendarEventsApiController < ApplicationController
   include Api::V1::CalendarEvent
 
-  before_action :require_user, :except => %w(public_feed index)
-  before_action :get_calendar_context, :only => :create
-  before_action :require_user_or_observer, :only => [:user_index]
-  before_action :require_authorization, :only => %w(index user_index)
+  before_filter :require_user, :except => %w(public_feed index)
+  before_filter :get_calendar_context, :only => :create
+  before_filter :require_user_or_observer, :only => [:user_index]
+  before_filter :require_authorization, :only => %w(index user_index)
 
   # @API List calendar events
   #
@@ -348,24 +343,24 @@ class CalendarEventsApiController < ApplicationController
       mark_submitted_assignments(user, events)
       includes = Array(params[:include])
       if includes.include?("submission")
-        submissions = Submission.active.where(assignment_id: events, user_id: user)
+        submissions = Submission.where(assignment_id: events, user_id: user)
           .group_by(&:assignment_id)
       end
       # preload data used by assignment_json
       ActiveRecord::Associations::Preloader.new.preload(events, :discussion_topic)
       Shard.partition_by_shard(events) do |shard_events|
-        having_submission = Submission.active.having_submission.
+        having_submission = Submission.having_submission.
             where(assignment_id: shard_events).
-            distinct.
+            uniq.
             pluck(:assignment_id).to_set
         shard_events.each do |event|
           event.has_submitted_submissions = having_submission.include?(event.id)
         end
 
-        having_student_submission = Submission.active.having_submission.
+        having_student_submission = Submission.having_submission.
             where(assignment_id: shard_events).
             where.not(user_id: nil).
-            distinct.
+            uniq.
             pluck(:assignment_id).to_set
         shard_events.each do |event|
           event.has_student_submissions = having_student_submission.include?(event.id)
@@ -436,12 +431,11 @@ class CalendarEventsApiController < ApplicationController
   #        -F 'calendar_event[end_at]=2012-07-19T22:00:00Z' \
   #        -H "Authorization: Bearer <token>"
   def create
-    params_for_create = calendar_event_params
-    if params_for_create[:description].present?
-      params_for_create[:description] = process_incoming_html_content(params_for_create[:description])
+    if params[:calendar_event][:description].present?
+      params[:calendar_event][:description] = process_incoming_html_content(params[:calendar_event][:description])
     end
 
-    @event = @context.calendar_events.build(params_for_create)
+    @event = @context.calendar_events.build(params[:calendar_event])
     @event.updating_user = @current_user
     @event.validate_context! if @context.is_a?(AppointmentGroup)
 
@@ -452,7 +446,15 @@ class CalendarEventsApiController < ApplicationController
       title = dup_options[:title]
 
       if dup_options[:count] > 0
-        events += create_event_and_duplicates(dup_options)
+        section_events = params[:calendar_event].delete(:child_event_data)
+        # handles multiple section repeast
+        section_events.each do |event|
+          event[:title] = title
+          section_dup_options = get_duplicate_params(event)
+          events += create_event_and_duplicates(section_dup_options)
+        end if section_events.present?
+
+        events += create_event_and_duplicates(dup_options) unless section_events.present?
       else
         events = [@event]
       end
@@ -514,14 +516,13 @@ class CalendarEventsApiController < ApplicationController
   #        -H "Authorization: Bearer <token>"
   def reserve
     get_event
-    if authorized_action(@event, @current_user, :reserve) && check_for_past_signup(@event)
+    if authorized_action(@event, @current_user, :reserve)
       begin
-        participant_id = Shard.relative_id_for(params[:participant_id], Shard.current, Shard.current) if params[:participant_id]
-        if participant_id && @event.appointment_group.grants_right?(@current_user, session, :manage)
-          participant = @event.appointment_group.possible_participants.detect { |p| p.id == participant_id }
+        if params[:participant_id] && @event.appointment_group.grants_right?(@current_user, session, :manage)
+          participant = @event.appointment_group.possible_participants.detect { |p| p.id == params[:participant_id].to_i }
         else
           participant = @event.appointment_group.participant_for(@current_user)
-          participant = nil if participant && participant_id && participant_id != participant.id
+          participant = nil if participant && params[:participant_id] && params[:participant_id].to_i != participant.id
         end
         raise CalendarEvent::ReservationError, "invalid participant" unless participant
         reservation = @event.reserve_for(participant, @current_user,
@@ -539,18 +540,6 @@ class CalendarEventsApiController < ApplicationController
                          }],
                :status => :bad_request
       end
-    end
-  end
-
-  # Pulling participants is done from the parent event that spawns the user's child calendar events
-  def participants
-    get_event
-    if authorized_action(@event, @current_user, :read_child_events)
-      participants = Api.paginate(@event.child_event_participants.order(:id), self, api_v1_calendar_event_participants_url)
-      json = participants.map do |user|
-        user_display_json(user)
-      end
-      render :json => json
     end
   end
 
@@ -595,11 +584,9 @@ class CalendarEventsApiController < ApplicationController
   def update
     get_event(true)
     if authorized_action(@event, @current_user, :update)
-      params_for_update = nil
       if @event.is_a?(Assignment)
-        params_for_update = {:due_at => params[:calendar_event][:start_at]}
+        params[:calendar_event] = {:due_at => params[:calendar_event][:start_at]}
       else
-        params_for_update = calendar_event_params
         @event.validate_context! if @event.context.is_a?(AppointmentGroup)
         @event.updating_user = @current_user
       end
@@ -618,10 +605,10 @@ class CalendarEventsApiController < ApplicationController
         end
         return unless authorized_action(@event, @current_user, :create)
       end
-      if params_for_update[:description].present?
-        params_for_update[:description] = process_incoming_html_content(params_for_update[:description])
+      if params[:calendar_event][:description].present?
+        params[:calendar_event][:description] = process_incoming_html_content(params[:calendar_event][:description])
       end
-      if @event.update_attributes(params_for_update)
+      if @event.update_attributes(params[:calendar_event])
         render :json => event_json(@event, @current_user, session)
       else
         render :json => @event.errors, :status => :bad_request
@@ -644,13 +631,10 @@ class CalendarEventsApiController < ApplicationController
   #        -H "Authorization: Bearer <token>"
   def destroy
     get_event
-    if authorized_action(@event, @current_user, :delete) && check_for_past_signup(@event.parent_event)
+    if authorized_action(@event, @current_user, :delete)
       @event.updating_user = @current_user
       @event.cancel_reason = params[:cancel_reason]
       if @event.destroy
-        if @event.appointment_group && @event.appointment_group.appointments.count == 0 && @event.appointment_group.context.root_account.feature_enabled?(:better_scheduler)
-          @event.appointment_group.destroy
-        end
         render :json => event_json(@event, @current_user, session)
       else
         render :json => @event.errors, :status => :bad_request
@@ -732,7 +716,7 @@ class CalendarEventsApiController < ApplicationController
           calendar.add_event(ics_event) if ics_event
         end
 
-        render plain: calendar.to_ical
+        render :text => calendar.to_ical
       end
       format.atom do
         feed = Atom::Feed.new do |f|
@@ -744,7 +728,7 @@ class CalendarEventsApiController < ApplicationController
         @events.each do |e|
           feed.entries << e.to_atom
         end
-        render :plain => feed.to_xml
+        render :text => feed.to_xml
       end
     end
   end
@@ -755,26 +739,13 @@ class CalendarEventsApiController < ApplicationController
     selected_contexts = @current_user.preferences[:selected_calendar_contexts] || []
 
     contexts = @contexts.map do |context|
-      context_data = {
+      {
         id: context.id,
         name: context.nickname_for(@current_user),
         asset_string: context.asset_string,
         color: @current_user.custom_colors[context.asset_string],
         selected: selected_contexts.include?(context.asset_string)
       }
-
-      if context.is_a?(Course)
-        context_data[:sections] = context.sections_visible_to(@current_user).map do |section|
-          {
-            id: section.id,
-            name: section.name,
-            asset_string: section.asset_string,
-            selected: selected_contexts.include?(section.asset_string),
-          }
-        end
-      end
-
-      context_data
     end
 
     render json: {contexts: StringifyIds.recursively_stringify_ids(contexts)}
@@ -826,7 +797,7 @@ class CalendarEventsApiController < ApplicationController
   def set_course_timetable
     get_context
     if authorized_action(@context, @current_user, :manage_calendar)
-      timetable_data = params[:timetables].to_unsafe_h
+      timetable_data = params[:timetables]
 
       builders = {}
       updated_section_ids = []
@@ -914,7 +885,7 @@ class CalendarEventsApiController < ApplicationController
       section = api_find(@context.active_course_sections, params[:course_section_id]) if params[:course_section_id]
       builder = Courses::TimetableEventBuilder.new(course: @context, course_section: section)
 
-      event_hashes = params[:events].map(&:to_unsafe_h)
+      event_hashes = params[:events]
       event_hashes.each do |hash|
         [:start_at, :end_at].each do |key|
           hash[key] = CanvasTime.try_parse(hash[key])
@@ -1005,8 +976,8 @@ class CalendarEventsApiController < ApplicationController
       codes.each do |c|
         unless pertinent_context_codes.include?(c)
           context = Context.find_by_asset_string(c)
-          @public_to_auth = true if context.is_a?(Course) && user && (context.public_syllabus_to_auth  || context.public_syllabus || context.is_public || context.is_public_to_auth_users)
-          @contexts.push context if context.is_a?(Course) && (context.is_public || context.public_syllabus || @public_to_auth)
+          @public_to_auth = true if context && user && (context.public_syllabus_to_auth  || context.public_syllabus || context.is_public || context.is_public_to_auth_users)
+          @contexts.push context if context && (context.is_public || context.public_syllabus || @public_to_auth)
         end
       end
 
@@ -1018,8 +989,7 @@ class CalendarEventsApiController < ApplicationController
     @context_codes = selected_contexts.map(&:asset_string)
     @section_codes = []
     if user
-      is_admin = user.roles(@domain_root_account).include?('admin') # if we're an admin - don't try to figure out which sections we belong to; just include all of them
-      @section_codes = user.section_context_codes(@context_codes, is_admin)
+      @section_codes = user.section_context_codes(@context_codes)
     end
 
     if @type == :event && @start_date && user
@@ -1028,8 +998,8 @@ class CalendarEventsApiController < ApplicationController
       if group_codes.present?
         @context_codes += AppointmentGroup.
           reservable_by(user).
+          intersecting(@start_date, @end_date).
           where(id: group_codes).
-          select('appointment_groups.id').
           map(&:asset_string)
       end
       # include manageable appointment group events for the specified contexts
@@ -1173,7 +1143,7 @@ class CalendarEventsApiController < ApplicationController
   end
 
   def mark_submitted_assignments(user, assignments)
-    submitted_ids = Submission.active.where("submission_type IS NOT NULL").
+    submitted_ids = Submission.where("submission_type IS NOT NULL").
       where(user_id: user, assignment_id: assignments).
       pluck(:assignment_id)
     assignments.each do |assignment|
@@ -1198,7 +1168,7 @@ class CalendarEventsApiController < ApplicationController
     end
 
     options[:iterator] ||= 0
-    event_attributes = set_duplicate_params(calendar_event_params, options)
+    event_attributes = set_duplicate_params(params[:calendar_event], options)
     event = @context.calendar_events.build(event_attributes)
     event.validate_context! if @context.is_a?(AppointmentGroup)
     event.updating_user = @current_user
@@ -1222,7 +1192,6 @@ class CalendarEventsApiController < ApplicationController
         title:     event_data[:title],
         start_at:  event_data[:start_at],
         end_at:    event_data[:end_at],
-        child_event_data: event_data[:child_event_data],
         count:     duplicate_data.fetch(:count, 0).to_i,
         interval:  duplicate_data.fetch(:interval, 1).to_i,
         add_count: value_to_boolean(duplicate_data[:append_iterator]),
@@ -1230,7 +1199,7 @@ class CalendarEventsApiController < ApplicationController
     }
   end
 
-  def set_duplicate_params(event_attributes, options = {})
+  def set_duplicate_params(options = {})
     options[:iterator] ||= 0
     offset_interval = options[:interval] * options[:iterator]
     offset = if options[:frequency] == "monthly"
@@ -1247,7 +1216,7 @@ class CalendarEventsApiController < ApplicationController
 
     if options[:child_event_data].present?
       event_attributes[:child_event_data] = options[:child_event_data].map do |child_event|
-        new_child_event = child_event.permit(:start_at, :end_at, :context_code)
+        new_child_event = child_event.dup
         new_child_event[:start_at] = Time.zone.parse(child_event[:start_at]) + offset unless child_event[:start_at].blank?
         new_child_event[:end_at] = Time.zone.parse(child_event[:end_at]) + offset unless child_event[:end_at].blank?
         new_child_event
@@ -1266,10 +1235,7 @@ class CalendarEventsApiController < ApplicationController
   def require_authorization
     @errors = {}
     user = @observee || @current_user
-    # appointment groups show up here in find-appointment mode; give them a free ride
-    ag_count = (params[:context_codes] || []).count { |code| code =~ /\Aappointment_group_/ }
-    context_limit = @domain_root_account.settings[:calendar_contexts_limit] || 10
-    codes = (params[:context_codes] || [user.asset_string])[0, context_limit + ag_count]
+    codes = (params[:context_codes] || [user.asset_string])[0, 10]
     get_options(codes, user)
 
     # if specific context codes were requested, ensure the user can access them
@@ -1287,20 +1253,5 @@ class CalendarEventsApiController < ApplicationController
         redirect_to_login
       end
     end
-  end
-
-  def calendar_event_params
-    params.require(:calendar_event).
-      permit(CalendarEvent.permitted_attributes + [:child_event_data => strong_anything])
-  end
-
-  def check_for_past_signup(event)
-    if event && event.end_at < Time.now.utc && event.context.is_a?(AppointmentGroup)
-      unless event.context.grants_right?(@current_user, :manage)
-        render :json => { :message => 'Cannot create or change reservation for past appointment' }, :status => :forbidden
-        return false
-      end
-    end
-    true
   end
 end
