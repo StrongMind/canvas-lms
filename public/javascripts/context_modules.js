@@ -1800,7 +1800,7 @@ import 'compiled/jquery.rails_flash_notifications'
     course_items.forEach(function (unit){
       var current_activity_container, last_was_subheader, current_lesson_state;
       var completions = [];
-      var last_lesson_state = "complete"; // because we want the first lesson to open by default if none of its activities are complete
+      var last_lesson_state = "started"; // because we want the first lesson to open by default if none of its activities are complete
       function evaluate_lesson () {
         if (_.every(completions)) {
           // if the container is complete, close it by default.
