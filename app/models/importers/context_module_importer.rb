@@ -23,7 +23,8 @@ module Importers
     self.item_class = ContextModule
 
     MAX_URL_LENGTH = 2000
-
+    smSequenceControl = true
+    
     def self.linked_resource_type_class(type)
       case type
         when /wiki_type|wikipage/i
@@ -131,6 +132,10 @@ module Importers
       item.start_at = Canvas::Migration::MigratorHelper.get_utc_time_from_timestamp(hash[:start_at]) if hash[:start_at]
       item.end_at = Canvas::Migration::MigratorHelper.get_utc_time_from_timestamp(hash[:end_at]) if hash[:end_at]
       item.require_sequential_progress = hash[:require_sequential_progress] if hash[:require_sequential_progress]
+      
+      #Disregard previously set sequence command if smSequenceControl Enabled
+      item.require_sequential_progress = true if smSequenceControl
+      
       item.requirement_count = hash[:requirement_count] if hash[:requirement_count]
 
       if hash[:prerequisites]
@@ -206,7 +211,8 @@ module Importers
             :title => wiki.title.presence || hash[:title] || hash[:linked_resource_title],
             :type => 'wiki_page',
             :id => wiki.id,
-            :indent => hash[:indent].to_i
+            :indent => hash[:indent].to_i,
+            :completion_requirement => smSequenceControl ? "must_view" ? ""
           }, existing_item, :wiki_page => wiki, :position => context_module.migration_position)
         end
       elsif resource_class == Attachment
@@ -217,7 +223,8 @@ module Importers
             :title => title,
             :type => 'attachment',
             :id => file.id,
-            :indent => hash[:indent].to_i
+            :indent => hash[:indent].to_i,
+            :completion_requirement => smSequenceControl ? "must_view" ? ""
           }, existing_item, :attachment => file, :position => context_module.migration_position)
         end
       elsif resource_class == Assignment
@@ -227,7 +234,8 @@ module Importers
             :title => ass.title.presence || hash[:title] || hash[:linked_resource_title],
             :type => 'assignment',
             :id => ass.id,
-            :indent => hash[:indent].to_i
+            :indent => hash[:indent].to_i,
+            :completion_requirement => smSequenceControl ? "must_view" ? ""
           }, existing_item, :assignment => ass, :position => context_module.migration_position)
         end
       elsif (hash[:linked_resource_type] || hash[:type]) =~ /folder|heading|contextmodulesubheader/i
@@ -247,7 +255,8 @@ module Importers
               :title => hash[:title] || hash[:linked_resource_title] || hash['description'],
               :type => 'external_url',
               :indent => hash[:indent].to_i,
-              :url => url
+              :url => url,
+              :completion_requirement => smSequenceControl ? "must_view" ? ""
             }, existing_item, :position => context_module.migration_position)
           else
             migration.add_import_warning(t(:migration_module_item_type, "Module Item"), hash[:title], "#{hash[:url]} is not a valid URL")
@@ -285,7 +294,8 @@ module Importers
             :type => 'context_external_tool',
             :indent => hash[:indent].to_i,
             :url => external_tool_url,
-            :id => external_tool_id
+            :id => external_tool_id,
+            :completion_requirement => smSequenceControl ? "must_view" ? ""
           }, existing_item, :position => context_module.migration_position)
         end
       elsif resource_class == Quizzes::Quiz
@@ -295,7 +305,8 @@ module Importers
             :title => quiz.title.presence || hash[:title] || hash[:linked_resource_title],
             :type => 'quiz',
             :indent => hash[:indent].to_i,
-            :id => quiz.id
+            :id => quiz.id,
+            :completion_requirement => smSequenceControl ? "must_view" ? ""
           }, existing_item, :quiz => quiz, :position => context_module.migration_position)
         end
       elsif resource_class == DiscussionTopic
@@ -307,7 +318,8 @@ module Importers
             :title => topic.title.presence || hash[:title] || hash[:linked_resource_title],
             :type => 'discussion_topic',
             :indent => hash[:indent].to_i,
-            :id => topic.id
+            :id => topic.id,
+            :completion_requirement => smSequenceControl ? "must_view" ? ""
           }, existing_item, :discussion_topic => topic, :position => context_module.migration_position)
         end
       elsif hash[:linked_resource_type] == 'UNSUPPORTED_TYPE'
