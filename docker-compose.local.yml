@@ -7,4 +7,3 @@ services:
       CANVAS_LMS_ACCOUNT_NAME: SMDockerized
       CANVAS_LMS_STATS_COLLECTION: 3
       COVERAGE: 1
-      TEST_ENV_NUMBER: 44
