@@ -23,7 +23,7 @@ TS=$(date +%FT%T)
 docker-compose build
 docker-compose run --rm web bundle install
 docker-compose run --rm web bundle exec rake db:create db:initial_setup canvas:compile_assets_dev
-docker-compose run --rm web bundle exec rake db:create
-docker-compose run --rm web bundle exec rake db:migrate
+docker-compose run --rm web bundle exec rake db:create RAILS_ENV=test
+docker-compose run --rm web bundle exec rake db:migrate RAILS_ENV=test
 docker-compose up -d
 docker-compose run -d web bundle exec rspec spec --format documentation  --out test_results/rspec-$TS.md
