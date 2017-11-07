@@ -99,7 +99,6 @@ module SeleniumDriverSetup
     def run
       begin
         [
-          Thread.new { start_webserver },
           Thread.new { start_driver }
         ].each(&:join)
       rescue Selenium::WebDriver::Error::WebDriverError
@@ -122,7 +121,6 @@ module SeleniumDriverSetup
     end
 
     def shutdown
-      server.shutdown if server
       if driver
         driver.close
         driver.quit

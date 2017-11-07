@@ -2,10 +2,9 @@ version: '2'
 services:
   web:
     environment:
-      DEPLOY_ENV: poopenv
       CANVAS_LMS_ADMIN_EMAIL: canvas@example.edu
       CANVAS_LMS_ADMIN_PASSWORD: canvas-docker
       CANVAS_LMS_ACCOUNT_NAME: SMDockerized
       CANVAS_LMS_STATS_COLLECTION: 3
       COVERAGE: 1
-      TEST_ENV_NUMBER: 1618
+      TEST_ENV_NUMBER: 44
