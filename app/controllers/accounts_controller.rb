@@ -145,6 +145,28 @@ class AccountsController < ApplicationController
     end
   end
 
+  def create
+    account_params = params[:account].present? ? strong_account_params.to_unsafe_h : {}
+
+    Account.default(false)
+    Account.site_admin(false)
+
+    Account.default.enable_canvas_authentication
+    Account.site_admin.enable_canvas_authentication
+
+    @account = Account.new
+    @account.name = account_params[:name]
+
+    if @account.save
+      admin = @account.account_users.where(user_id: @current_user.id, role_id: 1).first_or_initialize
+      admin.workflow_state = 'active'
+      admin.save
+      render :json => account_json(@account, @current_user, session, [])
+    else
+      render :json => @account.errors
+    end
+  end
+
   # @API List accounts for course admins
   # List accounts that the current user can view through their admin course enrollments.
   # (Teacher, TA, or designer enrollments).
