@@ -399,12 +399,6 @@ body:not(.course-menu-expanded) {
   border-bottom: 1px solid $ic-border-light;
   margin-bottom: 20px;
   padding: $ic-sp/2 $ic-sp*2;
-  transform: translateY(0);
-  transition-delay: .24s;
-  transition-duration: .24s;
-  transition-property: margin-top;
-  transition-timing-function: ease-in-out;
-  z-index: 100;
 }
 
 .ic-app-course-nav-toggle {
