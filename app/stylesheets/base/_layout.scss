@@ -30,16 +30,13 @@ body {
     min-width: 768px;
   }
 
-  &.ic-Login-Body {
-    .ic-app-nav-toggle-and-crumbs { display: none; }
-  }
-
   &.no-headers, &.embedded {
 
     .ic-Layout-wrapper { transform: translateX(140px); }
     .ic-app-header { width: 60px; }
     .ReactTray__Content { left: 60px; }
     .menu-item__text { opacity: 0; }
+
 
     .ic-app-nav-toggle-and-crumbs { margin-top: -53px; }
 
@@ -103,6 +100,14 @@ body {
       background: $layout-modal-bg !important;
       color: $layout-modal-font-color !important;
       height: auto !important;
+    }
+  }
+
+  &.full-width.grades:not(.gradebook) { // Speedgrader
+
+    .ic-Layout-wrapper {
+        max-width: unset !important;
+        transform: unset !important;
     }
   }
 }
@@ -184,7 +189,7 @@ iframe {
   &#file_content,
   &#tool_content,
   &.tool_launch {
-      height: calc(100vh - 180px); // This is for when the iframeResizer isn't supported. The iframeResizer will override this via inline styles.
+      height: calc(100vh - 200px); // This is for when the iframeResizer isn't supported. The iframeResizer will override this via inline styles.
   }
 }
 
