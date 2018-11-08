@@ -135,6 +135,14 @@ module CC
     def self.create_cc_assignment(node, assignment, migration_id, html_exporter, manifest = nil)
       node.title(assignment.title)
       node.text(html_exporter.html_content(assignment.description), texttype: 'text/html')
+      max_attempts = SettingsService.get_settings(object: 'assignment', id: assignment.migration_id)['max_attempts'].to_i || false
+      puts "==================================================================="
+      puts "max_attempts #{max_attempts}"
+      puts "node #{node}"
+      if max_attempts
+        node.max_attempts max_attempts
+      end
+      puts "==================================================================="
       if assignment.points_possible
         node.gradable(assignment.graded?, points_possible: assignment.points_possible)
       else
