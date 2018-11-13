@@ -17,6 +17,10 @@ namespace :strongmind do
         user.save
       end
     end
+
+    s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'], access_key_id: ENV['S3_ACCESS_KEY_ID'], secret_access_key: ENV['S3_ACCESS_KEY'])
+    obj = s3.bucket(ENV['S3_BUCKET_NAME']).object('reset_eula/reset_eula.log')
+    obj.upload_file('/tmp/reset_eula.log')
   end
 
 end
