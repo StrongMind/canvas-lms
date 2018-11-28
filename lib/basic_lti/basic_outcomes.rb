@@ -295,19 +295,6 @@ to because the assignment has no points possible.
 
         if @submission
           @submission.save
-          if SettingsService.get_settings(object: :school, id: 1)['lti_keep_highest_score']
-            best_score = @submission.score
-            best_grade = @submission.grade
-            versions = @submission.versions
-            versions.each do |version|
-              version_score = YAML.load(version.yaml)['score']
-              if version_score > best_score
-                best_score = version_score
-                best_grade = YAML.load(version.yaml)['grade']
-              end
-            end
-            @submission.update(score: best_score)
-          end
         else
           self.code_major = 'failure'
           self.description = I18n.t('lib.basic_lti.no_submission_created', 'This outcome request failed to create a new homework submission.')
@@ -412,3 +399,5 @@ to because the assignment has no points possible.
     end
   end
 end
+
+require File.expand_path('../../lib/basic_lti/basic_outcomes', CanvasShim::Engine.called_from)
