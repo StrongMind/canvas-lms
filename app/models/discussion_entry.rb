@@ -97,7 +97,7 @@ class DiscussionEntry < ActiveRecord::Base
     return unless topic_microservice_domain
 
     course.teachers.each do |teacher|
-      endpoint = "http://#{topic_microservice_domain}/teacher/#{teacher.id}/topic/#{topic.id}"
+      endpoint = "http://#{topic_microservice_domain}/teachers/#{teacher.id}/topics/#{topic.id}"
       if self.unread?(teacher)
         HTTParty.post(endpoint)
       else
