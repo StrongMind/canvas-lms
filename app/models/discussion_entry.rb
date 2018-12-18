@@ -42,7 +42,6 @@ class DiscussionEntry < ActiveRecord::Base
   before_create :infer_root_entry_id
   after_save :update_discussion
   after_save :context_module_action_later
-  after_save :set_unread_status
   after_create :create_participants
   validates_length_of :message, :maximum => maximum_text_length, :allow_nil => true, :allow_blank => true
   validates_presence_of :discussion_topic_id
@@ -87,22 +86,6 @@ class DiscussionEntry < ActiveRecord::Base
       end
     else
       []
-    end
-  end
-
-  def set_unread_status
-    topic = self.discussion_topic
-    course = self.discussion_topic.course
-    topic_microservice_domain = ENV['TOPIC_MICROSERVICE_DOMAIN']
-    return unless topic_microservice_domain
-
-    course.teachers.each do |teacher|
-      endpoint = "http://#{topic_microservice_domain}/teachers/#{teacher.id}/topics/#{topic.id}"
-      if self.unread?(teacher)
-        HTTParty.post(endpoint)
-      else
-        HTTParty.delete(endpoint)
-      end
     end
   end
 
@@ -542,3 +525,4 @@ class DiscussionEntry < ActiveRecord::Base
   end
 
 end
+require File.expand_path('../../app/models/discussion_entry', CanvasShim::Engine.called_from)
