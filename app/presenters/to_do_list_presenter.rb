@@ -57,8 +57,8 @@ class ToDoListPresenter
   end
 
   def discussion_topics_need_reading
-    # TESLA FIXME. MOCK POINT.
-    Assignment.joins(:discussion_topic).where('discussion_topics.id' => [31,30,29]).map do |assignment|
+    ids = JSON.parse(@user.get_teacher_unread_discussion_topics)
+    Assignment.joins(:discussion_topic).where('discussion_topics.id' => ids.map(&:to_i)).map do |assignment|
       AssignmentPresenter.new(@view, assignment, @user, :reading)
     end
   end
