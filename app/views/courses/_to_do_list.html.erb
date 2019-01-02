@@ -185,7 +185,7 @@ cache(safe_cache_key([@current_user, contexts, 'to_do_list_view']), cache_opts) 
             </p>
           </div>
         </a>
-        <%= render :partial => 'shared/ignore_option_list', :locals => {presenter: assignment} %>
+        <%= render :partial => 'shared/ignore_option_list', :locals => {presenter: assignment} unless assignment.type == :discussion_topics_need_reading %>
       </li>
     <% end %>
   </ul>

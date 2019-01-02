@@ -59,7 +59,7 @@ class ToDoListPresenter
   def discussion_topics_need_reading
     ids = JSON.parse(@user.get_teacher_unread_discussion_topics)
     Assignment.joins(:discussion_topic).where('discussion_topics.id' => ids.map(&:to_i)).map do |assignment|
-      AssignmentPresenter.new(@view, assignment, @user, :reading)
+      AssignmentPresenter.new(@view, assignment, @user, :discussion_topics_need_reading)
     end
   end
 
@@ -103,7 +103,7 @@ class ToDoListPresenter
   end
 
   class AssignmentPresenter
-    attr_reader :assignment
+    attr_reader :assignment, :type
     protected :assignment
     delegate :title, :submission_action_string, :points_possible, :due_at, :updated_at, :peer_reviews_due_at, to: :assignment
 
