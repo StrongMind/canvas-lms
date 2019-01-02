@@ -1686,6 +1686,16 @@ class User < ActiveRecord::Base
     end
   end
 
+  def get_teacher_unread_discussion_topics
+    topic_microservice_endpoint = ENV['TOPIC_MICROSERVICE_ENDPOINT']
+    api_key = ENV['TOPIC_MICROSERVICE_API_KEY']
+    return {} unless topic_microservice_endpoint && api_key
+    return {} unless self.enrollments.where(type: 'TecherEnrollment')
+      endpoint = "#{topic_microservice_endpoint}/teachers/#{ENV['CANVAS_DOMAIN']}:#{self.id}/topics/"
+      ret = HTTParty.get(endpoint, headers: { "x-api-key": api_key })
+      ret.body
+  end
+
   def wiki_pages_needing_viewing(opts={})
     needing_viewing('WikiPage', :student, 120.minutes, opts) do |wiki_pages_context, options|
       wiki_pages_context.available_to_planner.visible_to_user(self)
