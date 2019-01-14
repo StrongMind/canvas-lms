@@ -173,19 +173,25 @@ module AuthenticationMethods
 
       sis_id = @current_user && @current_user.pseudonym && @current_user.pseudonym.sis_user_id
       if sis_id
-        begin
-          lock_out_hs = HTTParty.get(
-            "https://flms.flipswitch.com/AttendanceTwo/IsLockedOut?schoolId=17&studentId=#{sis_id}",
-            headers: {"CanvasAuth" => "98454055-2148-4F9B-A170-FD61562998CE"}
-          ).body == 'true'
+        unless Rails.cache.read("unlocked_#{sis_id}")
+          begin
+            lock_out_hs = HTTParty.get(
+              "https://flms.flipswitch.com/AttendanceTwo/IsLockedOut?schoolId=17&studentId=#{sis_id}",
+              headers: {"CanvasAuth" => "98454055-2148-4F9B-A170-FD61562998CE"}
+            ).body == 'true'
 
-          lock_out_ms = HTTParty.get(
-            "https://flms.flipswitch.com/AttendanceTwo/IsLockedOut?schoolId=18&studentId=#{sis_id}",
-            headers: {"CanvasAuth" => "98454055-2148-4F9B-A170-FD61562998CE"}
-          ).body == 'true'
+            lock_out_ms = HTTParty.get(
+              "https://flms.flipswitch.com/AttendanceTwo/IsLockedOut?schoolId=18&studentId=#{sis_id}",
+              headers: {"CanvasAuth" => "98454055-2148-4F9B-A170-FD61562998CE"}
+            ).body == 'true'
 
-          redirect_to('https://flms.flipswitch.com') if lock_out_hs || lock_out_ms
-        rescue
+            if lock_out_hs || lock_out_ms
+              redirect_to('https://flms.flipswitch.com')
+            else
+              Rails.cache.write("unlocked_#{sis_id}", true, :expires_in => 5.minutes)
+            end
+          rescue
+          end
         end
       end
 
