@@ -175,15 +175,9 @@ module AuthenticationMethods
       if sis_id
         unless Rails.cache.read("unlocked_#{sis_id}")
           begin
-            lock_out_hs = HTTParty.get(
-              "https://flms.flipswitch.com/AttendanceTwo/IsLockedOut?schoolId=17&studentId=#{sis_id}",
-              headers: {"CanvasAuth" => "98454055-2148-4F9B-A170-FD61562998CE"}
-            ).body == 'true'
+            lock_out_hs = attendance_lockout_request(17, sis_id)
 
-            lock_out_ms = HTTParty.get(
-              "https://flms.flipswitch.com/AttendanceTwo/IsLockedOut?schoolId=18&studentId=#{sis_id}",
-              headers: {"CanvasAuth" => "98454055-2148-4F9B-A170-FD61562998CE"}
-            ).body == 'true'
+            lock_out_ms = attendance_lockout_request(18, sis_id)
 
             if lock_out_hs || lock_out_ms
               redirect_to('https://flms.flipswitch.com')
@@ -356,6 +350,15 @@ module AuthenticationMethods
   # have always overridden it here
   def delegated_auth_redirect_uri(uri)
     uri
+  end
+
+  private
+
+  def attendance_lockout_request(school_id, sis_id)
+    HTTParty.get(
+      "https://flms.flipswitch.com/AttendanceTwo/IsLockedOut?schoolId=#{school_id}&studentId=#{sis_id}",
+      headers: {"CanvasAuth" => ENV['ATTENDANCE_API_KEY']}
+    ).body == 'true'
   end
 
 end
