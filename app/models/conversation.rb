@@ -28,6 +28,7 @@ class Conversation < ActiveRecord::Base
 
   # Pipeline Service lives in canvas_shim
   after_save { PipelineService.publish(self) }
+  after_delete -> { PipelineService.publish(self) }
 
   validates_length_of :subject, :maximum => maximum_string_length, :allow_nil => true
 
