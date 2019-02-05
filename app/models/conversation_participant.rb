@@ -29,6 +29,7 @@ class ConversationParticipant < ActiveRecord::Base
 
   # Publish to the pipeline in using CanvasShim
   after_save { PipelineService.publish(self) }
+  after_destroy -> { PipelineService.publish(self) }
 
   after_destroy :destroy_conversation_message_participants
 
