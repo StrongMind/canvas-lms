@@ -39,6 +39,9 @@ class ConversationMessage < ActiveRecord::Base
   after_create :generate_user_note!
   after_save :update_attachment_associations
 
+  # Publish to the pipeline in using CanvasShim
+  after_save { PipelineService.publish(self) }
+
   scope :human, -> { where("NOT generated") }
   scope :with_attachments, -> { where("attachment_ids<>'' OR has_attachments") } # TODO: simplify post-migration
   scope :with_media_comments, -> { where("media_comment_id IS NOT NULL OR has_media_objects") } # TODO: simplify post-migration
