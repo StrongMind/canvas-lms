@@ -27,8 +27,7 @@ class Conversation < ActiveRecord::Base
   belongs_to :context, polymorphic: [:account, :course, :group]
 
   # Pipeline Service lives in canvas_shim
-  after_save { PipelineService.publish(self) }
-  after_destroy -> { PipelineService.publish(self) }
+  after_commit { PipelineService.publish(self) }
 
   validates_length_of :subject, :maximum => maximum_string_length, :allow_nil => true
 
