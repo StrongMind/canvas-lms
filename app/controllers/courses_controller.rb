@@ -1834,7 +1834,6 @@ class CoursesController < ApplicationController
 
     Enrollment.transaction do
       grade_out_users_params[:enrollment_ids].each do |id|
-        raise 'BAD'
         _conclude_user(id)
       end
     end

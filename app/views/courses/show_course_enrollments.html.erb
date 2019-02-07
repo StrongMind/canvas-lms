@@ -27,7 +27,7 @@
                 </tr>
               </thead>
               <tbody class="user-enrollments">
-                <% @context.all_student_enrollments.each do |enrollment| %>
+                <% @context.student_enrollments.each do |enrollment| %>
                   <tr class="rosterUser al-hover-container TeacherEnrollment" id="user_1">
                     <td>
                       <%= check_box_tag 'enrollment_ids[]', enrollment.id, false, id: dom_id(enrollment) %>
