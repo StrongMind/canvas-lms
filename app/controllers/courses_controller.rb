@@ -1825,6 +1825,29 @@ class CoursesController < ApplicationController
     end
   end
 
+  def show_course_enrollments
+    get_context
+  end
+
+  def conclude_users
+    get_context
+    raise 'boom'
+    enrollment_ids.each do |id|
+      _conclude_user(id)
+    end
+    render 'show_course_enrollments'
+  end
+
+  def _conclude_user(id)
+    @enrollment = @context.enrollments.find(id)
+    if @enrollment.can_be_concluded_by(@current_user, @context, session)
+      raise 'boom'
+      @enrollment.conclude
+    else
+      authorized_action(@context, @current_user, :permission_fail)
+    end
+  end
+
   def unconclude_user
     get_context
     @enrollment = @context.enrollments.find(params[:id])

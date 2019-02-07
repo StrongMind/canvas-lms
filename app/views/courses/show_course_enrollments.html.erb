@@ -1,0 +1,14 @@
+<%= check_box_tag '#', nil, id: 'select-all-enrollments' %>
+
+<%= form_for @context,  action: course_conclude_user_enrollments_path(@context), html: {id: "course_status_form"} do |f| %>
+  <ul>
+    <% @context.student_enrollments.each do |enrollment| %>
+      <li>
+        <%= check_box_tag 'enrollment_ids[]', enrollment.id, enrollment.completed?, id: dom_id(enrollment) %>
+        <%= label_tag dom_id(enrollment), enrollment.associated_user_name %>
+      </li>
+    <% end %>
+  </ul>
+
+  <%= f.submit "Grade Out Users" %>
+<% end %>
