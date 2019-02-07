@@ -1831,9 +1831,10 @@ class CoursesController < ApplicationController
 
   def conclude_users
     get_context
-    raise 'boom'
-    Enrollmment.transaction do
-      enrollment_ids.each do |id|
+
+    Enrollment.transaction do
+      grade_out_users_params[:enrollment_ids].each do |id|
+        raise 'BAD'
         _conclude_user(id)
       end
     end
@@ -1842,8 +1843,8 @@ class CoursesController < ApplicationController
 
   def _conclude_user(id)
     @enrollment = @context.enrollments.find(id)
+
     if @enrollment.can_be_concluded_by(@current_user, @context, session)
-      raise 'boom'
       @enrollment.conclude
     else
       authorized_action(@context, @current_user, :permission_fail)
@@ -2989,6 +2990,10 @@ class CoursesController < ApplicationController
 
   def effective_due_dates_params
     params.permit(assignment_ids: [])
+  end
+
+  def grade_out_users_params
+    params.permit(enrollment_ids: [])
   end
 
   def course_params
