@@ -1,14 +1,57 @@
-<%= check_box_tag '#', nil, id: 'select-all-enrollments' %>
+<div id="tab-0" class="roster-tab tab-panel ui-tabs-panel form-inline ui-widget-content ui-corner-bottom" style="min-height: 800px;" aria-labelledby="ui-id-1" role="tabpanel" aria-expanded="true" aria-hidden="false">
 
-<%= form_for @context,  action: course_conclude_user_enrollments_path(@context), html: {id: "course_status_form"} do |f| %>
-  <ul>
-    <% @context.student_enrollments.each do |enrollment| %>
-      <li>
-        <%= check_box_tag 'enrollment_ids[]', enrollment.id, enrollment.completed?, id: dom_id(enrollment) %>
-        <%= label_tag dom_id(enrollment), enrollment.associated_user_name %>
-      </li>
-    <% end %>
-  </ul>
+    <div class="v-gutter">
+      <div data-view="users">
+        <table class="roster ic-Table ic-Table--hover-row ic-Table--condensed ic-Table--striped">
+          <thead>
+            <tr>
+              <th>
+                <%= check_box_tag '#', nil, id: 'select-all-enrollments' %> Select All
+              </th>
+              <th scope="col"><span class="screenreader-only">Profile Picture</span></th>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">SIS ID</th>
+              <th scope="col">Role</th>
+              <th scope="col">Last Activity</th>
+            </tr>
+          </thead>
+          <tbody class="collectionViewItems">
+            <%= form_for @context,  action: course_conclude_user_enrollments_path(@context), html: {id: "course_status_form"} do |f| %>
+              <% @context.student_enrollments.each do |enrollment| %>
+                <tr class="rosterUser al-hover-container TeacherEnrollment" id="user_1">
+                  <td>
+                    <%= check_box_tag 'enrollment_ids[]', enrollment.id, enrollment.completed?, id: dom_id(enrollment) %>
 
-  <%= f.submit "Grade Out Users" %>
-<% end %>
+                  </td>
+                  <td class="center">
+                      <a href="/courses/1/users/1" class="avatar" style="background-image: url(/images/messages/avatar-50.png)"><span class="screenreader-only">canvas-admin@example.com</span></a>
+                  </td>
+                  <td>
+                    <%= enrollment.user.sortable_name %>
+                  </td>
+                  <td>
+                      <%= link_to enrollment.user.email, course_user_path(@context, enrollment.user) %>
+                  </td>
+                  <td>
+                    <%= enrollment.user&.primary_pseudonym&.sis_user_id %>
+                  </td>
+                  <td>
+                      <div><%= enrollment_name(enrollment) %></div>
+                  </td>
+                  <td>
+                    <div data-tooltip="" data-html-tooltip-title="Feb 7 at 11:21am">
+                      <%= I18n.l(enrollment.last_activity_at&.to_date, format: :date_at_time) if enrollment.last_activity_at.present? %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+
+              <%= f.submit "Grade Out Users" %>
+            <% end %>
+          </tbody>
+        </table>
+        <div class="paginatedLoadingIndicator" style="display: none;"></div>
+      </div>
+    </div>
+</div>

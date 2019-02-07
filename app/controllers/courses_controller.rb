@@ -1832,8 +1832,10 @@ class CoursesController < ApplicationController
   def conclude_users
     get_context
     raise 'boom'
-    enrollment_ids.each do |id|
-      _conclude_user(id)
+    Enrollmment.transaction do
+      enrollment_ids.each do |id|
+        _conclude_user(id)
+      end
     end
     render 'show_course_enrollments'
   end
