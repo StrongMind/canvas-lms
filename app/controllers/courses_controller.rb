@@ -2733,8 +2733,6 @@ class CoursesController < ApplicationController
     case event
     when 'conclude'
       :change_course_state
-    when 'grade_out'
-      :change_course_state
     when 'delete'
       :delete
     else
