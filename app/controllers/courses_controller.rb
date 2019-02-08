@@ -1836,9 +1836,11 @@ class CoursesController < ApplicationController
     get_context
     if @current_user && @current_user.can_create_enrollment_for?(@context, session, "TeacherEnrollment")
       begin
-        Enrollment.transaction do
-          grade_out_users_params[:enrollment_ids].each do |id|
-            _conclude_user(id)
+        if grade_out_users_params[:enrollment_ids]
+          Enrollment.transaction do
+            grade_out_users_params[:enrollment_ids].each do |id|
+              _conclude_user(id)
+            end
           end
         end
       ensure

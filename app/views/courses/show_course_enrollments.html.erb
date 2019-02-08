@@ -73,6 +73,17 @@
       $('#select-all-enrollments').on("change", function(e2) {
         $(':checkbox').prop("checked", $(this).prop("checked"));
       });
+
+      $('#grade-out-btn').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var result = confirm("Are you sure?");
+        if (result) {
+          $('form').trigger('submit');
+        }
+      });
     });
+
+
   </script>
 <% end %>
