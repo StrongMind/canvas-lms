@@ -1827,18 +1827,25 @@ class CoursesController < ApplicationController
 
   def show_course_enrollments
     get_context
+    unless @current_user && @current_user.can_create_enrollment_for?(@context, session, "TeacherEnrollment")
+      authorized_action(@context, @current_user, :permission_fail)
+    end
   end
 
   def conclude_users
     get_context
-    begin
-      Enrollment.transaction do
-        grade_out_users_params[:enrollment_ids].each do |id|
-          _conclude_user(id)
+    if @current_user && @current_user.can_create_enrollment_for?(@context, session, "TeacherEnrollment")
+      begin
+        Enrollment.transaction do
+          grade_out_users_params[:enrollment_ids].each do |id|
+            _conclude_user(id)
+          end
         end
+      ensure
+        render 'show_course_enrollments'
       end
-    ensure
-      render 'show_course_enrollments'
+    else
+      authorized_action(@context, @current_user, :permission_fail)
     end
   end
 
@@ -2725,6 +2732,8 @@ class CoursesController < ApplicationController
   def permission_for_event(event)
     case event
     when 'conclude'
+      :change_course_state
+    when 'grade_out'
       :change_course_state
     when 'delete'
       :delete
