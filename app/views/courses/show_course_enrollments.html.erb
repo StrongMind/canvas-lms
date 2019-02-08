@@ -79,7 +79,7 @@
         e.preventDefault();
         e.stopPropagation();
         var result = confirm(label);
-        if (result) {
+        if (result && $(':checked').length) {
           $('form').trigger('submit');
         }
       });
