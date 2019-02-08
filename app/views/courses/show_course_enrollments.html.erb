@@ -7,7 +7,7 @@
   <div>
     <div id="group_categories_tabs" class="ui-tabs-minimal ui-tabs ui-widget ui-widget-content ui-corner-all">
       <div id="tab-0" class="roster-tab tab-panel ui-tabs-panel form-inline ui-widget-content ui-corner-bottom" style="min-height: 800px;" aria-labelledby="ui-id-1" role="tabpanel" aria-expanded="true" aria-hidden="false">
-        <%= submit_tag "Grade Out Users", class: 'btn btn-primary pull-right' %>
+        <%= submit_tag "Grade Out Users", class: 'btn btn-primary pull-right', id: 'grade-out-btn' %>
 
         <div class="v-gutter">
           <div data-view="users">
@@ -69,6 +69,7 @@
 
 <% content_for :strongmind_javascript do %>
   <script type="text/javascript">
+    var label = "Hold on! You’re about to grade out these selected students for this particular course section. Are you sure you want to do this?";
     $(window).on("load", function(event) {
       $('#select-all-enrollments').on("change", function(e2) {
         $(':checkbox').prop("checked", $(this).prop("checked"));
@@ -77,7 +78,7 @@
       $('#grade-out-btn').click(function(e) {
         e.preventDefault();
         e.stopPropagation();
-        var result = confirm("Are you sure?");
+        var result = confirm(label);
         if (result) {
           $('form').trigger('submit');
         }
