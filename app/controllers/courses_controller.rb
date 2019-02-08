@@ -1831,13 +1831,15 @@ class CoursesController < ApplicationController
 
   def conclude_users
     get_context
-
-    Enrollment.transaction do
-      grade_out_users_params[:enrollment_ids].each do |id|
-        _conclude_user(id)
+    begin
+      Enrollment.transaction do
+        grade_out_users_params[:enrollment_ids].each do |id|
+          _conclude_user(id)
+        end
       end
+    ensure
+      render 'show_course_enrollments'
     end
-    render 'show_course_enrollments'
   end
 
   def _conclude_user(id)
