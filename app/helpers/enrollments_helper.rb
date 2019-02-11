@@ -1,10 +1,9 @@
 module EnrollmentsHelper
   # Expected type format
   # StudentEnrollment, TeacherEnrollment, TaEnrollment, ObserverEnrollment, DesignerEnrollment
-  #
+
   def enrollment_name(enrollment)
-    klass = enrollment.type
-    case klass
+    case enrollment.type
     when "StudentEnrollment"
       "Student"
     when "TeacherEnrollment"
