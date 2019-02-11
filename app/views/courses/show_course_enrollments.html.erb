@@ -66,6 +66,11 @@
 <% end %>
 
 <% content_for :strongmind_javascript do %>
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
   <script type="text/javascript">
     var label = "Hold on! You’re about to grade out these selected students for this particular course section. Are you sure you want to do this?";
     $(window).on("load", function(event) {

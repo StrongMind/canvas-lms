@@ -79,12 +79,6 @@
   </script>
   <%= javascript_include_tag(active_brand_config_js_url, defer: true) %>
 
-  <!-- TODO: StrongMind - Remove me? -->
-  <script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
-
   <%= include_head_js %>
 
   <% if SettingsService.get_settings(object: 'school', id: 1)['fullstory'] == 'on' %>
