@@ -209,6 +209,7 @@ CanvasRails::Application.routes.draw do
     post 'limit_user_grading/:id' => 'courses#limit_user', as: :limit_user_grading
     delete 'conclude_user/:id' => 'courses#conclude_user', as: :conclude_user_enrollment
 
+    # StrongMind Added
     post 'conclude_users' => 'courses#conclude_users', as: :conclude_user_enrollments
     get 'conclude_users' => 'courses#show_course_enrollments', as: :show_course_enrollments
 

@@ -77,7 +77,6 @@
 
       $('#grade-out-btn').click(function(e) {
         e.preventDefault();
-        e.stopPropagation();
         var result = confirm(label);
         if (result && $(':checked').length) {
           $('form').trigger('submit');
