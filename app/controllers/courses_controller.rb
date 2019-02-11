@@ -1843,6 +1843,10 @@ class CoursesController < ApplicationController
             end
           end
         end
+        flash.now[:notice] = t("The selected students have been graded out successfully.")
+      rescue StandardError => exception
+        Raven.capture_exception(exception)
+        flash.now[:error] = t("Something went wrong. Please try again.")
       ensure
         render 'show_course_enrollments'
       end
