@@ -77,9 +77,12 @@
 
       $('#grade-out-btn').click(function(e) {
         e.preventDefault();
-        var result = confirm(label);
-        if (result && $(':checked').length) {
-          $('form').trigger('submit');
+
+        if ($(':checked').length) {
+          var result = confirm(label);
+          if (result) {
+            $('form').trigger('submit');
+          }
         }
       });
     });
