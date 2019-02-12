@@ -67,3 +67,5 @@ event.json
 .DS_store
 
 yarn-error.log
+/.env.development
+/.env.test
