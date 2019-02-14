@@ -372,6 +372,12 @@ RSpec.configure do |config|
   config.before :each do
     raise "all specs need to use transactions" unless using_transactions_properly?
     reset_all_the_things!
+
+    # StrongMind Added
+    # Need to be able to disable SettingsService globally to fix CanvasLMS specs
+    # We need this to not blow up on dynamodb access, I don't want to boot a dynamodb docker container for
+    # Canvas specs.... hack this away for now
+    allow(SettingsService).to receive(:get_settings).with(anything).and_return({})
   end
 
   # normally all specs should always use transactions; you can override
