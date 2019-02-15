@@ -309,6 +309,12 @@ RSpec::Expectations.configuration.on_potential_false_positives = :raise
 RSpec.configure do |config|
   config.use_transactional_fixtures = true
   config.use_instantiated_fixtures = false
+
+  # Allows RSpec to persist some state between runs in order to support
+  # the `--only-failures` and `--next-failure` CLI options. We recommend
+  # you configure your source control system to ignore this file.
+  config.example_status_persistence_file_path = "spec/support/example_failures.txt"
+
   config.fixture_path = Rails.root+'spec/fixtures/'
   config.infer_spec_type_from_file_location!
   config.raise_errors_for_deprecations!
@@ -378,6 +384,7 @@ RSpec.configure do |config|
     # We need this to not blow up on dynamodb access, I don't want to boot a dynamodb docker container for
     # Canvas specs.... hack this away for now
     allow(SettingsService).to receive(:get_settings).with(anything).and_return({})
+    allow(PipelineService).to receive(:publish).with(anything)
   end
 
   # normally all specs should always use transactions; you can override
