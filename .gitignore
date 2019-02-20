@@ -69,3 +69,4 @@ event.json
 yarn-error.log
 /.env.development
 /.env.test
+/spec/support/example_failures.txt

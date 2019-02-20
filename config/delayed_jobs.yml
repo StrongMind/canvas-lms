@@ -1,3 +1,8 @@
+development:
+  workers:
+  - queue: canvas_queue
+    workers: 1
+
 production:
   workers:
   - queue: canvas_queue
@@ -19,4 +24,8 @@ production:
 default:
   workers:
   - queue: canvas_queue
-    workers: <%= Rails.env.development? ? 1 : 2 %>
+    workers: 2
+    max_priority: 10
+  - queue: canvas_queue
+    workers: 4
+
