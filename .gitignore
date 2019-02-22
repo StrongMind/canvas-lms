@@ -68,3 +68,4 @@ event.json
 
 yarn-error.log
 /spec/support/example_failures.txt
+/spec_strongmind/support/example_failures.txt
