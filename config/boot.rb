@@ -24,7 +24,7 @@ require 'bundler/setup' if File.exist?(ENV['BUNDLE_GEMFILE'])
 require 'bootsnap'
 Bootsnap.setup(
   cache_dir:            'tmp/cache',
-  development_mode:     true,
+  development_mode:     Rails.env == 'development',
   disable_trace:        false,
   load_path_cache:      false,
   autoload_paths_cache: false,
