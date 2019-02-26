@@ -322,7 +322,6 @@ class User < ActiveRecord::Base
   after_save :update_account_associations_if_necessary
   after_save :self_enroll_if_necessary
   after_save -> { PipelineService.publish self }
-  after_destroy -> { PipelineService.publish(self) }
 
   def courses_for_enrollments(enrollment_scope)
     Course.active.joins(:all_enrollments).merge(enrollment_scope.except(:joins)).distinct
@@ -3005,4 +3004,4 @@ class User < ActiveRecord::Base
     roles
   end
 end
-require File.expand_path('../../app/models/user', CanvasShim::Engine.called_from)
+
