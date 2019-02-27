@@ -22,9 +22,10 @@ require 'bundler/setup' if File.exist?(ENV['BUNDLE_GEMFILE'])
 
 # StrongMind Added
 require 'bootsnap'
+env = ENV['RAILS_ENV'] || "development"
 Bootsnap.setup(
   cache_dir:            'tmp/cache',
-  development_mode:     Rails.env == 'development',
+  development_mode:     env == 'development',
   disable_trace:        false,
   load_path_cache:      false,
   autoload_paths_cache: false,
