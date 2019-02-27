@@ -20,6 +20,7 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
+
   class << self
     [:before, :after, :around,
      :skip_before, :skip_after, :skip_around,
@@ -1214,7 +1215,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  rescue_from Exception, :with => :rescue_exception unless Rails.env == 'development'
+  rescue_from Exception, :with => :rescue_exception unless ENV['BYPASS_EXCEPTION_CATCHING'].present?
 
   # analogous to rescue_action_without_handler from ActionPack 2.3
   def rescue_exception(exception)

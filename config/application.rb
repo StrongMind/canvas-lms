@@ -35,6 +35,9 @@ require "rails/test_unit/railtie"
 
 Bundler.require(*Rails.groups)
 
+# StrongMind Added
+Dotenv::Railtie.load
+
 module CanvasRails
   class Application < Rails::Application
     $LOAD_PATH << config.root.to_s
