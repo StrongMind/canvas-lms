@@ -52,4 +52,9 @@ namespace :strongmind do
     obj.upload_file('/tmp/reset_eula.log')
   end
 
+  desc "Activate Canvas Analytics"
+  task :activate_analytics => :environment do
+    Setting.set('enable_page_views', 'db')
+  end
+
 end
