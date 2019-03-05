@@ -57,4 +57,9 @@ namespace :strongmind do
     Setting.set('enable_page_views', 'db')
   end
 
+  desc "Deactivate Canvas Analytics"
+  task :deactivate_analytics => :environment do
+    Setting.find_by_name("enable_page_views").delete
+  end
+
 end
