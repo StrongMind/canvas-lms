@@ -160,7 +160,7 @@
       <th scope="col"><%= t('headers.name', "Name") %></th>
       <th scope="col"><%= t('headers.due', "Due") %></th>
       <th scope="col" class="assignment_score"><%= t('headers.score', "Score") %></th>
-      <th scope="col" class="possible"><%= t('headers.out_of', "Out of") %></th>
+      <th scope="col"><%= t('headers.out_of', "Submitted") %></th>
       <th scope="col"><span class="screenreader-only"><%= t('headers.details', "Details") %></span></th>
     </tr>
   </thead>
@@ -231,7 +231,7 @@
                 <% if submission.try :pending_review? %>
                   <span class="screenreader-only"><%=t(:grading_in_progress, "Instructor is working on grades")%></span>
                 <% end %>
-                <%= student_score_display_for(submission, !can_do(@context, @current_user, :manage_grades)) %>
+                <%= student_score_display_for(submission, !can_do(@context, @current_user, :manage_grades)) %> / <%= n(round_if_whole(assignment.points_possible)) %>
               <% end %>
             </span>
             <% if assignment_presenter.is_letter_graded_or_gpa_scaled? %>
@@ -266,8 +266,8 @@
           </div>
         </div>
       </td>
-      <td class="possible points_possible">
-        <%= n(round_if_whole(assignment.points_possible)) %>
+      <td class="due">
+        <%= submission.try(:submitted_at) ? datetime_string(submission.submitted_at, :submitted_at) : t('-') %>
       </td>
       <td class="details">
         <% if !assignment.special_class %>
