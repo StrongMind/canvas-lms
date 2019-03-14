@@ -3,9 +3,14 @@ RSpec.configure do |config|
   config.include Capybara::DSL,          type: :controller
   config.include FeatureHelpers,         type: :feature
   config.include FeatureJsHelpers,       type: :feature
+
   config.include FactoryBot::Syntax::Methods
   config.include ActionView::Helpers::TextHelper
+
+  # This has to be included before SeleniumDependencies or some Factory methods with same names
+  # as in Selenium modules will get overridden incorrectly
   config.include Factories # Canvas LMS factories in /spec, not factory girl
+  config.include SeleniumDependencies,   type: :feature
 
   config.use_transactional_fixtures = false
 
