@@ -67,6 +67,9 @@ RSpec.configure do |config|
 
     DatabaseCleaner.strategy = Capybara.current_driver == :rack_test ? :transaction : :truncation
     DatabaseCleaner.start
+
+    # allow(SettingsService).to receive(:get_settings).with(anything).and_return({})
+    allow(PipelineService).to receive(:publish).with(anything)
   end
 
   config.after(:each) do

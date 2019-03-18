@@ -35,7 +35,9 @@ require 'capybara-screenshot/rspec'
 
 Dir[Rails.root.join('spec', 'factories', '*.rb')].each { |f| require f }
 
+# Work around for issues closing chrome via selenium/capy
 # Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+require Rails.root.join('spec/support/discourage_slow_specs.rb')
 
 # Load spec helper modules first
 Dir[Rails.root.join('spec_strongmind', 'support', 'helpers', '**', '*.rb')].each { |f| require f }
