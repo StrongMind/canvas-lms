@@ -33,14 +33,35 @@ require 'capybara-screenshot/rspec'
 # require only the support files necessary.
 #
 
+Dir[Rails.root.join('spec', 'factories', '*.rb')].each { |f| require f }
+
+# Work around for issues closing chrome via selenium/capy
+# Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+require Rails.root.join('spec/support/discourage_slow_specs.rb')
+
 # Load spec helper modules first
 Dir[Rails.root.join('spec_strongmind', 'support', 'helpers', '**', '*.rb')].each { |f| require f }
 
+require Rails.root.join('spec/selenium/test_setup/custom_selenium_rspec_matchers')
+
+Dir[Rails.root.join('spec_strongmind/support/helpers/common_helper_methods/*.rb')].each { |f| require f }
+
+module SeleniumDependencies
+  # include OtherHelperMethods
+  # include CustomSeleniumActions
+  # include CustomAlertActions
+
+  # include CustomScreenActions
+  # include CustomValidators
+  # include CustomWaitMethods
+  # include CustomDateHelpers
+  include LoginAndSessionMethods
+
+  # include CustomPageLoaders
+  # include SeleniumErrorRecovery
+end
+
 Dir[Rails.root.join('spec_strongmind', 'support', '**', '*.rb')].each { |f| require f }
-
-Dir[Rails.root.join('spec', 'factories', '*.rb')].each { |f| require f }
-
-Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
 # Checks for pending migration and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
