@@ -198,7 +198,7 @@ define [
       $.when(
         dataLoader.gotCustomColumns,
         dataLoader.gotAssignmentGroups,
-        dataLoader.gotGradingPeriodAssignments,
+        dataLoader.gotGradingPeriodAssignments
       ).then(@doSlickgridStuff)
 
       @studentsLoaded = dataLoader.gotStudents
