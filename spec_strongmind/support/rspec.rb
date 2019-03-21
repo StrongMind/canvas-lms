@@ -52,7 +52,6 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
-    Timecop.safe_mode = true
     DatabaseCleaner.clean_with(:truncation)
 
     begin
@@ -68,7 +67,7 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = Capybara.current_driver == :rack_test ? :transaction : :truncation
     DatabaseCleaner.start
 
-    # allow(SettingsService).to receive(:get_settings).with(anything).and_return({})
+    allow(SettingsService).to receive(:get_settings).with(anything).and_return({})
     allow(PipelineService).to receive(:publish).with(anything)
   end
 
