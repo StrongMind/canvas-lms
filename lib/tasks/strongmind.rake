@@ -23,7 +23,7 @@ namespace :strongmind do
 
   desc "Reset Session Secret"
   task :reset_session_secret =>  :environment do
-    Setting.set("session_secret_key", SecureRandom.hex(64))
+    puts Setting.set("session_secret_key", SecureRandom.hex(64))
   end
 
   desc "Re-enqueue orphaned jobs after deploy"
