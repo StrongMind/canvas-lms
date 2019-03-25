@@ -61,8 +61,8 @@ describe "speed grader - discussion submissions" do
   end
 
   it "displays discussion entries for only one student", priority: "1", test_id: 283745 do
-      get "/courses/#{@course.id}/gradebook/speed_grader?assignment_id=#{@assignment.id}"
-
+    get "/courses/#{@course.id}/gradebook/speed_grader?assignment_id=#{@assignment.id}"
+    sleep 2
     # check for correct submissions in speed grader iframe
     in_frame 'speedgrader_iframe' do
       expect(f('#main')).to include_text(@first_message)
@@ -70,6 +70,7 @@ describe "speed grader - discussion submissions" do
     end
     f('#next-student-button').click
     wait_for_ajax_requests
+    sleep 2
     in_frame 'speedgrader_iframe' do
       expect(f('#main')).not_to include_text(@first_message)
       expect(f('#main')).to include_text(@second_message)
@@ -86,7 +87,7 @@ describe "speed grader - discussion submissions" do
       f("#settings_link").click
       f('#hide_student_names').click
       expect_new_page_load { fj('.ui-dialog-buttonset .ui-button:visible:last').click }
-
+      sleep 2
       # check for correct submissions in speed grader iframe
       in_frame 'speedgrader_iframe' do
         expect(f('#main')).to include_text("This Student")
@@ -108,7 +109,7 @@ describe "speed grader - discussion submissions" do
       f("#settings_link").click
       f('#hide_student_names').click
       expect_new_page_load { fj('.ui-dialog-buttonset .ui-button:visible:last').click }
-
+      sleep 2
       # check for correct submissions in speed grader iframe
       in_frame 'speedgrader_iframe' do
         f('#discussion_view_link').click
@@ -128,7 +129,7 @@ describe "speed grader - discussion submissions" do
       f("#settings_link").click
       f('#hide_student_names').click
       expect_new_page_load { fj('.ui-dialog-buttonset .ui-button:visible:last').click }
-
+      sleep 2
       # check for correct submissions in speed grader iframe
       in_frame 'speedgrader_iframe' do
         f('#discussion_view_link').click
@@ -136,7 +137,7 @@ describe "speed grader - discussion submissions" do
       end
 
       get "/courses/#{@course.id}/gradebook/speed_grader?assignment_id=#{@assignment.id}"
-
+      sleep 2
       in_frame 'speedgrader_iframe' do
         f('.header_title a').click
         expect(f("body")).not_to contain_css('.avatar')
