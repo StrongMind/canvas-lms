@@ -6,18 +6,19 @@ services:
 addons:
   postgresql: "9.6"
   chrome: stable
+bundler_args: --without production development
+cache: bundler
 before_install:
+  - echo -e "Host github.com\n\tHostName github.com\n\tUser git\n\tIdentityFile ~/.ssh/id_rsa\n" >> ~/.ssh/config
   - "export STRONGMING_SPEC=1"
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
   - gem update --system
   - gem install bundler
 
 before_script:
-  - psql -c 'create database myapp_test;' -U postgres;
-  - RAILS_ENV=test bundle exec rake db:migrate
+  - psql -c 'create database canvas_test;' -U postgres;
+  - RAILS_ENV=test bin/rake db:migrate
 script:
-  - STRONGMING_SPEC=1 bundle exec rspec spec_strongmind/models
-gemfile:
-  - Gemfile
-cache: bundler
+  - STRONGMING_SPEC=1 bin/rspec spec_strongmind/models
