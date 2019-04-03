@@ -6,7 +6,7 @@ services:
 addons:
   postgresql: "9.6"
   chrome: stable
-bundler_args: --without production development STRONGMING_SPEC=1
+bundler_args: --without production development STRONGMIND_SPEC=1
 cache: bundler
 before_install:
   - "export DISPLAY=:99.0"
