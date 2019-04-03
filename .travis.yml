@@ -10,7 +10,7 @@ cache: bundler
 before_install:
   - sudo apt-get install -y libxmlsec1 libxmlsec1-dev imagemagick
   - gem update --system 2.6.12
-  - rvm use @global
+  - gem --version
   - "find /home/travis/.rvm/rubies -wholename '*default/bundler-*.gemspec' -delete"
   - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
   - gem uninstall bundler -x || gem uninstall bundler -a || true
