@@ -16,6 +16,8 @@ before_install:
   - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
   - "find /home/travis/.rvm/rubies -wholename '*default/bundler-*.gemspec' -delete"
   - gem list bundler
+  - gem uninstall bundler
+  - gem list bundler
   - gem install bundler -v '1.15.1'
 before_script:
   - psql -c 'create database canvas_test;' -U postgres;
