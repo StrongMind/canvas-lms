@@ -8,15 +8,20 @@ addons:
   chrome: stable
 cache: bundler
 before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
+  - sudo apt-get install -y libxmlsec1 libxmlsec1-dev imagemagick
   - rvm use @global
   - "find /home/travis/.rvm/rubies -wholename '*default/bundler-*.gemspec' -delete"
   - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
   - gem uninstall bundler -x || gem uninstall bundler -a || true
   - gem install bundler --version=1.15.1
   - bundler --version
+  - nvm install v6.9
+  - npm install -g coffee-script@1.6.2
+  - npm install -g gulp
+  - npm install -g webpack
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
 install:
   - STRONGMIND_SPEC=1 bundle install --without production development --jobs=3 --retry=3
 before_script:
