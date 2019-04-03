@@ -9,14 +9,13 @@ addons:
 bundler_args: --without production development
 cache: bundler
 before_install:
-  - echo -e "Host github.com\n\tHostName github.com\n\tUser git\n\tIdentityFile ~/.ssh/id_rsa\n" >> ~/.ssh/config
   - "export STRONGMING_SPEC=1"
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
   - gem update --system
+  - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
   - gem install bundler
-
 before_script:
   - psql -c 'create database canvas_test;' -U postgres;
   - RAILS_ENV=test bin/rake db:migrate
