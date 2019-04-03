@@ -6,10 +6,9 @@ services:
 addons:
   postgresql: "9.6"
   chrome: stable
-bundler_args: --without production development
+bundler_args: --without production development STRONGMING_SPEC=1
 cache: bundler
 before_install:
-  - "export STRONGMING_SPEC=1"
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
@@ -17,7 +16,7 @@ before_install:
   - "find /home/travis/.rvm/rubies -wholename '*default/bundler-*.gemspec' -delete"
   - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
   - gem uninstall bundler -x || gem uninstall bundler -a || true
-  - gem install bundler --version=1.15.1
+  - gem install bundler --version=1.15.1 --no-ri --no-rdoc
   - bundler --version
 before_script:
   - psql -c 'create database canvas_test;' -U postgres;
