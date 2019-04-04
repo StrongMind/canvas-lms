@@ -122,24 +122,5 @@ Capybara.configure do |config|
   config.default_max_wait_time = 7
 end
 
-## Capy Screenshot Help
-Capybara::Screenshot.prune_strategy      = { keep: 10 }
-Capybara::Screenshot.autosave_on_failure = false
-Capybara::Screenshot.append_timestamp    = false
-Capybara::Screenshot.register_driver(:chrome) do |driver, path|
-  driver.browser.save_screenshot(path)
-end
-Capybara::Screenshot.register_driver(:headless_chrome) do |driver, path|
-  driver.browser.save_screenshot(path)
-end
-Capybara::Screenshot.register_filename_prefix_formatter(:rspec) do |example|
-  "screenshot_#{example.description.gsub(' ', '-').gsub(/^.*\/spec\//,'')}"
-end
-
-# if ENV['CI_RUNNING']
-#   # don't attempt to generate on CI
-#   Capybara::Screenshot::RSpec.add_link_to_screenshot_for_failed_examples = false
-# else
-  # better looking screenshots (fixes relative paths when desired)
-  # Capybara.asset_host = 'http://localhost:3000'
-# end
+# better looking screenshots (fixes relative paths when desired)
+Capybara.asset_host = 'http://localhost:3000'
