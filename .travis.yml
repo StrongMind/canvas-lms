@@ -16,10 +16,8 @@ before_install:
   - gem --version
   - which bundle
   - bundler --version
-  - gem uninstall bundler -x || gem uninstall bundler -a || true # rm 1.16.0
-  - which bundle
-  - bundler --version
   - gem install bundler --version=1.15.1
+  - gem uninstall bundler -x -v 1.16.0 || true # rm 1.16.0
   - which bundle
   - bundler --version
   - nvm install v6.9
