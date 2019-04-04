@@ -9,7 +9,16 @@ addons:
 cache: bundler
 before_install:
   - sudo apt-get install -y libxmlsec1 libxmlsec1-dev imagemagick
+  - "find /home/travis/.rvm/rubies -wholename '*default/bundler-*.gemspec' -delete"
+  - gem uninstall bundler -x || gem uninstall bundler -a || true
+  - gem update --system 2.6.12
+  - which gem
+  - gem --version
+  - which bundle
+  - bundler --version
   - gem install bundler --version=1.15.1
+  - which bundle
+  - bundler --version
   - nvm install v6.9
   - npm install -g coffee-script@1.6.2
   - npm install -g gulp
