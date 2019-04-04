@@ -9,14 +9,7 @@ addons:
 cache: bundler
 before_install:
   - sudo apt-get install -y libxmlsec1 libxmlsec1-dev imagemagick
-  - gem update --system 2.6.12
-  - gem --version
-  - "find /home/travis/.rvm/rubies -wholename '*default/bundler-*.gemspec' -delete"
-  - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
-  - gem uninstall bundler -x || gem uninstall bundler -a || true
   - gem install bundler --version=1.15.1
-  - bundler --version
-  - gem --version
   - nvm install v6.9
   - npm install -g coffee-script@1.6.2
   - npm install -g gulp
@@ -25,7 +18,7 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 install:
-  - STRONGMIND_SPEC=1 bundle _1.15.1_ install --verbose --without production --jobs=3 --retry=3
+  - STRONGMIND_SPEC=1 bundle _1.15.1_ install --verbose --without production --jobs=3 --retry=1
 before_script:
   - psql -c 'create database canvas_test;' -U postgres;
   - RAILS_ENV=test bin/rake db:migrate
