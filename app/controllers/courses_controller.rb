@@ -1628,6 +1628,10 @@ class CoursesController < ApplicationController
 
 
     @context = api_find(Course.active, params[:id])
+
+    @current_requirement = CourseProgress.new(@context, @current_user).current_content_tag.id
+
+
     assign_localizer
     if request.xhr?
       if authorized_action(@context, @current_user, [:read, :read_as_admin])
