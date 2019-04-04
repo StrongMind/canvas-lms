@@ -36,4 +36,4 @@ before_script:
   - psql -c 'create database canvas_test;' -U postgres;
   - STRONGMIND_SPEC=1 RAILS_ENV=test bundle exec rake db:test:prepare
 script:
-  - STRONGMIND_SPEC=1 bundle exec rspec spec_strongmind/models
+  - STRONGMIND_SPEC=1 HEADLESS=1 bundle exec rspec spec_strongmind
