@@ -29,7 +29,7 @@ before_install:
   - "export DISPLAY=:99.0"
   # Allow headful tests
   # Enable user namespace cloning
-  - "sysctl kernel.unprivileged_userns_clone=1"
+  - "sudo sysctl kernel.unprivileged_userns_clone=1"
   # Launch XVFB
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
