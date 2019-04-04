@@ -16,7 +16,7 @@ before_install:
   - gem --version
   - which bundle
   - bundler --version
-  - gem uninstall bundler -x || gem uninstall bundler -a || true
+  - gem uninstall bundler -x -i /home/travis/.rvm/gems/ruby-2.4.1@global || gem uninstall bundler -a -i /home/travis/.rvm/gems/ruby-2.4.1@global || true
   - gem install bundler --version=1.15.1
   - gem list bundler
   - which bundle
