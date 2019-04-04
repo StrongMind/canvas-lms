@@ -9,6 +9,10 @@ Capybara.register_driver :chrome do |app|
   options.add_argument('--disable-extensions')
   options.add_argument('--enable-automation')
   options.add_argument('--window-size=1600,1000')
+  if ENV['CI']
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+  end
 
   # This enables access to the JS console logs in your feature specs.
   # You can see the logs during the test by calling (for example):
@@ -38,13 +42,17 @@ Capybara.register_driver :headless_chrome do |app|
   options.add_argument('--disable-extensions')
   options.add_argument('--enable-automation')
   options.add_argument('--window-size=1600,1000')
+  if ENV['CI']
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+  end
 
-   # This enables access to the JS console logs in your feature specs.
-   # You can see the logs during the test by calling (for example):
-   #
-   #   puts page.driver.browser.manage.logs.get(:browser).map(&:inspect).join("\n")
-   #
-   # This will print out each log entry in the JS log
+  # This enables access to the JS console logs in your feature specs.
+  # You can see the logs during the test by calling (for example):
+  #
+  #   puts page.driver.browser.manage.logs.get(:browser).map(&:inspect).join("\n")
+  #
+  # This will print out each log entry in the JS log
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
     logging_prefs: { 'browser' => 'ALL' }
   )
