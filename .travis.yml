@@ -16,13 +16,12 @@ before_install:
   - gem --version
   - which bundle
   - bundler --version
+  - gem uninstall bundler -x || gem uninstall bundler -a || true
   - gem install bundler --version=1.15.1
-  - rvm info
   - gem list bundler
-  - gem uninstall bundler -x -v 1.16.0 || true # rm 1.16.0
   - which bundle
   - bundler --version
-  - gem list bundler
+  - rvm info
   - nvm install v6.9
   - npm install -g coffee-script@1.6.2
   - npm install -g gulp
