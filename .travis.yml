@@ -33,6 +33,6 @@ install:
   - STRONGMIND_SPEC=1 bundle install --verbose --without production --jobs=3 --retry=1
 before_script:
   - psql -c 'create database canvas_test;' -U postgres;
-  - RAILS_ENV=test bundle exec rake db:migrate
+  - STRONGMIND_SPEC=1 RAILS_ENV=test bundle exec rake db:migrate
 script:
   - STRONGMING_SPEC=1 bundle exec rspec spec_strongmind/models
