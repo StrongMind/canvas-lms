@@ -22,8 +22,8 @@ before_install:
   - which bundle
   - bundler --version
   - rvm info
-  - yarn install
   - nvm install v6.9
+  - yarn install
   - npm install -g coffee-script@1.6.2
   - npm install -g gulp
   - npm install -g webpack
