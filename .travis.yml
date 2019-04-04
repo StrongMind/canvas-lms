@@ -17,9 +17,12 @@ before_install:
   - which bundle
   - bundler --version
   - gem install bundler --version=1.15.1
+  - rvm info
+  - gem list bundler
   - gem uninstall bundler -x -v 1.16.0 || true # rm 1.16.0
   - which bundle
   - bundler --version
+  - gem list bundler
   - nvm install v6.9
   - npm install -g coffee-script@1.6.2
   - npm install -g gulp
@@ -28,7 +31,7 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 install:
-  - STRONGMIND_SPEC=1 bundle _1.15.1_ install --verbose --without production --jobs=3 --retry=1
+  - STRONGMIND_SPEC=1 bundle install --verbose --without production --jobs=3 --retry=1
 before_script:
   - psql -c 'create database canvas_test;' -U postgres;
   - RAILS_ENV=test bin/rake db:migrate
