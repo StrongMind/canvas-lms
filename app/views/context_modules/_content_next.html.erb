@@ -41,7 +41,7 @@
 <div class="header-bar">
   <div class="header-bar-right header-bar__module-layout">
     <div class="header-bar-right__buttons">
-      <%= link_to('Resume', course_context_modules_item_redirect_path(@context, @current_requirement), class: 'btn btn-primary') %>
+      <%= link_to('Resume', @resume_link, class: 'btn btn-primary') %>
 
       <% if @can_edit %>
         <a class="btn module_progressions_link" href="<%= progressions_course_context_modules_path(@context) %>"><%= t('links.student_progress', 'View Progress') %></a>
