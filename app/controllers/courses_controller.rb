@@ -1628,9 +1628,7 @@ class CoursesController < ApplicationController
 
 
     @context = api_find(Course.active, params[:id])
-
-    current_requirement = CourseProgress.new(@course, @user).try(:current_content_tag).try(:id)
-    @resume_link = current_requirement ? course_context_modules_item_redirect_path(@course, current_requirement) : course_path(@course)
+    @current_requirement = CourseProgress.new(@context, @current_user).try(:current_content_tag).try(:id)
 
 
     assign_localizer
