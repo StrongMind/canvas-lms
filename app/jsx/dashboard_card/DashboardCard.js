@@ -43,6 +43,7 @@ export default class DashboardCard extends Component {
     assetString: PropTypes.string.isRequired,
     term: PropTypes.string,
     href: PropTypes.string.isRequired,
+    resume_link: PropTypes.string.isRequired,
     links: PropTypes.arrayOf(PropTypes.object),
     imagesEnabled: PropTypes.bool,
     image: PropTypes.string,
@@ -362,6 +363,7 @@ export default class DashboardCard extends Component {
           aria-label={I18n.t('Actions for %{course}', {course: this.state.nicknameInfo.nickname})}
         >
           { this.linksForCard() }
+          <a href={this.props.resume_link} className="icon-play"></a>
         </nav>
         <div className="sm-DashboardCard__progress-container">
           <div className="sm-DashboardCard__progress-container_progress-meter" style={{width: currentProgress, backgroundColor: this.props.backgroundColor}}/>

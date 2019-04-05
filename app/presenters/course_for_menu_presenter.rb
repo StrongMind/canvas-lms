@@ -35,6 +35,8 @@ class CourseForMenuPresenter
   attr_reader :course, :available_section_tabs
 
   def to_h
+    current_requirement = CourseProgress.new(course, @user).current_content_tag.id
+
     {
       longName: "#{course.name} - #{course.short_name}",
       shortName: course.nickname_for(@user),
@@ -42,6 +44,7 @@ class CourseForMenuPresenter
       courseCode: course.course_code,
       assetString: course.asset_string,
       href: course_path(course, :invitation => course.read_attribute(:invitation)),
+      resume_link: course_context_modules_item_redirect_path(course, current_requirement),
       term: term || nil,
       subtitle: subtitle,
       id: course.id,

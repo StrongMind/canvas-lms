@@ -1682,7 +1682,7 @@ class CoursesController < ApplicationController
         id: @context.id.to_s,
         pages_url: polymorphic_url([@context, :wiki_pages]),
         front_page_title: @context&.wiki&.front_page&.title,
-        default_view: default_view
+        default_view: default_view,
       }
 
       # make sure the wiki front page exists

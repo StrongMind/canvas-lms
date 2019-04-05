@@ -111,6 +111,7 @@ import MovementUtils from './MovementUtils'
             courseCode={card.courseCode}
             id={card.id}
             href={card.href}
+            resume_link={card.resume_link}
             links={card.links}
             term={card.term}
             assetString={card.assetString}
