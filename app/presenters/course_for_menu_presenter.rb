@@ -36,7 +36,7 @@ class CourseForMenuPresenter
 
   def to_h
     current_requirement = CourseProgress.new(course, @user).try(:current_content_tag).try(:id)
-    resume_link = current_requirement ? current_requirement : course_path(course, :invitation => course.read_attribute(:invitation))
+    resume_link = current_requirement ? course_context_modules_item_redirect_path(course, current_requirement) : course_path(course, :invitation => course.read_attribute(:invitation))
 
     {
       longName: "#{course.name} - #{course.short_name}",
