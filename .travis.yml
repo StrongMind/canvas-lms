@@ -30,16 +30,18 @@ before_install:
   # Allow headful tests
   # Enable user namespace cloning
   - "sudo sysctl kernel.unprivileged_userns_clone=1"
-  # Launch XVFB
+  # Launch XVFB - for non headless test runs
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 install:
   - STRONGMIND_SPEC=1 bundle install --without production --jobs=3 --retry=1
 before_script:
+  # grab Chrome for selenium
   - wget http://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip
   - mkdir -p /home/travis/bin
   - unzip chromedriver_linux64.zip -d /home/travis/bin/
   - psql -c 'create database canvas_test;' -U postgres;
   - STRONGMIND_SPEC=1 RAILS_ENV=test bundle exec rake db:test:prepare
+  - bundle exec rake brand_configs:generate_and_upload_all
 script:
   - STRONGMIND_SPEC=1 HEADLESS=1 bundle exec rspec spec_strongmind/models/ spec_strongmind/lib/ spec_strongmind/shim/
