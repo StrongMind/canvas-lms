@@ -42,9 +42,11 @@ before_script:
   - mkdir -p /home/travis/bin
   - unzip chromedriver_linux64.zip -d /home/travis/bin/
   - psql -c 'create database canvas_test;' -U postgres;
+  - rm Gemfile.lock
   - bundle
   - bundle exec rake canvas:compile_assets
   - bundle exec rake brand_configs:generate_and_upload_all
+  - rm Gemfile.lock
   - STRONGMIND_SPEC=1 bundle
   - STRONGMIND_SPEC=1 RAILS_ENV=test bundle exec rake db:test:prepare
 script:
