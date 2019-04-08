@@ -34,17 +34,17 @@ before_install:
   # Launch XVFB - for non headless test runs
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
-install:
-  - bundle install --deployment --jobs=3 --retry=1
-before_script:
   # grab Chrome for selenium
   - wget http://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip
   - mkdir -p /home/travis/bin
   - unzip chromedriver_linux64.zip -d /home/travis/bin/
+install:
+  - bundle install --path vendor/bundle --without production --jobs=3 --retry=1
+before_script:
   - psql -c 'create database canvas_test;' -U postgres;
   - bundle exec rake canvas:compile_assets
   - rm Gemfile.lock
-  - STRONGMIND_SPEC=1 bundle install --deployment --jobs=3 --retry=1
+  - STRONGMIND_SPEC=1 bundle install --path vendor/bundle --without production --jobs=3 --retry=1
   - STRONGMIND_SPEC=1 RAILS_ENV=test bundle exec rake db:test:prepare
 script:
   - STRONGMIND_SPEC=1 HEADLESS=1 bundle exec rspec spec_strongmind/models/ spec_strongmind/lib/ spec_strongmind/shim/
