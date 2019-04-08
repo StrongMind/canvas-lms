@@ -14,6 +14,7 @@ cache:
   bundler: true
   directories:
     - node_modules
+    - vendor/bundle
 before_install:
   - sudo apt-get install -y libxmlsec1 libxmlsec1-dev imagemagick
   - "find /home/travis/.rvm/rubies -wholename '*default/bundler-*.gemspec' -delete"
@@ -33,8 +34,6 @@ before_install:
   # Launch XVFB - for non headless test runs
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
-  - bundle
-  - bundle exec rake brand_configs:generate_and_upload_all
 install:
   - STRONGMIND_SPEC=1 bundle install --without production --jobs=3 --retry=1
 before_script:
@@ -43,6 +42,9 @@ before_script:
   - mkdir -p /home/travis/bin
   - unzip chromedriver_linux64.zip -d /home/travis/bin/
   - psql -c 'create database canvas_test;' -U postgres;
+  - bundle
+  - bundle exec rake canvas:compile_assets
+  - bundle exec rake brand_configs:generate_and_upload_all
   - STRONGMIND_SPEC=1 bundle
   - STRONGMIND_SPEC=1 RAILS_ENV=test bundle exec rake db:test:prepare
 script:
