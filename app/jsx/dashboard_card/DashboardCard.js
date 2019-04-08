@@ -363,7 +363,12 @@ export default class DashboardCard extends Component {
           aria-label={I18n.t('Actions for %{course}', {course: this.state.nicknameInfo.nickname})}
         >
           { this.linksForCard() }
-          <a href={this.props.resume_link} className="ic-DashboardCard__action discussions icon-play"></a>
+
+          {
+            this.props.resume_link ? (
+              <a href={this.props.resume_link} className="ic-DashboardCard__action discussions icon-play"></a>
+            ) : null
+          }
         </nav>
         <div className="sm-DashboardCard__progress-container">
           <div className="sm-DashboardCard__progress-container_progress-meter" style={{width: currentProgress, backgroundColor: this.props.backgroundColor}}/>

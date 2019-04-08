@@ -1628,7 +1628,10 @@ class CoursesController < ApplicationController
 
 
     @context = api_find(Course.active, params[:id])
-    @current_requirement = CourseProgress.new(@context, @current_user).try(:current_content_tag).try(:id)
+
+    if @context && @current_user.student_enrollments.find_by(course: @context)
+      @current_requirement = CourseProgress.new(@context, @current_user).current_content_tag.try(:id)
+    end
 
 
     assign_localizer
