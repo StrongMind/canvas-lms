@@ -1,6 +1,6 @@
 
 Capybara::Screenshot.prune_strategy      = { keep: 10 }
-Capybara::Screenshot.autosave_on_failure = ENV['CI'] ? true : false
+Capybara::Screenshot.autosave_on_failure = (ENV['CI'] || ENV['HEADLESS']) ? true : false
 Capybara::Screenshot.append_timestamp    = true
 Capybara::Screenshot.register_driver(:chrome) do |driver, path|
   driver.browser.save_screenshot(path)
@@ -11,7 +11,7 @@ Capybara::Screenshot.register_driver(:headless_chrome) do |driver, path|
 end
 
 Capybara::Screenshot.register_filename_prefix_formatter(:rspec) do |example|
-  "screenshot_#{example.description.gsub(' ', '-').gsub(/^.*\/spec\//,'')}"
+  "#{ 'TRAVISCI-' if ENV['CI'] }spec-fail-screenshot_#{example.description.gsub(/[^[:alpha:]]/, '-').gsub(/^.*\/spec\//,'')}"
 end
 
 Capybara::Screenshot.s3_configuration = {
