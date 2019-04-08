@@ -322,6 +322,7 @@ export default class DashboardCard extends Component {
             }
           </span>
           {this.renderHeaderHero()}
+
           <a href={this.props.href} className="ic-DashboardCard__link">
             <div className="sm-DashboardCard__course_grade" style={{borderColor: this.props.backgroundColor}}>
               { (current_grade)? current_grade : current_score }
@@ -355,6 +356,14 @@ export default class DashboardCard extends Component {
               menuOptions={this.calculateMenuOptions()}
             />
           )}
+
+
+          {
+            this.props.resume_link ? (
+              <a href={this.props.resume_link} className="icon-play ic-DashBoardCard__resume"></a>
+            ) : null
+          }
+
           { this.renderHeaderButton() }
 
         </div>
@@ -363,12 +372,6 @@ export default class DashboardCard extends Component {
           aria-label={I18n.t('Actions for %{course}', {course: this.state.nicknameInfo.nickname})}
         >
           { this.linksForCard() }
-
-          {
-            this.props.resume_link ? (
-              <a href={this.props.resume_link} className="ic-DashboardCard__action discussions icon-play"></a>
-            ) : null
-          }
         </nav>
         <div className="sm-DashboardCard__progress-container">
           <div className="sm-DashboardCard__progress-container_progress-meter" style={{width: currentProgress, backgroundColor: this.props.backgroundColor}}/>
