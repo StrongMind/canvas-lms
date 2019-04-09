@@ -23,6 +23,9 @@ before_install:
   - gem install bundler --version=1.15.1
   - nvm install v6.9
   - yarn install
+  - cd $TRAVIS_BUILD_DIR/vendor/canvas_shim
+  - yarn install
+  - cd $TRAVIS_BUILD_DIR
   - npm install -g coffee-script@1.6.2
   - npm install -g gulp
   - npm install -g webpack
