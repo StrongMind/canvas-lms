@@ -22,6 +22,11 @@ Capybara::Screenshot.s3_configuration = {
   },
   bucket_name: "canvas-lms-feature-spec-failure-screenshots"
 }
+puts '*'*50
+puts ENV['S3_ACCESS_KEY_ID']
+puts ENV['AWS_REGION']
+puts Capybara::Screenshot.s3_configuration[:s3_client_credentials][:access_key_id]
+puts Capybara::Screenshot.s3_configuration[:s3_client_credentials][:region]
 
 if ENV['CI']
   Capybara::Screenshot::RSpec.add_link_to_screenshot_for_failed_examples = false
