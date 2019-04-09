@@ -39,5 +39,10 @@ curl -s -X POST   -H "Content-Type: application/json"   -H "Accept: application/
 ## CI User Agent
     Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/73.0.3683.103 Safari/537.36
 
+
+## Read More
+[https://docs.travis-ci.com/user/running-build-in-debug-mode/#things-to-do-once-you-are-inside-the-debug-vm](https://docs.travis-ci.com/user/running-build-in-debug-mode/#things-to-do-once-you-are-inside-the-debug-vm)
+
+## Stuff
 Local User Agent
 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36
