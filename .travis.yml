@@ -27,13 +27,13 @@ before_install:
   - npm install -g gulp
   - npm install -g webpack
   - "export DISPLAY=:99.0"
-  # Allow headful tests
+  # Allow headful tests, see https://github.com/Googlechrome/puppeteer/issues/290
   # Enable user namespace cloning
   - "sudo sysctl kernel.unprivileged_userns_clone=1"
   # Launch XVFB - for non headless test runs
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
-  # grab Chrome for selenium
+  # grab Chromedriver for selenium
   - wget http://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip
   - mkdir -p /home/travis/bin
   - unzip chromedriver_linux64.zip -d /home/travis/bin/

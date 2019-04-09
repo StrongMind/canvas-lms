@@ -10,7 +10,7 @@ Capybara.register_driver :chrome do |app|
   options.add_argument('--enable-automation')
   options.add_argument('--window-size=1600,1000')
   if ENV['CI']
-    options.add_argument('--no-sandbox')
+    options.add_argument('--no-sandbox') # To use Chrome in the container-based environment
     options.add_argument('--disable-dev-shm-usage')
   end
 
@@ -43,7 +43,7 @@ Capybara.register_driver :headless_chrome do |app|
   options.add_argument('--enable-automation')
   options.add_argument('--window-size=1600,1000')
   if ENV['CI']
-    options.add_argument('--no-sandbox')
+    options.add_argument('--no-sandbox') # To use Chrome in the container-based environment
     options.add_argument('--disable-dev-shm-usage')
   end
 
