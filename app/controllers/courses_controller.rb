@@ -1635,7 +1635,7 @@ class CoursesController < ApplicationController
         current_user_settings = SettingsService.get_enrollment_settings(id: current_user_enrollment.id)
         sequence_control = current_user_settings.fetch('sequence_control', true)
         if sequence_control
-          @current_requirement = CourseProgress.new(@context, @current_user).current_content_tag.try(:id)
+          @current_requirement = CourseProgress.new(@context, @current_user).current_content_tag
         end
       end
     end
