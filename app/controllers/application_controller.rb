@@ -2005,7 +2005,7 @@ class ApplicationController < ActionController::Base
   end
 
   def browser_supported?
-    # StrongMind added debug
+    # StrongMind Added
     return true if ENV['CI']
 
     # the user_agent gem likes to (ab)use objects and metaprogramming, so
@@ -2013,13 +2013,6 @@ class ApplicationController < ActionController::Base
     # you upgrade your browser and it treats session cookie expiration
     # rules as a suggestion
     key = request.user_agent.to_s.sum # keep cookie size in check. a legitimate collision here would be 1. extremely unlikely and 2. not a big deal
-
-    # StrongMind added debug
-    Rails.logger.debug("\n"+"*"*50)
-    Rails.logger.debug("browser_key: #{key}")
-    Rails.logger.debug("user_agent: #{request.user_agent}")
-    Rails.logger.debug("browser_supported: #{Browser.supported?(request.user_agent)}")
-    Rails.logger.debug(("*"*50)+"\n")
 
     if key != session[:browser_key]
       session[:browser_key] = key
