@@ -121,6 +121,18 @@
     <% end %>
     <%= render :partial => "group_list", :locals => {:group_list => @user_groups} %>
     <%= nbsp unless @current_user %>
+
+    <% if @current_requirement %>
+      <div class="right side">
+        <h2><i class="icon-bookmark"></i>Pick up where you left off</h2>
+      </div>
+
+       <%= link_to(course_context_modules_item_redirect_path(@context, @current_requirement), class: 'btn button-sidebar-wide') do %>
+          <i class="icon-play"></i>
+          <span><%= t('Resume Course') %></span>
+        <% end %>
+
+    <% end %>
   </div>
   <% if @course_home_view == 'assignments' %>
     <%= render :partial => 'assignments/assignments_list_right_side', :locals => {:course_home => true} %>
