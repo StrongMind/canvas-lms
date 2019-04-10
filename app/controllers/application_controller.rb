@@ -2013,7 +2013,6 @@ class ApplicationController < ActionController::Base
     # you upgrade your browser and it treats session cookie expiration
     # rules as a suggestion
     key = request.user_agent.to_s.sum # keep cookie size in check. a legitimate collision here would be 1. extremely unlikely and 2. not a big deal
-
     if key != session[:browser_key]
       session[:browser_key] = key
       session[:browser_supported] = Browser.supported?(request.user_agent)
