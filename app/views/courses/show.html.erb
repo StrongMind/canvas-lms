@@ -129,10 +129,10 @@
           <span id="left-off">Pick up where you left off</span>
         </h2>
 
-        <div>
+        <div class="resume-text">
           <b><%= @context.name %></b>
         </div>
-        <div><%= @current_requirement.title %></div>
+        <div class="resume-text"><%= @current_requirement.title %></div>
 
         <%= link_to(course_context_modules_item_redirect_path(@context, @current_requirement), class: 'btn button-sidebar-wide') do %>
           <i class="icon-play"></i>
