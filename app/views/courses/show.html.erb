@@ -123,20 +123,21 @@
     <%= nbsp unless @current_user %>
 
     <% if @current_requirement %>
-      <div style="padding: 1.5rem 0;">
-        <div class="right side">
-          <h2>
-            <i class="icon-bookmark" style="vertical-align: middle; padding-right: 2.5px;"></i>
-            <span style="vertical-align: middle;">Pick up where you left off</span>
-          </h2>
-          <div><b><%= @context.name %></b></div>
-          <div><%= @current_requirement.title %></div>
-        </div>
+      <div id="resume-container">
+        <h2>
+          <i class="icon-bookmark"></i>
+          <span id="left-off">Pick up where you left off</span>
+        </h2>
 
-         <%= link_to(course_context_modules_item_redirect_path(@context, @current_requirement), class: 'btn button-sidebar-wide') do %>
-            <i class="icon-play"></i>
-            <span><%= t('Resume Course') %></span>
-          <% end %>
+        <div>
+          <b><%= @context.name %></b>
+        </div>
+        <div><%= @current_requirement.title %></div>
+
+        <%= link_to(course_context_modules_item_redirect_path(@context, @current_requirement), class: 'btn button-sidebar-wide') do %>
+          <i class="icon-play"></i>
+          <span><%= t('Resume Course') %></span>
+        <% end %>
       </div>
     <% end %>
   </div>
