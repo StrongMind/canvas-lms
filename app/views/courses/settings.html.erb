@@ -304,6 +304,17 @@
           </div>
         </td>
       </tr>
+<!-- sm -->
+      <% if can_manage %>
+        <tr>
+          <td class="form-label">Threshold</td>
+          <td>
+              <input type="text" name="courses[threshold]" id="threshold" />
+              <%= t('percent', %{percent}) %>
+          </td>
+        </tr>
+      <% end %>
+<!-- sm -->
       <tr>
         <td class="form-label"><%= f.label :license, :en => "License" %></td>
         <td colspan="3">
