@@ -2241,6 +2241,18 @@ class CoursesController < ApplicationController
     logging_source = api_request? ? :api : :manual
 
     params[:course] ||= {}
+
+    threshold = params[:course].delete(:threshold)
+
+    if threshold
+      SettingsService.update_settings(
+        object: 'school',
+        id: 1,
+        setting: 'threshold',
+        value: threshold
+      )
+    end
+
     params_for_update = course_params
     params[:course][:event] = :offer if params[:offer].present?
 
@@ -2989,7 +3001,7 @@ class CoursesController < ApplicationController
       :restrict_student_past_view, :restrict_student_future_view, :grading_standard, :grading_standard_enabled,
       :locale, :integration_id, :hide_final_grades, :hide_distribution_graphs, :lock_all_announcements, :public_syllabus,
       :public_syllabus_to_auth, :course_format, :time_zone, :organize_epub_by_content_type, :enable_offline_web_export,
-      :show_announcements_on_home_page, :home_page_announcement_limit, :threshold
+      :show_announcements_on_home_page, :home_page_announcement_limit
     )
   end
 end
