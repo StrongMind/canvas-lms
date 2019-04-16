@@ -589,6 +589,16 @@ END
       beta: false,
       development: false,
       use_settings_service: true
+    },
+    'prescriptive_credit_recovery' =>
+    {
+      display_name: -> { "Enable prescriptive credit recovery" },
+      description: -> { "Allow students to bypass units based on pretest score." },
+      applies_to: "RootAccount",
+      state: "allowed",
+      beta: false,
+      development: false,
+      use_settings_service: true
     }
   )
 
