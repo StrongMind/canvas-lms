@@ -156,5 +156,6 @@ class CourseProgress
       }
     end
   end
+  # TODO: remove me
   include CanvasShim::CourseProgress
 end
