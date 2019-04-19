@@ -1,6 +1,6 @@
 require_relative '../../../rails_helper'
 
-RSpec.describe PipelineService::Serializers::ConversationParticipant do
+RSpec.describe PipelineService::Serializers::ConversationParticipant, skip: 'todo: fix for running under LMS' do
   include_context "stubbed_network"
 
   subject { described_class.new(object: noun) }
