@@ -1,10 +1,14 @@
 require_relative '../rails_helper'
 
 RSpec.describe User do
-  before(:all) do
-    @admin_user = site_admin_user
+  let!(:site_admin) do
+    user_with_pseudonym(account: Account.site_admin)
+    site_admin_user(user: @user)
   end
-
+  let!(:account_admin) do
+    user_with_pseudonym(account: Account.default)
+    account_admin_user(user: @user)
+  end
   let!(:teacher) { teacher_in_course; @teacher }
   let!(:discussion_topic) { discussion_topic_model(context: @course) }
   let!(:assignment) do
@@ -63,23 +67,24 @@ RSpec.describe User do
 
     let!(:teacher_graded_submission) do
       sub = graded_submission_model(assignment: assignment, user: student1)
-      sub.update(graded_at: Time.zone.now, grader_id: teacher.id, score: '5')
+      sub.update!(graded_at: Time.zone.now, grader_id: teacher.id, score: '5')
       sub
     end
     # autograded submissions have the grader_id of (quiz_id x -1) note: That's multiplication
     let!(:auto_graded_submission) do
       sub = graded_submission_model(assignment: assignment, user: student2)
-      sub.update(graded_at: Time.zone.now, grader_id: -6, score: '5')
+      sub.update!(graded_at: Time.zone.now, grader_id: -6, score: '5')
       sub
     end
     let!(:ungraded_submission) do
       sub = graded_submission_model(assignment: assignment, user: student3)
-      sub.update(graded_at: Time.zone.now, grader_id: nil, score: '5')
+      sub.update!(graded_at: Time.zone.now, grader_id: nil, score: '5')
       sub
     end
+    # Sets grader as Site Admin, normally id of 1
     let!(:zero_grader_graded_submission) do
       sub = graded_submission_model(assignment: assignment, user: student4)
-      sub.update(graded_at: Time.zone.now, grader_id: 1, score: '5')
+      sub.update!(graded_at: Time.zone.now, grader_id: account_admin.id, score: '5')
       sub
     end
 
@@ -94,9 +99,10 @@ RSpec.describe User do
     end
 
     it "returns teacher-graded feedback" do
+
       grader_ids = student1.recent_feedback(contexts: [@course]).map(&:grader_id)
       expect(grader_ids).to include(teacher.id)
-      expect(grader_ids).not_to include(@admin_user.id)
+      expect(grader_ids).not_to include(site_admin_user.id)
 
       grader_ids = student2.recent_feedback(contexts: [@course]).map(&:grader_id)
       expect(grader_ids).to be_empty
