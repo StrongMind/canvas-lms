@@ -28,7 +28,6 @@ group :test do
     gem 'safe_yaml', '1.0.4', require: false
     gem 'selenium-webdriver',   '~> 3.14.0'
     gem 'shoulda-matchers',     '~> 3.1.2'
-    gem 'spring-watcher-listen'
     gem 'timecop',              '~> 0.9.1'
     gem 'vcr',                  '~> 4.0.0'
     gem 'webmock',              '~> 3.4.2'
