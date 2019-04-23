@@ -5,6 +5,7 @@
 ### Run StrongMind Spec(s)
     STRONGMIND_SPEC=1 bundle                                 # make sure your StrongMind bundle is setup
     STRONGMIND_SPEC=1 bundle exec rspec spec_strongmind/     # run StrongMind specs with bundle
+    HEADLESS=1 STRONGMIND_SPEC=1 bundle exec rspec spec_strongmind/features     # run feature specs headless
 
 ### You can get faster test runs using Spring
 Use **bin/rspec** instead of **bundle exec rspec**
