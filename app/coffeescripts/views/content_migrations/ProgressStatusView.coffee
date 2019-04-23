@@ -33,16 +33,20 @@ define [
       else
         super
 
-    toJSON: -> 
+    toJSON: ->
       json = super
+      json.queueSize = @queueSize()
       json.statusLabel = @statusLabel()
       json.status = @status(humanize: true)
       json
 
+    queueSize: ->
+      @model.progressModel.attributes.migration_queue_position
+
     # a map of which bootstrap label to display for
     # a given workflow state. Defaults to nothing
     # workflow_state: 'label-class'
-    # ie:  
+    # ie:
     #   'success: 'label-success'
 
     statusLabelClassMap:
