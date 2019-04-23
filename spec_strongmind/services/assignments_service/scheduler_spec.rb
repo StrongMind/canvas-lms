@@ -142,28 +142,30 @@ RSpec.describe AssignmentsService::Scheduler do
         described_class.new(course: course, assignment_count: 35)
       end
 
-      it 'runs the default ' do
+      it 'runs the default' do
         actual = subject.course_dates
         expect(actual.values.select { |v| v > 1 }.any?).to be
       end
     end
 
     context 'when given holidays' do
-        before do
-          ENV['HOLIDAYS'] = "2018-11-28,2018-11-29"
-        end
+      before do
+        @env = {
+          HOLIDAYS: "2018-11-28,2018-11-29"
+        }
+      end
 
-        after do
-          ENV['HOLIDAYS'] = nil
-        end
-
-        it 'will not include the first holiday in course dates' do
+      it 'will not include the first holiday in course dates' do
+        with_modified_env @env do
           expect(subject.course_dates.keys[1].strftime("%F")). to_not eq "2018-11-28"
         end
+      end
 
-        it 'will not include more holidays in course dates' do
+      it 'will not include more holidays in course dates' do
+        with_modified_env @env do
           expect(subject.course_dates.keys[1].strftime("%F")). to_not eq "2018-11-29"
         end
+      end
     end
   end
 end

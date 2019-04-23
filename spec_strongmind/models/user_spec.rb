@@ -19,40 +19,54 @@ RSpec.describe User do
   let(:response) { double('response', body: [discussion_topic.id].to_json, code: 200) }
 
   before do
-    ENV['TOPIC_MICROSERVICE_ENDPOINT'] = 'endpoint'
-    ENV['TOPIC_MICROSERVICE_API_KEY'] = 'key'
+    @env = {
+      TOPIC_MICROSERVICE_ENDPOINT: 'endpoint',
+      TOPIC_MICROSERVICE_API_KEY: 'key'
+    }
 
     allow(HTTParty).to receive(:get).and_return(response)
   end
 
   describe '#get_teacher_unread_discussion_topic_assignments' do
     it 'is mixed in' do
-      expect(teacher).to respond_to(:get_teacher_unread_discussion_topic_assignments)
+      with_modified_env @env do
+        expect(teacher).to respond_to(:get_teacher_unread_discussion_topic_assignments)
+      end
     end
 
     it 'calls the endpoint' do
-      expect(HTTParty).to receive(:get).and_return(response)
-      teacher.get_teacher_unread_discussion_topic_assignments(@course)
+      with_modified_env @env do
+        expect(HTTParty).to receive(:get).and_return(response)
+        teacher.get_teacher_unread_discussion_topic_assignments(@course)
+      end
     end
 
     it 'returns a list of assignments' do
-      expect(teacher.get_teacher_unread_discussion_topic_assignments(@course)).to eq [assignment]
+      with_modified_env @env do
+        expect(teacher.get_teacher_unread_discussion_topic_assignments(@course)).to eq [assignment]
+      end
     end
 
     context "missing configuration" do
       before do
-        ENV['TOPIC_MICROSERVICE_ENDPOINT'] = nil
-        ENV['TOPIC_MICROSERVICE_API_KEY'] = nil
+        @env = {
+          TOPIC_MICROSERVICE_ENDPOINT: nil,
+          TOPIC_MICROSERVICE_API_KEY: nil
+        }
       end
 
       it 'wont look up enrollments' do
-        expect(teacher).to_not receive(:enrollments) # self.enrollments.where(...).empty?
-        teacher.get_teacher_unread_discussion_topic_assignments(@course)
+        with_modified_env @env do
+          expect(teacher).to_not receive(:enrollments) # self.enrollments.where(...).empty?
+          teacher.get_teacher_unread_discussion_topic_assignments(@course)
+        end
       end
 
       it "wont call the service" do
-        expect(HTTParty).to_not receive(:get)
-        teacher.get_teacher_unread_discussion_topic_assignments(@course)
+        with_modified_env @env do
+          expect(HTTParty).to_not receive(:get)
+          teacher.get_teacher_unread_discussion_topic_assignments(@course)
+        end
       end
     end
   end
@@ -70,18 +84,21 @@ RSpec.describe User do
       sub.update!(graded_at: Time.zone.now, grader_id: teacher.id, score: '5')
       sub
     end
+
     # autograded submissions have the grader_id of (quiz_id x -1) note: That's multiplication
     let!(:auto_graded_submission) do
       sub = graded_submission_model(assignment: assignment, user: student2)
       sub.update!(graded_at: Time.zone.now, grader_id: -6, score: '5')
       sub
     end
+
     let!(:ungraded_submission) do
       sub = graded_submission_model(assignment: assignment, user: student3)
       sub.update!(graded_at: Time.zone.now, grader_id: nil, score: '5')
       sub
     end
-    # Sets grader as Site Admin, normally id of 1
+
+    # Sets grader as Account Admin, normally id of 1
     let!(:zero_grader_graded_submission) do
       sub = graded_submission_model(assignment: assignment, user: student4)
       sub.update!(graded_at: Time.zone.now, grader_id: account_admin.id, score: '5')
@@ -99,7 +116,6 @@ RSpec.describe User do
     end
 
     it "returns teacher-graded feedback" do
-
       grader_ids = student1.recent_feedback(contexts: [@course]).map(&:grader_id)
       expect(grader_ids).to include(teacher.id)
       expect(grader_ids).not_to include(site_admin_user.id)

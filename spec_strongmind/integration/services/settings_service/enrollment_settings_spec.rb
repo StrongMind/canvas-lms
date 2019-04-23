@@ -1,6 +1,6 @@
 require_relative '../../../rails_helper'
 
-# Not used
+# Not used, was at a time thought to boot/stub docker dynamo db instance in tests
 RSpec.xdescribe 'Save an enrollment setting', dynamo_db: true do
   let(:enrollment) { SettingsService::Enrollment.new }
 

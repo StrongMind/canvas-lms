@@ -3,6 +3,7 @@ RSpec.configure do |config|
   config.include Capybara::DSL,          type: :controller
   config.include FeatureHelpers,         type: :feature
   config.include FeatureJsHelpers,       type: :feature
+  config.include GeneralHelpers
 
   config.include FactoryBot::Syntax::Methods
   config.include ActionView::Helpers::TextHelper

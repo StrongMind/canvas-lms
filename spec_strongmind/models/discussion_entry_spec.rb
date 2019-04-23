@@ -12,12 +12,14 @@ RSpec.describe DiscussionEntry do
       "endpoint/teachers/#{ENV['CANVAS_DOMAIN']}:#{@teacher.id}/topics/#{discussion_topic.id}"
     end
 
-    let(:headers) { { :"x-api-key"=>'key' } }
+    let(:headers) { { :"x-api-key" => 'key' } }
 
     before do
-      ENV['TOPIC_MICROSERVICE_ENDPOINT'] = 'endpoint'
-      ENV['TOPIC_MICROSERVICE_API_KEY'] = 'key'
-      ENV['CANVAS_DOMAIN'] = 'test'
+      @global_env = {
+        TOPIC_MICROSERVICE_ENDPOINT: 'endpoint',
+        TOPIC_MICROSERVICE_API_KEY: 'key',
+        CANVAS_DOMAIN: 'test'
+      }
 
       allow(HTTParty).to receive(:post)
       allow(HTTParty).to receive(:delete)
@@ -26,44 +28,50 @@ RSpec.describe DiscussionEntry do
 
     context 'when the entry has not been read' do
       it 'posts to the endpoint on save' do
-        discussion_entry.change_read_state('unread', @teacher)
-        expect(HTTParty).to receive(:post).with(endpoint, headers: headers)
-        discussion_entry.save
+        with_modified_env @global_env do
+          discussion_entry.change_read_state('unread', @teacher)
+
+          expect(HTTParty).to receive(:post).with(endpoint, headers: headers)
+
+          discussion_entry.save
+        end
       end
     end
 
     context 'when the entry has been read' do
-      before do
-        discussion_entry.change_read_state('read', @teacher)
-      end
-
       it 'delete to the endpoint on save' do
-        expect(HTTParty).to receive(:delete).with(endpoint, headers: headers)
-        discussion_entry.save
+        with_modified_env @global_env do
+          discussion_entry.change_read_state('read', @teacher)
+          expect(HTTParty).to receive(:delete).with(endpoint, headers: headers)
+
+          discussion_entry.save
+        end
       end
     end
 
     context 'when the configuration is missing' do
-      before do
-        ENV['TOPIC_MICROSERVICE_ENDPOINT'] = nil
-        ENV['TOPIC_MICROSERVICE_API_KEY'] = nil
-      end
-
       it 'wont post to the service' do
-        expect(HTTParty).to_not receive(:delete)
-        expect(HTTParty).to_not receive(:post)
-        discussion_entry.save
+        local_env = {
+          TOPIC_MICROSERVICE_ENDPOINT: nil,
+          TOPIC_MICROSERVICE_API_KEY: nil
+        }
+
+        with_modified_env local_env do
+          expect(HTTParty).to_not receive(:delete)
+          expect(HTTParty).to_not receive(:post)
+
+          discussion_entry.save
+        end
       end
     end
 
     context 'when unread discussion feature flag is off' do
-      before do
-        allow(SettingsService).to receive(:get_settings).and_return('show_unread_discussions' => false)
-      end
-
       it 'wont post to the service' do
+        allow(SettingsService).to receive(:get_settings).and_return('show_unread_discussions' => false)
+
         expect(HTTParty).to_not receive(:delete)
         expect(HTTParty).to_not receive(:post)
+
         discussion_entry.save
       end
     end

@@ -3,16 +3,22 @@ require_relative '../../../../rails_helper'
 RSpec.describe PipelineService::Endpoints::Pipeline::MessageBuilder, skip: 'todo: fix for running under LMS' do
   include_context "stubbed_network"
 
+  around do |example|
+    envs = {
+      CANVAS_DOMAIN:  'someschool.com',
+      PIPELINE_ENDPOINT: 'endpoint',
+      PIPELINE_USER_NAME: 'canvas_stage',
+      PIPELINE_PASSWORD: 'password'
+    }
+
+    ClimateControl.modify envs do
+      example.run
+    end
+  end
+
   let(:course) { Course.create }
   let(:user) { User.create }
   let(:enrollment) { Enrollment.create(user: user, course: course)}
-
-  before do
-    ENV['CANVAS_DOMAIN'] = 'someschool.com'
-    ENV['PIPELINE_ENDPOINT'] ='endpoint'
-    ENV['PIPELINE_USER_NAME'] ='canvas_stage'
-    ENV['PIPELINE_PASSWORD'] ='password'
-  end
 
   subject do
     described_class.new(

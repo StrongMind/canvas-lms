@@ -13,25 +13,29 @@ RSpec.describe Submission do
 
       it 'publishes on create' do
         expect(PipelineService).to receive(:publish).with an_instance_of(Submission)
+
         submission_model
       end
 
       it 'publishes on save' do
         @submission = submission_model
         expect(PipelineService).to receive(:publish).with an_instance_of(Submission)
+
         @submission.save
       end
     end
 
     describe '#send_unit_grades_to_pipeline' do
       before do
-        ENV['PIPELINE_ENDPOINT']               = 'endpoint'
-        ENV['PIPELINE_USER_NAME']              = 'name'
-        ENV['PIPELINE_PASSWORD']               = 'password'
-        ENV['SIS_ENROLLMENT_UPDATE_API_KEY']   = 'junk'
-        ENV['SIS_ENROLLMENT_UPDATE_ENDPOINT']  = 'junk'
-        ENV['SIS_UNIT_GRADE_ENDPOINT_API_KEY'] = 'hunk'
-        ENV['SIS_UNIT_GRADE_ENDPOINT']         = 'junk'
+        @env = {
+          PIPELINE_ENDPOINT: 'endpoint',
+          PIPELINE_USER_NAME: 'name',
+          PIPELINE_PASSWORD: 'password',
+          SIS_ENROLLMENT_UPDATE_API_KEY: 'junk',
+          SIS_ENROLLMENT_UPDATE_ENDPOINT: 'junk',
+          SIS_UNIT_GRADE_ENDPOINT_API_KEY: 'hunk',
+          SIS_UNIT_GRADE_ENDPOINT: 'junk'
+        }
 
         allow(SettingsService).to receive(:get_settings).and_return({})
         allow(PipelineService::HTTPClient).to receive(:post)
@@ -46,17 +50,21 @@ RSpec.describe Submission do
       let(:course) {Course.create(context_modules: [context_module])}
 
       it 'wont send if there is no change to the score' do
-        expect(PipelineService::Events::HTTPClient).to_not receive(:post)
+        with_modified_env @env do
+          expect(PipelineService::Events::HTTPClient).to_not receive(:post)
 
-        course_with_student_submissions
+          course_with_student_submissions
+        end
       end
 
       context 'setting disabled' do
         it 'wont fire' do
-          expect(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => false)
-          expect(PipelineService::Events::HTTPClient).to_not receive(:post)
+          with_modified_env @env do
+            expect(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => false)
+            expect(PipelineService::Events::HTTPClient).to_not receive(:post)
 
-          course_with_student_submissions(submission_points: 50)
+            course_with_student_submissions(submission_points: 50)
+          end
         end
       end
     end
