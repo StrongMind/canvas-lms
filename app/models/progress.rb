@@ -58,9 +58,7 @@ class Progress < ActiveRecord::Base
   def migration_queue_position
     return unless workflow_state == 'queued'
     return unless self.context_type == "ContentMigration"
-    ContentMigration.running.or(ContentMigration.waiting)
-      .where("created_at < ?", context.created_at)
-      .count
+    ContentMigration.where(:workflow_state => ['exporting', 'importing', 'exported', 'queued']).where("created_at < ?", context.created_at).count
   end
 
   def update_completion!(value)
