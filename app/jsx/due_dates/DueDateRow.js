@@ -20,6 +20,7 @@ import _ from 'underscore'
 import React from 'react'
 import PropTypes from 'prop-types'
 import DueDateTokenWrapper from 'jsx/due_dates/DueDateTokenWrapper'
+import DueDateTokenWrapperExclude from 'jsx/due_dates/DueDateTokenWrapperExclude'
 import DueDateCalendars from 'jsx/due_dates/DueDateCalendars'
 import DueDateRemoveRowLink from 'jsx/due_dates/DueDateRemoveRowLink'
 import I18n from 'i18n!assignments'
@@ -182,10 +183,23 @@ import $ from 'jquery'
       return (
         <div className="Container__DueDateRow-item" role="region" aria-label={I18n.t("Due Date Set")} data-row-key={this.props.rowKey} >
           {this.removeLinkIfNeeded()}
+
           <DueDateTokenWrapper
             tokens              = {this.tokenizedOverrides()}
             disabled            = {this.props.inputsDisabled}
             handleTokenAdd      = {this.props.handleTokenAdd}
+            handleTokenRemove   = {this.props.handleTokenRemove}
+            potentialOptions    = {this.props.validDropdownOptions}
+            rowKey              = {this.props.rowKey}
+            defaultSectionNamer = {this.props.defaultSectionNamer}
+            currentlySearching  = {this.props.currentlySearching}
+            allStudentsFetched  = {this.props.allStudentsFetched}
+          />
+          
+          <DueDateTokenWrapperExclude
+            tokens              = {[]}
+            disabled            = {this.props.inputsDisabled}
+            handleTokenAdd      = {this.props.handleExcludeTokenAdd}
             handleTokenRemove   = {this.props.handleTokenRemove}
             potentialOptions    = {this.props.validDropdownOptions}
             rowKey              = {this.props.rowKey}
