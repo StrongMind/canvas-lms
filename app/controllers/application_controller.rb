@@ -1143,9 +1143,6 @@ class ApplicationController < ActionController::Base
     user = @current_user || (@accessed_asset && @accessed_asset[:user])
     if user && @log_page_views != false
       add_interaction_seconds
-      log_participation(user)
-      log_gets
-      finalize_page_view
     else
       @page_view.destroy if @page_view && !@page_view.new_record?
     end
@@ -1163,7 +1160,7 @@ class ApplicationController < ActionController::Base
       @page_view = PageView.where(user: @current_user).order(:created_at)[-2]
       if @page_view
         @page_view.do_update(updated_fields)
-        @page_view_update = true
+        @page_view.save
       end
     end
   end
