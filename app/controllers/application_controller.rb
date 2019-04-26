@@ -1078,6 +1078,7 @@ class ApplicationController < ActionController::Base
     @page_view = PageView.generate(request, attributes)
     @page_view.user_request = true if params[:user_request] || (user && !request.xhr? && request.get?)
     @page_before_render = Time.now.utc
+    @page_view.save if @page_view
   end
 
   def disable_page_views
@@ -1158,16 +1159,9 @@ class ApplicationController < ActionController::Base
 
   def add_interaction_seconds
     updated_fields = params.slice(:interaction_seconds)
-    if request.xhr? && params[:page_view_token] && !updated_fields.empty? && !(@page_view && @page_view.generated_by_hand)
-      RequestContextGenerator.store_interaction_seconds_update(params[:page_view_token], updated_fields[:interaction_seconds])
-
-      page_view_info = PageView.decode_token(params[:page_view_token])
-      @page_view = PageView.find_for_update(page_view_info[:request_id])
+    if request.xhr? && !updated_fields.empty?
+      @page_view = PageView.where(user: @current_user).order(:created_at)[-2]
       if @page_view
-        if @page_view.id
-          response.headers["X-Canvas-Page-View-Update-Url"] = page_view_path(
-            @page_view.id, page_view_token: @page_view.token)
-        end
         @page_view.do_update(updated_fields)
         @page_view_update = true
       end

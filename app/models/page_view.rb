@@ -26,7 +26,7 @@ class PageView < ActiveRecord::Base
   belongs_to :asset_user_access
 
   before_save :ensure_account
-  before_save :cap_interaction_seconds
+  #before_save :cap_interaction_seconds
   belongs_to :context, polymorphic: [:course, :account, :group, :user, :user_profile], polymorphic_prefix: true
 
   CONTEXT_TYPES = %w{Course Account Group User UserProfile}.freeze
@@ -50,7 +50,7 @@ class PageView < ActiveRecord::Base
       p.session_id = request.session_options[:id].to_s.force_encoding(Encoding::UTF_8).presence
       p.user_agent = request.user_agent
       p.remote_ip = request.remote_ip
-      p.interaction_seconds = 5
+      p.interaction_seconds = 0
       p.created_at = Time.now
       p.updated_at = Time.now
       p.id = RequestContextGenerator.request_id
