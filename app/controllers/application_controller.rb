@@ -1157,7 +1157,8 @@ class ApplicationController < ActionController::Base
   def add_interaction_seconds
     updated_fields = params.slice(:interaction_seconds)
     if request.xhr? && !updated_fields.empty? && !(@page_view && @page_view.generated_by_hand)
-      @page_view = PageView.where(user: @current_user).order(:created_at)[-2]
+      current_session = request.session_options[:id].to_s.force_encoding(Encoding::UTF_8).presence
+      @page_view = PageView.where(user: @current_user, session_id: current_session).order(:created_at)[-2]
       if @page_view
         @page_view.do_update(updated_fields)
         @page_view.save
