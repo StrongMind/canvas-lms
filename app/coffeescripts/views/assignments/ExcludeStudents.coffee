@@ -1,7 +1,6 @@
 define [
   'jquery'
   'Backbone'
-  'underscore'
   'react'
   'react-dom'
   'jsx/assignments/ExcludeStudents',
@@ -9,17 +8,16 @@ define [
 ], (
   $,
   Backbone,
-  _,
   React,
   ReactDOM,
   ExcludeStudents,
-  ExcludeStudentsHB
+  ExcludeStudentsTemplate
 ) ->
     class ExcludeStudentsView extends Backbone.View
-      
-      template: ExcludeStudentsHB
+      template: ExcludeStudentsTemplate
       render: ->
         div = @$el[0]
         return unless div
+        
         ExcludeStudentsElement = React.createElement(ExcludeStudents)
         ReactDOM.render(ExcludeStudentsElement, div)
