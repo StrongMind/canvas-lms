@@ -18,7 +18,7 @@ namespace :strongmind_defaults do
 
   desc "set default gradebook many_submissions_chunk_size"
   task :set_gradebook_submissions_chunk_size => :environment do
-    Setting.set('gradebook2.many_gradebook2.many_submissions_chunk_size', '5')
+    Setting.set('gradebook2.many_submissions_chunk_size', '5')
     chunk_size = Setting.get('gradebook2.many_submissions_chunk_size', 0)
     puts "Gradebook submissions_chunk_size set to: #{chunk_size}"
   end
