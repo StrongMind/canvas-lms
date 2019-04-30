@@ -152,6 +152,8 @@ define [
       @assignment = @model
       @setDefaultsIfNew()
       @dueDateOverrideView = options.views['js-assignment-overrides']
+      @excludeStudentsView = options.views['js-exclude-students']
+      
       @on 'success', @redirectAfterSave
       @gradingTypeSelector.on 'change:gradingType', @handleGradingTypeChange
       if ENV.CONDITIONAL_RELEASE_SERVICE_ENABLED

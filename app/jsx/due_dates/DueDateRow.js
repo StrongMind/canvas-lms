@@ -196,18 +196,6 @@ import $ from 'jquery'
             allStudentsFetched  = {this.props.allStudentsFetched}
           />
           
-          <DueDateTokenWrapperExclude
-            tokens              = {[]}
-            disabled            = {this.props.inputsDisabled}
-            handleTokenAdd      = {this.props.handleExcludeTokenAdd}
-            handleTokenRemove   = {this.props.handleTokenRemove}
-            potentialOptions    = {this.props.validDropdownOptions}
-            rowKey              = {this.props.rowKey}
-            defaultSectionNamer = {this.props.defaultSectionNamer}
-            currentlySearching  = {this.props.currentlySearching}
-            allStudentsFetched  = {this.props.allStudentsFetched}
-          />
-
           <DueDateCalendars
             dates       = {this.props.dates}
             disabled    = {this.props.inputsDisabled}
