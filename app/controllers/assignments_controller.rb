@@ -461,7 +461,7 @@ class AssignmentsController < ApplicationController
           @assignment.overrides_for(@current_user, ensure_set_not_empty: true),
           @current_user
         ),
-        ASSIGNMENT_EXCLUSIONS: @context.student_enrollments.map(&:user).map(&:as_json),
+        ASSIGNMENT_EXCLUSIONS: @context.student_enrollments.map {|enr| {id: enr.user_id, name: enr.user.name} },
         COURSE_ID: @context.id,
         GROUP_CATEGORIES: group_categories,
         HAS_GRADED_SUBMISSIONS: @assignment.graded_submissions_exist?,
