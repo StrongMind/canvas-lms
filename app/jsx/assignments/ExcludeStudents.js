@@ -5,13 +5,14 @@ class ExcludeStudents extends React.Component {
         super(props)
         this.state = {
             students: 
-                {
-                    1: {id: 1, name: 'Chris Young'},
-                    2: {id: 2, name: 'Andy Rosenberg'},
-                    3: {id: 3, name: 'John VanBuskirk'}
-                }
-            ,
-            exceptions: { 2: {id: 2, name: 'Andy Rosenberg'} }
+                [
+                    {id: 1, name: 'Chris Young'},
+                    {id: 2, name: 'Andy Rosenberg'},
+                    {id: 3, name: 'John VanBuskirk'}
+                ],
+            exceptions: [
+                [ {id: 2, name: 'Andy Rosenberg'} ]
+            ]
         }
         this.handleStudentClick = this.handleStudentClick.bind(this)
     }
@@ -28,18 +29,26 @@ class ExcludeStudents extends React.Component {
 
     renderStudentList () {
         return (
-            Object.keys(this.state.students).map((key) => 
-                this.renderStudentListItem(this.state.students[key])
+            this.state.students.map((item) => 
+                this.renderStudentListItem(item)
             )
         )
     }
 
     handleStudentClick(e) {
-        console.log(e.target.getAttribute('data-student-id'))
+        var studentID = e.target.getAttribute('data-student-id')        
+        var myStudent = this.state.students.find((student) => { 
+            return student.id == studentID
+        })
+        
+        this.setState(
+            { exceptions: [...this.state.exceptions, myStudent] }
+        )
     }
   
     render() {
-        return(    
+        console.log(this.state)
+        return(
             <ul>
                 { this.renderStudentList() }
             </ul>
