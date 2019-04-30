@@ -18,6 +18,5 @@ define [
       render: ->
         div = @$el[0]
         return unless div
-        
         ExcludeStudentsElement = React.createElement(ExcludeStudents)
         ReactDOM.render(ExcludeStudentsElement, div)
