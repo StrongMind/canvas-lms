@@ -1,17 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import TokenInput, {Option as ComboboxOption} from 'react-tokeninput'
+
 class ExcludeStudents extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             students: 
-                [
-                    {id: 1, name: 'Chris Young'},
-                    {id: 2, name: 'Andy Rosenberg'},
-                    {id: 3, name: 'John VanBuskirk'}
-                ],
+                ENV['ALL_STUDENTS'],
             exceptions: [
-                [ {id: 2, name: 'Andy Rosenberg'} ]
+                ENV['EXCLUDED_STUDENTS']
             ]
         }
         this.handleStudentClick = this.handleStudentClick.bind(this)
@@ -45,12 +43,37 @@ class ExcludeStudents extends React.Component {
             { exceptions: [...this.state.exceptions, myStudent] }
         )
     }
+
+    handleInput() {
+      console.log('hi');
+    }
+
+    handeFocus() {
+      console.log('Hey');
+    }
+
+    handleTokenAdd() {
+      console.log('Howdy');
+    }
+
+    handleTokenRemove() {
+      console.log("Bye");
+    }
   
     render() {
         console.log(this.state)
         return(
             <ul>
                 { this.renderStudentList() }
+                <TokenInput
+                    selected            = {ENV['EXCLUDED_STUDENTS']}
+                    onFocus             = {this.handleFocus}
+                    onInput             = {this.handleInput}
+                    onSelect            = {this.handleTokenAdd}
+                    onRemove            = {this.handleTokenRemove}
+                    value               = {true}
+                    ref                 = "TokenInput"
+                />
             </ul>
         )
     }
