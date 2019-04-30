@@ -461,7 +461,8 @@ class AssignmentsController < ApplicationController
           @assignment.overrides_for(@current_user, ensure_set_not_empty: true),
           @current_user
         ),
-        ASSIGNMENT_EXCLUSIONS: @context.student_enrollments.map {|enr| {id: enr.user_id, name: enr.user.name} },
+        ALL_STUDENTS: students_in_course,
+        EXCLUDED_STUDENTS: excused_students,
         COURSE_ID: @context.id,
         GROUP_CATEGORIES: group_categories,
         HAS_GRADED_SUBMISSIONS: @assignment.graded_submissions_exist?,
@@ -572,5 +573,17 @@ class AssignmentsController < ApplicationController
     (@assignment.turnitin_enabled? && @context.turnitin_pledge) ||
     (@assignment.vericite_enabled? && @context.vericite_pledge) ||
     @assignment.course.account.closest_turnitin_pledge
+  end
+
+  def tiny_student_hash(group)
+    group.map {|obj| {id: obj.user_id, name: obj.user.name} }
+  end
+
+  def students_in_course
+    tiny_student_hash(@context.student_enrollments.where(type: "StudentEnrollment"))
+  end
+
+  def excused_students
+    tiny_student_hash(@assignment.submissions.select(&:excused))
   end
 end
