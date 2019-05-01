@@ -87,9 +87,7 @@ class ExcludeStudents extends React.Component {
     handleTokenAdd(token) {
       var studentName = this.findStudentName(token);
       if(!studentName) return
-      var student = this.state.students.find(function(element){
-        return element.name === studentName
-      })
+      var student = this.state.students.find((element) => element.name === studentName)
       this.setState({exceptions: [...this.state.exceptions, student]})
     }
 
