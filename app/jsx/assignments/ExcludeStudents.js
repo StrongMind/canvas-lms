@@ -72,20 +72,11 @@ class ExcludeStudents extends React.Component {
     }
 
     filterTags(userInput) {
-      if (userInput === '')
-        return this.setState({options: []});
-      
-      var filter = new RegExp('^'+userInput, 'i');
-
-      var filteredNames = this.names().filter(function(name) {
-        return filter.test(name); // || filter.test(state.id);
-      }).filter(function(state) {
-        return this.state.students
-          .map(function(value) { return value.name })
-          .indexOf(name) === -1
-      }.bind(this))
+      if (userInput === '') return this.setState({options: []});
       this.setState({
-        options: filteredNames
+        options: this.names().filter(function(name) {
+          return new RegExp('^'+userInput, 'i').test(name);
+        })
       });
     }
 
@@ -95,8 +86,7 @@ class ExcludeStudents extends React.Component {
 
     handleTokenAdd(token) {
       var studentName = this.findStudentName(token);
-
-      if(!studentName) {return}
+      if(!studentName) return
       var student = this.state.students.find(function(element){
         return element.name === studentName
       })
