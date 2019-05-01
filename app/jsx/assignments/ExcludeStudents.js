@@ -26,7 +26,9 @@ class ExcludeStudents extends React.Component {
     names(){
       return this.state.students.map(student => {
         return student.name
-      })
+      }).filter(function(name) {
+        return !this.state.exceptions.find(stu => stu.name === name)
+      }.bind(this))
     }
 
     fixture(){
