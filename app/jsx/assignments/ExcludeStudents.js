@@ -79,15 +79,15 @@ class ExcludeStudents extends React.Component {
     };
 
     handeFocus() {
-      ('Hey');
+      console.log('HandleFocus')
     }
 
-    handleTokenAdd() {
-      ('Howdy');
+    handleTokenAdd(token) {
+      console.log(token);
     }
 
     handleTokenRemove() {
-      ("Bye");
+      console.log("handleTokenRemove");
     }
 
     renderComboboxOptions(){
