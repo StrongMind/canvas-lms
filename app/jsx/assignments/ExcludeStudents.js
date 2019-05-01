@@ -5,74 +5,120 @@ import TokenInput, {Option as ComboboxOption} from 'react-tokeninput'
 class ExcludeStudents extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            students: 
-                ENV['ALL_STUDENTS'],
-            exceptions: [
-                ENV['EXCLUDED_STUDENTS']
-            ]
-        }
-        this.handleStudentClick = this.handleStudentClick.bind(this)
+        this.state = this.fixture()
+        this.handleInput = this.handleInput.bind(this)
+        this.renderComboboxOptions = this.renderComboboxOptions.bind(this)
+    }
+
+    
+    lmsData(){
+      return {
+        students: 
+            ENV['ALL_STUDENTS'],
+        exceptions: [
+            ENV['EXCLUDED_STUDENTS']
+        ]
+      }
+    }
+
+    names(){
+      return this.state.students.map(student => {
+        return student.name
+      })
+    }
+
+    fixture(){
+      return {
+        input: '',
+        loading: false,
+        options: this.names,
+        students: 
+          [
+            {name: 'chris', id: 1},
+            {name: 'conrad', id: 4},
+            {name: 'joe', id: 2}
+          ],
+        exceptions: 
+          [
+            {name: 'pete', id: 3}
+          ]
+      }
     }
     
-    renderStudentListItem(item) {
-        return(
-            <li>
-                <input type="checkbox" data-student-id={item.id} checked={this.state.exceptions[item.id]} onClick={this.handleStudentClick}></input>
-                &nbsp;
-                <span>{item.name}</span>
-            </li> 
-        )
-    }
-
-    renderStudentList () {
-        return (
-            this.state.students.map((item) => 
-                this.renderStudentListItem(item)
-            )
-        )
-    }
-
-    handleStudentClick(e) {
-        var studentID = e.target.getAttribute('data-student-id')        
-        var myStudent = this.state.students.find((student) => { 
-            return student.id == studentID
+    handleInput(userInput) {
+      this.setState({
+        input: userInput,
+        loading: true,
+        options: []
+      })
+      setTimeout(function () {
+        this.filterTags(this.state.input)
+        this.setState({
+          loading: false
         })
-        
-        this.setState(
-            { exceptions: [...this.state.exceptions, myStudent] }
-        )
+      }.bind(this), 500)
     }
 
-    handleInput() {
-      console.log('hi');
-    }
+    filterTags = (userInput) => {
+      
+      if (userInput === '')
+        return this.setState({options: []});
+      
+      var filter = new RegExp('^'+userInput, 'i');
+
+      var filteredNames = this.names().filter(function(name) {
+        return filter.test(name); // || filter.test(state.id);
+      }).filter(function(state) {
+        return this.state.students
+          .map(function(value) { return value.name })
+          .indexOf(name) === -1
+      }.bind(this))
+      this.setState({
+        options: filteredNames
+      });
+    };
 
     handeFocus() {
-      console.log('Hey');
+      ('Hey');
     }
 
     handleTokenAdd() {
-      console.log('Howdy');
+      ('Howdy');
     }
 
     handleTokenRemove() {
-      console.log("Bye");
+      ("Bye");
+    }
+
+    renderComboboxOptions(){
+      return this.state.options.map(function(name) {
+        return (
+          <ComboboxOption
+            key={name}
+            value={name}
+            isFocusable={name.length > 1}
+          >{name}</ComboboxOption>
+        );
+      });      
     }
   
     render() {
-        console.log(this.state)
+        
+
+        var options = this.state.options.length ?
+        this.renderComboboxOptions() : [];
+
         return(
             <ul>
-                { this.renderStudentList() }
                 <TokenInput
-                    selected            = {ENV['EXCLUDED_STUDENTS']}
-                    onFocus             = {this.handleFocus}
-                    onInput             = {this.handleInput}
-                    onSelect            = {this.handleTokenAdd}
-                    onRemove            = {this.handleTokenRemove}
-                    value               = {true}
-                    ref                 = "TokenInput"
+                    menuContent = {options}
+                    selected    = {this.state.exceptions}
+                    onFocus     = {this.handleFocus}
+                    onInput     = {this.handleInput}
+                    onSelect    = {this.handleTokenAdd}
+                    onRemove    = {this.handleTokenRemove}
+                    value       = {true}
+                    ref         = "TokenInput"
                 />
             </ul>
         )
