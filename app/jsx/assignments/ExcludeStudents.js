@@ -8,9 +8,11 @@ class ExcludeStudents extends React.Component {
         this.state = this.fixture()
         this.handleInput = this.handleInput.bind(this)
         this.renderComboboxOptions = this.renderComboboxOptions.bind(this)
+        this.handleTokenAdd = this.handleTokenAdd.bind(this)
+        this.handleTokenRemove = this.handleTokenRemove.bind(this)
+        this.filterTags = this.filterTags.bind(this)
     }
 
-    
     lmsData(){
       return {
         students: 
@@ -34,14 +36,14 @@ class ExcludeStudents extends React.Component {
         options: [],
         students: 
           [
-            {name: 'chris', id: 1},
-            {name: 'conrad', id: 4},
-            {name: 'joe', id: 2},
-            {name: 'pete', id: 3}
+            { name: 'chris', id: 1},
+            { name: 'conrad', id: 4},
+            { name: 'joe', id: 2},
+            { name: 'pete', id: 3}
           ],
         exceptions: 
           [
-            {name: 'pete', id: 3}
+            { name: 'pete', id: 3 }
           ]
       }
     }
@@ -60,8 +62,14 @@ class ExcludeStudents extends React.Component {
       }.bind(this), 500)
     }
 
-    filterTags = (userInput) => {
-      
+    findStudentName(userInput){
+      var filter = new RegExp('^'+userInput, 'i');
+      return this.names().find(function(name) {
+        return filter.test(name)
+      })
+    }
+
+    filterTags(userInput) {
       if (userInput === '')
         return this.setState({options: []});
       
@@ -77,18 +85,24 @@ class ExcludeStudents extends React.Component {
       this.setState({
         options: filteredNames
       });
-    };
+    }
 
     handeFocus() {
       console.log('HandleFocus')
     }
 
     handleTokenAdd(token) {
-      console.log(token);
+      var studentName = this.findStudentName(token);
+      var student = this.state.students.find(function(element){
+        return element.name === studentName
+      })
+      this.setState({exceptions: [...this.state.exceptions, student]})
     }
 
-    handleTokenRemove() {
-      console.log("handleTokenRemove");
+    handleTokenRemove(token) {
+      this.setState({exceptions: this.state.exceptions.filter(function(student) { 
+        return student.id !== token.id
+      })});
     }
 
     renderComboboxOptions(){
@@ -104,8 +118,6 @@ class ExcludeStudents extends React.Component {
     }
   
     render() {
-        
-
         var options = this.state.options.length ?
         this.renderComboboxOptions() : [];
 
