@@ -31,7 +31,7 @@ class ExcludeStudents extends React.Component {
       return {
         input: '',
         loading: false,
-        options: this.names(),
+        options: [],
         students: 
           [
             {name: 'chris', id: 1},
