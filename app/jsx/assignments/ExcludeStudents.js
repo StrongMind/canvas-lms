@@ -108,7 +108,7 @@ class ExcludeStudents extends React.Component {
         );
       });      
     }
-  
+    
     render() {
         var options = this.state.options.length ?
         this.renderComboboxOptions() : [];

@@ -15,12 +15,18 @@ define [
 ) ->
     class ExcludeStudentsView extends Backbone.View
       template: ExcludeStudentsTemplate
+      # ==============================
+      #     syncing with react data
+      # ==============================
+  
       setNewExcludesCollection: (newExcludes) =>
-        console.log(newExcludes)
+        @model.resetExcludes(newExcludes)
+      
       render: ->
         div = @$el[0]
         return unless div
-        ExcludeStudentsElement = React.createElement(ExcludeStudents, 
+        ExcludeStudentsElement = React.createElement(
+          ExcludeStudents,
           syncWithBackbone: @setNewExcludesCollection
         )
         ReactDOM.render(ExcludeStudentsElement, div)
