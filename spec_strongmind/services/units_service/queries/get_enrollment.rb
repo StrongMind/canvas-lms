@@ -1,15 +1,17 @@
 require_relative '../../../rails_helper'
 
 RSpec.describe UnitsService::Queries::GetEnrollment do
-  subject { described_class }
-  let(:course) { Course.create }
-  let(:user) { User.create }
-  let!(:enrollment) { Enrollment.create!(course: course, user: user)}
+  before do
+    @student = student_in_course(:active_all => true).user
+    @get_enrollment_query = UnitsService::Queries::GetEnrollment
+  end
+
   describe '#query' do
-    it '' do
-      result = subject.query(course: course, user: user)
-      expect(result.course_id).to eq(course.id)
-      expect(result.user_id).to eq(user.id)
+    it 'finds the enrollment for a course/student' do
+      result = @get_enrollment_query.query(course: @course, user: @student)
+
+      expect(result.course_id).to eq(@course.id)
+      expect(result.user_id).to eq(@student.id)
     end
   end
 end

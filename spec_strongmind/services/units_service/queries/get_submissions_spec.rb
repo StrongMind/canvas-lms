@@ -1,73 +1,60 @@
 require_relative '../../../rails_helper'
 
-RSpec.describe UnitsService::Queries::GetSubmissions, skip: 'todo: fix for running under LMS' do
+RSpec.describe UnitsService::Queries::GetSubmissions do
   include_context "stubbed_network"
-  let(:student) { User.create }
-  let(:course)  { Course.create(context_modules: [unit]) }
-  let(:submission) { Submission.create!(user: student, assignment: assignment) }
-  let(:assignment) { Assignment.create(course: course, published: true) }
-  let(:unit) { ContextModule.create }
-  let(:item) { ContentTag.create(content: assignment) }
-
-  let(:units_result) do
-    units = {}
-    units[unit] = [item]
-    units
-  end
-
-  subject { described_class.new(student: student, course: course) }
-
-  before do
-    allow(subject).to receive(:units).and_return(units_result)
-  end
 
   context 'when item is a discussion topic' do
-    let!(:discussion_course) { Course.create(context_modules: [discussion_context_module]) }
-    let!(:discussion_topic) { DiscussionTopic.create(workflow_state: 'active') }
-    let!(:discussion_context_module) { ContextModule.create(content_tags: [discussion_content_tag]) }
-    let!(:discussion_assignment) { Assignment.create(discussion_topic: discussion_topic, workflow_state: 'published') }
-    let!(:discussion_submission) { Submission.create!(user: student, assignment: discussion_assignment) }
-    let!(:discussion_content_tag) { ContentTag.create(content: discussion_topic) }
-
-    let(:discussion_units_result) do
-      units = {}
-      units[discussion_context_module] = [discussion_content_tag]
-      units
-    end
-
     before do
-      allow(subject).to receive(:units).and_return(discussion_units_result)
+      @student                   = student_in_course(:active_all => true).user
+      @discussion_course         = @course
+      @discussion_course         = course_factory
+      @discussion_topic          = discussion_topic_model(context: @course, workflow_state: 'active')
+      @discussion_context_module = @discussion_course.context_modules.create!(name: "Module 2")
+      @discussion_assignment     = @discussion_course.assignments.create!(title: "Assignment 2", workflow_state: 'published')
+      @discussion_assignment.update discussion_topic: @discussion_topic
+      @discussion_submission     = @discussion_assignment.submit_homework(@student)
+      @discussion_content_tag    = @discussion_context_module.add_item({id: @discussion_topic.id, type: 'discussion_topic'})
+      @get_submissions_query = UnitsService::Queries::GetSubmissions.new(student: @student, course: @discussion_course)
     end
-
-    subject { described_class.new(student: student, course: discussion_course) }
 
     it 'returns the submission from the related assignment' do
       result = {}
-      result[discussion_context_module] = [discussion_submission]
-      expect(subject.query).to eq result
+      result[@discussion_context_module] = [@discussion_submission]
+      expect(@get_submissions_query.query).to eq result
     end
   end
 
-  it 'returns the unit and its submissions' do
-    result = {}
-    result[unit] = [submission]
-    expect(subject.query).to eq result
-  end
+  context 'when content is an assignment' do
+    before do
+      @student            = student_in_course(:active_all => true).user
+      @course1            = @course
+      @context_module     = @course1.context_modules.create!(name: "Module 1") # unit
+      @assignment         = @course1.assignments.create!(title: "Assignment 1", workflow_state: 'published')
+      @content_tag        = @context_module.add_item({id: @assignment.id, type: 'assignment'}) # item
+      @submission         = @assignment.submit_homework(@student)
 
-  context "with excused submission" do
-    let(:submission) do
-      Submission.create!(user: student, assignment: assignment)
+      @get_submissions_query = UnitsService::Queries::GetSubmissions.new(student: @student, course: @course1)
     end
 
-    let(:excused_submission) do
-      Submission.create!(user: student, assignment: assignment, excused: true)
-    end
-
-    it 'will not return the excused submission' do
+    it 'returns the unit and its submissions' do
       result = {}
-      result[unit] = [submission]
+      result[@context_module] = [@submission]
+      expect(@get_submissions_query.query).to eq result
+    end
 
-      expect(subject.query[unit]).to_not include(excused_submission)
+    context "with excused submission" do
+      before do
+        @assignment2         = @course1.assignments.create!(title: "Assignment 2", workflow_state: 'published')
+        @content_tag2        = @context_module.add_item({id: @assignment2.id, type: 'assignment'}) # item
+        @submission2         = @assignment2.submit_homework(@student)
+
+        @excused_submission = @assignment.submit_homework(@student)
+        @excused_submission.update excused: true
+      end
+
+      it 'will not return the excused submission' do
+        expect(@get_submissions_query.query[@context_module]).to_not include(@excused_submission)
+      end
     end
   end
 end
