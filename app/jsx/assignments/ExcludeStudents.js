@@ -101,7 +101,7 @@ class ExcludeStudents extends React.Component {
       return this.state.options.map(function(name) {
         return (
           <ComboboxOption
-            key={name}
+            key={name} 
             value={name}
             isFocusable={name.length > 1}
           >{name}</ComboboxOption>
@@ -112,6 +112,8 @@ class ExcludeStudents extends React.Component {
     render() {
         var options = this.state.options.length ?
         this.renderComboboxOptions() : [];
+
+        this.props.syncWithBackbone(this.state.exceptions)
 
         return(
             <ul>
