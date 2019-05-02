@@ -21,6 +21,9 @@ define [
   
       setNewExcludesCollection: (newExcludes) =>
         @model.resetExcludes(newExcludes)
+
+      getExcludedStudents: () =>
+        @model.excludes
       
       render: ->
         div = @$el[0]

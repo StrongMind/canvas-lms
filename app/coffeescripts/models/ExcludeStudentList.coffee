@@ -25,3 +25,6 @@ define [
     resetExcludes: (@new) ->
       console.log(@new)
       @excludes = @new
+
+    getExcludes: () ->
+      @excludes

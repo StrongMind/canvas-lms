@@ -373,7 +373,7 @@ define [
       data.due_at = defaultDates?.get('due_at') or null
       data.only_visible_to_overrides = !@dueDateOverrideView.overridesContainDefault()
       data.assignment_overrides = @dueDateOverrideView.getOverrides()
-      data.excludeStudents      = @excludeStudentsView
+      data.excludedStudents = @excludeStudentsView.getExcludedStudents()
       data.published = true if @shouldPublish
       data.points_possible = round(numberHelper.parse(data.points_possible), 2)
       data.peer_review_count = numberHelper.parse(data.peer_review_count) if data.peer_review_count
