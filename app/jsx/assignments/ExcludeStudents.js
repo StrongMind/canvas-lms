@@ -5,7 +5,8 @@ import TokenInput, {Option as ComboboxOption} from 'react-tokeninput'
 class ExcludeStudents extends React.Component {
     constructor(props) {
         super(props)
-        this.state = this.fixture()
+        this.state = this.lmsData()
+
         this.handleInput = this.handleInput.bind(this)
         this.renderComboboxOptions = this.renderComboboxOptions.bind(this)
         this.handleTokenAdd = this.handleTokenAdd.bind(this)
@@ -15,20 +16,12 @@ class ExcludeStudents extends React.Component {
 
     lmsData(){
       return {
-        students: 
-            ENV['ALL_STUDENTS'],
-        exceptions: [
-            ENV['EXCLUDED_STUDENTS']
-        ]
+        input: '',
+        loading: false,
+        options: [],
+        students: ENV['ALL_STUDENTS'],
+        exceptions: ENV['EXCLUDED_STUDENTS']
       }
-    }
-
-    names(){
-      return this.state.students.map(student => {
-        return student.name
-      }).filter(function(name) {
-        return !this.state.exceptions.find(stu => stu.name === name)
-      }.bind(this))
     }
 
     fixture(){
@@ -49,6 +42,16 @@ class ExcludeStudents extends React.Component {
           ]
       }
     }
+
+    names(){
+      return this.state.students.map(student => {
+        return student.name
+      }).filter(function(name) {
+        return !this.state.exceptions.find(stu => stu.name === name)
+      }.bind(this))
+    }
+
+    
     
     handleInput(userInput) {
       this.setState({
