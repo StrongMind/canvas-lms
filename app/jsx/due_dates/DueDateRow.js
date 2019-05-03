@@ -182,7 +182,6 @@ import $ from 'jquery'
       return (
         <div className="Container__DueDateRow-item" role="region" aria-label={I18n.t("Due Date Set")} data-row-key={this.props.rowKey} >
           {this.removeLinkIfNeeded()}
-
           <DueDateTokenWrapper
             tokens              = {this.tokenizedOverrides()}
             disabled            = {this.props.inputsDisabled}
@@ -194,7 +193,7 @@ import $ from 'jquery'
             currentlySearching  = {this.props.currentlySearching}
             allStudentsFetched  = {this.props.allStudentsFetched}
           />
-          
+
           <DueDateCalendars
             dates       = {this.props.dates}
             disabled    = {this.props.inputsDisabled}

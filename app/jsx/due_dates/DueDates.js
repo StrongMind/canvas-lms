@@ -300,7 +300,6 @@ import 'compiled/jquery.rails_flash_notifications'
     },
 
     handleExcludeTokenAdd(rowKey, newToken){
-      alert("exclude")
       this.changeRowToken(TokenActions.handleTokenAdd, rowKey, newToken)
     },
 
@@ -501,7 +500,6 @@ import 'compiled/jquery.rails_flash_notifications'
             validDropdownOptions = {this.validDropdownOptions()}
             handleDelete         = {this.removeRow.bind(this, rowKey)}
             handleTokenAdd       = {this.handleTokenAdd.bind(this, rowKey)}
-            handleExcludeTokenAdd = {this.handleExcludeTokenAdd.bind(this, rowKey)}
             handleTokenRemove    = {this.handleTokenRemove.bind(this, rowKey)}
             defaultSectionNamer  = {this.defaultSectionNamer}
             replaceDate          = {this.replaceDate.bind(this, rowKey)}
