@@ -1,29 +1,31 @@
 require_relative '../../../rails_helper'
 
-RSpec.describe UnitsService::Commands::GetUnitGrades, skip: 'todo: fix for running under LMS' do
+RSpec.describe UnitsService::Commands::GetUnitGrades do
   include_context "stubbed_network"
 
-  let(:course) { Course.create }
-  let(:user) { User.create(pseudonym: Pseudonym.create) }
-
   before do
+    @enrollment = student_in_course(:active_all => true)
+    @student    = @enrollment.student
+    teacher_in_course(course: @course)
+
+
     allow(SettingsService).to receive(:get_settings).and_return('auto_due_dates' => nil, 'auto_enrollment_due_dates' => nil)
-    @enrollment = Enrollment.create(course: course, user: user)
+
+    allow(@enrollment).to receive(:computed_current_score).and_return(90)
     allow(UnitsService::Queries::GetEnrollment).to receive(:query).and_return(@enrollment)
     allow(PipelineService).to receive(:publish)
     allow(SettingsService).to receive(:get_settings).and_return(
       'enable_unit_grade_calculations' => true
     )
 
-    allow(Enrollment).to receive(:computed_current_score).and_return(90)
     seed
   end
 
   it 'calculates a weighted score for each unit' do
-    skip 'todo: fix for running under LMS'
-    result = described_class.new(course: course, student: user, submission: Submission.first).call
+    result = described_class.new(course: @course, student: @student, submission: Submission.first).call
 
     expect(result[:units].count).to eq 6
+
     result[:units].each do |unit|
       expect(unit[:score]).to eq 75
     end
@@ -31,22 +33,20 @@ RSpec.describe UnitsService::Commands::GetUnitGrades, skip: 'todo: fix for runni
 
   def seed
     6.times do |count|
-      assignment_group1 = AssignmentGroup.create(name: "assignments", group_weight: 0.5)
-      assignment_group2 = AssignmentGroup.create(name: "workbook", group_weight: 0.5)
-      assignment1 = Assignment.create(workflow_state: 'published', assignment_group: assignment_group1)
-      content_tag1 = ContentTag.create(content: assignment1)
-      assignment2 = Assignment.create(workflow_state: 'published', assignment_group: assignment_group2)
-      content_tag2 = ContentTag.create(content: assignment2)
+      assignment_group1 = AssignmentGroup.create(name: "assignments", group_weight: 0.5, context: @course)
+      assignment_group2 = AssignmentGroup.create(name: "workbook", group_weight: 0.5, context: @course)
 
-      course.context_modules << ContextModule.create(
-        content_tags: [content_tag1, content_tag2]
-      )
-      course.assignment_groups = [assignment_group1, assignment_group2]
+      @context_module   = @course.context_modules.create!(name: "Module #{count}") # unit
 
-      course.assignments << assignment1
-      course.assignments << assignment2
-      assignment1.submissions << Submission.create(user: user, assignment: assignment1, score: 50, graded_at: Time.now)
-      assignment2.submissions << Submission.create(user: user, assignment: assignment2, score: 100, graded_at: Time.now)
+      @assignment1      = @course.assignments.create!(title: "Assignment #{count} A", workflow_state: 'published', assignment_group: assignment_group1)
+      @content_tag1     = @context_module.add_item({id: @assignment1.id, type: 'assignment'}) # item
+      @submission1      = @assignment1.submit_homework(@student)
+      @submission1.update_attributes!(graded_at: Time.zone.now, grader_id: @teacher.id, score: 50)
+
+      @assignment2      = @course.assignments.create!(title: "Assignment #{count} B", workflow_state: 'published', assignment_group: assignment_group2)
+      @content_tag2     = @context_module.add_item({id: @assignment2.id, type: 'assignment'}) # item
+      @submission2      = @assignment2.submit_homework(@student)
+      @submission2.update_attributes!(graded_at: Time.zone.now, grader_id: @teacher.id, score: 100)
     end
   end
 end

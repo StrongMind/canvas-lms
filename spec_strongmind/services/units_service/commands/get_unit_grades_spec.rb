@@ -1,68 +1,78 @@
 require_relative '../../../rails_helper'
 
-RSpec.describe UnitsService::Commands::GetUnitGrades, skip: 'todo: fix for running under LMS' do
+RSpec.describe UnitsService::Commands::GetUnitGrades do
   include_context "stubbed_network"
 
-  let(:course) { Course.create(assignment_groups: []) }
-  let(:pseudonym) { Pseudonym.create(sis_user_id: 1001) }
-  let(:user) { User.create(pseudonym: pseudonym) }
-  let(:query_instance) { double('query instance', query: nil) }
-  let(:current_time) { Time.now }
-  let(:unit) { double('unit', id: 1, created_at: current_time, position: 3 ) }
-  let(:calculator_instance) { double('calculator_instance', call: { unit => 54 }) }
-  let(:submitted_at) { Time.now }
-  let(:submission) { double('submission', submitted_at: submitted_at, graded_at: current_time, grader_id: 2) }
-  let(:cm) {ContextModule.create()}
-  let(:unit_submissions) { Hash.new }
-
-  subject { described_class.new(course: course, student: user, submission: submission) }
-
-  before do
-    allow(SettingsService).to receive(:get_settings).and_return('auto_due_dates' => nil, 'auto_enrollment_due_dates' => nil)
-    @enrollment = Enrollment.create(user: user, course: course)
-    ENV['CANVAS_DOMAIN'] = 'canvasdomain.com'
-    allow(UnitsService::Queries::GetSubmissions).to receive(:new).and_return(query_instance)
-    allow(UnitsService::GradesCalculator).to receive(:new).and_return(calculator_instance)
-    allow(UnitsService::Queries::GetEnrollment).to receive(:query).and_return(@enrollment)
-    allow(@enrollment).to receive(:computed_current_score).and_return(90)
-    allow(subject).to receive(:unit_submissions).and_return(unit_submissions)
+  let!(:account_admin) do
+    user_with_pseudonym(account: Account.default)
+    account_admin_user(user: @user)
   end
 
+  before do
+    @enrollment = student_in_course(:active_all => true)
+    @student    = @enrollment.student
+    @pseudonym  = pseudonym(@student)
 
-  it 'returns the calculator results' do
-    unit_submissions[unit] = [submission]
-    expect(subject.call).to eq(
-      course_id: course.id,
-      course_score: 90,
-      school_domain: "canvasdomain.com",
-      student_id: user.id,
-      sis_user_id: 1001,
-      submitted_at: submitted_at,
-      units: [{
-        score: 54,
-        id: unit.id,
-        position: unit.position
-      }]
-    )
+    teacher_in_course(course: @course)
+
+    @context_module = @course.context_modules.create!(name: "Module 1") # unit
+    @assignment     = @course.assignments.create!(title: "Assignment 1", workflow_state: 'published')
+    @content_tag    = @context_module.add_item({id: @assignment.id, type: 'assignment'}) # item
+    @submission     = @assignment.submit_homework(@student, submission_type: "online_text_entry", body: "o hai")
+
+    calculator_instance = double('calculator_instance', call: { @context_module => 54 })
+
+    allow(SettingsService).to receive(:get_settings).and_return('auto_due_dates' => nil, 'auto_enrollment_due_dates' => nil)
+    allow(UnitsService::GradesCalculator).to receive(:new).and_return(calculator_instance)
+    allow_any_instance_of(Enrollment).to receive(:computed_current_score).and_return(90)
+  end
+
+  describe '#call' do
+    it 'returns the calculator results' do
+      @pseudonym.update! sis_user_id: 1001
+      @submission.update!(graded_at: Time.zone.now, grader_id: @teacher.id, score: 54)
+      @command = UnitsService::Commands::GetUnitGrades.new(course: @course, student: @student, submission: @submission)
+
+      expect(@command.call).to eq(
+        course_id: @course.id,
+        course_score: 90,
+        school_domain: ENV['CANVAS_DOMAIN'],
+        student_id: @student.id,
+        sis_user_id: '1001',
+        submitted_at: @submission[:submitted_at],
+        units: [{
+          score: 54,
+          id: @context_module.id,
+          position: @context_module.position
+        }]
+      )
+    end
   end
 
   describe "#submissions_graded?" do
-    it "does the thing" do
-      unit_submissions[cm] = [Submission.create(graded_at: current_time, grader_id: 2)]
-      expect(subject.send(:submissions_graded?, cm, 54)).to eq 54
-    end
+    context 'when student has a graded submission' do
+      it "does the thing" do
+        @submission.update!(graded_at: Time.zone.now, grader_id: @teacher.id, score: 54)
+        @command = UnitsService::Commands::GetUnitGrades.new(course: @course, student: @student, submission: @submission)
 
-    context "student has no graded submissions" do
-      it 'does not do the thing' do
-        unit_submissions[cm] = [Submission.create]
-        expect(subject.send(:submissions_graded?, cm, 0)).to eq nil
+        expect(@command.send(:submissions_graded?, @context_module, 54)).to eq 54
       end
     end
 
-    context "student has graded submissions from zerograder" do
+    context "when student has no graded submissions" do
       it 'does not do the thing' do
-        unit_submissions[cm] = [Submission.create(score: 0, graded_at: current_time, grader_id: 1)]
-        expect(subject.send(:submissions_graded?, cm, 0)).to eq nil
+        @command = UnitsService::Commands::GetUnitGrades.new(course: @course, student: @student, submission: @submission)
+
+        expect(@command.send(:submissions_graded?, @context_module, 0)).to eq nil
+      end
+    end
+
+    context "when student has graded submissions from zerograder" do
+      it 'does not do the thing' do
+        @submission.update!(graded_at: Time.zone.now, grader_id: account_admin.id, score: 0)
+        @command = UnitsService::Commands::GetUnitGrades.new(course: @course, student: @student, submission: @submission)
+
+        expect(@command.send(:submissions_graded?, @context_module, 0)).to eq nil
       end
     end
   end
