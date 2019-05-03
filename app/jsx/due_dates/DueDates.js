@@ -299,10 +299,6 @@ import 'compiled/jquery.rails_flash_notifications'
       this.changeRowToken(TokenActions.handleTokenAdd, rowKey, newToken)
     },
 
-    handleExcludeTokenAdd(rowKey, newToken){
-      this.changeRowToken(TokenActions.handleTokenAdd, rowKey, newToken)
-    },
-
     handleTokenRemove(rowKey, tokenToRemove){
       this.changeRowToken(TokenActions.handleTokenRemove, rowKey, tokenToRemove)
     },
