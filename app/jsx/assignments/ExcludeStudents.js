@@ -53,8 +53,6 @@ class ExcludeStudents extends React.Component {
       }.bind(this))
     }
 
-    
-    
     handleInput(userInput) {
       this.setState({
         input: userInput,
@@ -111,7 +109,7 @@ class ExcludeStudents extends React.Component {
             isFocusable={name.length > 1}
           >{name}</ComboboxOption>
         );
-      });      
+      });
     }
     
     render() {
@@ -122,18 +120,23 @@ class ExcludeStudents extends React.Component {
         if(!this.state.exceptions){return <ul></ul>}
         if(!this.state.students){return <ul></ul>}
         return(
-            <ul>
-                <TokenInput
-                    menuContent = {options}
-                    selected    = {this.state.exceptions}
-                    onFocus     = {this.handleFocus}
-                    onInput     = {this.handleInput}
-                    onSelect    = {this.handleTokenAdd}
-                    onRemove    = {this.handleTokenRemove}
-                    value       = {true}
-                    ref         = "TokenInput"
-                />
-            </ul>
+          <div className="Container__DueDateRow">
+            <div className="Container__DueDateRow-item">              
+              <div id="excuse-label" class="ic-Label" title="Excuse these students" aria-label="Excuse these students">
+                Excuse these students
+              </div>
+              <TokenInput
+                  menuContent = {options}
+                  selected    = {this.state.exceptions}
+                  onFocus     = {this.handleFocus}
+                  onInput     = {this.handleInput}
+                  onSelect    = {this.handleTokenAdd}
+                  onRemove    = {this.handleTokenRemove}
+                  value       = {true}
+                  ref         = "TokenInput"
+              />
+            </div>
+          </div>
         )
     }
 }
