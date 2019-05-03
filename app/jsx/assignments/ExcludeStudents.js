@@ -107,6 +107,23 @@ class ExcludeStudents extends React.Component {
         );
       });
     }
+
+    rowStyle() {
+      return({
+        'border': '1px solid #ccc',
+        'borderRadius': '5px',
+        'borderBottomLeftRadius': 0,
+        'borderBottomRightRadius': 0,
+        'borderBottom': 'none'
+      })
+    };
+
+    containerStyle(){
+      return({
+        borderBottom: '1px solid #ccc',
+        padding: '15px'
+      })
+    }
     
     render() {
         var options = this.state.options.length ?
@@ -115,9 +132,10 @@ class ExcludeStudents extends React.Component {
         this.props.syncWithBackbone(this.state.exceptions)
         if(!this.state.exceptions){return <ul></ul>}
         if(!this.state.students){return <ul></ul>}
+
         return(
-          <div className="Container__DueDateRow">
-            <div className="Container__DueDateRow-item">              
+          <div style={this.rowStyle()}>
+            <div style={this.containerStyle()}>
               <div id="excuse-label" class="ic-Label" title="Excuse these students" aria-label="Excuse these students">
                 Exempt these students
               </div>
