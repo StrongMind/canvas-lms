@@ -83,10 +83,6 @@ class ExcludeStudents extends React.Component {
       });
     }
 
-    handeFocus() {
-      console.log('HandleFocus')
-    }
-
     handleTokenAdd(token) {
       var studentName = this.findStudentName(token);
       if(!studentName) return
@@ -123,12 +119,11 @@ class ExcludeStudents extends React.Component {
           <div className="Container__DueDateRow">
             <div className="Container__DueDateRow-item">              
               <div id="excuse-label" class="ic-Label" title="Excuse these students" aria-label="Excuse these students">
-                Excuse these students
+                Exempt these students
               </div>
               <TokenInput
                   menuContent = {options}
                   selected    = {this.state.exceptions}
-                  onFocus     = {this.handleFocus}
                   onInput     = {this.handleInput}
                   onSelect    = {this.handleTokenAdd}
                   onRemove    = {this.handleTokenRemove}

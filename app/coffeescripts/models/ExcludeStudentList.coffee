@@ -25,7 +25,6 @@ define [
       @excludes = ENV['EXCLUDED_STUDENTS']
 
     resetExcludes: (@new) ->
-      console.log(@new)
       @excludes = @new
 
     getExcludes: () ->
