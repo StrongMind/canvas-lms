@@ -21,6 +21,8 @@ define [
 
   class ExcludeStudentList
     constructor: (@excludes) ->
+      @students = ENV['ALL_STUDENTS']
+      @excludes = ENV['EXCLUDED_STUDENTS']
 
     resetExcludes: (@new) ->
       console.log(@new)
@@ -28,3 +30,4 @@ define [
 
     getExcludes: () ->
       @excludes
+      

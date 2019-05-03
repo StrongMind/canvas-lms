@@ -30,6 +30,8 @@ define [
         return unless div
         ExcludeStudentsElement = React.createElement(
           ExcludeStudents,
-          syncWithBackbone: @setNewExcludesCollection
+          syncWithBackbone: @setNewExcludesCollection,
+          students: @model.students,
+          excludes: @model.excludes
         )
         ReactDOM.render(ExcludeStudentsElement, div)

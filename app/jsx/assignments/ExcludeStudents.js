@@ -5,7 +5,7 @@ import TokenInput, {Option as ComboboxOption} from 'react-tokeninput'
 class ExcludeStudents extends React.Component {
     constructor(props) {
         super(props)
-        this.state = this.lmsData()
+        this.state = this.lmsData(props)
 
         this.handleInput = this.handleInput.bind(this)
         this.renderComboboxOptions = this.renderComboboxOptions.bind(this)
@@ -14,16 +14,18 @@ class ExcludeStudents extends React.Component {
         this.filterTags = this.filterTags.bind(this)
     }
 
-    lmsData(){
+    lmsData(props){
       return {
         input: '',
         loading: false,
         options: [],
-        students: ENV['ALL_STUDENTS'],
-        exceptions: ENV['EXCLUDED_STUDENTS']
+        students: props['students'],
+        exceptions: props['excludes']
       }
     }
 
+    // Use this to set test state if you aren't connecting to
+    // Data from the server
     fixture(){
       return {
         input: '',
@@ -117,7 +119,8 @@ class ExcludeStudents extends React.Component {
         this.renderComboboxOptions() : [];
 
         this.props.syncWithBackbone(this.state.exceptions)
-
+        if(!this.state.exceptions){return <ul></ul>}
+        if(!this.state.students){return <ul></ul>}
         return(
             <ul>
                 <TokenInput
