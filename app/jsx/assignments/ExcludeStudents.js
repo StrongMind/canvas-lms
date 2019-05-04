@@ -6,7 +6,6 @@ class ExcludeStudents extends React.Component {
     constructor(props) {
         super(props)
         this.state = this.lmsData(props)
-
         this.handleInput = this.handleInput.bind(this)
         this.renderComboboxOptions = this.renderComboboxOptions.bind(this)
         this.handleTokenAdd = this.handleTokenAdd.bind(this)
@@ -83,10 +82,14 @@ class ExcludeStudents extends React.Component {
       });
     }
 
+    findStudent(studentName){
+      return this.state.students.find((element) => element.name === studentName)
+    }
+
     handleTokenAdd(token) {
       var studentName = this.findStudentName(token);
       if(!studentName) return
-      var student = this.state.students.find((element) => element.name === studentName)
+      var student = this.findStudent(studentName)
       this.setState({exceptions: [...this.state.exceptions, student]})
     }
 
@@ -97,13 +100,14 @@ class ExcludeStudents extends React.Component {
     }
 
     renderComboboxOptions(){
-      return this.state.options.map(function(name) {
+      return this.state.options.map((name) => {
+        var student = this.findStudent(name)
         return (
           <ComboboxOption
-            key={name} 
-            value={name}
-            isFocusable={name.length > 1}
-          >{name}</ComboboxOption>
+            key={student.id} 
+            value={student.name}
+            isFocusable={student.name.length > 1}
+          >{student.name}</ComboboxOption>
         );
       });
     }
