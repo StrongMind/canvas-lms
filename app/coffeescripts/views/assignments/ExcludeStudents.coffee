@@ -4,17 +4,17 @@ define [
   'react'
   'react-dom'
   'jsx/assignments/StudentExemptions',
-  'jst/assignments/ExcludeStudents'
+  'jst/assignments/StudentExemptionsTemplate'
 ], (
   $,
   Backbone,
   React,
   ReactDOM,
   StudentExemptions,
-  ExcludeStudentsTemplate
+  StudentExemptionsTemplate
 ) ->
     class ExcludeStudentsView extends Backbone.View
-      template: ExcludeStudentsTemplate
+      template: StudentExemptionsTemplate
       # ==============================
       #     syncing with react data
       # ==============================
