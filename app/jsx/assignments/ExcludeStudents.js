@@ -19,7 +19,7 @@ class ExcludeStudents extends React.Component {
         loading: false,
         options: [],
         students: props['students'],
-        exceptions: props['excludes']
+        exemptions: props['excludes']
       }
     }
 
@@ -37,7 +37,7 @@ class ExcludeStudents extends React.Component {
             { name: 'joe', id: 2},
             { name: 'pete', id: 3}
           ],
-        exceptions: 
+        exemptions: 
           [
             { name: 'pete', id: 3 }
           ]
@@ -47,9 +47,9 @@ class ExcludeStudents extends React.Component {
     names(){
       return this.state.students.map(student => {
         return student.name
-      }).filter(function(name) {
-        return !this.state.exceptions.find(stu => stu.name === name)
-      }.bind(this))
+      }).filter(name =>
+        !this.state.exemptions.find(stu => stu.name === name)
+      )
     }
 
     handleInput(userInput) {
@@ -58,28 +58,28 @@ class ExcludeStudents extends React.Component {
         loading: true,
         options: []
       })
-      setTimeout(function () {
+      setTimeout(() => {
         this.filterTags(this.state.input)
         this.setState({
           loading: false
         })
-      }.bind(this), 500)
+      }, 500)
     }
 
     findStudentName(userInput){
       var filter = new RegExp('^'+userInput, 'i');
-      return this.names().find(function(name) {
-        return filter.test(name)
-      })
+      return this.names().find((name) => 
+        filter.test(name)
+      )
     }
 
     filterTags(userInput) {
       if (userInput === '') return this.setState({options: []});
       this.setState({
-        options: this.names().filter(function(name) {
-          return new RegExp('^'+userInput, 'i').test(name);
-        })
-      });
+        options: this.names().filter((name) => 
+          new RegExp('^'+userInput, 'i').test(name)
+        )
+      })
     }
 
     findStudent(studentName){
@@ -90,13 +90,13 @@ class ExcludeStudents extends React.Component {
       var studentName = this.findStudentName(token);
       if(!studentName) return
       var student = this.findStudent(studentName)
-      this.setState({exceptions: [...this.state.exceptions, student]})
+      this.setState({exemptions: [...this.state.exemptions, student]})
     }
 
     handleTokenRemove(token) {
-      this.setState({exceptions: this.state.exceptions.filter(function(student) { 
-        return student.id !== token.id
-      })});
+      this.setState({exemptions: this.state.exemptions.filter((student) =>  
+        student.id !== token.id
+      )});
     }
 
     renderComboboxOptions(){
@@ -108,8 +108,8 @@ class ExcludeStudents extends React.Component {
             value={student.name}
             isFocusable={student.name.length > 1}
           >{student.name}</ComboboxOption>
-        );
-      });
+        )
+      })
     }
 
     rowStyle() {
@@ -133,8 +133,8 @@ class ExcludeStudents extends React.Component {
         var options = this.state.options.length ?
         this.renderComboboxOptions() : [];
 
-        this.props.syncWithBackbone(this.state.exceptions)
-        if(!this.state.exceptions){return <ul></ul>}
+        this.props.syncWithBackbone(this.state.exemptions)
+        if(!this.state.exemptions){return <ul></ul>}
         if(!this.state.students){return <ul></ul>}
 
         return(
@@ -145,7 +145,7 @@ class ExcludeStudents extends React.Component {
               </div>
               <TokenInput
                   menuContent = {options}
-                  selected    = {this.state.exceptions}
+                  selected    = {this.state.exemptions}
                   onInput     = {this.handleInput}
                   onSelect    = {this.handleTokenAdd}
                   onRemove    = {this.handleTokenRemove}
