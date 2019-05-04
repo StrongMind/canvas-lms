@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TokenInput, {Option as ComboboxOption} from 'react-tokeninput'
 
-class ExcludeStudents extends React.Component {
+class StudentExemptions extends React.Component {
     constructor(props) {
         super(props)
         this.state = this.lmsData(props)
@@ -19,7 +19,7 @@ class ExcludeStudents extends React.Component {
         loading: false,
         options: [],
         students: props['students'],
-        exemptions: props['excludes']
+        exemptions: props['exemptions']
       }
     }
 
@@ -158,4 +158,4 @@ class ExcludeStudents extends React.Component {
     }
 }
 
-export default ExcludeStudents
+export default StudentExemptions

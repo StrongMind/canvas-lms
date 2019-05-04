@@ -3,14 +3,14 @@ define [
   'Backbone'
   'react'
   'react-dom'
-  'jsx/assignments/ExcludeStudents',
+  'jsx/assignments/StudentExemptions',
   'jst/assignments/ExcludeStudents'
 ], (
   $,
   Backbone,
   React,
   ReactDOM,
-  ExcludeStudents,
+  StudentExemptions,
   ExcludeStudentsTemplate
 ) ->
     class ExcludeStudentsView extends Backbone.View
@@ -28,10 +28,10 @@ define [
       render: ->
         div = @$el[0]
         return unless div
-        ExcludeStudentsElement = React.createElement(
-          ExcludeStudents,
+        StudentExemptionsElement = React.createElement(
+          StudentExemptions,
           syncWithBackbone: @setNewExcludesCollection,
           students: @model.students,
-          excludes: @model.excludes
+          exemptions: @model.excludes
         )
-        ReactDOM.render(ExcludeStudentsElement, div)
+        ReactDOM.render(StudentExemptionsElement, div)
