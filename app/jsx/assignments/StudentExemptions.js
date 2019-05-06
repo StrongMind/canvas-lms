@@ -111,10 +111,16 @@ class StudentExemptions extends React.Component {
             >{student.name}</ComboboxOption>
           )
         })
-      } else {
+      } else if (this.state.input && !this.state.loading) {
         return (
-          [<ComboboxOption>{"No results found"}</ComboboxOption>]
+          [
+            <ComboboxOption key="No results found" value="No results found">
+              No results found
+            </ComboboxOption>
+          ]
         )
+      } else {
+        return []
       }
     }
 
@@ -143,7 +149,7 @@ class StudentExemptions extends React.Component {
         return(
           <div style={this.rowStyle()}>
             <div style={this.containerStyle()}>
-              <div id="excuse-label" className="ic-Label" title="Excuse these students" aria-label="Excuse these students">
+              <div id="exempt-label" class="ic-Label" title="Exempt these students" aria-label="Exempt these students">
                 Exempt these students
               </div>
               <TokenInput
