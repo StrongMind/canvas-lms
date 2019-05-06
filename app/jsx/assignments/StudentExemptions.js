@@ -143,7 +143,7 @@ class StudentExemptions extends React.Component {
         return(
           <div style={this.rowStyle()}>
             <div style={this.containerStyle()}>
-              <div id="excuse-label" class="ic-Label" title="Excuse these students" aria-label="Excuse these students">
+              <div id="excuse-label" className="ic-Label" title="Excuse these students" aria-label="Excuse these students">
                 Exempt these students
               </div>
               <TokenInput
