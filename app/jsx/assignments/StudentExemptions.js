@@ -100,16 +100,22 @@ class StudentExemptions extends React.Component {
     }
 
     renderComboboxOptions(){
-      return this.state.options.map((name) => {
-        var student = this.findStudent(name)
+      if (this.state.options.length) {
+        return this.state.options.map((name) => {
+          var student = this.findStudent(name)
+          return (
+            <ComboboxOption
+              key={student.id}
+              value={student.name}
+              isFocusable={student.name.length > 1}
+            >{student.name}</ComboboxOption>
+          )
+        })
+      } else {
         return (
-          <ComboboxOption
-            key={student.id} 
-            value={student.name}
-            isFocusable={student.name.length > 1}
-          >{student.name}</ComboboxOption>
+          [<ComboboxOption>{"No results found"}</ComboboxOption>]
         )
-      })
+      }
     }
 
     rowStyle() {
@@ -130,9 +136,6 @@ class StudentExemptions extends React.Component {
     }
     
     render() {
-        var options = this.state.options.length ?
-        this.renderComboboxOptions() : [];
-
         this.props.syncWithBackbone(this.state.exemptions)
         if(!this.state.exemptions){return <ul></ul>}
         if(!this.state.students){return <ul></ul>}
@@ -144,7 +147,7 @@ class StudentExemptions extends React.Component {
                 Exempt these students
               </div>
               <TokenInput
-                  menuContent = {options}
+                  menuContent = {this.renderComboboxOptions()}
                   selected    = {this.state.exemptions}
                   onInput     = {this.handleInput}
                   onSelect    = {this.handleTokenAdd}
