@@ -116,7 +116,10 @@
               <%= t("(Excused)") if module_item && module_item.try_rescue(:assignment).try_rescue(:is_excused?, @current_user) %>
             </a>
           <% end %>
-          <span title="<%= module_item && module_item.title %>" class="title locked_title"><%= module_item && module_item.title %></span>
+          <span title="<%= module_item && module_item.title %>" class="title locked_title">
+            <%= module_item && module_item.title %>
+            <%= t("(Excused)") if module_item && module_item.try_rescue(:assignment).try_rescue(:is_excused?, @current_user) %>
+          </span>
           <span class="points_possible" style="display: none;"><%= round_if_whole(module_item.try_rescue(:assignment).try_rescue(:points_possible)) || nbsp %></span>
           <span class="requirement" style="display: none;">&nbsp;</span>
           <span class="completion_requirement" style="display: none;">&nbsp;</span>
