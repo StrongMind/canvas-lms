@@ -101,6 +101,7 @@
               data-item-href="<%= context_url(@context, :context_url) %>/modules/items/<%= module_item.id %>"
             >
                <%= module_item.title %>
+               <%= t("(Excused)") if module_item && module_item.try_rescue(:assignment).try_rescue(:is_excused?, @current_user) %>
             </a>
           <% else %>
             <a
@@ -112,6 +113,7 @@
               <% end %>
             >
               <%= module_item && module_item.title %>
+              <%= t("(Excused)") if module_item && module_item.try_rescue(:assignment).try_rescue(:is_excused?, @current_user) %>
             </a>
           <% end %>
           <span title="<%= module_item && module_item.title %>" class="title locked_title"><%= module_item && module_item.title %></span>
