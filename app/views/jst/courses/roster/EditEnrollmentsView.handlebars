@@ -1,0 +1,15 @@
+<p>{{#t "edit_sections_desc"}}Please select a module to start this student at.{{/t}}</p>
+
+
+<div class="ic-Form-control">
+  <label class="ic-Label" for="content_tag_id">{{#t}}Module:{{/t}}</label>
+  <select class="ic-Input" name="content_tag_id" id="content_tag_id" class="">
+    {{#each context_modules}}
+      <optgroup label="{{name}}">
+        {{#each this.content_tags}}
+          <option value="{{this.id}}">{{this.title}}</option>
+        {{/each}}
+      </optgroup>
+    {{/each}}
+  </select>
+</div>
