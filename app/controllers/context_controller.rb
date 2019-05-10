@@ -219,7 +219,15 @@ class ContextController < ApplicationController
           :concluded => @context.concluded?,
           :teacherless => @context.teacherless?,
           :available => @context.available?,
-          :pendingInvitationsCount => @context.invited_count_visible_to(@current_user)
+          :pendingInvitationsCount => @context.invited_count_visible_to(@current_user),
+          :context_modules => @context.context_modules.order(position: :asc).map do |context_module|
+            {
+              name: context_module.name,
+              content_tags: context_module.content_tags.active.order(position: :asc).map do |tag|
+                { title: tag.title, id: tag.id }
+              end
+            }
+          end
         }
       })
 
