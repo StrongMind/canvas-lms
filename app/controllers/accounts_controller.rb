@@ -763,6 +763,7 @@ class AccountsController < ApplicationController
 
       @announcements = @account.announcements.order(:created_at).paginate(page: params[:page], per_page: 50)
       @external_integration_keys = ExternalIntegrationKey.indexed_keys_for(@account)
+      @holidays = ENV["HOLIDAYS"] ? ENV["HOLIDAYS"].split(",") : []
 
       js_env({
         CUSTOM_HELP_LINKS: @domain_root_account && @domain_root_account.help_links || [],
@@ -770,6 +771,7 @@ class AccountsController < ApplicationController
         APP_CENTER: { enabled: Canvas::Plugin.find(:app_center).enabled? },
         LTI_LAUNCH_URL: account_tool_proxy_registration_path(@account),
         CONTEXT_BASE_URL: "/accounts/#{@context.id}",
+        HOLIDAYS: @holidays,
         MASKED_APP_CENTER_ACCESS_TOKEN: @account.settings[:app_center_access_token].try(:[], 0...5),
         PERMISSIONS: {
           :create_tool_manually => @account.grants_right?(@current_user, session, :create_tool_manually),

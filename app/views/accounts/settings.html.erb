@@ -228,6 +228,25 @@ TEXT
                   </tr>
 
                   <tr>
+                    <td><%= settings.blabel :school_holidays, :en => "Add Holiday" %></td>
+                    <td>
+                      <%= settings.text_field :holiday, :class => "date_entry" %>
+                    </td>
+                    
+                  </tr>
+
+                  <tr>
+                    <td><%= settings.blabel :school_holidays, :en => "All Holidays" %></td>
+                    <td>
+                      <dl id="holidates" style="max-width: 600px;">
+                        <% @holidays.each do |holiday| %>
+                          <dd style="display: inline-block; margin: .4rem;"><%= DateTime.parse(holiday).strftime("%b %d, %Y") %> <sup><a href="#" class="del-date">x</a></sup></dd>
+                        <% end %>
+                      </dl>
+                    </td>
+                  </tr>
+
+                  <tr>
                     <td colspan="2"><%= settings.check_box :prevent_course_renaming_by_teachers, :checked => @account.settings[:prevent_course_renaming_by_teachers] %>
                     <%= settings.label :prevent_course_renaming_by_teachers, :en => "Don't let teachers rename their courses" %>
                     </td>

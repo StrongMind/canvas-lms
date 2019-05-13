@@ -50,6 +50,20 @@ import 'jqueryui/tabs'
     $enroll_users_form.find('#admin_role_id').focus().select();
   }
 
+  function makeDate(date) {
+    return new Date(date).toISOString().split('T')[0]
+  }
+  
+  function appendDate(date) {
+    $('#holidates').append('<dd style="display: inline-block; margin: .4rem;">' + date + ' <sup><a href="#" class="del-date">x</a></sup></dd>');
+  }
+
+  function parseDateFilter(date) {
+    return date.text().split(" x")[0];
+  }
+
+  var timereg = /[0-9][0-9]:[0-9][0-9][ ](am|pm)/gi;
+
   $(document).ready(function() {
     function checkFutureListingSetting () {
       if ($('#account_settings_restrict_student_future_view_value').is(':checked')) {
@@ -60,6 +74,25 @@ import 'jqueryui/tabs'
     }
     checkFutureListingSetting();
     $('#account_settings_restrict_student_future_view_value').change(checkFutureListingSetting);
+    
+    $(".date_entry").datetime_field({alwaysShowTime: false});
+
+    $(".date_entry").change(function(e) {
+      var date = makeDate(this.value);
+      if (!ENV['HOLIDAYS'].includes(date)) {
+        ENV['HOLIDAYS'].push(date);
+        appendDate(this.value.replace(timereg, ''));
+      }
+    });
+
+    $(document).on('click', '.del-date', function(e) {
+      e.preventDefault();
+      var date = $(this).parent().parent();
+      ENV['HOLIDAYS'] = ENV['HOLIDAYS'].filter(function(holiday) {
+        return holiday !== makeDate(parseDateFilter(date));
+      });
+      date.remove();
+    });
 
     $("#account_settings").submit(function() {
       var $this = $(this);
