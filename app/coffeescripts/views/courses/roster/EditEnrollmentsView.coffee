@@ -32,22 +32,24 @@ define [
     @mixin RosterDialogMixin
 
     dialogOptions:
-      id: 'edit_sections'
+      id: 'edit_enrollment_placement'
       title: I18n.t 'titles.edit_enrollment', 'Edit Enrollment'
 
     render: ->
       @$el.html editEnrollmentsViewTemplate
-        context_modules: @model
+        context_modules: @context_modules
       this
 
     update: (e) =>
       e.preventDefault()
 
+      return unless confirm('Are you sure you want to custom place this user? This action is not easily undone, please exercise caution.')
+
       contentTagId = $('select#content_tag_id').val()
 
       deferreds = []
 
-      url = "/api/v1/enrollments/custom_placement"
+      url = "/api/v1/courses/#{@enrollment.course_id}/enrollments/#{@enrollment.id}/custom_placement"
       data =
         content_tag:
           id: contentTagId
@@ -58,7 +60,7 @@ define [
 
       @disable($.when(deferreds...)
         .done =>
-          $.flashMessage I18n.t('flash.sections', 'Custom placement successfully updated')
+          $.flashMessage 'Custom placement successfully updated'
         .fail ->
-          $.flashError I18n.t('flash.sectionError', "Something went wrong attempting to custom place the user. Please try again later.")
+          $.flashError "Something went wrong attempting to custom place the user. Please try again later."
         .always => @close())
