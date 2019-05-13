@@ -1008,7 +1008,7 @@ CanvasRails::Application.routes.draw do
 
       delete 'courses/:course_id/enrollments/:id', action: :destroy
 
-      post 'enrollments/custom_placement', action: :custom_placement
+      post 'courses/:course_id/enrollments/:id/custom_placement', action: :custom_placement
     end
 
 

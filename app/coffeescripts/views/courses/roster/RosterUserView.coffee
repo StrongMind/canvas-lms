@@ -145,7 +145,10 @@ define [
 
     editEnrollments: (e) ->
       editEnrollmentsDialog ||= new EditEnrollmentsView
-      editEnrollmentsDialog.model = @options.course.context_modules
+      enrollment = @model.get('enrollments').find (el) -> ENV.course.id == el.course_id
+      editEnrollmentsDialog.model           = @model
+      editEnrollmentsDialog.enrollment      = enrollment
+      editEnrollmentsDialog.context_modules = @options.course.context_modules
       editEnrollmentsDialog.render().show()
 
     editRoles: (e) ->

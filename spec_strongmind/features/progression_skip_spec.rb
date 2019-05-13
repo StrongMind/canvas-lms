@@ -106,23 +106,67 @@ RSpec.describe 'Teacher can force advance student module progress', type: :featu
   end
 
   it "shows me some modules" do
+    visit "/courses/#{@course.id}"
+
+    expect(page).to have_selector('a.home.active')
+
+    click_link 'People'
+
+    within find("#user_#{@student.id}") do
+      find('.al-trigger').click()
+      sleep 1
+      click_link 'Edit Enrollment'
+    end
+
+    expect(page).to have_selector('.ui-dialog', visible: true)
+
+    select "Module 2 Discussion Topic: requires contribution", from: 'Unit to start'
+
+    within '.ui-dialog' do
+      click_button 'Update'
+    end
+
+    accept_confirm
+
+    sleep 2
+
+    expect(page).to have_selector('.ic-flash-success', text: 'Custom placement successfully updated')
+
+    # switch to student check course progress indicators
+    destroy_session
     user_session(@student)
+
+    Capybara.ignore_hidden_elements = false
 
     visit "/courses/#{@course.id}"
 
     expect(page).to have_selector('a.home.active')
-    sleep 5
+    expect(page).to have_selector('.icon-check', visible: false)
 
-    # USE INSTEAD?
-    # content_tags_visible_to(self.user, is_teacher: false, ignore_observer_logic: true)
+    within "#context_module_#{@module1.id} .ig-header" do
+      expect(page).to have_content('Progress: 100%')
+    end
 
-    @student.custom_placement_at(@m2_topic_tag) # pass a content_tag
+    within("#context_module_content_#{@module1.id}") do
+      expect(page).to have_selector('.icon-check[title=Completed]', count: 8, visible: false)
+      expect(page).not_to have_selector('.unstarted-icon', visible: false)
+    end
 
+    within "#context_module_#{@module2.id} .ig-header" do
+      expect(page).to have_content('Progress: 50%')
+    end
 
+    within("#context_module_content_#{@module2.id}") do
+      expect(page).to have_selector('.icon-check[title=Completed]', count: 1)
+      expect(page).to have_selector('.unstarted-icon[title="This assignment has not been started"]', count: 1)
+    end
 
-    visit "/courses/#{@course.id}"
-    sleep 5
-    binding.pry
+    Capybara.ignore_hidden_elements = true
+
+    # @student.custom_placement_at(@m2_topic_tag) # pass a content_tag
+    # visit "/courses/#{@course.id}"
+    # sleep 5
+    # binding.pry
     x = 1
   end
 end
