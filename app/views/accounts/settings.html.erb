@@ -238,9 +238,9 @@ TEXT
                   <tr>
                     <td><%= settings.blabel :school_holidays, :en => "All Holidays" %></td>
                     <td>
-                      <dl id="holidates" style="max-width: 600px;">
+                      <dl id="holidates" style="max-width: 60%; margin-right: auto;">
                         <% @holidays.each do |holiday| %>
-                          <dd style="display: inline-block; margin: .4rem;"><%= DateTime.parse(holiday).strftime("%b %d, %Y") %> <sup><a href="#" class="del-date">x</a></sup></dd>
+                          <dd class="ic-badge ic-badge--neutral" style="display: inline-block; margin: .25rem 1px;"><%= DateTime.parse(holiday).strftime("%b %e, %Y") %> <sup><a href="#" class="del-date">x</a></sup></dd>
                         <% end %>
                       </dl>
                     </td>
