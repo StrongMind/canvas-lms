@@ -55,7 +55,8 @@ import 'jqueryui/tabs'
   }
   
   function appendDate(date) {
-    $('#holidates').append('<dd class="ic-badge ic-badge--neutral" style="display: inline-block; margin: .25rem 1px;">' + date + ' <sup><a href="#" class="del-date">x</a></sup></dd>');
+    $('#holidates').append('<dd class="holiday-badge ic-badge ic-badge--neutral">' +
+    date + ' <sup><a href="#" class="del-date">x</a></sup></dd>');
   }
 
   function parseDateFilter(date) {
