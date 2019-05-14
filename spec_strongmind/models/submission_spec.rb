@@ -39,7 +39,7 @@ RSpec.describe Submission do
 
         allow(SettingsService).to receive(:get_settings).and_return({})
         allow(PipelineService::HTTPClient).to receive(:post)
-        allow(PipelineService::Events::HTTPClient).to receive(:post)
+
         allow(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => true)
         allow(UnitsService::Queries::GetEnrollment).to receive(:query).and_return(@enrollment)
       end
@@ -50,6 +50,8 @@ RSpec.describe Submission do
       let(:course) {Course.create(context_modules: [context_module])}
 
       it 'wont send if there is no change to the score' do
+        skip 'There is no longer PipelineService::Events'
+
         with_modified_env @env do
           expect(PipelineService::Events::HTTPClient).to_not receive(:post)
 
@@ -60,9 +62,15 @@ RSpec.describe Submission do
       context 'setting disabled' do
         it 'wont fire' do
           with_modified_env @env do
-            expect(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => false)
-            expect(PipelineService::Events::HTTPClient).to_not receive(:post)
+            allow(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => false)
 
+            # course callback
+            expect(PipelineService).to receive(:publish).with(an_instance_of(Course))
+
+            # submission callback
+            expect(PipelineService).not_to receive(:publish).with(an_instance_of(PipelineService::Nouns::UnitGrades))
+
+            # will save a submission triggering callback
             course_with_student_submissions(submission_points: 50)
           end
         end
