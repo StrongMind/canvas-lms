@@ -96,6 +96,7 @@ import 'jqueryui/tabs'
 
     $("#account_settings").submit(function() {
       var $this = $(this);
+      $this.append("<input type='hidden' name='holidays' value=" + ENV['HOLIDAYS'].join(',') + "/>");
       var remove_ip_filters = true;
       $(".ip_filter .value").each(function() {
         $(this).removeAttr('name');
