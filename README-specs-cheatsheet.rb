@@ -137,7 +137,7 @@
     @a
   end
 
-  teacher.get_teacher_unread_discussion_topic_assignments(@course)
+  teacher.get_teacher_unread_discussion_topics(@course)
 
   @discussion_topic = DiscussionTopic.find_by_assignment_id(@assignment.id)
 

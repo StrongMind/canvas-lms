@@ -27,23 +27,23 @@ RSpec.describe User do
     allow(HTTParty).to receive(:get).and_return(response)
   end
 
-  describe '#get_teacher_unread_discussion_topic_assignments' do
+  describe '#get_teacher_unread_discussion_topics' do
     it 'is mixed in' do
       with_modified_env @env do
-        expect(teacher).to respond_to(:get_teacher_unread_discussion_topic_assignments)
+        expect(teacher).to respond_to(:get_teacher_unread_discussion_topics)
       end
     end
 
     it 'calls the endpoint' do
       with_modified_env @env do
         expect(HTTParty).to receive(:get).and_return(response)
-        teacher.get_teacher_unread_discussion_topic_assignments(@course)
+        teacher.get_teacher_unread_discussion_topics(@course)
       end
     end
 
     it 'returns a list of assignments' do
       with_modified_env @env do
-        expect(teacher.get_teacher_unread_discussion_topic_assignments(@course)).to eq [assignment]
+        expect(teacher.get_teacher_unread_discussion_topics(@course)).to eq [assignment]
       end
     end
 
@@ -58,14 +58,14 @@ RSpec.describe User do
       it 'wont look up enrollments' do
         with_modified_env @env do
           expect(teacher).to_not receive(:enrollments) # self.enrollments.where(...).empty?
-          teacher.get_teacher_unread_discussion_topic_assignments(@course)
+          teacher.get_teacher_unread_discussion_topics(@course)
         end
       end
 
       it "wont call the service" do
         with_modified_env @env do
           expect(HTTParty).to_not receive(:get)
-          teacher.get_teacher_unread_discussion_topic_assignments(@course)
+          teacher.get_teacher_unread_discussion_topics(@course)
         end
       end
     end
