@@ -55,7 +55,7 @@ define [
           id: contentTagId
 
       deferreds.push $.ajaxJSON url, 'POST', data, () =>
-        console.log("yah ajax'n")
+        console.log("Custom placement submitted")
 
 
       @disable($.when(deferreds...)
