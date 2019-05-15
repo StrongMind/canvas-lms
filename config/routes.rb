@@ -1007,8 +1007,6 @@ CanvasRails::Application.routes.draw do
       put 'courses/:course_id/enrollments/:id/reactivate', :action => :reactivate, :as => 'reactivate_enrollment'
 
       delete 'courses/:course_id/enrollments/:id', action: :destroy
-
-      post 'courses/:course_id/enrollments/:id/custom_placement', action: :custom_placement
     end
 
 
