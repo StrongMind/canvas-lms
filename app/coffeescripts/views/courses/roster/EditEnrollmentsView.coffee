@@ -33,7 +33,7 @@ define [
 
     dialogOptions:
       id: 'edit_enrollment_placement'
-      title: I18n.t 'titles.edit_enrollment', 'Edit Enrollment'
+      title: 'Edit Enrollment'
 
     render: ->
       @$el.html editEnrollmentsViewTemplate
