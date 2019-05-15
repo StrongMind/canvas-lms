@@ -251,8 +251,7 @@
 #       }
 #
 class EnrollmentsApiController < ApplicationController
-  before_action :get_course_from_section, except: :custom_placement
-  before_action :require_context
+  before_action :get_course_from_section, :require_context
   before_action :require_user
 
   @@errors = {
@@ -665,22 +664,6 @@ class EnrollmentsApiController < ApplicationController
     else
       render :json => @enrollment.errors, :status => :bad_request
     end
-  end
-
-  # Strongmind Added
-  def custom_placement
-    @enrollment  = @context.enrollments.find(params[:id])
-    @content_tag = ContentTag.find(params[:content_tag].dig(:id))
-
-    if @enrollment && @content_tag
-      @enrollment.user.custom_placement_at(@content_tag)
-      render :json => {}, :status => :ok
-    else
-      render :json => {}, :status => :unprocessable_entity
-    end
-
-  rescue StandardError
-    render :json => {}, :status => :bad_request
   end
 
   protected
