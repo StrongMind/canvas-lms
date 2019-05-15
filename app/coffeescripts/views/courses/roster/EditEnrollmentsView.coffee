@@ -54,9 +54,7 @@ define [
         content_tag:
           id: contentTagId
 
-      deferreds.push $.ajaxJSON url, 'POST', data, () =>
-        console.log("Custom placement submitted")
-
+      deferreds.push $.ajaxJSON url, 'POST', data
 
       @disable($.when(deferreds...)
         .done =>
