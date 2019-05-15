@@ -3,6 +3,8 @@ require_relative '../rails_helper'
 
 RSpec.describe 'Teacher can force advance student module progress', type: :feature, js: true do
 
+  include_context 'stubbed_network'
+
   before(:each) do
     student_in_course(active_all: true)
     course_with_teacher_logged_in(course: @course)
