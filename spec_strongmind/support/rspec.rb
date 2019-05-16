@@ -18,7 +18,7 @@ RSpec.configure do |config|
 
   def reset_all_the_things!
     I18n.locale = :en
-    Time.zone = 'UTC'
+    Time.zone = 'Arizona'
     LoadAccount.force_special_account_reload = true
     Account.clear_special_account_cache!(true)
     PluginSetting.current_account = nil
@@ -45,7 +45,7 @@ RSpec.configure do |config|
   end
 
   # Mirror canvas's specs
-  Account.time_zone_attribute_defaults[:default_time_zone] = 'UTC'
+  Account.time_zone_attribute_defaults[:default_time_zone] = 'Arizona'
 
   config.before :all do
     Role.ensure_built_in_roles!
