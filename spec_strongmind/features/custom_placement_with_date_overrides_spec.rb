@@ -191,7 +191,8 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     Capybara.ignore_hidden_elements = true
 
     expect(AssignmentOverrideStudent.count).to be_zero
-    # an override is auto delted when no more students associated
+    # an override is auto deleted when no more students associated
     expect(AssignmentOverride.where(workflow_state: 'deleted').count).to eq(4)
+    # 4 not 5 because quizzes are currently not auto due dated
   end
 end
