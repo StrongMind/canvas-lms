@@ -1,12 +1,17 @@
 
 require_relative '../rails_helper'
 
-RSpec.describe 'Teacher can force advance student module progress', type: :feature, js: true do
+RSpec.describe 'As a Teacher I can force advance student module progress', type: :feature, js: true do
 
   include_context 'stubbed_network'
 
   before(:each) do
+    # enable auto_due_dates
+    # enable auto_enrollment_due_dates
+    allow(SettingsService).to receive(:get_settings).with(object: :school, id: 1).and_return('auto_due_dates' => 'on', 'auto_enrollment_due_dates' => 'on')
+
     student_in_course(active_all: true)
+    @course.update_attribute :conclude_at, 1.month.from_now
     course_with_teacher_logged_in(course: @course)
 
   # Module 1 -------
@@ -44,10 +49,10 @@ RSpec.describe 'Teacher can force advance student module progress', type: :featu
 
   # Group Discussion
     @group_discussion = group_assignment_discussion(course: @course)
+    @assignment.update_attribute :due_at, nil # rm default due date from factory
 
     @group_discussion_tag = @module1.add_item(type: 'discussion_topic', id: @root_topic.id, title: 'Group Discussion: requires contribution')
     @group.add_user @student, 'accepted'
-
 
   # Quiz
     # quiz_type can be assignment or survey
@@ -58,16 +63,6 @@ RSpec.describe 'Teacher can force advance student module progress', type: :featu
 
     @quiz_tag = @module1.add_item({:id => @quiz.id, :type => 'quiz', :title => 'Quiz: min score 90'})
 
-    # Context External Tool
-      # tool = @course.context_external_tools.create!(:name => "b", :url => "http://www.google.com", :consumer_key => '12345', :shared_secret => 'secret')
-      # external_tool_tag = @module1.add_item(:type => 'context_external_tool', :id => tool.id, :url => tool.url, :new_tab => false)
-
-    # External Tool
-      # tool = @course.context_external_tools.create!(:name => "b", :url => "http://www.google.com", :consumer_key => '12345', :shared_secret => 'secret', :tool_id => 'ewet00b')
-      # @module1.add_item(:type => 'external_tool', :title => 'Tool', :id => tool.id, :url => 'http://www.google.com', :new_tab => false, :indent => 0)
-      # @module1.save!
-
-    # 'lti/message_handler'
 
     @module1.completion_requirements = {
       @assignment_tag.id       => { type: 'must_submit' },
@@ -105,9 +100,36 @@ RSpec.describe 'Teacher can force advance student module progress', type: :featu
     }
 
     @module2.save!
+
+  # set up distributed due dates
+
+    expect(Assignment.order(:id).pluck(:due_at).compact).to be_empty
+    late_enrollment_date = 2.weeks.from_now
+
+    service = AssignmentsService::Commands::DistributeDueDates.new(course: @course)
+    service.call
+
+    # no overrides yet
+    expect(AssignmentOverride.count).to be_zero
+
+    # make enrollment date in future
+    @student.enrollments.first.update_column :created_at, late_enrollment_date
+
+    service = AssignmentsService::Commands::SetEnrollmentAssignmentDueDates.new(enrollment: @student.enrollments.first)
+    service.call
+
+    # make sure all due dates were shifted forward
+    Assignment.order(:id).each do |as|
+      assignment_overrides = as.overrides_for(@student)
+
+      # there should be overrides
+      expect(assignment_overrides).to_not be_empty
+      # due dates should be after late enrollment start
+      expect(assignment_overrides.first.due_at).to be > late_enrollment_date.beginning_of_day
+    end
   end
 
-  it "shows me some modules" do
+  it "should delete all due date overrides for student and push them forward" do
     visit "/courses/#{@course.id}"
 
     expect(page).to have_selector('a.home.active')
@@ -165,10 +187,8 @@ RSpec.describe 'Teacher can force advance student module progress', type: :featu
 
     Capybara.ignore_hidden_elements = true
 
-    # @student.custom_placement_at(@m2_topic_tag) # pass a content_tag
-    # visit "/courses/#{@course.id}"
-    # sleep 5
-    # binding.pry
-    x = 1
+    expect(AssignmentOverrideStudent.count).to be_zero
+    # an override is auto delted when no more students associated
+    expect(AssignmentOverride.where(workflow_state: 'deleted').count).to eq(5)
   end
 end
