@@ -1,6 +1,8 @@
 class EnrollmentSettingsController < ApplicationController
   def update
     if params[:id] == 'sequence_control'
+      enrollment = Enrollment.find(params[:enrollment_id])
+      return unless enrollment && enrollment.workflow_state == "invited"
       params[:value] = ActiveRecord::Type::Boolean.new.deserialize(params[:value])
     end
     SettingsService.update_enrollment_setting(
