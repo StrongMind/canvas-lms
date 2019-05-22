@@ -1,6 +1,8 @@
 require_relative '../rails_helper'
 
 RSpec.describe User do
+  include_context "stubbed_network"
+
   let!(:site_admin) do
     user_with_pseudonym(account: Account.site_admin)
     site_admin_user(user: @user)
@@ -72,7 +74,7 @@ RSpec.describe User do
   end
 
   describe "#recent_feedback" do
-    include_context "stubbed_network"
+
 
     let(:student1) { student_in_course(course: @course).user }
     let(:student2) { student_in_course(course: @course).user }

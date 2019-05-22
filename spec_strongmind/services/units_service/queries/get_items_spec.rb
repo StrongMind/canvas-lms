@@ -1,6 +1,8 @@
 require_relative '../../../rails_helper'
 
 RSpec.describe UnitsService::Queries::GetItems do
+  include_context "stubbed_network"
+
   let(:empty_result) do
     # {<context_module>: []}
     {}.tap { |hash| hash[@context_module] = [] }

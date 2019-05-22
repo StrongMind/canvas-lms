@@ -1,6 +1,8 @@
 require_relative '../rails_helper'
 
 RSpec.describe Submission do
+  include_context "stubbed_network"
+
   context 'callbacks' do
     before do
       allow(PipelineService).to receive(:publish)

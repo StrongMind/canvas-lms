@@ -1,6 +1,8 @@
 require_relative '../../../rails_helper'
 
 RSpec.describe BasicLTI::BasicOutcomes::LtiResponse do
+  include_context 'stubbed_network'
+
   let(:lti_response) { BasicLTI::BasicOutcomes::LtiResponse.new(double('lti_request')) }
 
   let!(:teacher) { teacher_in_course; @teacher }

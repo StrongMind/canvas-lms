@@ -1,6 +1,8 @@
 require_relative '../../../rails_helper'
 
 RSpec.describe AssignmentsService::Queries::AssignmentsWithDueDates do
+  include_context "stubbed_network"
+
   let!(:course) { teacher_in_course; @course }
   let!(:assignment) { assignment_model(context: @course) }
   let!(:context_module) { course.context_modules.create(name: 'Unit 1', context: course) }

@@ -1,6 +1,7 @@
 require_relative '../../../rails_helper'
 
 RSpec.describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
+  include_context "stubbed_network"
 
   before do
     @course_start_date     = Time.parse('2019-01-07 23:59:59.999999999 -0700')
