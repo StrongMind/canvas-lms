@@ -58,7 +58,7 @@ define [
 
       @disable($.when(deferreds...)
         .done =>
-          $.flashMessage 'Custom placement successfully updated'
+          $.flashMessage 'Custom placement process started. You can check progress by viewing the course as the student.'
         .fail ->
           $.flashError "Something went wrong attempting to custom place the user. Please try again later."
         .always => @close())

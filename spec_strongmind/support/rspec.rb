@@ -63,6 +63,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     reset_all_the_things!
+    Delayed::Testing.clear_all! # delete all queued jobs
 
     DatabaseCleaner.strategy = Capybara.current_driver == :rack_test ? :transaction : :truncation
     DatabaseCleaner.start
