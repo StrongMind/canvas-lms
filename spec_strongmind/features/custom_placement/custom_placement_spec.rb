@@ -1,5 +1,5 @@
 
-require_relative '../rails_helper'
+require_relative '../../rails_helper'
 
 RSpec.describe 'As a Teacher I can force advance student module progress', type: :feature, js: true do
 
