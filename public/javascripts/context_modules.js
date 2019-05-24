@@ -1553,7 +1553,13 @@ import 'compiled/jquery.rails_flash_notifications'
               modules.updateAssignmentData();
               modules.loadMasterCourseData(data.content_tag.id);
             }), { onComplete: function() {
-              window.location.reload();
+              if (ENV['score_threshold']) {
+                var score = $item.find('.min_score_requirement .unfulfilled');
+                score.parents().show();
+                score.text(`Score at least ${ENV['score_threshold']}`);
+                score.prepend('<span style="margin-left: -.5rem; padding-right: 1.25rem;">|</span>');
+              }
+
               $module.find('.add_module_item_link').focus();
             }}
           );
