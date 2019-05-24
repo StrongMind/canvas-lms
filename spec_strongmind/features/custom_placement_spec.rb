@@ -58,9 +58,10 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
 
     @quiz_tag = @module1.add_item({:id => @quiz.id, :type => 'quiz', :title => 'Quiz: min score 90'})
 
-    # Context External Tool
-      # tool = @course.context_external_tools.create!(:name => "b", :url => "http://www.google.com", :consumer_key => '12345', :shared_secret => 'secret')
-      # external_tool_tag = @module1.add_item(:type => 'context_external_tool', :id => tool.id, :url => tool.url, :new_tab => false)
+  # Context External Tool
+    tool = @course.context_external_tools.create!(:name => "Context External Tool", :url => "http://www.google.com", :consumer_key => '12345', :shared_secret => 'secret')
+    @external_tool_tag = @module1.add_item(:id => tool.id, :type => 'context_external_tool', :url => tool.url, :new_tab => false, :indent => 0)
+    @external_tool_tag.publish!
 
     # External Tool
       # tool = @course.context_external_tools.create!(:name => "b", :url => "http://www.google.com", :consumer_key => '12345', :shared_secret => 'secret', :tool_id => 'ewet00b')
@@ -70,15 +71,16 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     # 'lti/message_handler'
 
     @module1.completion_requirements = {
-      @assignment_tag.id       => { type: 'must_submit' },
-      @external_url_tag.id     => { type: 'must_view' },
-      @header_tag.id           => { type: 'must_view' }, # valid?
-      wiki_tag.id              => { type: 'must_view' },
-      @attachment_tag.id       => { type: 'must_view' },
-      @topic_tag.id            => { type: 'must_contribute' },
-      @group_discussion_tag.id => { type: 'must_contribute' },
-      @quiz_tag.id             => { type: 'min_score', min_score: 90 },
-      @assignment2_tag.id      => { type: 'must_mark_done' }
+      @assignment_tag.id        => { type: 'must_submit' },
+      @external_url_tag.id      => { type: 'must_view' },
+      @header_tag.id            => { type: 'must_view' }, # valid?
+      wiki_tag.id               => { type: 'must_view' },
+      @attachment_tag.id        => { type: 'must_view' },
+      @topic_tag.id             => { type: 'must_contribute' },
+      @group_discussion_tag.id  => { type: 'must_contribute' },
+      @quiz_tag.id              => { type: 'min_score', min_score: 90 },
+      @external_tool_tag.id     => { type: 'must_view' },
+      @assignment2_tag.id       => { type: 'must_mark_done' }
     }
 
     @module1.save!
@@ -132,13 +134,15 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
 
     sleep 2
 
-    expect(page).to have_selector('.ic-flash-success', text: 'Custom placement successfully updated')
+    expect(page).to have_selector('.ic-flash-success', text: 'Custom placement process started. You can check progress by viewing the course as the student.')
 
     # switch to student check course progress indicators
     destroy_session
     user_session(@student)
 
     Capybara.ignore_hidden_elements = false
+
+    Delayed::Testing.drain # run all queued jobs
 
     visit "/courses/#{@course.id}"
 
@@ -150,7 +154,7 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     end
 
     within("#context_module_content_#{@module1.id}") do
-      expect(page).to have_selector('.icon-check[title=Completed]', count: 8, visible: false)
+      expect(page).to have_selector('.icon-check[title=Completed]', count: 9, visible: false)
       expect(page).not_to have_selector('.unstarted-icon', visible: false)
     end
 
