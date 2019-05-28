@@ -1553,7 +1553,7 @@ import 'compiled/jquery.rails_flash_notifications'
               modules.updateAssignmentData();
               modules.loadMasterCourseData(data.content_tag.id);
             }), { onComplete: function() {
-              if (ENV['score_threshold']) {
+              if (ENV['score_threshold'] && ['assignment', 'discussion_topic', 'quiz'].includes(item_data['item[type]'])) {
                 var score = $item.find('.min_score_requirement .unfulfilled');
                 score.parents().show();
                 score.text(`Score at least ${ENV['score_threshold']}`);
