@@ -61,6 +61,19 @@ import 'compiled/jquery.rails_flash_notifications'
       updateTaggedItems: function() {
       },
 
+      checkForExisting: function(item_type, item_id) {
+        var prefix = '';
+        if (item_type === 'assignment') {
+          prefix = ".Assignment_";
+        } else if (item_type === 'discussion_topic') {
+          prefix = ".DiscussionTopic_";
+        } else if (item_type === 'quiz') {
+          prefix = ".Quiz_";
+        }
+
+        return $(prefix + item_id).length > 1;
+      },
+
       currentIndent: function($item) {
         var classes = $item.attr('class').split(/\s/);
         var indent = 0;
@@ -1557,7 +1570,10 @@ import 'compiled/jquery.rails_flash_notifications'
                 var score = $item.find('.min_score_requirement .unfulfilled');
                 score.parents().show();
                 score.text(`Score at least ${ENV['score_threshold']}`);
-                score.prepend('<span style="margin-left: -.5rem; padding-right: 1.25rem;">|</span>');
+
+                if (modules.checkForExisting(item_data['item[type]'], item_data['item[id]'])) {
+                  score.prepend('<span style="margin-left: -.5rem; padding-right: 1.25rem;">|</span>');
+                }
               }
 
               $module.find('.add_module_item_link').focus();
