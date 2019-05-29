@@ -6,8 +6,7 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
   include_context 'stubbed_network'
 
   before(:each) do
-    student_in_course(active_all: true)
-    course_with_teacher_logged_in(course: @course)
+    course_with_teacher_logged_in()
 
   # Module 1 -------
 
@@ -107,6 +106,10 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     }
 
     @module2.save!
+
+    student_in_course(course: @course, active_all: true)
+
+    Delayed::Testing.drain
   end
 
   it "by selecting a unit in a upcoming module bypassing all the requirements of the units & modules" do
