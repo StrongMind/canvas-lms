@@ -10,9 +10,8 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     # enable auto_enrollment_due_dates
     allow(SettingsService).to receive(:get_settings).with(object: :school, id: 1).and_return('auto_due_dates' => 'on', 'auto_enrollment_due_dates' => 'on')
 
-    student_in_course(active_all: true)
+    course_with_teacher_logged_in
     @course.update_attribute :conclude_at, 1.month.from_now
-    course_with_teacher_logged_in(course: @course)
 
   # Module 1 -------
 
@@ -106,6 +105,10 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
 
     @module2.save!
 
+    student_in_course(course: @course, active_all: true)
+
+    Delayed::Testing.drain
+
   # set up distributed due dates
 
     expect(Assignment.order(:id).pluck(:due_at).compact).to be_empty
@@ -123,6 +126,8 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     service = AssignmentsService::Commands::SetEnrollmentAssignmentDueDates.new(enrollment: @student.enrollments.first)
     service.call
 
+    expect(AssignmentOverride.count).to eq(4)
+
     # make sure all due dates were shifted forward
     Assignment.order(:id).each do |as|
       assignment_overrides = as.overrides_for(@student)
@@ -135,6 +140,8 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
       # due dates should be after late enrollment start
       expect(assignment_overrides.first.due_at).to be > late_enrollment_date.beginning_of_day
     end
+
+    Delayed::Testing.drain
   end
 
   it "should delete all due date overrides for student and push them forward" do
@@ -198,9 +205,10 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
 
     Capybara.ignore_hidden_elements = true
 
+    # An AssignmentOverride is auto deleted when no more students associated
     expect(AssignmentOverrideStudent.count).to be_zero
-    # an override is auto deleted when no more students associated
+
+    # 4 not 5 because quizzes are currently not auto due dated!
     expect(AssignmentOverride.where(workflow_state: 'deleted').count).to eq(4)
-    # 4 not 5 because quizzes are currently not auto due dated
   end
 end
