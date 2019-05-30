@@ -109,10 +109,18 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
 
     student_in_course(course: @course, active_all: true)
 
+    @module1.find_or_create_progressions(@student)
+    @module2.find_or_create_progressions(@student)
+
+    @module2.reload.relock_progressions
+
+    expect(@module1.evaluate_for(@student)).to be_unlocked
+    expect(@module2.evaluate_for(@student)).to be_unlocked
+
     Delayed::Testing.drain
   end
 
-  it "by selecting a unit in a upcoming module bypassing all the requirements of the units & modules" do
+  it "by selecting a unit in a upcoming module, bypasses all the requirements of the units & modules.  And modules are unlocked correctly" do
     visit "/courses/#{@course.id}"
 
     expect(page).to have_selector('a.home.active')
@@ -172,10 +180,15 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
 
     Capybara.ignore_hidden_elements = true
 
-    # @student.custom_placement_at(@m2_topic_tag) # pass a content_tag
-    # visit "/courses/#{@course.id}"
-    # sleep 5
-    # binding.pry
-    x = 1
+    # Progressions should not be locked at this point
+    progressions = @student.context_module_progressions.order('context_module_id ASC')
+
+    expect(progressions.count).to eq(2)
+
+    p1 = @module1.reload.evaluate_for(@student)
+    expect(p1).not_to be_locked
+
+    p2 = @module2.reload.evaluate_for(@student)
+    expect(p2).not_to be_locked
   end
 end
