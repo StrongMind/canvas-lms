@@ -112,10 +112,14 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     @module1.find_or_create_progressions(@student)
     @module2.find_or_create_progressions(@student)
 
+    # Lock progressions
     @module2.reload.relock_progressions
 
-    expect(@module1.evaluate_for(@student)).to be_unlocked
-    expect(@module2.evaluate_for(@student)).to be_unlocked
+    # We want to also ensure Progressions get unlocked during custom placement.
+    # Attempting to mirror issue seen on dev where module requirements are passed but they're
+    # still in a locked state
+    progressions = @student.context_module_progressions.order('context_module_id ASC')
+    expect(progressions.all?(&:locked?)).to be true
 
     Delayed::Testing.drain
   end
