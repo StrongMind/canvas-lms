@@ -25,7 +25,7 @@ RSpec.describe 'As a Teacher I can NOT force advance a PENDING student', type: :
     within find("#user_#{@student.id}") do
       find('.al-trigger').click()
       sleep 1
-      expect(page).not_to have_link('Edit Enrollment')
+      expect(page).not_to have_link('Initial Placement')
     end
   end
 end

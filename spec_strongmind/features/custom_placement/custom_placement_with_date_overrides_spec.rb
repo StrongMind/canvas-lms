@@ -70,7 +70,6 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     @module1.completion_requirements = {
       @assignment_tag.id       => { type: 'must_submit' },
       @external_url_tag.id     => { type: 'must_view' },
-      @header_tag.id           => { type: 'must_view' }, # valid?
       wiki_tag.id              => { type: 'must_view' },
       @attachment_tag.id       => { type: 'must_view' },
       @topic_tag.id            => { type: 'must_contribute' },
@@ -132,11 +131,12 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     Assignment.order(:id).each do |as|
       assignment_overrides = as.overrides_for(@student)
 
-      # skip for now, possible bug in auto due dates for quizzes
+      # Quiz - skip for now, possible bug in auto due dates for quizzes
       next if assignment_overrides.first.nil? || assignment_overrides.first&.quiz?
 
       # there should be overrides
       expect(assignment_overrides).to_not be_empty
+
       # due dates should be after late enrollment start
       expect(assignment_overrides.first.due_at).to be > late_enrollment_date.beginning_of_day
     end
@@ -154,7 +154,7 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     within find("#user_#{@student.id}") do
       find('.al-trigger').click()
       sleep 1
-      click_link 'Edit Enrollment'
+      click_link 'Initial Placement'
     end
 
     expect(page).to have_selector('.ui-dialog', visible: true)
