@@ -12,10 +12,15 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
 
     @module1 = @course.context_modules.create!(:name => "Module 1")
 
-  # Assignment
+  # Assignment 1
     @assignment = @course.assignments.create!(:name => "Assignment: pls submit", :submission_types => ["online_text_entry"], :points_possible => 42)
     @assignment.publish
     @assignment_tag = @module1.add_item(:id => @assignment.id, :type => 'assignment', :title => 'Assignment: requires submission')
+
+  # Assignment 3
+    @assignment3 = @course.assignments.create!(:name => "Assignment 3: min score", :submission_types => ["online_text_entry"], :points_possible => 42)
+    @assignment3.publish
+    @assignment3_tag = @module1.add_item(:id => @assignment3.id, :type => 'assignment', :title => 'Assignment 2: min score')
 
   # External Url
     @external_url_tag = @module1.add_item(type: 'external_url', url: 'http://example.com/lolcats', title: 'External Url: requires viewing')
@@ -64,15 +69,9 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     @external_tool_tag = @module1.add_item(:id => tool.id, :type => 'context_external_tool', :url => tool.url, :new_tab => false, :indent => 0)
     @external_tool_tag.publish!
 
-    # External Tool
-      # tool = @course.context_external_tools.create!(:name => "b", :url => "http://www.google.com", :consumer_key => '12345', :shared_secret => 'secret', :tool_id => 'ewet00b')
-      # @module1.add_item(:type => 'external_tool', :title => 'Tool', :id => tool.id, :url => 'http://www.google.com', :new_tab => false, :indent => 0)
-      # @module1.save!
-
-    # 'lti/message_handler'
-
     @module1.completion_requirements = {
       @assignment_tag.id        => { type: 'must_submit' },
+      @assignment3_tag.id       => { type: 'min_score', min_score: 70 },
       @external_url_tag.id      => { type: 'must_view' },
       @group_discussion_tag.id  => { type: 'must_contribute' },
       wiki_tag.id               => { type: 'must_view' },
@@ -118,7 +117,7 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     Delayed::Testing.drain
   end
 
-  it "by selecting a unit in a upcoming module bypassing all the requirements of the units & modules" do
+  it "[Alternate requirements ordering] by selecting a unit in a upcoming module bypassing all the requirements of the units & modules" do
     visit "/courses/#{@course.id}"
 
     expect(page).to have_selector('a.home.active')
@@ -128,7 +127,7 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     within find("#user_#{@student.id}") do
       find('.al-trigger').click()
       sleep 1
-      click_link 'Edit Enrollment'
+      click_link 'Initial Placement'
     end
 
     expect(page).to have_selector('.ui-dialog', visible: true)
@@ -161,11 +160,11 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     expect(page).to have_selector('.icon-check', visible: false)
 
     within "#context_module_#{@module1.id} .ig-header" do
-      expect(page).to have_content('Progress: 88%')
+      expect(page).to have_content('Progress: 90%')
     end
 
     within("#context_module_content_#{@module1.id}") do
-      expect(page).to have_selector('.icon-check[title=Completed]', count: 8, visible: false)
+      expect(page).to have_selector('.icon-check[title=Completed]', count: 9, visible: false)
       expect(page).to have_selector('.unstarted-icon', count: 1, visible: false)
     end
 
