@@ -153,6 +153,7 @@ RSpec.describe AssignmentsService::Scheduler do
         @env = {
           HOLIDAYS: "2018-11-28,2018-11-29"
         }
+        allow(subject).to receive(:settings_service_holidays).and_return(nil)
       end
 
       it 'will not include the first holiday in course dates' do
