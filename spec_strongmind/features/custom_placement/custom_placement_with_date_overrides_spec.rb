@@ -17,8 +17,8 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
 
     @module1 = @course.context_modules.create!(:name => "Module 1")
 
-  # Assignment
-    @assignment = @course.assignments.create!(:name => "Assignment: pls submit", :submission_types => ["online_text_entry"], :points_possible => 42)
+  # Assignment 1
+    @assignment = @course.assignments.create!(:name => "Assignment 1: pls submit", :submission_types => ["online_text_entry"], :points_possible => 42)
     @assignment.publish
     @assignment_tag = @module1.add_item(:id => @assignment.id, :type => 'assignment', :title => 'Assignment: requires submission')
 
@@ -29,10 +29,10 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
   # Context Module Sub Header
     @header_tag = @module1.add_item(:type => "sub_header", :title => "Context Module Sub Header")
 
-  # Assignment: must_mark_done
-    @assignment2 = @course.assignments.create!(:name => "Assignment: Must Mark Done", :submission_types => ["online_text_entry"])
+  # Assignment 2: must_mark_done
+    @assignment2 = @course.assignments.create!(:name => "Assignment 2: Must Mark Done", :submission_types => ["online_text_entry"])
     @assignment2.publish
-    @assignment2_tag = @module1.add_item(:id => @assignment2.id, :type => 'assignment', :title => 'Assignment: requires mark done')
+    @assignment2_tag = @module1.add_item(:id => @assignment2.id, :type => 'assignment', :title => 'Assignment 2: requires mark done')
 
   # Wiki Page or Page
     wiki     = @course.wiki_pages.create! :title => "Wiki Page"
@@ -42,15 +42,20 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     @attachment     = attachment_model(:context => @course, display_name: 'Attachment')
     @attachment_tag = @module1.add_item(:id => @attachment.id, :type => 'attachment', :title => 'Attachment: requires viewing')
 
-  # Discussion Topic
-    @topic     = @course.discussion_topics.create!
+  # Discussion Topic with Assignment
+    @topic     = @course.discussion_topics.create!(title: 'Discussion Topic with Assignment')
+    @topic.assignment = @course.assignments.build(:submission_types => 'discussion_topic', :title => @topic.title, :points_possible => 100)
+    @topic.assignment.infer_times
+    @topic.assignment.saved_by = :discussion_topic
+    @topic.save
+    expect(@topic).to be_for_assignment
     @topic_tag = @module1.add_item({:id => @topic.id, :type => 'discussion_topic', :title => 'Discussion Topic: requires contribution'})
 
-  # Group Discussion
+  # Group Discussion with Assignment
     @group_discussion = group_assignment_discussion(course: @course)
     @assignment.update_attribute :due_at, nil # rm default due date from factory
 
-    @group_discussion_tag = @module1.add_item(type: 'discussion_topic', id: @root_topic.id, title: 'Group Discussion: requires contribution')
+    @group_discussion_tag = @module1.add_item(type: 'discussion_topic', id: @root_topic.id, title: 'Group Assignment Discussion: requires contribution')
     @group.add_user @student, 'accepted'
 
   # Quiz
@@ -125,7 +130,7 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     service = AssignmentsService::Commands::SetEnrollmentAssignmentDueDates.new(enrollment: @student.enrollments.first)
     service.call
 
-    expect(AssignmentOverride.count).to eq(4)
+    expect(AssignmentOverride.count).to eq(5)
 
     # make sure all due dates were shifted forward
     Assignment.order(:id).each do |as|
@@ -208,7 +213,7 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     # An AssignmentOverride is auto deleted when no more students associated
     expect(AssignmentOverrideStudent.count).to be_zero
 
-    # 4 not 5 because quizzes are currently not auto due dated!
-    expect(AssignmentOverride.where(workflow_state: 'deleted').count).to eq(4)
+    # 5 not 6 because quizzes are currently not auto due dated!
+    expect(AssignmentOverride.where(workflow_state: 'deleted').count).to eq(5)
   end
 end

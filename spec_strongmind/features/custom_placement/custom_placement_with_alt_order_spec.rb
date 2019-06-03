@@ -13,7 +13,7 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     @module1 = @course.context_modules.create!(:name => "Module 1")
 
   # Assignment 1
-    @assignment = @course.assignments.create!(:name => "Assignment: pls submit", :submission_types => ["online_text_entry"], :points_possible => 42)
+    @assignment = @course.assignments.create!(:name => "Assignment 1: pls submit", :submission_types => ["online_text_entry"], :points_possible => 42)
     @assignment.publish
     @assignment_tag = @module1.add_item(:id => @assignment.id, :type => 'assignment', :title => 'Assignment: requires submission')
 
@@ -26,10 +26,10 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     @external_url_tag = @module1.add_item(type: 'external_url', url: 'http://example.com/lolcats', title: 'External Url: requires viewing')
     @external_url_tag.publish
 
-  # Group Discussion
+  # Group Discussion with Assignment
     @group_discussion = group_assignment_discussion(course: @course)
 
-    @group_discussion_tag = @module1.add_item(type: 'discussion_topic', id: @root_topic.id, title: 'Group Discussion: requires contribution')
+    @group_discussion_tag = @module1.add_item(type: 'discussion_topic', id: @root_topic.id, title: 'Group Assignment Discussion: requires contribution')
     @group.add_user @student, 'accepted'
 
   # Context Module Sub Header
@@ -48,12 +48,14 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     @attachment     = attachment_model(:context => @course, display_name: 'Attachment')
     @attachment_tag = @module1.add_item(:id => @attachment.id, :type => 'attachment', :title => 'Attachment: requires viewing')
 
-  # Discussion Topic
-    @topic     = @course.discussion_topics.create!
+  # Discussion Topic with Assignment
+    @topic     = @course.discussion_topics.create!(title: 'Discussion Topic with Assignment')
+    @topic.assignment = @course.assignments.build(:submission_types => 'discussion_topic', :title => @topic.title, :points_possible => 100)
+    @topic.assignment.infer_times
+    @topic.assignment.saved_by = :discussion_topic
+    @topic.save
+    expect(@topic).to be_for_assignment
     @topic_tag = @module1.add_item({:id => @topic.id, :type => 'discussion_topic', :title => 'Discussion Topic: requires contribution'})
-
-
-
 
   # Quiz
     # quiz_type can be assignment or survey
