@@ -13,12 +13,12 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     @module1 = @course.context_modules.create!(:name => "Module 1")
 
   # Assignment 1
-    @assignment = @course.assignments.create!(:name => "Assignment: pls submit", :submission_types => ["online_text_entry"], :points_possible => 42)
+    @assignment = @course.assignments.create!(:name => "Assignment 1: pls submit", :submission_types => ["online_text_entry"], :points_possible => 25)
     @assignment.publish
     @assignment_tag = @module1.add_item(:id => @assignment.id, :type => 'assignment', :title => 'Assignment: requires submission')
 
   # Assignment 3
-    @assignment3 = @course.assignments.create!(:name => "Assignment 3: min score", :submission_types => ["online_text_entry"], :points_possible => 42)
+    @assignment3 = @course.assignments.create!(:name => "Assignment 3: min score", :submission_types => ["online_text_entry"], :points_possible => 50)
     @assignment3.publish
     @assignment3_tag = @module1.add_item(:id => @assignment3.id, :type => 'assignment', :title => 'Assignment 2: min score')
 
@@ -30,9 +30,9 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     @header_tag = @module1.add_item(:type => "sub_header", :title => "Context Module Sub Header")
 
   # Assignment 2: must_mark_done
-    @assignment2 = @course.assignments.create!(:name => "Assignment: Must Mark Done", :submission_types => ["online_text_entry"])
+    @assignment2 = @course.assignments.create!(:name => "Assignment 2: Must Mark Done", :submission_types => ["online_text_entry"], :points_possible => 40)
     @assignment2.publish
-    @assignment2_tag = @module1.add_item(:id => @assignment2.id, :type => 'assignment', :title => 'Assignment: requires mark done')
+    @assignment2_tag = @module1.add_item(:id => @assignment2.id, :type => 'assignment', :title => 'Assignment 2: requires mark done')
 
   # Wiki Page or Page
     wiki     = @course.wiki_pages.create! :title => "Wiki Page"
@@ -42,16 +42,20 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     @attachment     = attachment_model(:context => @course, display_name: 'Attachment')
     @attachment_tag = @module1.add_item(:id => @attachment.id, :type => 'attachment', :title => 'Attachment: requires viewing')
 
-  # Discussion Topic
-    @topic     = @course.discussion_topics.create!
+  # Discussion Topic with Assignment
+    @topic     = @course.discussion_topics.create!(title: 'Discussion Topic with Assignment')
+    @topic.assignment = @course.assignments.build(:submission_types => 'discussion_topic', :title => @topic.title, :points_possible => 100)
+    @topic.assignment.infer_times
+    @topic.assignment.saved_by = :discussion_topic
+    @topic.save
+    expect(@topic).to be_for_assignment
     @topic_tag = @module1.add_item({:id => @topic.id, :type => 'discussion_topic', :title => 'Discussion Topic: requires contribution'})
 
-  # Group Discussion
+  # Group Discussion with Assignment
     @group_discussion = group_assignment_discussion(course: @course)
 
-    @group_discussion_tag = @module1.add_item(type: 'discussion_topic', id: @root_topic.id, title: 'Group Discussion: requires contribution')
+    @group_discussion_tag = @module1.add_item(type: 'discussion_topic', id: @root_topic.id, title: 'Group Assignment Discussion: requires contribution')
     @group.add_user @student, 'accepted'
-
 
   # Quiz
     # quiz_type can be assignment or survey
@@ -98,7 +102,7 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     @module2.prerequisites = "module_#{@module1.id}"
 
   # Module 2 Assignment 3
-    @m2_assignment = @course.assignments.create!(:name => "Module 2 Assignment: pls submit", :submission_types => ["online_text_entry"], :points_possible => 42)
+    @m2_assignment = @course.assignments.create!(:name => "Module 2 Assignment: pls submit", :submission_types => ["online_text_entry"], :points_possible => 10)
     @m2_assignment.publish
     @m2_assignment_tag = @module2.add_item(:id => @m2_assignment.id, :type => 'assignment', :title => 'Module 2 Assignment: requires submission')
 
@@ -158,6 +162,19 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
 
     expect(page).to have_selector('.ic-flash-success', text: 'Custom placement process started. You can check progress by viewing the course as the student.')
 
+    # Assignments should show Excused in gradebook
+    click_link 'Grades'
+
+    expect(page).to have_selector('#gradebook_grid')
+
+    assignments = [@assignment, @assignment2, @assignment3, @topic.assignment, @root_topic.assignment, @quiz.assignment, @m2_assignment]
+
+    assignments.each do |assignment|
+      text = evaluate_script(%Q{$('[data-user-id=#{@student.id}][data-assignment-id=#{assignment.id}]').parents('.gradebook-cell').first().text()})
+
+      expect(text).to include('EX')
+    end
+
     # switch to student check course progress indicators
     destroy_session
     user_session(@student)
@@ -202,4 +219,6 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     p2 = @module2.reload.evaluate_for(@student)
     expect(p2).not_to be_locked
   end
+
+
 end
