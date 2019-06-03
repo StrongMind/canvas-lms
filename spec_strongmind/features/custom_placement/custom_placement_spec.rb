@@ -83,7 +83,6 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
       @assignment_tag.id        => { type: 'must_submit' },
       @assignment3_tag.id       => { type: 'min_score', min_score: 70 },
       @external_url_tag.id      => { type: 'must_view' },
-      @header_tag.id            => { type: 'must_view' }, # valid?
       wiki_tag.id               => { type: 'must_view' },
       @attachment_tag.id        => { type: 'must_view' },
       @topic_tag.id             => { type: 'must_contribute' },
@@ -118,12 +117,15 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
 
     @module2.save!
 
-    student_in_course(course: @course, active_all: true)
+    # Invite student to course
+    @student = user_with_pseudonym
+    @course.enroll_user(@student, 'StudentEnrollment')
+    @student = @student.reload
+    expect(@student.enrollments.first).to be_invited
 
+    # Setup progressions & Lock progressions
     @module1.find_or_create_progressions(@student)
     @module2.find_or_create_progressions(@student)
-
-    # Lock progressions
     @module2.reload.relock_progressions
 
     # We want to also ensure Progressions get unlocked during custom placement.
@@ -135,7 +137,7 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     Delayed::Testing.drain
   end
 
-  it "by selecting a unit in a upcoming module, bypasses all the requirements of the units & modules.  And modules are unlocked correctly." do
+  it "by selecting a unit in a upcoming module. It bypasses all the requirements of the units & modules and modules are unlocked correctly." do
     visit "/courses/#{@course.id}"
 
     expect(page).to have_selector('a.home.active')
@@ -162,21 +164,24 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
 
     expect(page).to have_selector('.ic-flash-success', text: 'Custom placement process started. You can check progress by viewing the course as the student.')
 
+    @student = @student.reload
+    expect(@student.enrollments.first).to be_active
+
     # Assignments should show Excused in gradebook
     click_link 'Grades'
 
-    sleep 2
+    sleep 1
     expect(page).to have_selector('#gradebook_grid')
     expect(page).to have_selector('.gradebook-cell')
 
     assignments = [@assignment1, @assignment2, @assignment3, @topic.assignment, @root_topic.assignment, @quiz.assignment, @m2_assignment]
 
     assignments.each do |assignment|
-      text = evaluate_script(%Q{$('[data-user-id=#{@student.id}][data-assignment-id=#{assignment.id}]').parents('.gradebook-cell')}).first.text
+      text = evaluate_script(%Q{$('[data-user-id=#{@student.id}][data-assignment-id=#{assignment.id}]').parents('.gradebook-cell')})&.first&.text
 
-      puts "{#{assignment.title}-#{text}}"
+      # puts "{#{assignment.title}-#{text}}"
 
-      expect(text).to include('EX')
+      expect(text).to include('EX') # how exclusions show in gradebook
     end
 
     # switch to student check course progress indicators
@@ -223,6 +228,4 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     p2 = @module2.reload.evaluate_for(@student)
     expect(p2).not_to be_locked
   end
-
-
 end
