@@ -13,9 +13,9 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     @module1 = @course.context_modules.create!(:name => "Module 1")
 
   # Assignment 1
-    @assignment = @course.assignments.create!(:name => "Assignment 1: pls submit", :submission_types => ["online_text_entry"], :points_possible => 42)
-    @assignment.publish
-    @assignment_tag = @module1.add_item(:id => @assignment.id, :type => 'assignment', :title => 'Assignment: requires submission')
+    @assignment1 = @course.assignments.create!(:name => "Assignment 1: pls submit", :submission_types => ["online_text_entry"], :points_possible => 42)
+    @assignment1.publish
+    @assignment_tag = @module1.add_item(:id => @assignment1.id, :type => 'assignment', :title => 'Assignment: requires submission')
 
   # Assignment 3
     @assignment3 = @course.assignments.create!(:name => "Assignment 3: min score", :submission_types => ["online_text_entry"], :points_possible => 42)

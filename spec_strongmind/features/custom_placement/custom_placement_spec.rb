@@ -13,9 +13,9 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     @module1 = @course.context_modules.create!(:name => "Module 1")
 
   # Assignment 1
-    @assignment = @course.assignments.create!(:name => "Assignment 1: pls submit", :submission_types => ["online_text_entry"], :points_possible => 25)
-    @assignment.publish
-    @assignment_tag = @module1.add_item(:id => @assignment.id, :type => 'assignment', :title => 'Assignment: requires submission')
+    @assignment1 = @course.assignments.create!(:name => "Assignment 1: pls submit", :submission_types => ["online_text_entry"], :points_possible => 25)
+    @assignment1.publish
+    @assignment_tag = @module1.add_item(:id => @assignment1.id, :type => 'assignment', :title => 'Assignment: requires submission')
 
   # Assignment 3
     @assignment3 = @course.assignments.create!(:name => "Assignment 3: min score", :submission_types => ["online_text_entry"], :points_possible => 50)
@@ -165,12 +165,16 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     # Assignments should show Excused in gradebook
     click_link 'Grades'
 
+    sleep 2
     expect(page).to have_selector('#gradebook_grid')
+    expect(page).to have_selector('.gradebook-cell')
 
-    assignments = [@assignment, @assignment2, @assignment3, @topic.assignment, @root_topic.assignment, @quiz.assignment, @m2_assignment]
+    assignments = [@assignment1, @assignment2, @assignment3, @topic.assignment, @root_topic.assignment, @quiz.assignment, @m2_assignment]
 
     assignments.each do |assignment|
-      text = evaluate_script(%Q{$('[data-user-id=#{@student.id}][data-assignment-id=#{assignment.id}]').parents('.gradebook-cell').first().text()})
+      text = evaluate_script(%Q{$('[data-user-id=#{@student.id}][data-assignment-id=#{assignment.id}]').parents('.gradebook-cell')}).first.text
+
+      puts "{#{assignment.title}-#{text}}"
 
       expect(text).to include('EX')
     end
