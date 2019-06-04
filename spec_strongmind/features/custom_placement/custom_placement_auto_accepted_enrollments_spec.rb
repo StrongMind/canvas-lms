@@ -6,6 +6,8 @@ RSpec.describe 'As a Teacher using custom placement', type: :feature, js: true d
   include_context 'stubbed_network'
 
   before(:each) do
+    allow(SettingsService).to receive(:get_settings).with(object: :school, id: 1).and_return('enable_custom_placement' => true)
+
     course_with_teacher_logged_in
     @student = user_with_pseudonym
     @course.enroll_user(@student, 'StudentEnrollment') #invited

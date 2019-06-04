@@ -6,6 +6,8 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
   include_context 'stubbed_network'
 
   before(:each) do
+    allow(SettingsService).to receive(:get_settings).with(object: :school, id: 1).and_return('enable_custom_placement' => true)
+
     course_with_teacher_logged_in()
 
   # Module 1 -------

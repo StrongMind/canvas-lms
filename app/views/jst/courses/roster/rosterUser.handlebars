@@ -92,12 +92,13 @@
       {{#if canEditRoles}}
         <li><a href="#" data-event="editRoles"><i class="icon-edit" aria-hidden="true"></i> {{#t}}Edit Role{{/t}}</a></li>
       {{/if}}
-
-      <li>
-        <a href="#" data-event="editEnrollments">
-          <i class="icon-edit" aria-hidden="true"></i> Initial Placement
-        </a>
-      </li>
+      {{#if canCustomPlacement}}
+        <li>
+          <a href="#" data-event="editEnrollments">
+            <i class="icon-edit" aria-hidden="true"></i> Initial Placement
+          </a>
+        </li>
+      {{/if}}
 
       <li><a href="{{url}}"><i class="icon-user" aria-hidden="true"></i> {{#t "links.user_details"}}User Details{{/t}}</a></li>
 
