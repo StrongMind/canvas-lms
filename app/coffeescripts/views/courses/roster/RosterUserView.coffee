@@ -74,6 +74,7 @@ define [
         json.course_id = enrollment.course_id
 
     permissionsJSON: (json) ->
+      json.canCustomPlacement = ENV.CUSTOM_PLACEMENT
       json.url = "#{ENV.COURSE_ROOT_URL}/users/#{@model.get('id')}"
       json.isObserver = @model.hasEnrollmentType('ObserverEnrollment')
       json.isPending = @model.pending(@model.currentRole)
