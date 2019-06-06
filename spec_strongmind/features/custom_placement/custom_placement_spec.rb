@@ -111,10 +111,14 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     @m2_topic     = @course.discussion_topics.create!
     @m2_topic_tag = @module2.add_item({:id => @m2_topic.id, :type => 'discussion_topic', :title => 'Module 2 Discussion Topic: requires contribution'})
 
+  # External Url
+    @m2_external_url_tag = @module2.add_item(type: 'external_url', url: 'http://example.com/lolcats', title: 'Module 2 External Url: requires viewing')
+    @m2_external_url_tag.publish
 
     @module2.completion_requirements = {
       @m2_assignment_tag.id => { type: 'must_submit' },
-      @m2_topic_tag.id      => { type: 'must_contribute' }
+      @m2_topic_tag.id      => { type: 'must_contribute' },
+      @m2_external_url_tag.id => { type: 'must_view' }
     }
 
     @module2.save!
@@ -126,7 +130,7 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     enrollment = @student.enrollments.first
     expect(enrollment).to be_invited
 
-    # Force sequence control on to cover progression lock checks below, dev env usecase
+    # Force sequence control on to cover progression lock checks below, to cover issue found on dev env testing
     allow(SettingsService).to receive(:get_enrollment_settings).with(id: enrollment.id).and_return('sequence_control' => true)
 
     # Setup progressions & Lock progressions
@@ -158,7 +162,7 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
 
     expect(page).to have_selector('.ui-dialog', visible: true)
 
-    select "Module 2 Discussion Topic: requires contribution", from: 'Unit to start'
+    select "Module 2 External Url: requires viewing", from: 'Unit to start'
 
     within '.ui-dialog' do
       click_button 'Update'
@@ -206,6 +210,7 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     within "#context_module_#{@module1.id} .ig-header" do
       expect(page).to have_content('Progress: 100%')
     end
+    # binding.pry
 
     within("#context_module_content_#{@module1.id}") do
       expect(page).to have_selector('.icon-check[title=Completed]', count: 10, visible: false)
@@ -213,11 +218,11 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     end
 
     within "#context_module_#{@module2.id} .ig-header" do
-      expect(page).to have_content('Progress: 50%')
+      expect(page).to have_content('Progress: 66%')
     end
 
     within("#context_module_content_#{@module2.id}") do
-      expect(page).to have_selector('.icon-check[title=Completed]', count: 1)
+      expect(page).to have_selector('.icon-check[title=Completed]', count: 2)
       expect(page).to have_selector('.unstarted-icon[title="This assignment has not been started"]', count: 1)
     end
 
