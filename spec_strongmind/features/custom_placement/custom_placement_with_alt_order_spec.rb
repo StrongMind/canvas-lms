@@ -131,7 +131,7 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     within find("#user_#{@student.id}") do
       find('.al-trigger').click()
       sleep 1
-      click_link 'Initial Placement'
+      click_link 'Custom Placement'
     end
 
     expect(page).to have_selector('.ui-dialog', visible: true)

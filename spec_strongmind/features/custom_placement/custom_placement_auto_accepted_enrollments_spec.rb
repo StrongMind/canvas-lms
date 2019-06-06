@@ -51,7 +51,7 @@ RSpec.describe 'As a Teacher using custom placement', type: :feature, js: true d
     within find("#user_#{@student.id}") do
       find('.al-trigger').click()
       sleep 1
-      click_link 'Initial Placement'
+      click_link 'Custom Placement'
     end
 
     expect(page).to have_selector('.ui-dialog', visible: true)
