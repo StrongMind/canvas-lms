@@ -123,7 +123,11 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     @student = user_with_pseudonym
     @course.enroll_user(@student, 'StudentEnrollment')
     @student = @student.reload
-    expect(@student.enrollments.first).to be_invited
+    enrollment = @student.enrollments.first
+    expect(enrollment).to be_invited
+
+    # Force sequence control on to cover progression lock checks below, dev env usecase
+    allow(SettingsService).to receive(:get_enrollment_settings).with(id: enrollment.id).and_return('sequence_control' => true)
 
     # Setup progressions & Lock progressions
     @module1.find_or_create_progressions(@student)
