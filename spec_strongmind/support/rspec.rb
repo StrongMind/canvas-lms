@@ -68,6 +68,8 @@ RSpec.configure do |config|
 
     DatabaseCleaner.strategy = Capybara.current_driver == :rack_test ? :transaction : :truncation
     DatabaseCleaner.start
+
+    Role.ensure_built_in_roles!
   end
 
   config.after(:each) do
