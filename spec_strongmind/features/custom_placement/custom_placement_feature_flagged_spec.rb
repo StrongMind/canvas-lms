@@ -20,7 +20,7 @@ RSpec.describe 'As a System with custom placement behind feature flag', type: :f
     within find("#user_#{@student.id}") do
       find('.al-trigger').click()
       sleep 1
-      expect(page).to_not have_selector('a[href="#"][data-event=editEnrollments]', text: 'Initial Placement')
+      expect(page).to_not have_selector('a[href="#"][data-event=editEnrollments]', text: 'Custom Placement')
     end
 
     # Turn on feature flag!
@@ -35,7 +35,7 @@ RSpec.describe 'As a System with custom placement behind feature flag', type: :f
     within find("#user_#{@student.id}") do
       find('.al-trigger').click()
       sleep 1
-      expect(page).to have_selector('a[href="#"][data-event=editEnrollments]', text: 'Initial Placement')
+      expect(page).to have_selector('a[href="#"][data-event=editEnrollments]', text: 'Custom Placement')
     end
   end
 end
