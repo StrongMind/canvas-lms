@@ -43,7 +43,7 @@ define [
     update: (e) =>
       e.preventDefault()
 
-      return unless confirm('Are you sure you want to custom place this user?')
+      return unless confirm(' Please confirm that you want to custom place this user.')
 
       contentTagId = $('select#content_tag_id').val()
 
