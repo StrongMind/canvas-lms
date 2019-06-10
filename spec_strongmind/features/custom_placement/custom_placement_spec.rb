@@ -107,7 +107,7 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     @m2_assignment.publish
     @m2_assignment_tag = @module2.add_item(:id => @m2_assignment.id, :type => 'assignment', :title => 'Module 2 Assignment: requires submission')
 
-  # Discussion Topic
+  # Discussion Topic WITH NO ASSIGNMENT!
     @m2_topic     = @course.discussion_topics.create!
     @m2_topic_tag = @module2.add_item({:id => @m2_topic.id, :type => 'discussion_topic', :title => 'Module 2 Discussion Topic: requires contribution'})
 
