@@ -60,11 +60,6 @@ import 'jqueryui/tabs'
   }
 
   function appendFiletype(filetype) {
-
-    if(filetype.indexOf('.') < 0) {
-      filetype = "." + filetype;
-    }
-
     $('#filetypes').append('<dd class="filetype-badge ic-badge ic-badge--neutral">' +
     filetype + ' <sup><a href="#" class="del-filetype">x</a></sup></dd>'); 
   }
@@ -98,22 +93,17 @@ import 'jqueryui/tabs'
 
     $(document).on('click', '#add_new_filetypes_button', function(e) {
       e.preventDefault();
-      var filetypes = $('.allowed_filetype_entry').val();
+      var filetypes = $('.allowed_filetype_entry').val().split(',');
 
-      if (filetypes.indexOf(',') >= 0) {
-        var values = filetypes.split(',');
-        $.each(values, function(index, value) {
-          if($.inArray(value, ENV['FILETYPES']) == -1) {
-            appendFiletype(value);
-            ENV['FILETYPES'].push(value.replace(/\./g, "").trim());
+      $.each(filetypes, function(index, value) {
+        if($.inArray(value, ENV['FILETYPES']) == -1) {
+          if(value.indexOf('.') !== 0) {
+            value = "." + value;
           }
-        });
-      } else {
-        if($.inArray(filetypes, ENV['FILETYPES']) == -1) {
-          appendFiletype(filetypes);
-          ENV['FILETYPES'].push(filetypes.replace(/\./g, "").trim());
+          appendFiletype(value);
+          ENV['FILETYPES'].push(value.trim());
         }
-      }
+      });
 
       $('#update_settings_hint').show('slow');
       $(".allowed_filetype_entry").val('');
