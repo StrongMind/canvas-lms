@@ -1,7 +1,7 @@
 development:
   workers:
   - queue: canvas_queue
-    workers: 1
+    workers: 3
 
 production:
   workers:
