@@ -32,13 +32,13 @@ RSpec.describe 'Assignment', type: :model do
       end
     end
 
-    context 'when user passed is a User' do
+    context 'when user passed is an excused User' do
       before do
         student_in_course(active_all: true)
         teacher_in_course(course: @course)
       end
 
-      it 'looks up by user id' do
+      it 'returns true' do
         @assignment = @course.assignments.create!(:title => 'Assignment', :points_possible => 10)
 
         @assignment.grade_student(@student, grader: @teacher, excused: true)
