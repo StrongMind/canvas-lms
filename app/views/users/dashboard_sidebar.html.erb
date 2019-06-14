@@ -22,6 +22,8 @@
   <%= image_tag(brand_variable("ic-brand-right-sidebar-logo"), :class => "ic-sidebar-logo__image", :alt => "Canvas by Instructure") %>
 </div>
 <% end %>
+
+<%= link_to 'alerts', cs_alerts_path %>
 <% if planner_enabled? %>
   <div class="Sidebar__TodoListContainer"></div>
 <% else %>
