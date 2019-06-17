@@ -60,6 +60,17 @@ RSpec.describe Submission do
           expect(@module1.updated_at).to be >= new_now
         end
       end
+
+      context 'when submission doesnt have an assignment and excused changed (probably not real scenario)' do
+        it 'does not raise an error' do
+          @submission.excused = !@submission.excused
+          @submission.assignment = nil
+
+          expect {
+            @submission.touch_context_module
+          }.not_to raise_error
+        end
+      end
     end
 
     describe '#send_submission_to_pipeline' do
