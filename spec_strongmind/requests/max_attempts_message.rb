@@ -39,9 +39,20 @@ RSpec.describe "Redirect with max attempts", type: :request do
       allow(SettingsService).to receive(:get_settings).with(object: 'assignment', id: @min_score_assignment.migration_id).and_return('max_attempts' => 5)
     end
 
-    it "doesn't assign" do
+    it "returns false" do
       get course_context_modules_item_redirect_path(@course, @regular_assignment_tag)
       expect(@controller.instance_variable_get(:@maxed_out)).to be false
+    end
+  end
+
+  context "no passing threshold" do
+    before do
+      allow(SettingsService).to receive(:get_settings).with(object: :course, id: @course.id).and_return('passing_threshold' => nil)
+    end
+
+    it "does not assign" do
+      get course_context_modules_item_redirect_path(@course, @regular_assignment_tag)
+      expect(@controller.instance_variable_get(:@maxed_out)).to be nil
     end
   end
 end
