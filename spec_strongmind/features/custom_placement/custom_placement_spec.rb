@@ -131,7 +131,7 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     expect(enrollment).to be_invited
 
     # Force sequence control on to cover progression lock checks below, to cover issue found on dev env testing
-    allow(SettingsService).to receive(:get_enrollment_settings).with(id: enrollment.id).and_return('sequence_control' => true)
+    allow(SettingsService).to receive(:get_enrollment_settings).with(id: an_instance_of(Integer)).and_return('sequence_control' => true) # with any enrollment id
 
     # Setup progressions & Lock progressions
     @module1.find_or_create_progressions(@student)
@@ -210,7 +210,6 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
     within "#context_module_#{@module1.id} .ig-header" do
       expect(page).to have_content('Progress: 100%')
     end
-    # binding.pry
 
     within("#context_module_content_#{@module1.id}") do
       expect(page).to have_selector('.icon-check[title=Completed]', count: 10, visible: false)
