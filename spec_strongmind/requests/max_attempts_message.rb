@@ -6,15 +6,12 @@ RSpec.describe "Redirect with max attempts", type: :request do
   before(:each) do
     student_in_course(active_all: true)
     course_with_student_logged_in(course: @course)
-
     @module1 = @course.context_modules.create!(:name => "Module 1")
 
-    # Assignment 3
     @min_score_assignment = @course.assignments.create!(:name => "Assignment 3: min score", :submission_types => ["online_text_entry"], :points_possible => 50, migration_id: '12345')
     @min_score_assignment.publish
     @min_score_assignment_tag = @module1.add_item(:id => @min_score_assignment.id, :type => 'assignment', :title => 'Assignment 2: min score')
 
-    # Assignment 1
     @regular_assignment = @course.assignments.create!(:name => "Assignment 1: pls submit", :submission_types => ["online_text_entry"], :points_possible => 25)
     @regular_assignment.publish
     @regular_assignment_tag = @module1.add_item(:id => @regular_assignment.id, :type => 'assignment', :title => 'Assignment: requires submission')
