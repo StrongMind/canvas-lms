@@ -52,8 +52,8 @@ RSpec.describe 'Excused assignments on Course home page', type: :feature, js: tr
         end
 
         # Excused test in requirements area
-        within '.completion_requirement' do
-          expect(page).to have_selector('.excused_requirement', visible: true)
+        within '.ig-details .completion_requirement' do
+          expect(page).to have_selector('.excused', visible: true)
           expect(page).to have_content('Excused')
         end
       end
