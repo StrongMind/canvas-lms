@@ -172,10 +172,9 @@ module CC
         module_exam = false
       end
 
-      if max_attempts
-        node.max_attempts max_attempts
-        node.is_end_of_module_exam module_exam if module_exam
-      end
+      node.max_attempts max_attempts if max_attempts
+      node.is_end_of_module_exam module_exam if module_exam
+
       if manifest && manifest.try(:user).present?
         node.module_locked assignment.locked_by_module_item?(manifest.user, deep_check_if_needed: true).present?
       end
