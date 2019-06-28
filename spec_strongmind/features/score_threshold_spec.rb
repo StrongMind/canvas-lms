@@ -6,6 +6,7 @@ RSpec.describe 'Score threshold feature', type: :feature, js: true do
 
   context "with score_threshold set" do
     before do
+      allow(SettingsService).to receive(:get_settings).and_return('passing_threshold' => 70)
       allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentMinScores).to receive(:score_threshold).and_return(75.0)
 
       account_admin_user
