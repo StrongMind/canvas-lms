@@ -1515,7 +1515,6 @@ import 'compiled/jquery.rails_flash_notifications'
 
     $(".edit_module_link").live('click', function(event) {
       event.preventDefault();
-      if (ENV['module_editing_disabled']) { return }
       modules.editModule($(this).parents(".context_module"));
     });
 
