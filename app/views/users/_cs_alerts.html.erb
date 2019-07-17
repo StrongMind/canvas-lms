@@ -5,7 +5,7 @@
       <div class="todo-badge-wrapper">
         <div class="">
           <%
-            alert_count = AlertsService::Client.list(@current_user.id).payload.count
+            alert_count = AlertsService::Client.teacher_alerts(@current_user.id).payload.count
             badge_class = if alert_count > 0
               'badge-important'
             else
