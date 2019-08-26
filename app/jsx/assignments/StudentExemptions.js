@@ -14,13 +14,13 @@ class StudentExemptions extends React.Component {
     }
 
     lmsData(props){
-      return this.fixture();
-        // input: '',
-        // loading: false,
-        // options: [],
-        // students: props['students'],
-        // exemptions: props['exemptions']
-
+      return {
+          input: '',
+          loading: false,
+          options: [],
+          students: props['students'],
+          exemptions: props['exemptions']
+        }
     }
 
     // Use this to set test state if you aren't connecting to
