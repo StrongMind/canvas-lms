@@ -493,6 +493,7 @@ class DiscussionTopicsController < ApplicationController
         js_hash[:allow_self_signup] = true  # for group creation
         js_hash[:group_user_type] = 'student'
         js_hash['EXCLUDED_STUDENTS'] = excused_students
+        js_hash['ALL_STUDENTS'] = students_in_course
       end
       js_env(js_hash)
 
