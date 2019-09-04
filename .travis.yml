@@ -3,6 +3,7 @@ rvm:
 services:
   - redis-server
   - postgresql
+  - xvfb
 addons:
   postgresql: "9.6"
   chrome: stable
@@ -33,9 +34,6 @@ before_install:
   # Allow headful tests, see https://github.com/Googlechrome/puppeteer/issues/290
   # Enable user namespace cloning
   - "sudo sysctl kernel.unprivileged_userns_clone=1"
-  # Launch XVFB - for non headless test runs
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
   # grab Chromedriver for selenium
   - wget http://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip
   - mkdir -p /home/travis/bin
