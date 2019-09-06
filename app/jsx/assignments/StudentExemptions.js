@@ -147,12 +147,6 @@ class StudentExemptions extends React.Component {
       })
     }
 
-    styleBold() {
-      return({
-        fontWeight: 'bold'
-      })
-    }
-
     render() {
         this.props.syncWithBackbone(this.state.exemptions)
         if(!this.state.exemptions){return <ul></ul>}
@@ -177,7 +171,7 @@ class StudentExemptions extends React.Component {
               </div>
             </div>
             <div style={this.messageStyle()}>
-              <p>Note: It may take up to <span style={this.styleBold()}>15 minutes</span> for the excuse tag to show in all student areas.</p>
+              <p>Note: It may take up to 15 minutes for the excuse tag to show in all student areas.</p>
             </div>
           </div>
         )
