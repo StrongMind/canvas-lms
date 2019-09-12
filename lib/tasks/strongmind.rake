@@ -82,24 +82,26 @@ namespace :strongmind do
     )
   end
 
-  desc "Redistrubute due dates on courses after X start date"
-  task :redistrubute_date_dates_after => :environment do
-    abort("No date specified in ENV") unless ENV['REDISTRUBUTE_AFTER']
-    start_after = Date::strptime(ENV['REDISTRUBUTE_AFTER'], "%d-%m-%Y")
-    courses = Course.where('start_date > ?', start_after)
+  desc "redistribute due dates on courses after X start date"
+  task :redistribute_date_dates_after => :environment do
+    abort("No date specified in ENV") unless ENV['REDISTRIBUTE_AFTER']
+    start_after = Date::strptime(ENV['REDISTRIBUTE_AFTER'], "%m-%d-%Y")
+    courses = Course.where('start_at > ?', start_after)
     CSV_FILE_NAME = "#{ENV['SCHOOL_NAME']}_due_date_redistribute_due_dates_#{Time.now.utc.iso8601}"
     CSV.open(CSV_FILE_NAME, "wb") do |csv|
       courses.each do |course|
-        course.assignments.each do |assignment|
-          csv << [course.id, assignment.id, assignment.due_at]
-        end
-        if ENV['COMMIT'] == "1"
-          AssignmentsService.distribute_due_dates(course: course)
-        end
+        next unless course.conclude_at?
+        puts "working on course #{course.id}"
+          course.assignments.each do |assignment|
+            csv << [course.id, assignment.id, assignment.due_at || "none"]
+          end
+          if ENV['COMMIT'] == "1"
+            AssignmentsService.distribute_due_dates(course: course)
+          end
       end
-      CSV.close
+      csv.close
       s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'], access_key_id: ENV['S3_ACCESS_KEY_ID'], secret_access_key: ENV['S3_ACCESS_KEY'])
-      obj = s3.bucket(ENV['S3_BUCKET_NAME']).object("due_date_redistrubute/#{CSV_FILE_NAME})
+      obj = s3.bucket(ENV['S3_BUCKET_NAME']).object("due_date_redistribute/#{CSV_FILE_NAME}")
       obj.upload_file(CSV_FILE_NAME)
     end
   end
