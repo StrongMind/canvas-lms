@@ -153,6 +153,7 @@ define [
       @setDefaultsIfNew()
       @dueDateOverrideView = options.views['js-assignment-overrides']
       @excludeStudentsView = options.views['js-exclude-students']
+      @excludeStudentsView = options.views['js-unassign-students']
       
       @on 'success', @redirectAfterSave
       @gradingTypeSelector.on 'change:gradingType', @handleGradingTypeChange

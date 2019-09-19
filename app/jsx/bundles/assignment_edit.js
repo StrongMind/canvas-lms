@@ -26,6 +26,7 @@ import DueDateList from 'compiled/models/DueDateList'
 import DueDateOverride from 'compiled/views/assignments/DueDateOverride'
 import ExcludeStudents from 'compiled/views/assignments/ExcludeStudents'
 import ExcludeStudentList from 'compiled/models/ExcludeStudentList'
+import UnassignStudentList from 'compiled/models/UnassignStudentList'
 
 import AssignmentGroupSelector from 'compiled/views/assignments/AssignmentGroupSelector'
 import GradingTypeSelector from 'compiled/views/assignments/GradingTypeSelector'
@@ -47,6 +48,7 @@ assignment.urlRoot = ENV.URL_ROOT
 const sectionList = new SectionCollection(ENV.SECTION_LIST)
 const dueDateList = new DueDateList(assignment.get('assignment_overrides'), sectionList, assignment)
 const excludeStudentList = new ExcludeStudentList([])
+const unassignStudentList = new UnassignStudentList([])
 
 const assignmentGroupSelector = new AssignmentGroupSelector({
   parentModel: assignment,
@@ -87,6 +89,9 @@ const editView = new EditView({
       dueDatesReadonly: !!lockedItems.due_dates,
       availabilityDatesReadonly: !!lockedItems.availability_dates
     }),
+    'js-unassign-students': new ExcludeStudents(
+      { model: unassignStudentList }
+    )
   },
   lockedItems: assignment.id ? lockedItems : {} // if no id, creating a new assignment
 })

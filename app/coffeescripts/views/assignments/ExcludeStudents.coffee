@@ -24,7 +24,7 @@ define [
 
       getExcludedStudents: () =>
         @model.excludes
-      
+
       render: ->
         div = @$el[0]
         return unless div
