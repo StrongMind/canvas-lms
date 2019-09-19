@@ -25,6 +25,7 @@ import DueDateList from 'compiled/models/DueDateList'
 
 import DueDateOverride from 'compiled/views/assignments/DueDateOverride'
 import ExcludeStudents from 'compiled/views/assignments/ExcludeStudents'
+import UnassignStudents from 'compiled/views/assignments/UnassignStudents'
 import ExcludeStudentList from 'compiled/models/ExcludeStudentList'
 import UnassignStudentList from 'compiled/models/UnassignStudentList'
 
@@ -89,7 +90,7 @@ const editView = new EditView({
       dueDatesReadonly: !!lockedItems.due_dates,
       availabilityDatesReadonly: !!lockedItems.availability_dates
     }),
-    'js-unassign-students': new ExcludeStudents(
+    'js-unassign-students': new UnassignStudents(
       { model: unassignStudentList }
     )
   },
