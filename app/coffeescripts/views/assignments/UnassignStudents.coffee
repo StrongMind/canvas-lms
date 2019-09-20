@@ -3,14 +3,14 @@ define [
   'Backbone'
   'react'
   'react-dom'
-  'jsx/assignments/StudentExemptions',
+  'jsx/assignments/StudentUnassign',
   'jst/assignments/StudentExemptionsTemplate'
 ], (
   $,
   Backbone,
   React,
   ReactDOM,
-  StudentExemptions,
+  StudentUnassignments,
   StudentExemptionsTemplate
 ) ->
   class UnassignStudentsView extends Backbone.View
@@ -29,7 +29,7 @@ define [
       div = @$el[0]
       return unless div
       StudentExemptionsElement = React.createElement(
-        StudentExemptions,
+        StudentUnassignments,
         syncWithBackbone: @setNewExcludesCollection,
         students: @model.students,
         exemptions: @model.excludes
