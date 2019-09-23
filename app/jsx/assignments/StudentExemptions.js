@@ -5,7 +5,7 @@ import TokenInput, {Option as ComboboxOption} from 'react-tokeninput'
 class StudentExemptions extends React.Component {
     constructor(props) {
         super(props)
-      this.state = this.lmsData(props)
+        this.state = this.lmsData(props)
         this.handleInput = this.handleInput.bind(this)
         this.renderComboboxOptions = this.renderComboboxOptions.bind(this)
         this.handleTokenAdd = this.handleTokenAdd.bind(this)

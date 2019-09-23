@@ -86,24 +86,22 @@ import 'compiled/jquery.rails_flash_notifications'
         selectedGroupSetId: this.props.selectedGroupSetId
       }, this.fetchAdhocStudents)
 
-      function filterOverrides(overrides) {
-        var ids = []
-        overrides.forEach((object) => {
-          ids.push(object.attributes.student_ids)
-        })
-
-        return ids
-      }
-
-      console.log(filterOverrides(this.props.overrides))
-
-      OverrideStudentStore.setCurrentOverrides(this.props.overrides)
+      OverrideStudentStore.setCurrentOverrides(this.filterOverrideIds(this.props.overrides))
 
       OverrideStudentStore.addChangeListener(this.handleStudentStoreChange)
 
       StudentGroupStore.setGroupSetIfNone(this.props.selectedGroupSetId)
       StudentGroupStore.addChangeListener(this.handleStudentGroupStoreChange)
       StudentGroupStore.fetchGroupsForCourse()
+    },
+
+    filterOverrideIds(overrides) {
+      let ids = []
+      overrides.forEach((object) => {
+        ids.push.apply(ids, object.attributes.student_ids)
+      })
+
+      return ids
     },
 
     fetchAdhocStudents(){
@@ -302,6 +300,7 @@ import 'compiled/jquery.rails_flash_notifications'
       )
 
       this.replaceRow(rowKey, newOverridesForRow, row["dates"])
+      OverrideStudentStore.setCurrentOverrides(this.filterOverrideIds(newOverridesForRow))
     },
 
     handleInteractionStart() {
