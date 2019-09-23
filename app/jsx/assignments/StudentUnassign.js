@@ -1,21 +1,22 @@
 import React from 'react'
-import getState from 'redux'
 import TokenInput, {Option as ComboboxOption} from 'react-tokeninput'
 import StudentExemptions from 'jsx/assignments/StudentExemptions'
+import OverrideStudentStore from "jsx/due_dates/OverrideStudentStore";
 
 class StudentUnassignments extends StudentExemptions {
   constructor(props) {
     super(props)
+    this.state.filteredStudents = this.filterOverrides()
+  }
+
+  componentDidMount() {
+    this.setState({
+      overrides: OverrideStudentStore.getCurrentOverrides()
+    })
   }
 
   filterOverrides() {
-    console.log(this.state.options)
-    console.log(this.state.overrides)
     return this.state.options.filter(student => !this.state.overrides.includes(student.id))
-  }
-
-  mapStateToProps(state) {
-    return { overrides: state.overrides.flatMap(override => override['attributes']['student_ids']) }
   }
 
   renderComboboxOptions() {

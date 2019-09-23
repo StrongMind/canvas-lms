@@ -32,7 +32,8 @@ import parseLinkHeader from 'compiled/fn/parseLinkHeader'
     searchedNames: {},
     currentlySearching: false,
     allStudentsFetched: false,
-    requestedStudentsForCourse: false
+    requestedStudentsForCourse: false,
+    currentOverrides: []
   }
 
   var OverrideStudentStore = createStore($.extend(true, {}, initialStoreState))
@@ -174,6 +175,18 @@ import parseLinkHeader from 'compiled/fn/parseLinkHeader'
 
   OverrideStudentStore.currentlySearching = function(){
     return this.getState().currentlySearching
+  }
+
+  OverrideStudentStore.setCurrentOverrides = function(overrides) {
+    this.setState({
+      currentOverrides: overrides
+    })
+
+    console.log(this.getState())
+  }
+
+  OverrideStudentStore.getCurrentOverrides = function() {
+    return this.getState().currentOverrides
   }
 
   // -------------------

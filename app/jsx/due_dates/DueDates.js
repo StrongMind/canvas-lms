@@ -20,7 +20,6 @@ import _ from 'underscore'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import OverrideActions from "jsx/assignments/actions/OverridesActions";
 import DueDateRow from 'jsx/due_dates/DueDateRow'
 import DueDateAddRowButton from 'jsx/due_dates/DueDateAddRowButton'
 import OverrideStudentStore from 'jsx/due_dates/OverrideStudentStore'
@@ -87,7 +86,18 @@ import 'compiled/jquery.rails_flash_notifications'
         selectedGroupSetId: this.props.selectedGroupSetId
       }, this.fetchAdhocStudents)
 
-      OverrideActions.setOverrides(this.props.overrides)
+      function filterOverrides(overrides) {
+        var ids = []
+        overrides.forEach((object) => {
+          ids.push(object.attributes.student_ids)
+        })
+
+        return ids
+      }
+
+      console.log(filterOverrides(this.props.overrides))
+
+      OverrideStudentStore.setCurrentOverrides(this.props.overrides)
 
       OverrideStudentStore.addChangeListener(this.handleStudentStoreChange)
 
