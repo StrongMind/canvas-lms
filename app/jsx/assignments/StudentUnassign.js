@@ -8,12 +8,18 @@ class StudentUnassignments extends StudentExemptions {
     super(props)
     this.filterTags = this.filterTags.bind(this)
     this.names = this.names.bind(this)
+    this.handleTokenAdd = this.handleTokenAdd.bind(this)
+    this.handleTokenRemove = this.handleTokenRemove.bind(this)
   }
 
   componentDidMount() {
     this.setState({
       overrides: OverrideStudentStore.getCurrentOverrides()
     })
+  }
+
+  componentWillUpdate() {
+    OverrideStudentStore.setCurrentUnassignments(this.state.exemptions)
   }
 
   filterTags(userInput) {
@@ -54,6 +60,19 @@ class StudentUnassignments extends StudentExemptions {
 
   filterOverrides() {
     return this.filterArray().map(students => students.name)
+  }
+
+  handleTokenAdd(token) {
+    var studentName = this.findStudentName(token);
+    if(!studentName) return
+    var student = this.findStudent(studentName)
+    this.setState({exemptions: [...this.state.exemptions, student]})
+  }
+
+  handleTokenRemove(token) {
+    this.setState({exemptions: this.state.exemptions.filter((student) =>
+      student.id !== token.id
+    )});
   }
 
   renderComboboxOptions() {
