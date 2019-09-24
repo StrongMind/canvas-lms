@@ -6,6 +6,7 @@ import OverrideStudentStore from "jsx/due_dates/OverrideStudentStore";
 class StudentUnassignments extends StudentExemptions {
   constructor(props) {
     super(props)
+    this.filterTags = this.filterTags.bind(this)
   }
 
   componentDidMount() {
@@ -13,6 +14,19 @@ class StudentUnassignments extends StudentExemptions {
       overrides: OverrideStudentStore.getCurrentOverrides()
     })
   }
+
+  filterTags(userInput) {
+      this.setState({
+        overrides: OverrideStudentStore.getCurrentOverrides()
+      })
+
+      if (userInput === '') return this.setState({options: []});
+      this.setState({
+        options: this.names().filter((name) =>
+          new RegExp('^'+userInput, 'i').test(name)
+        )
+      })
+    }
 
   componentWillReceiveProps(nextProps) {
     console.log('received props')
