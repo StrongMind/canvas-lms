@@ -7,6 +7,7 @@ class StudentUnassignments extends StudentExemptions {
   constructor(props) {
     super(props)
     this.filterTags = this.filterTags.bind(this)
+    this.names = this.names.bind(this)
   }
 
   componentDidMount() {
@@ -39,8 +40,12 @@ class StudentUnassignments extends StudentExemptions {
     }
   }
 
-  findStudent(studentName){
-    return this.filterArray().find((element) => element.name === studentName)
+  names(){
+    return this.state.students.map(student => {
+      return student.name
+    }).filter(name =>
+      this.filterArray().find(stu => stu.name === name)
+    )
   }
 
   filterArray() {
