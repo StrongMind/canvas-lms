@@ -181,8 +181,6 @@ import parseLinkHeader from 'compiled/fn/parseLinkHeader'
     this.setState({
       currentOverrides: overrides
     })
-
-    console.log(this.getState())
   }
 
   OverrideStudentStore.getCurrentOverrides = function() {

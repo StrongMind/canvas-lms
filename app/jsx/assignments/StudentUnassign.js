@@ -16,26 +16,16 @@ class StudentUnassignments extends StudentExemptions {
   }
 
   filterTags(userInput) {
-      this.setState({
-        overrides: OverrideStudentStore.getCurrentOverrides()
-      })
+    this.setState({
+      overrides: OverrideStudentStore.getCurrentOverrides()
+    })
 
-      if (userInput === '') return this.setState({options: []});
-      this.setState({
-        options: this.names().filter((name) =>
-          new RegExp('^'+userInput, 'i').test(name)
-        )
-      })
-    }
-
-  componentWillReceiveProps(nextProps) {
-    console.log('received props')
-    const { currentOverrides } = nextProps
-    if (currentOverrides !== this.state.overrides) {
-      this.setState({
-        overrides: currentOverrides
-      })
-    }
+    if (userInput === '') return this.setState({options: []});
+    this.setState({
+      options: this.names().filter((name) =>
+        new RegExp('^'+userInput, 'i').test(name)
+      )
+    })
   }
 
   lmsData(props){
@@ -55,7 +45,6 @@ class StudentUnassignments extends StudentExemptions {
   }
 
   renderComboboxOptions() {
-    console.log(this.filterOverrides())
     if (this.filterOverrides().length) {
       return this.filterOverrides().map((name) => {
         var student = this.findStudent(name)
