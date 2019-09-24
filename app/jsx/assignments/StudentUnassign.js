@@ -39,9 +39,16 @@ class StudentUnassignments extends StudentExemptions {
     }
   }
 
+  findStudent(studentName){
+    return this.filterArray().find((element) => element.name === studentName)
+  }
+
+  filterArray() {
+    return this.state.students.filter(student => !this.state.overrides.includes(student.id))
+  }
+
   filterOverrides() {
-    let filteredArray = this.state.students.filter(student => !this.state.overrides.includes(student.id))
-    return filteredArray.map(students => students.name)
+    return this.filterArray().map(students => students.name)
   }
 
   renderComboboxOptions() {
