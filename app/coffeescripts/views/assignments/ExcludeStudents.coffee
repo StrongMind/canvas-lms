@@ -34,6 +34,6 @@ define [
           students: @model.students,
           exemptions: @model.excludes,
           delayMessage: true,
-          labelMessage: "Exempt these students"
+          labelMessage: "Excuse these students from this assignment"
         )
         ReactDOM.render(StudentExemptionsElement, div)

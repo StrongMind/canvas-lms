@@ -74,10 +74,14 @@ body {
   position: relative;
   z-index: 200;
 
-  #exempt-label {
-    font-size: 0.75rem;
-    margin-bottom: 0.3rem;
+  .form-column-left {
+    margin-top: 0;
   }
+}
+
+#exempt-label {
+  font-size: 0.75rem;
+  margin-bottom: 0.3rem;
 }
 
 #exclude-students-wrapper {

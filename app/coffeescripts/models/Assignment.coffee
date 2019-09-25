@@ -332,7 +332,7 @@ define [
       return @id
 
     assignmentIsEditable: =>
-      if(ENV.ASSIGNMENT.id)
+      if(ENV.ASSIGNMENT && ENV.ASSIGNMENT.id)
         return true
 
     postToSISEnabled: =>
