@@ -32,6 +32,8 @@ define [
         StudentUnassignments,
         syncWithBackbone: @setNewExcludesCollection,
         students: @model.students,
-        exemptions: @model.excludes
+        exemptions: @model.excludes,
+        delayMessage: false,
+        labelMessage: "Remove these students from this assignment"
       )
       ReactDOM.render(StudentExemptionsElement, div)

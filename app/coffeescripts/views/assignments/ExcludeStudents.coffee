@@ -32,6 +32,8 @@ define [
           StudentExemptions,
           syncWithBackbone: @setNewExcludesCollection,
           students: @model.students,
-          exemptions: @model.excludes
+          exemptions: @model.excludes,
+          delayMessage: true,
+          labelMessage: "Exempt these students"
         )
         ReactDOM.render(StudentExemptionsElement, div)
