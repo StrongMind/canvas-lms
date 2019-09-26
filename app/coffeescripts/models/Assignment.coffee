@@ -331,10 +331,6 @@ define [
     labelId: =>
       return @id
 
-    assignmentIsEditable: =>
-      if(ENV.ASSIGNMENT && ENV.ASSIGNMENT.id)
-        return true
-
     postToSISEnabled: =>
       return ENV.POST_TO_SIS
 
@@ -420,7 +416,7 @@ define [
         'assignmentGroupId', 'iconType', 'published', 'htmlUrl', 'htmlEditUrl',
         'labelId', 'position', 'postToSIS', 'multipleDueDates', 'nonBaseDates',
         'allDates', 'hasDueDate', 'hasPointsPossible', 'singleSectionDueDate',
-        'moderatedGrading', 'assignmentIsEditable', 'postToSISEnabled', 'isOnlyVisibleToOverrides',
+        'moderatedGrading', 'postToSISEnabled', 'isOnlyVisibleToOverrides',
         'omitFromFinalGrade', 'is_quiz_assignment', 'isQuizLTIAssignment',
         'secureParams', 'inClosedGradingPeriod', 'dueDateRequired', 'submissionTypesFrozen'
       ]

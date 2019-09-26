@@ -198,14 +198,14 @@
     </div>
   </div>
 
-  {{#if assignmentIsEditable}}
+  {{#unless ENV.new_assignment}}
     <div id="unassign-wrapper">
       <div class="form-column-left">
         {{#t}}Unassign{{/t}}
       </div>
       <div class="overrides-column-right js-unassign-students"></div>
     </div>
-  {{/if}}
+  {{/unless}}
 </div>
 
 <div id="exclude-students-wrapper">
