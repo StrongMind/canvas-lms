@@ -292,7 +292,7 @@ import DisabledTokenInput from 'jsx/due_dates/DisabledTokenInput'
       var included = OverrideStudentStore.getCurrentUnassignments().some(item => item.id === set.id)
 
       if (set.enrollments && included) {
-        return
+        return <ComboboxOption></ComboboxOption>
       }
 
       return <ComboboxOption key={set.key || `${displayName}-${index}`} value={set.name} set_props={set}>
