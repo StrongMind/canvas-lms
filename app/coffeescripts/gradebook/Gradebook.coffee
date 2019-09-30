@@ -704,7 +704,6 @@ define [
         @staticCellFormatter(row, col, '')
       else
         cellAttributes = @submissionStateMap.getSubmissionState(submission)
-        console.log(Object.keys(submission))
         if !Object.keys(submission).includes("cached_due_date")
           @unassignedCellFormatter(row, col, "UN")
         else if cellAttributes.hideGrade
