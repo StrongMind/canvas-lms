@@ -320,12 +320,14 @@ module Canvas::Security
     def verify_jwt(body, ignore_expiration: false)
       if body[:exp].present? && !ignore_expiration
         if timestamp_is_expired?(body[:exp])
+          Rails.logger.error { "timestamp_is_expired: #{body[:exp]} - #{body}" }
           raise Canvas::Security::TokenExpired
         end
       end
 
       if body[:nbf].present?
         if timestamp_is_future?(body[:nbf])
+          Rails.logger.error { "timestamp_is_future:  #{body[:nbf]} - #{body}" }
           raise Canvas::Security::InvalidToken
         end
       end
