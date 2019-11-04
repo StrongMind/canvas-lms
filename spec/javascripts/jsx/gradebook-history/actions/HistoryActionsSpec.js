@@ -16,9 +16,6 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Fixtures from 'spec/jsx/gradebook-history/Fixtures';
-import parseLinkHeader from 'jsx/shared/parseLinkHeader';
-
 import {
   FETCH_HISTORY_START,
   FETCH_HISTORY_SUCCESS,
@@ -31,9 +28,41 @@ import {
   fetchHistoryFailure,
   fetchHistoryNextPageStart,
   fetchHistoryNextPageSuccess,
-  fetchHistoryNextPageFailure,
-  formatHistoryItems
+  fetchHistoryNextPageFailure
 } from 'jsx/gradebook-history/actions/HistoryActions';
+
+function defaultResponse () {
+  return {
+    data: {
+      events: [
+        {
+          created_at: '2017-05-30T23:16:59Z',
+          event_type: 'grade_change',
+          grade_after: '21',
+          grade_before: '19',
+          grade_current: '22',
+          graded_anonymously: false,
+          id: '123456',
+          points_possible_after: '25',
+          points_possible_before: '25',
+          links: {
+            assignment: 1,
+            course: 1,
+            grader: 100,
+            student: 110
+          }
+        }
+      ],
+      linked: {
+        assignments: [{ id: 1, name: 'Rustic Rubber Duck', grading_type: 'points', points_possible: 26 }],
+        users: [{ id: 100, name: 'Ms. Twillie Jones' }, { id: 110, name: 'Norval Abbott' }]
+      }
+    },
+    headers: {
+      link: '<http://example.com/3?&page=first>; rel="current",<http://example.com/3?&page=bookmark:asdf>; rel="next"'
+    }
+  };
+}
 
 QUnit.module('HistoryActions');
 
@@ -44,17 +73,37 @@ test('fetchHistoryStart creates an action with type FETCH_HISTORY_START', functi
   deepEqual(fetchHistoryStart(), expectedValue);
 });
 
-test('fetchHistorySuccess creates an action with type FETCH_HISTORY_SUCCESS and payload', function () {
-  const response = Fixtures.historyResponse();
-  const { events, linked: { assignments, users } } = response.data;
-  const expectedValue = {
-    type: FETCH_HISTORY_SUCCESS,
-    payload: {
-      items: formatHistoryItems({ events, users, assignments }),
-      link: parseLinkHeader(response.headers.link).next
+test('fetchHistorySuccess creates an action with type FETCH_HISTORY_SUCCESS', function () {
+  const response = defaultResponse();
+  strictEqual(fetchHistorySuccess(response.data, response.headers).type, FETCH_HISTORY_SUCCESS);
+});
+
+test('fetchHistorySuccess creates an action with history items in payload', function () {
+  const response = defaultResponse();
+  const expectedItems = [
+    {
+      anonymous: false,
+      assignment: 'Rustic Rubber Duck',
+      date: '2017-05-30T23:16:59Z',
+      displayAsPoints: true,
+      grader: 'Ms. Twillie Jones',
+      gradeAfter: '21',
+      gradeBefore: '19',
+      gradeCurrent: '22',
+      id: '123456',
+      pointsPossibleBefore: '25',
+      pointsPossibleAfter: '25',
+      pointsPossibleCurrent: '26',
+      student: 'Norval Abbott'
     }
-  };
-  deepEqual(fetchHistorySuccess(response.data, response.headers), expectedValue);
+  ];
+  deepEqual(fetchHistorySuccess(response.data, response.headers).payload.items, expectedItems);
+});
+
+test('fetchHistorySuccess creates an action with history next page link in payload', function () {
+  const response = defaultResponse();
+  const expectedUrl = 'http://example.com/3?&page=bookmark:asdf';
+  strictEqual(fetchHistoryNextPageSuccess(response.data, response.headers).payload.link, expectedUrl);
 });
 
 test('fetchHistoryFailure creates an action with type FETCH_HISTORY_FAILURE', function () {
@@ -71,16 +120,37 @@ test('fetchHistoryNextPageStart creates an action with type FETCH_HISTORY_NEXT_P
   deepEqual(fetchHistoryNextPageStart(), expectedValue);
 });
 
-test('fetchHistoryNextPageSuccess creates an action with type FETCH_HISTORY_NEXT_PAGE_SUCCESS and payload', function () {
-  const response = Fixtures.historyResponse();
-  const expectedValue = {
-    type: FETCH_HISTORY_NEXT_PAGE_SUCCESS,
-    payload: {
-      items: formatHistoryItems(response.data),
-      link: parseLinkHeader(response.headers.link).next
+test('fetchHistoryNextPageSuccess creates an action with type FETCH_HISTORY_NEXT_PAGE_SUCCESS', function () {
+  const response = defaultResponse();
+  strictEqual(fetchHistoryNextPageSuccess(response.data, response.headers).type, FETCH_HISTORY_NEXT_PAGE_SUCCESS);
+});
+
+test('fetchHistoryNextPageSuccess creates an action with history items in payload', function () {
+  const response = defaultResponse();
+  const expectedItems = [
+    {
+      anonymous: false,
+      assignment: 'Rustic Rubber Duck',
+      date: '2017-05-30T23:16:59Z',
+      displayAsPoints: true,
+      grader: 'Ms. Twillie Jones',
+      gradeAfter: '21',
+      gradeBefore: '19',
+      gradeCurrent: '22',
+      id: '123456',
+      pointsPossibleBefore: '25',
+      pointsPossibleAfter: '25',
+      pointsPossibleCurrent: '26',
+      student: 'Norval Abbott'
     }
-  };
-  deepEqual(fetchHistoryNextPageSuccess(response.data, response.headers), expectedValue);
+  ];
+  deepEqual(fetchHistoryNextPageSuccess(response.data, response.headers).payload.items, expectedItems);
+});
+
+test('fetchHistoryNextPageSuccess creates an action with history next page link in payload', function () {
+  const response = defaultResponse();
+  const expectedUrl = 'http://example.com/3?&page=bookmark:asdf';
+  strictEqual(fetchHistoryNextPageSuccess(response.data, response.headers).payload.link, expectedUrl);
 });
 
 test('fetchHistoryNextPageFailure creates an action with type FETCH_HISTORY_NEXT_PAGE_FAILURE', function () {

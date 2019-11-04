@@ -624,8 +624,8 @@ class ContextExternalTool < ActiveRecord::Base
 
     context = context.context if context.is_a?(Group)
 
-    tool = context.context_external_tools.having_setting(type).where(id: id).first
-    tool ||= ContextExternalTool.having_setting(type).where(context_type: 'Account', context_id: context.account_chain_ids, id: id).first
+    tool = context.context_external_tools.having_setting(type).active.where(id: id).first
+    tool ||= ContextExternalTool.having_setting(type).active.where(context_type: 'Account', context_id: context.account_chain_ids, id: id).first
     raise ActiveRecord::RecordNotFound if !tool && raise_error
 
     tool
@@ -703,8 +703,8 @@ class ContextExternalTool < ActiveRecord::Base
     end
   end
 
-  def self.global_navigation_tools(root_account, visibility)
-    tools = root_account.context_external_tools.active.having_setting(:global_navigation).to_a
+  def self.global_navigation_tools(accounts, visibility)
+    tools = accounts.map(&:global_navigation_tools).flatten.uniq
     if visibility == 'members'
       # reject the admin only tools
       tools.reject!{|tool| tool.global_navigation[:visibility] == 'admins'}
@@ -712,11 +712,11 @@ class ContextExternalTool < ActiveRecord::Base
     tools
   end
 
-  def self.global_navigation_menu_cache_key(root_account, visibility)
+  def self.global_navigation_menu_cache_key(user, visibility)
     # only reload the menu if one of the global nav tools has changed
-    key = "external_tools/global_navigation/#{root_account.asset_string}/#{visibility}"
+    key = "external_tools/global_navigation/#{user.asset_string}/#{visibility}"
     Rails.cache.fetch(key) do
-      tools = global_navigation_tools(root_account, visibility)
+      tools = global_navigation_tools(user.associated_accounts, visibility)
       Digest::MD5.hexdigest(tools.map(&:cache_key).join('/'))
     end
   end

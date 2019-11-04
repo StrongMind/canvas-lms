@@ -572,6 +572,10 @@ describe GradebooksController do
             @course.enable_feature!(:new_gradebook)
           end
 
+          after(:each) do
+            ENV.delete("GRADEBOOK_DEVELOPMENT")
+          end
+
           let(:assignment) do
             @course.assignments.create!(
               due_at: 3.days.ago,
@@ -590,11 +594,19 @@ describe GradebooksController do
             expect(gradebook_options).to have_key :graded_late_or_missing_submissions_exist
           end
 
-          it "is true if graded late submissions exist" do
+          it "is true if graded late submissions exist and the development flag is on" do
+            ENV["GRADEBOOK_DEVELOPMENT"] = "true"
             assignment.submit_homework(@student, body: "a body")
             assignment.grade_student(@student, grader: @teacher, grade: 8)
             get :show, params: {course_id: @course.id}
             expect(graded_late_or_missing_submissions_exist).to be true
+          end
+
+          it "is false if graded late submissions exist and the development flag is off" do
+            assignment.submit_homework(@student, body: "a body")
+            assignment.grade_student(@student, grader: @teacher, grade: 8)
+            get :show, params: {course_id: @course.id}
+            expect(graded_late_or_missing_submissions_exist).to be false
           end
 
           it "is false if late submissions exist, but they are not graded" do
@@ -603,10 +615,17 @@ describe GradebooksController do
             expect(graded_late_or_missing_submissions_exist).to be false
           end
 
-          it "is true if graded missing submissions exist" do
+          it "is true if graded missing submissions exist and the development flag is on" do
+            ENV["GRADEBOOK_DEVELOPMENT"] = "true"
             assignment.grade_student(@student, grader: @teacher, grade: 8)
             get :show, params: {course_id: @course.id}
             expect(graded_late_or_missing_submissions_exist).to be true
+          end
+
+          it "is false if graded missing submissions exist and the development flag is off" do
+            assignment.grade_student(@student, grader: @teacher, grade: 8)
+            get :show, params: {course_id: @course.id}
+            expect(graded_late_or_missing_submissions_exist).to be false
           end
 
           it "is false if missing submissions exist, but they are not graded" do
@@ -905,25 +924,46 @@ describe GradebooksController do
   end
 
   describe "POST 'update_submission'" do
-    it "includes assignment_visibility" do
-      user_session(@teacher)
-      @assignment = @course.assignments.create!(:title => "some assignment")
-      @student = @course.enroll_user(User.create!(:name => "some user"))
-      post(
-        'update_submission',
-        params: {
-          course_id: @course.id,
-          submission: {
-            assignment_id: @assignment.id,
-            user_id: @student.user_id,
-            grade: 10
-          }
-        },
-        format: :json
-      )
+    describe "returned JSON" do
+      before(:once) do
+        @assignment = @course.assignments.create!(title: "Math 1.1")
+        @student = @course.enroll_user(User.create!(name: "Adam Jones"))
+      end
 
-      submissions = JSON.parse(response.body).map{ |sub| sub['submission']}
-      expect(submissions).to all include('assignment_visible' => true)
+      before(:each) do
+        user_session(@teacher)
+        post(
+          'update_submission',
+          params: {
+            course_id: @course.id,
+            submission: {
+              assignment_id: @assignment.id,
+              user_id: @student.user_id,
+              grade: 10
+            }
+          },
+          format: :json
+        )
+      end
+
+      let(:json) { JSON.parse(response.body) }
+
+      it "includes assignment_visibility" do
+        submissions = json.map {|submission| submission['submission']}
+        expect(submissions).to all include('assignment_visible' => true)
+      end
+
+      it "includes missing in submission history" do
+        submission_history = json.first['submission']['submission_history']
+        submissions = submission_history.map {|submission| submission['submission']}
+        expect(submissions).to all include('missing' => false)
+      end
+
+      it "includes late in submission history" do
+        submission_history = json.first['submission']['submission_history']
+        submissions = submission_history.map {|submission| submission['submission']}
+        expect(submissions).to all include('late' => false)
+      end
     end
 
     it "allows adding comments for submission" do

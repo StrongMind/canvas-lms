@@ -217,7 +217,7 @@ export default class DashboardCard extends Component {
   linksForCard () {
     return this.props.links.map((link) => {
       if (!link.hidden) {
-        const screenReaderLabel = `${link.screenreader} - ${this.state.nicknameInfo.nickname}`;
+        const screenReaderLabel = `${link.label} - ${this.state.nicknameInfo.nickname}`;
         return (
           <DashboardCardAction
             unreadCount={this.unreadCount(link.icon, this.state.stream)}
@@ -316,8 +316,7 @@ export default class DashboardCard extends Component {
             {
               this.props.imagesEnabled && this.props.image ?
                 I18n.t('Course image for %{course}', {course: this.state.nicknameInfo.nickname})
-              :
-                I18n.t('Course card color region for %{course}', {course: this.state.nicknameInfo.nickname})
+                : I18n.t('Course card color region for %{course}', {course: this.state.nicknameInfo.nickname})
             }
           </span>
           {this.renderHeaderHero()}

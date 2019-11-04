@@ -141,6 +141,25 @@ describe Account do
         expect(@account.fast_all_courses({:term => EnrollmentTerm.where(sis_source_id: "T003").first}).map(&:sis_source_id).sort).to eq ["C005", "C006", "C007", "C008", "C009", "C005S", "C006S", "C007S", "C008S", "C009S"].sort
       end
 
+      it "don't double-count cross-listed courses" do
+        def check_account(account, expected_length, expected_course_names)
+          actual_courses = account.fast_all_courses
+          expect(actual_courses.length).to eq expected_length
+          actual_course_names = actual_courses.pluck("name").sort!
+          expect(actual_course_names).to eq(expected_course_names.sort!)
+        end
+
+        root_account = Account.create!
+        account_a = Account.create!({ :root_account => root_account })
+        account_b = Account.create!({ :root_account => root_account })
+        course_a = course_factory({ :account => account_a, :course_name => "course_a" })
+        course_b = course_factory({ :account => account_b, :course_name => "course_b" })
+        course_b.course_sections.create!({ :name => "section_b" })
+        course_b.course_sections.first.crosslist_to_course(course_a)
+        check_account(account_a, 1, ["course_a"])
+        check_account(account_b, 1, ["course_b"])
+      end
+
       it "should list associated nonenrollmentless courses" do
         expect(@account.fast_all_courses({:hide_enrollmentless_courses => true}).map(&:sis_source_id).sort).to eq ["C001", "C005", "C007", "C001S", "C005S", "C007S"].sort #C007 probably shouldn't be here, cause the enrollment section is deleted, but we kinda want to minimize database traffic
       end
@@ -726,6 +745,54 @@ describe Account do
       @user3.sortable_name = 'richard'; @user3.save
       users = @account.users_not_in_groups([], order: User.sortable_name_order_by_clause('users'))
       expect(users.map{ |u| u.id }).to eq [@user2.id, @user1.id, @user3.id]
+    end
+  end
+
+  context "#global_navigation_tools" do
+    let(:account) { Account.create! name: 'root_account'}
+    let(:external_tool) do
+      ContextExternalTool.new(
+        name: 'test_name',
+        consumer_key: 'test_key',
+        shared_secret: 'bob',
+        domain: 'example.com',
+        workflow_state: 'public',
+        global_navigation: {url: 'http://www.example.com', text: 'Example URL'}
+      )
+    end
+
+    it 'should include tools for the current account' do
+      external_tool.update_attributes!(context: account)
+      expect(account.global_navigation_tools).to match_array [external_tool]
+    end
+
+    it 'should include tools for all accounts in the account chain' do
+      sub_account = Account.create!(parent_account: account, name: 'sub_account')
+      tool_two = external_tool.dup
+      tool_two.update_attributes!(context: sub_account)
+      external_tool.update_attributes!(context: account)
+      expect(sub_account.global_navigation_tools.map(&:id)).to eq [tool_two.id, external_tool.id]
+    end
+
+    it 'should not include tools intalled in sub-accounts' do
+      sub_account = Account.create!(parent_account: account, name: 'sub_account')
+      tool_two = external_tool.dup
+      tool_two.update_attributes!(context: sub_account)
+      external_tool.update_attributes!(context: account)
+      expect(account.global_navigation_tools).to match_array [external_tool]
+    end
+
+    it "should only return tools with the 'global_navigation' setting" do
+      external_tool.update_attributes!(context: account)
+      tool_two = external_tool.dup
+      tool_two.update_attributes!(context: account)
+      tool_three = external_tool.dup
+      tool_three.update_attributes!(
+        context: account,
+        global_navigation: nil
+      )
+      global_tools = account.global_navigation_tools.map{ |t| t.settings.dig(:global_navigation, 'url') }
+      expect(global_tools).to match_array ['http://www.example.com', 'http://www.example.com']
     end
   end
 

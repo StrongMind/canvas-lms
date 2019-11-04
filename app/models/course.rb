@@ -1069,6 +1069,7 @@ class Course < ActiveRecord::Base
   end
 
   def recompute_student_scores_without_send_later(student_ids = nil, opts = {})
+    student_ids = admin_visible_student_enrollments.where(user_id: student_ids).pluck(:user_id) if student_ids
     student_ids ||= admin_visible_student_enrollments.pluck(:user_id)
     Rails.logger.info "GRADES: recomputing scores in course=#{global_id} students=#{student_ids.inspect}"
     Enrollment.recompute_final_score(
@@ -2544,13 +2545,9 @@ class Course < ActiveRecord::Base
           tab[:external] = default_tab[:external]
           tab[:icon] = default_tab[:icon]
           tab[:target] = default_tab[:target] if default_tab[:target]
-          tab[:screenreader] = default_tab[:screenreader]
           default_tabs.delete_if {|t| t[:id] == tab[:id] }
           external_tabs.delete_if {|t| t[:id] == tab[:id] }
           tab
-        else
-          # Remove any tabs we don't know about in default_tabs (in case we removed them or something, like Groups)
-          nil
         end
       end
       tabs.compact!

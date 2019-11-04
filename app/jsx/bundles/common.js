@@ -23,7 +23,7 @@ import I18n from 'i18n!common'
 import Backbone from 'Backbone'
 import updateSubnavMenuToggle from 'jsx/subnav_menu/updateSubnavMenuToggle'
 import splitAssetString from 'compiled/str/splitAssetString'
-import * as mathml from 'mathml'
+import {isMathMLOnPage, loadMathJax} from 'mathml'
 
 import ToolLaunchResizer from '../../../public/javascripts/lti/tool_launch_resizer'
 

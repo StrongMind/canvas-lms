@@ -222,7 +222,7 @@ define [
         max: 400
       total:
         min: 95
-        max: 110
+        max: 400
 
     hasSections: $.Deferred()
     gridReady: $.Deferred()
@@ -387,6 +387,11 @@ define [
         submissionsURL: @options.submissions_url
         submissionsChunkCb: @gotSubmissionsChunk
         submissionsChunkSize: @options.chunk_size
+        customColumnIds: @gradebookContent.customColumns.map((column) -> column.id)
+        customColumnDataURL: @options.custom_column_data_url
+        customColumnDataPageCb: @gotCustomColumnDataChunk
+        customColumnDataParams:
+          include_hidden: true
       )
 
       dataLoader.gotStudentIds.then (response) =>
@@ -466,13 +471,13 @@ define [
         customColumn = @buildCustomColumn(column)
         @gradebookGrid.columns.definitions[customColumn.id] = customColumn
 
-    gotCustomColumnDataChunk: (column, columnData) =>
+    gotCustomColumnDataChunk: (customColumnId, columnData) =>
       studentIds = []
 
       for datum in columnData
         student = @student(datum.user_id)
         if student? #ignore filtered students
-          student["custom_col_#{column.id}"] = datum.content
+          student["custom_col_#{customColumnId}"] = datum.content
           studentIds.push(student.id)
 
       @invalidateRowsForStudentIds(_.uniq(studentIds))
@@ -928,7 +933,7 @@ define [
           @submissionsForStudent(student),
           @assignmentGroups,
           @options.group_weighting_scheme,
-          @gradingPeriodSet if hasGradingPeriods,
+          (@gradingPeriodSet if hasGradingPeriods),
           EffectiveDueDates.scopeToUser(@effectiveDueDates, student.id) if hasGradingPeriods
         )
 
@@ -1499,7 +1504,6 @@ define [
 
       id: columnId
       type: 'custom_column'
-      name: htmlEscape customColumn.title
       field: "custom_col_#{customColumn.id}"
       width: 100
       cssClass: "meta-cell custom_column #{columnId}"
@@ -1527,7 +1531,6 @@ define [
       columnDef =
         id: columnId
         field: fieldName
-        name: assignment.name
         object: assignment
         getGridSupport: => @gridSupport
         propFactory: new AssignmentRowCellPropFactory(assignment, @)
@@ -1536,7 +1539,7 @@ define [
         width: assignmentWidth
         cssClass: "assignment #{columnId}"
         headerCssClass: "assignment #{columnId}"
-        toolTip: assignment.name
+        toolTip: htmlEscape(assignment.name)
         type: 'assignment'
         assignmentId: assignment.id
 
@@ -1566,8 +1569,7 @@ define [
       {
         id: columnId
         field: fieldName
-        name: assignmentGroup.name
-        toolTip: assignmentGroup.name
+        toolTip: htmlEscape(assignmentGroup.name)
         object: assignmentGroup
         minWidth: columnWidths.assignmentGroup.min
         maxWidth: columnWidths.assignmentGroup.max
@@ -2101,6 +2103,38 @@ define [
 
     # Submission Tray
 
+    assignmentColumns: =>
+      @gridSupport.grid.getColumns().filter (column) =>
+        column.type == 'assignment'
+
+    navigateAssignment: (direction) =>
+      location = @gridSupport.state.getActiveLocation()
+      columns = @grid.getColumns()
+      range = if direction == 'next'
+        [location.cell + 1 .. columns.length]
+      else
+        [location.cell - 1 ... 0]
+      assignment
+
+      for i in range
+        curAssignment = columns[i]
+
+        if curAssignment.id.match(/^assignment_(?!group)/)
+          this.gridSupport.state.setActiveLocation('body', { row: location.row, cell: i })
+          assignment = curAssignment
+          break
+
+      assignment
+
+    loadTrayAssignment: (direction) =>
+      studentId = @getSubmissionTrayState().studentId
+      assignment = @navigateAssignment(direction)
+
+      return unless assignment
+
+      @setSubmissionTrayState(true, studentId, assignment.assignmentId)
+      @updateRowAndRenderSubmissionTray(studentId)
+
     renderSubmissionTray: (student) =>
       mountPoint = document.getElementById('StudentTray__Container')
       { open, studentId, assignmentId } = @getSubmissionTrayState()
@@ -2108,9 +2142,21 @@ define [
       # submission has not yet loaded
       fakeSubmission = { assignment_id: assignmentId, late: false, missing: false, excused: false, seconds_late: 0 }
       submission = @getSubmission(studentId, assignmentId) || fakeSubmission
+      assignment = @getAssignment(assignmentId)
+      activeLocation = @gridSupport.state.getActiveLocation()
+      cell = activeLocation.cell
+
+      columns = @gridSupport.grid.getColumns()
+      currentColumn = columns[cell]
+
+      assignmentColumns = @assignmentColumns()
+      currentIndex = assignmentColumns.indexOf(currentColumn)
+
+      isFirstAssignment = currentIndex == 0
+      isLastAssignment = currentIndex == assignmentColumns.length - 1
 
       props =
-        key: "submission_tray_#{studentId}_#{assignmentId}"
+        key: "grade_details_tray"
         colors: @getGridColors()
         isOpen: open
         latePolicy: @courseContent.latePolicy
@@ -2122,7 +2168,12 @@ define [
           id: student.id,
           name: student.name,
           avatarUrl: htmlDecode(student.avatar_url)
+        assignment: ConvertCase.camelize(assignment)
         submission: ConvertCase.camelize(submission)
+        isFirstAssignment: isFirstAssignment
+        isLastAssignment: isLastAssignment
+        selectNextAssignment: => @loadTrayAssignment('next')
+        selectPreviousAssignment: => @loadTrayAssignment('previous')
         courseId: @options.context_id
         speedGraderEnabled: @options.speed_grader_enabled
         submissionUpdating: @contentLoadStates.submissionUpdating

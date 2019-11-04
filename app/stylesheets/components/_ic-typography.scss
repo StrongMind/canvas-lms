@@ -29,10 +29,57 @@
 /// Global Settings
 ///////==============
 
+
+@font-face {
+  font-family: 'LatoWeb';
+  src: url('/fonts/lato/latin/LatoLatin-Regular.woff2') format('woff2'),
+       url('/fonts/lato/latin/LatoLatin-Regular.woff') format('woff'),
+       url('/fonts/lato/latin/LatoLatin-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'LatoWeb';
+  src: url('/fonts/lato/latin/LatoLatin-Italic.woff2') format('woff2'),
+       url('/fonts/lato/latin/LatoLatin-Italic.woff') format('woff'),
+       url('/fonts/lato/latin/LatoLatin-Italic.ttf') format('truetype');
+  font-style: italic;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'LatoWeb';
+  src: url('/fonts/lato/latin/LatoLatin-Bold.woff2') format('woff2'),
+       url('/fonts/lato/latin/LatoLatin-Bold.woff') format('woff'),
+       url('/fonts/lato/latin/LatoLatin-Bold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'LatoWeb';
+  src: url('/fonts/lato/latin/LatoLatin-Light.woff2') format('woff2'),
+       url('/fonts/lato/latin/LatoLatin-Light.woff') format('woff'),
+       url('/fonts/lato/latin/LatoLatin-Light.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 300;
+}
+
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  font-family: $ic-font-family-fallback;
+  &.lato-font-loaded {
+    font-family: $ic-font-family;
+  }
+}
+
 body {
+  font-weight: 400;
   font-family: $ic-font-family-reading;
   font-size: $ic-font-size;
-  font-weight: 400;
   margin: 0;
   line-height: $ic-line-height;
   color: $ic-font-color-dark;
@@ -220,6 +267,24 @@ dd {
   dd {
     margin-left: $horizontalComponentOffset;
   }
+}
+
+///////==============
+/// Prevents sub and sup affecting line-height in all browsers
+///////==============
+
+sub,
+sup {
+  position: relative;
+  font-size: 75%;
+  line-height: 0;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
 }
 
 ///////==============

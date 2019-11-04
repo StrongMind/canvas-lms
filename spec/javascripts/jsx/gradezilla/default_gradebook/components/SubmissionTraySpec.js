@@ -21,11 +21,21 @@ import { mount, ReactWrapper } from 'enzyme';
 import SubmissionTray from 'jsx/gradezilla/default_gradebook/components/SubmissionTray';
 
 QUnit.module('SubmissionTray', function (hooks) {
+  let clock;
   let content;
   let wrapper;
 
+  hooks.beforeEach(function () {
+    const applicationElement = document.createElement('div');
+    applicationElement.id = 'application';
+    document.getElementById('fixtures').appendChild(applicationElement);
+    clock = sinon.useFakeTimers();
+  });
+
   hooks.afterEach(function () {
     wrapper.unmount();
+    document.getElementById('fixtures').innerHTML = '';
+    clock.restore();
   });
 
   function mountComponent (props) {
@@ -59,9 +69,18 @@ QUnit.module('SubmissionTray', function (hooks) {
         secondsLate: 0,
         assignmentId: '30'
       },
-      updateSubmission () {}
+      updateSubmission () {},
+      assignment: {
+        name: 'Book Report',
+        htmlUrl: 'http://example.com/theassignment'
+      },
+      isFirstAssignment: true,
+      isLastAssignment: true,
+      selectNextAssignment: () => {},
+      selectPreviousAssignment: () => {}
     };
     wrapper = mount(<SubmissionTray {...defaultProps} {...props} />);
+    clock.tick(50); // wait for Tray to transition open
   }
 
   function avatarDiv () {
@@ -151,5 +170,47 @@ QUnit.module('SubmissionTray', function (hooks) {
     mountComponent({ showContentComingSoon: true });
     notOk(radioInputGroupDiv());
   });
-});
 
+  test('shows assignment carousel', function () {
+    mountComponent();
+    strictEqual(wrapContent().find('#assignment-carousel').length, 1);
+  });
+
+  test('shows assignment carousel containing given assignment name', function () {
+    mountComponent();
+    strictEqual(wrapContent().find('#assignment-carousel').text(), 'Book Report');
+  });
+
+  test('shows assignment carousel with no arrows when isFirstAssignment and isLastAssignment are true', function () {
+    mountComponent();
+    strictEqual(wrapContent().find('#assignment-carousel .left-arrow-button-container button').length, 0);
+    strictEqual(wrapContent().find('#assignment-carousel .right-arrow-button-container button').length, 0);
+  });
+
+  test('shows assignment carousel with both arrows when isFirstAssignment and isLastAssignment are false', function () {
+    mountComponent({
+      isFirstAssignment: false,
+      isLastAssignment: false
+    });
+    strictEqual(wrapContent().find('#assignment-carousel .left-arrow-button-container button').length, 1);
+    strictEqual(wrapContent().find('#assignment-carousel .right-arrow-button-container button').length, 1);
+  });
+
+  test('shows assignment carousel with left arrow when isFirstAssignment is false', function () {
+    mountComponent({
+      isFirstAssignment: false,
+      isLastAssignment: true
+    });
+    strictEqual(wrapContent().find('#assignment-carousel .left-arrow-button-container button').length, 1);
+    strictEqual(wrapContent().find('#assignment-carousel .right-arrow-button-container button').length, 0);
+  });
+
+  test('shows assignment carousel with right arrow when isLastAssignment is false', function () {
+    mountComponent({
+      isFirstAssignment: true,
+      isLastAssignment: false
+    });
+    strictEqual(wrapContent().find('#assignment-carousel .left-arrow-button-container button').length, 0);
+    strictEqual(wrapContent().find('#assignment-carousel .right-arrow-button-container button').length, 1);
+  });
+});

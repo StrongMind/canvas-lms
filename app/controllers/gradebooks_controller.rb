@@ -570,7 +570,8 @@ class GradebooksController < ApplicationController
 
   def submissions_json
     @submissions.map do |sub|
-      json = sub.as_json(Submission.json_serialization_full_parameters)
+      submission_history_methods = { include: { submission_history: { methods: %i[late missing] } } }
+      json = sub.as_json(Submission.json_serialization_full_parameters.merge(submission_history_methods))
       json['submission']['assignment_visible'] = sub.assignment_visible_to_user?(sub.user)
       json['submission']['provisional_grade_id'] = sub.provisional_grade_id if sub.provisional_grade_id
       json
@@ -746,14 +747,16 @@ class GradebooksController < ApplicationController
   private
 
   def new_gradebook_env(env)
+    development_mode_enabled = !!ENV['GRADEBOOK_DEVELOPMENT']
     graded_late_or_missing_submissions_exist =
-      @context.submissions.graded.late.union(@context.submissions.graded.missing).exists?
+      development_mode_enabled &&
+      (@context.submissions.graded.late.exists? || @context.submissions.graded.missing.exists?)
 
     options = {
       colors: gradebook_settings.fetch(:colors, {}),
       graded_late_or_missing_submissions_exist: graded_late_or_missing_submissions_exist,
       gradezilla: true,
-      new_gradebook_development_enabled: !!ENV['GRADEBOOK_DEVELOPMENT'],
+      new_gradebook_development_enabled: development_mode_enabled,
       late_policy: @context.late_policy.as_json(include_root: false)
     }
     env.deep_merge({ GRADEBOOK_OPTIONS: options })

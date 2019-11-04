@@ -150,7 +150,7 @@ describe SectionTabHelper do
         )
         expect(tag.a_classes).to be_a Array
         expect(tag.a_classes).to include tab_assignments[:css_class]
-        expect(tag.a_classes).to_not include 'active'
+        expect(tag.a_classes).not_to include 'active'
       end
 
       it 'should include `active` class if tab is active' do
@@ -182,7 +182,7 @@ describe SectionTabHelper do
 
       it 'includes a target if tab has the target attribute' do
         tag = SectionTabHelperSpec::SectionTabTag.new(new_window_tab, course)
-        expect(tag.a_attributes[:target]).to  eq '_blank'
+        expect(tag.a_attributes[:target]).to eq '_blank'
       end
 
     end

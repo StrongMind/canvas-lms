@@ -512,13 +512,12 @@ import 'compiled/jquery/fixDialogButtons'
         .data('current_criterion', $criterion)
         .dialog({
           title: I18n.t('titles.criterion_long_description', "Criterion Long Description"),
-          width: 400,
+          width: 416,
           buttons: []
         });
 
       if(editing && !isLearningOutcome) {
         $rubric_long_description_dialog.fixDialogButtons();
-        $rubric_long_description_dialog.find("textarea:visible:first").focus().select();
       }
     })
     .delegate(".find_rubric_link", 'click', function(event) {
@@ -757,7 +756,7 @@ import 'compiled/jquery/fixDialogButtons'
           ENV.MASTER_COURSE_DATA.is_master_course_child_content && ENV.MASTER_COURSE_DATA.master_course_restrictions.points) {
           skipPointsUpdate = true;
         } else if (data['rubric_association[use_for_grading]'] == '1') {
-          var assignmentPoints = numberHelper.parse($("#assignment_show .points_possible, .discussion-title .discussion-points").text());
+          const assignmentPoints = numberHelper.parse($("#assignment_show .points_possible, #rubrics.rubric_dialog .assignment_points_possible").text());
           var rubricPoints = parseFloat(data.points_possible);
           if (assignmentPoints != null && assignmentPoints != undefined && rubricPoints != assignmentPoints && !forceSubmit) {
             var pointRatio = assignmentPoints === 0 ? rubricPoints : rubricPoints / assignmentPoints;
@@ -773,6 +772,7 @@ import 'compiled/jquery/fixDialogButtons'
               $("#edit_rubric_form").submit();
             };
             $confirmDialog.dialog({
+              dialogClass: 'edit-rubric-confirm-points-change',
               buttons: [
                 {
                   text: I18n.t('change', 'Change'),

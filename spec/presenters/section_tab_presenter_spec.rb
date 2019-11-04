@@ -119,11 +119,11 @@ describe SectionTabPresenter do
   end
 
   describe '#to_h' do
-    it 'should include icon & path' do
+    it 'should include icon, path & label' do
       h = SectionTabPresenter.new(tab.merge({
         icon: 'icon-home'
       }), course).to_h
-      expect(h.keys).to include(:icon, :hidden, :path)
+      expect(h.keys).to include(:icon, :hidden, :path, :label)
       expect(h).to_not have_key(:screenreader)
     end
 

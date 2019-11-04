@@ -1181,6 +1181,53 @@ describe FilesController do
     end
   end
 
+  describe "POST api_capture" do
+    before :each do
+      allow(InstFS).to receive(:enabled?).and_return(true)
+      allow(InstFS).to receive(:jwt_secret).and_return("jwt signing key")
+      @token = Canvas::Security.create_jwt({}, nil, InstFS.jwt_secret)
+    end
+
+    it "rejects if InstFS integration is disabled" do
+      allow(InstFS).to receive(:enabled?).and_return(false)
+      post "api_capture", params: { id: 1 }
+      assert_status(404)
+    end
+
+    it "rejects if JWT is excluded or improperly formed" do
+      wrong_token = Canvas::Security.create_jwt({}, nil, "the wrong key")
+      post "api_capture", params: { id: 1, token: wrong_token }
+      assert_status(403)
+    end
+
+    it "rejects if required params aren't included" do
+      post "api_capture", params: { id: 1, user_id: 1, context_type: "Course", token: @token }
+      # `context_id` is excluded
+      assert_status(400)
+    end
+
+    it "should create a new attachment" do
+      course = Course.create
+      folder = Folder.create!(:name => "test", :context => course)
+      user = User.create!(:name => "me")
+      params = {
+        id: 1,
+        user_id: user.id,
+        context_type: "Course",
+        context_id: course.id,
+        token: @token,
+        name: "test.txt",
+        size: 42,
+        content_type: "text/plain",
+        instfs_uuid: 1,
+        folder_id: folder.id,
+      }
+      post "api_capture", params: params
+      assert_status(201)
+      expect(folder.attachments.first).to_not be_nil
+    end
+  end
+
   describe "public_url" do
     before :once do
       assignment_model :course => @course, :submission_types => %w(online_upload)
@@ -1197,7 +1244,7 @@ describe FilesController do
         get "public_url", params: {:id => @attachment.id}
         expect(response).to be_success
         data = json_parse
-        expect(data).to eq({ "public_url" => @attachment.authenticated_s3_url(secure: false) })
+        expect(data).to eq({ "public_url" => @attachment.authenticated_url(secure: false) })
       end
     end
 
@@ -1215,7 +1262,7 @@ describe FilesController do
         get "public_url", params: {:id => @attachment.id, :submission_id => @submission.id}
         expect(response).to be_success
         data = json_parse
-        expect(data).to eq({ "public_url" => @attachment.authenticated_s3_url(secure: false) })
+        expect(data).to eq({ "public_url" => @attachment.authenticated_url(secure: false) })
       end
 
       it "should verify that the requested file belongs to the submission" do
@@ -1231,7 +1278,7 @@ describe FilesController do
         get "public_url", params: {:id => old_file.id, :submission_id => @submission.id}
         expect(response).to be_success
         data = json_parse
-        expect(data).to eq({ "public_url" => old_file.authenticated_s3_url(secure: false) })
+        expect(data).to eq({ "public_url" => old_file.authenticated_url(secure: false) })
       end
     end
   end

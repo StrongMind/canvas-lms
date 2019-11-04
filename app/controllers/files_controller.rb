@@ -112,7 +112,7 @@ class FilesController < ApplicationController
   before_action :require_context, except: [
     :assessment_question_show, :image_thumbnail, :show_thumbnail,
     :create_pending, :s3_success, :show, :api_create, :api_create_success, :api_create_success_cors,
-    :api_show, :api_index, :destroy, :api_update, :api_file_status, :public_url
+    :api_show, :api_index, :destroy, :api_update, :api_file_status, :public_url, :api_capture
   ]
 
   before_action :check_file_access_flags, only: [:show_relative, :show]
@@ -398,7 +398,7 @@ class FilesController < ApplicationController
     # verify that the requested attachment belongs to the submission
     return render_unauthorized_action if @submission && !@submission.includes_attachment?(@attachment)
     if @submission ? authorized_action(@submission, @current_user, :read) : authorized_action(@attachment, @current_user, :download)
-      render :json  => { :public_url => @attachment.authenticated_s3_url(:secure => request.ssl?) }
+      render :json  => { :public_url => @attachment.authenticated_url(:secure => request.ssl?) }
     end
   end
 
@@ -537,11 +537,11 @@ class FilesController < ApplicationController
           # some form.
           if @current_user &&
              (attachment.canvadocable? ||
-              (service_enabled?(:google_docs_previews) && attachment.authenticated_s3_url))
+              (service_enabled?(:google_docs_previews) && attachment.authenticated_url))
             attachment.context_module_action(@current_user, :read)
           end
-          if url = service_enabled?(:google_docs_previews) && attachment.authenticated_s3_url
-            json[:attachment][:authenticated_s3_url] = url
+          if url = service_enabled?(:google_docs_previews) && attachment.authenticated_url
+            json[:attachment][:authenticated_url] = url
           end
 
           json_include = if @attachment.context.is_a?(User) || @attachment.context.is_a?(Course)
@@ -764,6 +764,49 @@ class FilesController < ApplicationController
 
   def api_create_success_cors
     head :ok
+  end
+
+  def api_capture
+    unless InstFS.enabled?
+      head :not_found
+      return
+    end
+
+    # check service authorization
+    begin
+      Canvas::Security.decode_jwt(params[:token], [ InstFS.jwt_secret ])
+    rescue
+      head :forbidden
+      return
+    end
+
+    # validate params
+    unless params[:user_id] && params[:context_type] && params[:context_id]
+      head :bad_request
+      return
+    end
+
+    @context = Context.find_polymorphic(params[:context_type], params[:context_id])
+    @attachment = @context.attachments.build
+
+    # service metadata
+    @attachment.filename = params[:name]
+    @attachment.display_name = params[:display_name] || params[:name]
+    @attachment.size = params[:size]
+    @attachment.content_type = params[:content_type]
+    @attachment.instfs_uuid = params[:instfs_uuid]
+    @attachment.modified_at = Time.zone.now
+
+    # capture params
+    @attachment.folder = Folder.where(id: params[:folder_id]).first
+    @attachment.user = api_find(User, params[:user_id])
+    @attachment.lock_at = params[:lock_at].presence
+    @attachment.unlock_at = params[:unlock_at].presence
+    @attachment.locked = Canvas::Plugin.value_to_boolean(params[:locked])
+    @attachment.hidden = Canvas::Plugin.value_to_boolean(params[:hidden])
+
+    @attachment.save!
+    render plain: "OK", status: :created, location: api_v1_attachment_url(@attachment)
   end
 
   def api_create_success

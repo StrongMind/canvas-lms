@@ -596,9 +596,6 @@ import 'compiled/jquery.rails_flash_notifications'
               $('#context_modules_sortable_container').removeClass('item-group-container--is-empty');
             }
           },
-          open: function(){
-            $(this).find('input[type=text],textarea,select').first().focus();
-          }
         }).dialog('open');
         $module.removeClass('dont_remove');
       },
@@ -1506,12 +1503,13 @@ import 'compiled/jquery.rails_flash_notifications'
       modules.hideMoveModuleItem();
     });
 
-    $('.icon-drag-handle').on('focus', function (event) {
-      $(event.currentTarget).siblings('.drag_and_drop_warning').show();
-    });
-    $('.icon-drag-handle').on('blur', function (event) {
-      $(event.currentTarget).siblings('.drag_and_drop_warning').hide();
-    });
+    $('.drag_and_drop_warning').on('focus', function (event) {
+      $(event.currentTarget).removeClass('screenreader-only');
+    })
+
+    $('.drag_and_drop_warning').on('blur', function (event) {
+      $(event.currentTarget).addClass('screenreader-only');
+    })
 
     if (ENV['module_editing_disabled']) {
       $(".edit_module_link").live('mouseover', function(event) {
@@ -1571,6 +1569,8 @@ import 'compiled/jquery.rails_flash_notifications'
               $module.find(".context_module_items.ui-sortable").sortable('enable').sortable('refresh');
               initNewItemPublishButton($item, data.content_tag);
               modules.updateAssignmentData();
+
+              $item.find('.lock-icon').data({moduleType: data.content_tag.type, contentId: data.content_tag.id});
               modules.loadMasterCourseData(data.content_tag.id);
             }), { onComplete: function() {
               if (ENV['score_threshold'] && ['assignment', 'discussion_topic', 'quiz'].includes(item_data['item[type]'])) {

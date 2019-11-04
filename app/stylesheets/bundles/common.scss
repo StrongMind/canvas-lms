@@ -22,6 +22,9 @@
 // Variables (including Bootstrap and jQuery UI), mixins, and functions
 @import "base/environment";
 
+// Reset
+@import "components/ic-reset";
+
 // Heavily customized vendor styles
 @import "vendor/jqueryui/jquery.ui.all";
 @import "base/custom_bootstrap";
@@ -30,6 +33,7 @@
 // Canvas components and area-specific styles
 @import "components/alerts";
 @import "components/buttons";
+@import "components/ic-code";
 @import "components/g_base";
 @import "components/ic-typography";
 @import "components/accordion";

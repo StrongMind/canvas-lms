@@ -104,14 +104,6 @@ module GradezillaCommon
     accept_alert
   end
 
-  def open_assignment_options(cell_index)
-    assignment_cell = ffj('#gradebook_grid .container_1 .slick-header-column')[cell_index]
-    driver.action.move_to(assignment_cell).perform
-    trigger = assignment_cell.find_element(:css, '.gradebook-header-drop')
-    trigger.click
-    expect(fj("##{trigger['aria-owns']}")).to be_displayed
-  end
-
   def find_slick_cells(row_index, element)
     grid = element
     rows = grid.find_elements(:css, '.slick-row')
@@ -147,40 +139,9 @@ module GradezillaCommon
     ::Gradezilla.select_section(section)
   end
 
-  def gradebook_column_array(css_row_class)
-    column = ff(css_row_class)
-    text_values = []
-    column.each do |row|
-      text_values.push(row.text)
-    end
-    text_values
-  end
-
-  def conclude_and_unconclude_course
-    # conclude course
-    @course.complete!
-    @user.reload
-    @user.cached_current_enrollments
-    @enrollment.reload
-
-    # un-conclude course
-    @enrollment.workflow_state = 'active'
-    @enrollment.save!
-    @course.reload
-  end
-
   def gradebook_data_setup(opts={})
     assignment_setup_defaults
     assignment_setup(opts)
-  end
-
-  def data_setup_as_observer
-    user_with_pseudonym
-    course_with_observer user: @user, active_all: true
-    @course.observers=[@observer]
-    assignment_setup_defaults
-    assignment_setup
-    @all_students.each {|s| s.observers=[@observer]}
   end
 
   def assignment_setup_defaults
@@ -311,7 +272,74 @@ module GradezillaCommon
     )
   end
 
-  def get_group_points
-    ff('div.assignment-points-possible')
+  shared_context 'late_policy_course_setup' do
+    let(:now) { Time.zone.now }
+
+    def create_course_late_policy
+      # create late/missing policies on backend
+      @course.create_late_policy!(
+        missing_submission_deduction_enabled: true,
+        missing_submission_deduction: 50.0,
+        late_submission_deduction_enabled: true,
+        late_submission_deduction: 10.0,
+        late_submission_interval: 'day',
+        late_submission_minimum_percent_enabled: true,
+        late_submission_minimum_percent: 50.0,
+      )
+    end
+
+    def create_assignments
+      # create 2 assignments due in the past
+      @a1 = @course.assignments.create!(
+        title: 'assignment one',
+        grading_type: 'points',
+        points_possible: 100,
+        due_at: 1.day.ago(now),
+        submission_types: 'online_text_entry'
+      )
+
+      @a2 = @course.assignments.create!(
+        title: 'assignment two',
+        grading_type: 'points',
+        points_possible: 100,
+        due_at: 1.day.ago(now),
+        submission_types: 'online_text_entry'
+      )
+
+      # create 1 assignment due in the future
+      @a3 = @course.assignments.create!(
+        title: 'assignment three',
+        grading_type: 'points',
+        points_possible: 10,
+        due_at: 2.days.from_now,
+        submission_types: 'online_text_entry'
+      )
+
+      # create 1 assignment that will be Excused for Student1
+      @a4 = @course.assignments.create!(
+        title: 'assignment four',
+        grading_type: 'points',
+        points_possible: 10,
+        due_at: 2.days.from_now,
+        submission_types: 'online_text_entry'
+      )
+    end
+
+    def make_submissions
+      # submit a1(late) and a3(on-time) so a2(missing)
+      Timecop.freeze(now) do
+        @a1.submit_homework(@course.students.first, body: 'submitting my homework')
+        @a3.submit_homework(@course.students.first, body: 'submitting my homework')
+      end
+    end
+
+    def grade_assignments
+      # as a teacher grade the assignments
+      @a1.grade_student(@course.students.first, grade: 90, grader: @teacher)
+      @a2.grade_student(@course.students.first, grade: 10, grader: @teacher)
+      @a3.grade_student(@course.students.first, grade: 9, grader: @teacher)
+      @a4.grade_student(@course.students.first, excuse: true, grader: @teacher)
+    end
   end
 end
+

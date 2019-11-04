@@ -459,7 +459,8 @@ class Account < ActiveRecord::Base
       all_courses
     else
       shard.activate do
-        Course.where("EXISTS (?)", CourseAccountAssociation.where(account_id: self).where("course_id=courses.id"))
+        Course.where("EXISTS (?)", CourseAccountAssociation.where(account_id: self, course_section_id: nil)
+              .where("course_id=courses.id"))
       end
     end
   end
@@ -1434,13 +1435,15 @@ class Account < ActiveRecord::Base
           link[:type] = 'custom'
         end
       end
+      links = HelpLinks.map_default_links(links)
     end
 
-    if settings[:new_custom_help_links]
-      links || Account::HelpLinks.default_links
+    result = if settings[:new_custom_help_links]
+      links || HelpLinks.default_links
     else
-      Account::HelpLinks.default_links + (links || [])
+      HelpLinks.default_links + (links || [])
     end
+    HelpLinks.instantiate_links(result)
   end
 
   def set_service_availability(service, enable)
@@ -1649,5 +1652,12 @@ class Account < ActiveRecord::Base
 
   def migrate_to_canvadocs?
     Canvadocs.hijack_crocodoc_sessions? && feature_enabled?(:new_annotations)
+  end
+
+  def global_navigation_tools
+    ContextExternalTool.active.having_setting('global_navigation').where(
+      context_type: 'Account',
+      context_id: Account.account_chain_ids(self.id)
+    ).to_a
   end
 end

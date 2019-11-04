@@ -16,8 +16,9 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import I18n from 'i18n!gradebook';
 import ReactDOM from 'react-dom';
-import { createGradebook } from 'spec/jsx/gradezilla/default_gradebook/GradebookSpecHelper';
+import { createGradebook, setFixtureHtml } from 'spec/jsx/gradezilla/default_gradebook/GradebookSpecHelper';
 import CustomColumnHeaderRenderer
 from 'jsx/gradezilla/default_gradebook/slick-grid/column-headers/CustomColumnHeaderRenderer';
 
@@ -34,6 +35,8 @@ QUnit.module('CustomColumnHeaderRenderer', function (suiteHooks) {
 
   suiteHooks.beforeEach(function () {
     $container = document.createElement('div');
+    document.body.appendChild($container);
+    setFixtureHtml($container);
 
     gradebook = createGradebook();
     gradebook.gotCustomColumns([
@@ -42,6 +45,10 @@ QUnit.module('CustomColumnHeaderRenderer', function (suiteHooks) {
     ]);
     column = { id: gradebook.getCustomColumnId('2401'), customColumnId: '2401' };
     renderer = new CustomColumnHeaderRenderer(gradebook);
+  });
+
+  suiteHooks.afterEach(function() {
+    $container.remove();
   });
 
   QUnit.module('#render', function () {
@@ -53,6 +60,13 @@ QUnit.module('CustomColumnHeaderRenderer', function (suiteHooks) {
     test('calls the "ref" option with the component reference', function () {
       render();
       equal(component.constructor.name, 'CustomColumnHeader');
+    });
+
+    test('uses translated label for teacher notes', function () {
+      sinon.stub(I18n, 't').withArgs('Notes').returns('Translated Notes');
+      render();
+      equal(component.props.title, 'Translated Notes');
+      I18n.t.restore();
     });
 
     test('uses the custom column for the related "customColumnId" on the column definition', function () {

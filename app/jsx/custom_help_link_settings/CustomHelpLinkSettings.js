@@ -51,7 +51,7 @@ import 'compiled/jquery.rails_flash_notifications'
 
         return {
           ...link,
-          id: 'link' + counter,
+          id: link.id || ('link' + counter),
           available_to: link.available_to || [],
           state: link.state || 'active'
         }
@@ -152,7 +152,7 @@ import 'compiled/jquery.rails_flash_notifications'
       counter++;
 
       const links = [...this.state.links];
-      const id = 'link' + counter;
+      const id = link.id || ('link' + counter);
 
       links.splice(0, 0, {
         ...link,
@@ -252,6 +252,7 @@ import 'compiled/jquery.rails_flash_notifications'
 
       return (
         <fieldset>
+          <h2 className="screenreader-only">{I18n.t('Help menu options')}</h2>
           <legend>{ I18n.t('Help menu options') }</legend>
           <div className="ic-Form-group ic-Form-group--horizontal">
             <label className="ic-Form-control">

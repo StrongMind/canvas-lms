@@ -18,6 +18,7 @@
 
 import I18n from 'i18n!account_settings'
 import $ from 'jquery'
+import htmlEscape from 'str/htmlEscape'
 import EditorConfig from './tinymce.config'
 import globalAnnouncements from './global_announcements'
 import './jquery.ajaxJSON'
@@ -361,7 +362,10 @@ import 'jqueryui/tabs'
         width: 560
       });
 
-      $('<a href="#"><i class="icon-question standalone-icon"></i></a>')
+      $(`<button class="Button Button--icon-action" type="button">
+        <i class="icon-question"></i>
+        <span class="screenreader-only">${htmlEscape(I18n.t("About this service"))}</span>
+      </button>`)
         .click(function(event){
           event.preventDefault();
           $dialog.dialog('open');
