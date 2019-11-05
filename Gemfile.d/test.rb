@@ -74,4 +74,5 @@ group :test do
   gem 'escape_code', '0.2', require: false
   gem 'hashdiff', '0.3.4'
   gem 'luminosity_contrast', '0.2.1'
+ end
 end

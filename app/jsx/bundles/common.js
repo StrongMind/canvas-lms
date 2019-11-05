@@ -151,9 +151,9 @@ if (!supportsCSSVars) {
   }, 'canvasCssVariablesPolyfill')
 }
 
-$(document).ready(() => {
-  if (mathml.isMathMLOnPage()) {
-    mathml.loadMathJax('MML_HTMLorMML.js')
+$(window).load(() => {
+  if (isMathMLOnPage()) {
+    loadMathJax('MML_HTMLorMML.js');
   }
 
   let distractionFree = window.localStorage.getItem("distraction_free");
