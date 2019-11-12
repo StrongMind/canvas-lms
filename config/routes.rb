@@ -1508,6 +1508,7 @@ CanvasRails::Application.routes.draw do
       post 'files/:id/create_success', action: :api_create_success
       get 'files/:id/create_success', action: :api_create_success
       match '/api/v1/files/:id/create_success', via: [:options], action: :api_create_success_cors
+      post 'files/capture', action: :api_capture
 
 
       # 'attachment' (rather than 'file') is used below so modules API can use polymorphic_url to generate an item API link
@@ -2089,7 +2090,9 @@ CanvasRails::Application.routes.draw do
     scope(controller: 'lti/originality_reports_api') do
       post "assignments/:assignment_id/submissions/:submission_id/originality_report", action: :create
       put "assignments/:assignment_id/submissions/:submission_id/originality_report/:id", action: :update
+      put "assignments/:assignment_id/files/:file_id/originality_report", action: :update
       get "assignments/:assignment_id/submissions/:submission_id/originality_report/:id", action: :show
+      get "assignments/:assignment_id/files/:file_id/originality_report", action: :show
     end
 
   end

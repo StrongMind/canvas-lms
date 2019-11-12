@@ -3,26 +3,40 @@
 --
 
 -- Dumped from database version 9.6.10
--- Dumped by pg_dump version 9.6.3
+-- Dumped by pg_dump version 11.3
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
+SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-SET search_path = public, pg_catalog;
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA public;
+
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
 
 --
 -- Name: delayed_jobs_after_delete_row_tr_fn(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION delayed_jobs_after_delete_row_tr_fn() RETURNS trigger
+CREATE FUNCTION public.delayed_jobs_after_delete_row_tr_fn() RETURNS trigger
     LANGUAGE plpgsql
-    SET search_path TO public
+    SET search_path TO 'public'
     AS $$
       DECLARE
         running_count integer;
@@ -46,9 +60,9 @@ CREATE FUNCTION delayed_jobs_after_delete_row_tr_fn() RETURNS trigger
 -- Name: delayed_jobs_before_insert_row_tr_fn(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION delayed_jobs_before_insert_row_tr_fn() RETURNS trigger
+CREATE FUNCTION public.delayed_jobs_before_insert_row_tr_fn() RETURNS trigger
     LANGUAGE plpgsql
-    SET search_path TO public
+    SET search_path TO 'public'
     AS $$
       BEGIN
         IF NEW.strand IS NOT NULL THEN
@@ -66,9 +80,9 @@ CREATE FUNCTION delayed_jobs_before_insert_row_tr_fn() RETURNS trigger
 -- Name: half_md5_as_bigint(character varying); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION half_md5_as_bigint(strand character varying) RETURNS bigint
+CREATE FUNCTION public.half_md5_as_bigint(strand character varying) RETURNS bigint
     LANGUAGE plpgsql
-    SET search_path TO public
+    SET search_path TO 'public'
     AS $$
       DECLARE
         strand_md5 bytea;
@@ -94,7 +108,7 @@ SET default_with_oids = false;
 -- Name: abstract_courses; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE abstract_courses (
+CREATE TABLE public.abstract_courses (
     id bigint NOT NULL,
     sis_source_id character varying(255),
     sis_batch_id bigint,
@@ -114,7 +128,7 @@ CREATE TABLE abstract_courses (
 -- Name: abstract_courses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE abstract_courses_id_seq
+CREATE SEQUENCE public.abstract_courses_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -126,14 +140,14 @@ CREATE SEQUENCE abstract_courses_id_seq
 -- Name: abstract_courses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE abstract_courses_id_seq OWNED BY abstract_courses.id;
+ALTER SEQUENCE public.abstract_courses_id_seq OWNED BY public.abstract_courses.id;
 
 
 --
 -- Name: access_tokens; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE access_tokens (
+CREATE TABLE public.access_tokens (
     id bigint NOT NULL,
     developer_key_id bigint NOT NULL,
     user_id bigint,
@@ -154,7 +168,7 @@ CREATE TABLE access_tokens (
 -- Name: access_tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE access_tokens_id_seq
+CREATE SEQUENCE public.access_tokens_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -166,14 +180,14 @@ CREATE SEQUENCE access_tokens_id_seq
 -- Name: access_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE access_tokens_id_seq OWNED BY access_tokens.id;
+ALTER SEQUENCE public.access_tokens_id_seq OWNED BY public.access_tokens.id;
 
 
 --
 -- Name: account_authorization_configs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE account_authorization_configs (
+CREATE TABLE public.account_authorization_configs (
     id bigint NOT NULL,
     account_id bigint NOT NULL,
     auth_port integer,
@@ -209,7 +223,7 @@ CREATE TABLE account_authorization_configs (
 -- Name: account_authorization_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE account_authorization_configs_id_seq
+CREATE SEQUENCE public.account_authorization_configs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -221,14 +235,14 @@ CREATE SEQUENCE account_authorization_configs_id_seq
 -- Name: account_authorization_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE account_authorization_configs_id_seq OWNED BY account_authorization_configs.id;
+ALTER SEQUENCE public.account_authorization_configs_id_seq OWNED BY public.account_authorization_configs.id;
 
 
 --
 -- Name: account_notification_roles; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE account_notification_roles (
+CREATE TABLE public.account_notification_roles (
     id bigint NOT NULL,
     account_notification_id bigint NOT NULL,
     role_id bigint
@@ -239,7 +253,7 @@ CREATE TABLE account_notification_roles (
 -- Name: account_notification_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE account_notification_roles_id_seq
+CREATE SEQUENCE public.account_notification_roles_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -251,14 +265,14 @@ CREATE SEQUENCE account_notification_roles_id_seq
 -- Name: account_notification_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE account_notification_roles_id_seq OWNED BY account_notification_roles.id;
+ALTER SEQUENCE public.account_notification_roles_id_seq OWNED BY public.account_notification_roles.id;
 
 
 --
 -- Name: account_notifications; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE account_notifications (
+CREATE TABLE public.account_notifications (
     id bigint NOT NULL,
     subject character varying(255),
     icon character varying(255) DEFAULT 'warning'::character varying,
@@ -278,7 +292,7 @@ CREATE TABLE account_notifications (
 -- Name: account_notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE account_notifications_id_seq
+CREATE SEQUENCE public.account_notifications_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -290,14 +304,14 @@ CREATE SEQUENCE account_notifications_id_seq
 -- Name: account_notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE account_notifications_id_seq OWNED BY account_notifications.id;
+ALTER SEQUENCE public.account_notifications_id_seq OWNED BY public.account_notifications.id;
 
 
 --
 -- Name: account_reports; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE account_reports (
+CREATE TABLE public.account_reports (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     message text,
@@ -320,7 +334,7 @@ CREATE TABLE account_reports (
 -- Name: account_reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE account_reports_id_seq
+CREATE SEQUENCE public.account_reports_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -332,21 +346,22 @@ CREATE SEQUENCE account_reports_id_seq
 -- Name: account_reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE account_reports_id_seq OWNED BY account_reports.id;
+ALTER SEQUENCE public.account_reports_id_seq OWNED BY public.account_reports.id;
 
 
 --
 -- Name: account_users; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE account_users (
+CREATE TABLE public.account_users (
     id bigint NOT NULL,
     account_id bigint NOT NULL,
     user_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     role_id bigint NOT NULL,
-    workflow_state character varying DEFAULT 'active'::character varying NOT NULL
+    workflow_state character varying DEFAULT 'active'::character varying NOT NULL,
+    sis_batch_id bigint
 );
 
 
@@ -354,7 +369,7 @@ CREATE TABLE account_users (
 -- Name: account_users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE account_users_id_seq
+CREATE SEQUENCE public.account_users_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -366,14 +381,14 @@ CREATE SEQUENCE account_users_id_seq
 -- Name: account_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE account_users_id_seq OWNED BY account_users.id;
+ALTER SEQUENCE public.account_users_id_seq OWNED BY public.account_users.id;
 
 
 --
 -- Name: accounts; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE accounts (
+CREATE TABLE public.accounts (
     id bigint NOT NULL,
     name character varying(255),
     created_at timestamp without time zone,
@@ -420,7 +435,7 @@ CREATE TABLE accounts (
 -- Name: accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE accounts_id_seq
+CREATE SEQUENCE public.accounts_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -432,14 +447,14 @@ CREATE SEQUENCE accounts_id_seq
 -- Name: accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE accounts_id_seq OWNED BY accounts.id;
+ALTER SEQUENCE public.accounts_id_seq OWNED BY public.accounts.id;
 
 
 --
 -- Name: alert_criteria; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE alert_criteria (
+CREATE TABLE public.alert_criteria (
     id bigint NOT NULL,
     alert_id bigint,
     criterion_type character varying(255),
@@ -451,7 +466,7 @@ CREATE TABLE alert_criteria (
 -- Name: alert_criteria_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE alert_criteria_id_seq
+CREATE SEQUENCE public.alert_criteria_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -463,14 +478,14 @@ CREATE SEQUENCE alert_criteria_id_seq
 -- Name: alert_criteria_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE alert_criteria_id_seq OWNED BY alert_criteria.id;
+ALTER SEQUENCE public.alert_criteria_id_seq OWNED BY public.alert_criteria.id;
 
 
 --
 -- Name: alerts; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE alerts (
+CREATE TABLE public.alerts (
     id bigint NOT NULL,
     context_id bigint NOT NULL,
     context_type character varying(255) NOT NULL,
@@ -485,7 +500,7 @@ CREATE TABLE alerts (
 -- Name: alerts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE alerts_id_seq
+CREATE SEQUENCE public.alerts_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -497,14 +512,14 @@ CREATE SEQUENCE alerts_id_seq
 -- Name: alerts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE alerts_id_seq OWNED BY alerts.id;
+ALTER SEQUENCE public.alerts_id_seq OWNED BY public.alerts.id;
 
 
 --
 -- Name: appointment_group_contexts; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE appointment_group_contexts (
+CREATE TABLE public.appointment_group_contexts (
     id bigint NOT NULL,
     appointment_group_id bigint,
     context_code character varying(255),
@@ -519,7 +534,7 @@ CREATE TABLE appointment_group_contexts (
 -- Name: appointment_group_contexts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE appointment_group_contexts_id_seq
+CREATE SEQUENCE public.appointment_group_contexts_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -531,14 +546,14 @@ CREATE SEQUENCE appointment_group_contexts_id_seq
 -- Name: appointment_group_contexts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE appointment_group_contexts_id_seq OWNED BY appointment_group_contexts.id;
+ALTER SEQUENCE public.appointment_group_contexts_id_seq OWNED BY public.appointment_group_contexts.id;
 
 
 --
 -- Name: appointment_group_sub_contexts; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE appointment_group_sub_contexts (
+CREATE TABLE public.appointment_group_sub_contexts (
     id bigint NOT NULL,
     appointment_group_id bigint,
     sub_context_id bigint,
@@ -553,7 +568,7 @@ CREATE TABLE appointment_group_sub_contexts (
 -- Name: appointment_group_sub_contexts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE appointment_group_sub_contexts_id_seq
+CREATE SEQUENCE public.appointment_group_sub_contexts_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -565,14 +580,14 @@ CREATE SEQUENCE appointment_group_sub_contexts_id_seq
 -- Name: appointment_group_sub_contexts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE appointment_group_sub_contexts_id_seq OWNED BY appointment_group_sub_contexts.id;
+ALTER SEQUENCE public.appointment_group_sub_contexts_id_seq OWNED BY public.appointment_group_sub_contexts.id;
 
 
 --
 -- Name: appointment_groups; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE appointment_groups (
+CREATE TABLE public.appointment_groups (
     id bigint NOT NULL,
     title character varying(255),
     description text,
@@ -600,7 +615,7 @@ CREATE TABLE appointment_groups (
 -- Name: appointment_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE appointment_groups_id_seq
+CREATE SEQUENCE public.appointment_groups_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -612,14 +627,14 @@ CREATE SEQUENCE appointment_groups_id_seq
 -- Name: appointment_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE appointment_groups_id_seq OWNED BY appointment_groups.id;
+ALTER SEQUENCE public.appointment_groups_id_seq OWNED BY public.appointment_groups.id;
 
 
 --
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE ar_internal_metadata (
+CREATE TABLE public.ar_internal_metadata (
     key character varying NOT NULL,
     value character varying,
     created_at timestamp without time zone NOT NULL,
@@ -631,7 +646,7 @@ CREATE TABLE ar_internal_metadata (
 -- Name: assessment_question_bank_users; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE assessment_question_bank_users (
+CREATE TABLE public.assessment_question_bank_users (
     id bigint NOT NULL,
     assessment_question_bank_id bigint NOT NULL,
     user_id bigint NOT NULL,
@@ -644,7 +659,7 @@ CREATE TABLE assessment_question_bank_users (
 -- Name: assessment_question_bank_users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE assessment_question_bank_users_id_seq
+CREATE SEQUENCE public.assessment_question_bank_users_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -656,14 +671,14 @@ CREATE SEQUENCE assessment_question_bank_users_id_seq
 -- Name: assessment_question_bank_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE assessment_question_bank_users_id_seq OWNED BY assessment_question_bank_users.id;
+ALTER SEQUENCE public.assessment_question_bank_users_id_seq OWNED BY public.assessment_question_bank_users.id;
 
 
 --
 -- Name: assessment_question_banks; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE assessment_question_banks (
+CREATE TABLE public.assessment_question_banks (
     id bigint NOT NULL,
     context_id bigint,
     context_type character varying(255),
@@ -680,7 +695,7 @@ CREATE TABLE assessment_question_banks (
 -- Name: assessment_question_banks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE assessment_question_banks_id_seq
+CREATE SEQUENCE public.assessment_question_banks_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -692,14 +707,14 @@ CREATE SEQUENCE assessment_question_banks_id_seq
 -- Name: assessment_question_banks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE assessment_question_banks_id_seq OWNED BY assessment_question_banks.id;
+ALTER SEQUENCE public.assessment_question_banks_id_seq OWNED BY public.assessment_question_banks.id;
 
 
 --
 -- Name: assessment_questions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE assessment_questions (
+CREATE TABLE public.assessment_questions (
     id bigint NOT NULL,
     name text,
     question_data text,
@@ -719,7 +734,7 @@ CREATE TABLE assessment_questions (
 -- Name: assessment_questions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE assessment_questions_id_seq
+CREATE SEQUENCE public.assessment_questions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -731,14 +746,14 @@ CREATE SEQUENCE assessment_questions_id_seq
 -- Name: assessment_questions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE assessment_questions_id_seq OWNED BY assessment_questions.id;
+ALTER SEQUENCE public.assessment_questions_id_seq OWNED BY public.assessment_questions.id;
 
 
 --
 -- Name: assessment_requests; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE assessment_requests (
+CREATE TABLE public.assessment_requests (
     id bigint NOT NULL,
     rubric_assessment_id bigint,
     user_id bigint NOT NULL,
@@ -759,7 +774,7 @@ CREATE TABLE assessment_requests (
 -- Name: assessment_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE assessment_requests_id_seq
+CREATE SEQUENCE public.assessment_requests_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -771,14 +786,14 @@ CREATE SEQUENCE assessment_requests_id_seq
 -- Name: assessment_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE assessment_requests_id_seq OWNED BY assessment_requests.id;
+ALTER SEQUENCE public.assessment_requests_id_seq OWNED BY public.assessment_requests.id;
 
 
 --
 -- Name: asset_user_accesses; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE asset_user_accesses (
+CREATE TABLE public.asset_user_accesses (
     id bigint NOT NULL,
     asset_code character varying(255),
     asset_group_code character varying(255),
@@ -801,7 +816,7 @@ CREATE TABLE asset_user_accesses (
 -- Name: asset_user_accesses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE asset_user_accesses_id_seq
+CREATE SEQUENCE public.asset_user_accesses_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -813,14 +828,14 @@ CREATE SEQUENCE asset_user_accesses_id_seq
 -- Name: asset_user_accesses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE asset_user_accesses_id_seq OWNED BY asset_user_accesses.id;
+ALTER SEQUENCE public.asset_user_accesses_id_seq OWNED BY public.asset_user_accesses.id;
 
 
 --
 -- Name: assignment_configuration_tool_lookups; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE assignment_configuration_tool_lookups (
+CREATE TABLE public.assignment_configuration_tool_lookups (
     id bigint NOT NULL,
     assignment_id bigint NOT NULL,
     tool_id bigint,
@@ -836,7 +851,7 @@ CREATE TABLE assignment_configuration_tool_lookups (
 -- Name: assignment_configuration_tool_lookups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE assignment_configuration_tool_lookups_id_seq
+CREATE SEQUENCE public.assignment_configuration_tool_lookups_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -848,14 +863,14 @@ CREATE SEQUENCE assignment_configuration_tool_lookups_id_seq
 -- Name: assignment_configuration_tool_lookups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE assignment_configuration_tool_lookups_id_seq OWNED BY assignment_configuration_tool_lookups.id;
+ALTER SEQUENCE public.assignment_configuration_tool_lookups_id_seq OWNED BY public.assignment_configuration_tool_lookups.id;
 
 
 --
 -- Name: assignment_groups; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE assignment_groups (
+CREATE TABLE public.assignment_groups (
     id bigint NOT NULL,
     name character varying(255),
     rules text,
@@ -880,7 +895,7 @@ CREATE TABLE assignment_groups (
 -- Name: assignment_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE assignment_groups_id_seq
+CREATE SEQUENCE public.assignment_groups_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -892,14 +907,14 @@ CREATE SEQUENCE assignment_groups_id_seq
 -- Name: assignment_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE assignment_groups_id_seq OWNED BY assignment_groups.id;
+ALTER SEQUENCE public.assignment_groups_id_seq OWNED BY public.assignment_groups.id;
 
 
 --
 -- Name: assignment_override_students; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE assignment_override_students (
+CREATE TABLE public.assignment_override_students (
     id bigint NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -914,7 +929,7 @@ CREATE TABLE assignment_override_students (
 -- Name: assignment_override_students_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE assignment_override_students_id_seq
+CREATE SEQUENCE public.assignment_override_students_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -926,14 +941,14 @@ CREATE SEQUENCE assignment_override_students_id_seq
 -- Name: assignment_override_students_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE assignment_override_students_id_seq OWNED BY assignment_override_students.id;
+ALTER SEQUENCE public.assignment_override_students_id_seq OWNED BY public.assignment_override_students.id;
 
 
 --
 -- Name: assignment_overrides; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE assignment_overrides (
+CREATE TABLE public.assignment_overrides (
     id bigint NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -960,7 +975,7 @@ CREATE TABLE assignment_overrides (
 -- Name: assignment_overrides_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE assignment_overrides_id_seq
+CREATE SEQUENCE public.assignment_overrides_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -972,14 +987,14 @@ CREATE SEQUENCE assignment_overrides_id_seq
 -- Name: assignment_overrides_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE assignment_overrides_id_seq OWNED BY assignment_overrides.id;
+ALTER SEQUENCE public.assignment_overrides_id_seq OWNED BY public.assignment_overrides.id;
 
 
 --
 -- Name: assignments; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE assignments (
+CREATE TABLE public.assignments (
     id bigint NOT NULL,
     title character varying(255),
     description text,
@@ -1033,7 +1048,8 @@ CREATE TABLE assignments (
     omit_from_final_grade boolean DEFAULT false NOT NULL,
     vericite_enabled boolean DEFAULT false NOT NULL,
     intra_group_peer_reviews boolean DEFAULT false NOT NULL,
-    lti_context_id character varying
+    lti_context_id character varying,
+    anonymous_instructor_annotations boolean DEFAULT false
 );
 
 
@@ -1041,7 +1057,7 @@ CREATE TABLE assignments (
 -- Name: course_sections; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE course_sections (
+CREATE TABLE public.course_sections (
     id bigint NOT NULL,
     sis_source_id character varying(255),
     sis_batch_id bigint,
@@ -1068,7 +1084,7 @@ CREATE TABLE course_sections (
 -- Name: courses; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE courses (
+CREATE TABLE public.courses (
     id bigint NOT NULL,
     name character varying(255),
     account_id bigint NOT NULL,
@@ -1125,7 +1141,7 @@ CREATE TABLE courses (
 -- Name: enrollments; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE enrollments (
+CREATE TABLE public.enrollments (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     course_id bigint NOT NULL,
@@ -1158,7 +1174,7 @@ CREATE TABLE enrollments (
 -- Name: group_memberships; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE group_memberships (
+CREATE TABLE public.group_memberships (
     id bigint NOT NULL,
     group_id bigint NOT NULL,
     workflow_state character varying(255) NOT NULL,
@@ -1175,7 +1191,7 @@ CREATE TABLE group_memberships (
 -- Name: groups; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE groups (
+CREATE TABLE public.groups (
     id bigint NOT NULL,
     name character varying(255),
     workflow_state character varying(255) NOT NULL,
@@ -1210,7 +1226,7 @@ CREATE TABLE groups (
 -- Name: submissions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE submissions (
+CREATE TABLE public.submissions (
     id bigint NOT NULL,
     body text,
     url character varying(255),
@@ -1258,27 +1274,27 @@ CREATE TABLE submissions (
 -- Name: assignment_student_visibilities; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW assignment_student_visibilities AS
+CREATE VIEW public.assignment_student_visibilities AS
  SELECT DISTINCT a.id AS assignment_id,
     e.user_id,
     c.id AS course_id
-   FROM ((((((((assignments a
-     JOIN courses c ON (((a.context_id = c.id) AND ((a.context_type)::text = 'Course'::text))))
-     JOIN enrollments e ON (((e.course_id = c.id) AND ((e.type)::text = ANY (ARRAY[('StudentEnrollment'::character varying)::text, ('StudentViewEnrollment'::character varying)::text])) AND ((e.workflow_state)::text <> 'deleted'::text))))
-     JOIN course_sections cs ON (((cs.course_id = c.id) AND (e.course_section_id = cs.id))))
-     LEFT JOIN group_memberships gm ON (((gm.user_id = e.user_id) AND ((gm.workflow_state)::text = 'accepted'::text))))
-     LEFT JOIN groups g ON ((((g.context_type)::text = 'Course'::text) AND (g.context_id = c.id) AND ((g.workflow_state)::text = 'available'::text) AND (gm.group_id = g.id))))
-     LEFT JOIN assignment_override_students aos ON (((aos.assignment_id = a.id) AND (aos.user_id = e.user_id))))
-     LEFT JOIN assignment_overrides ao ON (((ao.assignment_id = a.id) AND ((ao.workflow_state)::text = 'active'::text) AND ((((ao.set_type)::text = 'CourseSection'::text) AND (ao.set_id = cs.id)) OR (((ao.set_type)::text = 'ADHOC'::text) AND (ao.set_id IS NULL) AND (ao.id = aos.assignment_override_id)) OR (((ao.set_type)::text = 'Group'::text) AND (ao.set_id = g.id))))))
-     LEFT JOIN submissions s ON (((s.user_id = e.user_id) AND (s.assignment_id = a.id) AND (s.score IS NOT NULL))))
-  WHERE (((a.workflow_state)::text <> ALL (ARRAY[('deleted'::character varying)::text, ('unpublished'::character varying)::text])) AND (((a.only_visible_to_overrides = true) AND ((ao.id IS NOT NULL) OR (s.id IS NOT NULL))) OR (COALESCE(a.only_visible_to_overrides, false) = false)));
+   FROM ((((((((public.assignments a
+     JOIN public.courses c ON (((a.context_id = c.id) AND ((a.context_type)::text = 'Course'::text))))
+     JOIN public.enrollments e ON (((e.course_id = c.id) AND ((e.type)::text = ANY ((ARRAY['StudentEnrollment'::character varying, 'StudentViewEnrollment'::character varying])::text[])) AND ((e.workflow_state)::text <> 'deleted'::text))))
+     JOIN public.course_sections cs ON (((cs.course_id = c.id) AND (e.course_section_id = cs.id))))
+     LEFT JOIN public.group_memberships gm ON (((gm.user_id = e.user_id) AND ((gm.workflow_state)::text = 'accepted'::text))))
+     LEFT JOIN public.groups g ON ((((g.context_type)::text = 'Course'::text) AND (g.context_id = c.id) AND ((g.workflow_state)::text = 'available'::text) AND (gm.group_id = g.id))))
+     LEFT JOIN public.assignment_override_students aos ON (((aos.assignment_id = a.id) AND (aos.user_id = e.user_id))))
+     LEFT JOIN public.assignment_overrides ao ON (((ao.assignment_id = a.id) AND ((ao.workflow_state)::text = 'active'::text) AND ((((ao.set_type)::text = 'CourseSection'::text) AND (ao.set_id = cs.id)) OR (((ao.set_type)::text = 'ADHOC'::text) AND (ao.set_id IS NULL) AND (ao.id = aos.assignment_override_id)) OR (((ao.set_type)::text = 'Group'::text) AND (ao.set_id = g.id))))))
+     LEFT JOIN public.submissions s ON (((s.user_id = e.user_id) AND (s.assignment_id = a.id) AND ((s.workflow_state)::text <> 'deleted'::text))))
+  WHERE (((a.workflow_state)::text <> ALL ((ARRAY['deleted'::character varying, 'unpublished'::character varying])::text[])) AND (((a.only_visible_to_overrides = true) AND ((ao.id IS NOT NULL) OR (s.id IS NOT NULL))) OR (COALESCE(a.only_visible_to_overrides, false) = false)));
 
 
 --
 -- Name: assignments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE assignments_id_seq
+CREATE SEQUENCE public.assignments_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1290,14 +1306,14 @@ CREATE SEQUENCE assignments_id_seq
 -- Name: assignments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE assignments_id_seq OWNED BY assignments.id;
+ALTER SEQUENCE public.assignments_id_seq OWNED BY public.assignments.id;
 
 
 --
 -- Name: attachment_associations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE attachment_associations (
+CREATE TABLE public.attachment_associations (
     id bigint NOT NULL,
     attachment_id bigint,
     context_id bigint,
@@ -1309,7 +1325,7 @@ CREATE TABLE attachment_associations (
 -- Name: attachment_associations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE attachment_associations_id_seq
+CREATE SEQUENCE public.attachment_associations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1321,14 +1337,14 @@ CREATE SEQUENCE attachment_associations_id_seq
 -- Name: attachment_associations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE attachment_associations_id_seq OWNED BY attachment_associations.id;
+ALTER SEQUENCE public.attachment_associations_id_seq OWNED BY public.attachment_associations.id;
 
 
 --
 -- Name: attachments; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE attachments (
+CREATE TABLE public.attachments (
     id bigint NOT NULL,
     context_id bigint,
     context_type character varying(255),
@@ -1372,7 +1388,7 @@ CREATE TABLE attachments (
 -- Name: attachments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE attachments_id_seq
+CREATE SEQUENCE public.attachments_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1384,14 +1400,14 @@ CREATE SEQUENCE attachments_id_seq
 -- Name: attachments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE attachments_id_seq OWNED BY attachments.id;
+ALTER SEQUENCE public.attachments_id_seq OWNED BY public.attachments.id;
 
 
 --
 -- Name: bookmarks_bookmarks; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE bookmarks_bookmarks (
+CREATE TABLE public.bookmarks_bookmarks (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     name character varying(255) NOT NULL,
@@ -1405,7 +1421,7 @@ CREATE TABLE bookmarks_bookmarks (
 -- Name: bookmarks_bookmarks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE bookmarks_bookmarks_id_seq
+CREATE SEQUENCE public.bookmarks_bookmarks_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1417,14 +1433,14 @@ CREATE SEQUENCE bookmarks_bookmarks_id_seq
 -- Name: bookmarks_bookmarks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE bookmarks_bookmarks_id_seq OWNED BY bookmarks_bookmarks.id;
+ALTER SEQUENCE public.bookmarks_bookmarks_id_seq OWNED BY public.bookmarks_bookmarks.id;
 
 
 --
 -- Name: brand_configs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE brand_configs (
+CREATE TABLE public.brand_configs (
     md5 character varying(32) NOT NULL,
     variables text,
     share boolean DEFAULT false NOT NULL,
@@ -1439,125 +1455,15 @@ CREATE TABLE brand_configs (
 
 
 --
--- Name: cached_grade_distributions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE cached_grade_distributions (
-    course_id bigint NOT NULL,
-    s0 integer DEFAULT 0 NOT NULL,
-    s1 integer DEFAULT 0 NOT NULL,
-    s2 integer DEFAULT 0 NOT NULL,
-    s3 integer DEFAULT 0 NOT NULL,
-    s4 integer DEFAULT 0 NOT NULL,
-    s5 integer DEFAULT 0 NOT NULL,
-    s6 integer DEFAULT 0 NOT NULL,
-    s7 integer DEFAULT 0 NOT NULL,
-    s8 integer DEFAULT 0 NOT NULL,
-    s9 integer DEFAULT 0 NOT NULL,
-    s10 integer DEFAULT 0 NOT NULL,
-    s11 integer DEFAULT 0 NOT NULL,
-    s12 integer DEFAULT 0 NOT NULL,
-    s13 integer DEFAULT 0 NOT NULL,
-    s14 integer DEFAULT 0 NOT NULL,
-    s15 integer DEFAULT 0 NOT NULL,
-    s16 integer DEFAULT 0 NOT NULL,
-    s17 integer DEFAULT 0 NOT NULL,
-    s18 integer DEFAULT 0 NOT NULL,
-    s19 integer DEFAULT 0 NOT NULL,
-    s20 integer DEFAULT 0 NOT NULL,
-    s21 integer DEFAULT 0 NOT NULL,
-    s22 integer DEFAULT 0 NOT NULL,
-    s23 integer DEFAULT 0 NOT NULL,
-    s24 integer DEFAULT 0 NOT NULL,
-    s25 integer DEFAULT 0 NOT NULL,
-    s26 integer DEFAULT 0 NOT NULL,
-    s27 integer DEFAULT 0 NOT NULL,
-    s28 integer DEFAULT 0 NOT NULL,
-    s29 integer DEFAULT 0 NOT NULL,
-    s30 integer DEFAULT 0 NOT NULL,
-    s31 integer DEFAULT 0 NOT NULL,
-    s32 integer DEFAULT 0 NOT NULL,
-    s33 integer DEFAULT 0 NOT NULL,
-    s34 integer DEFAULT 0 NOT NULL,
-    s35 integer DEFAULT 0 NOT NULL,
-    s36 integer DEFAULT 0 NOT NULL,
-    s37 integer DEFAULT 0 NOT NULL,
-    s38 integer DEFAULT 0 NOT NULL,
-    s39 integer DEFAULT 0 NOT NULL,
-    s40 integer DEFAULT 0 NOT NULL,
-    s41 integer DEFAULT 0 NOT NULL,
-    s42 integer DEFAULT 0 NOT NULL,
-    s43 integer DEFAULT 0 NOT NULL,
-    s44 integer DEFAULT 0 NOT NULL,
-    s45 integer DEFAULT 0 NOT NULL,
-    s46 integer DEFAULT 0 NOT NULL,
-    s47 integer DEFAULT 0 NOT NULL,
-    s48 integer DEFAULT 0 NOT NULL,
-    s49 integer DEFAULT 0 NOT NULL,
-    s50 integer DEFAULT 0 NOT NULL,
-    s51 integer DEFAULT 0 NOT NULL,
-    s52 integer DEFAULT 0 NOT NULL,
-    s53 integer DEFAULT 0 NOT NULL,
-    s54 integer DEFAULT 0 NOT NULL,
-    s55 integer DEFAULT 0 NOT NULL,
-    s56 integer DEFAULT 0 NOT NULL,
-    s57 integer DEFAULT 0 NOT NULL,
-    s58 integer DEFAULT 0 NOT NULL,
-    s59 integer DEFAULT 0 NOT NULL,
-    s60 integer DEFAULT 0 NOT NULL,
-    s61 integer DEFAULT 0 NOT NULL,
-    s62 integer DEFAULT 0 NOT NULL,
-    s63 integer DEFAULT 0 NOT NULL,
-    s64 integer DEFAULT 0 NOT NULL,
-    s65 integer DEFAULT 0 NOT NULL,
-    s66 integer DEFAULT 0 NOT NULL,
-    s67 integer DEFAULT 0 NOT NULL,
-    s68 integer DEFAULT 0 NOT NULL,
-    s69 integer DEFAULT 0 NOT NULL,
-    s70 integer DEFAULT 0 NOT NULL,
-    s71 integer DEFAULT 0 NOT NULL,
-    s72 integer DEFAULT 0 NOT NULL,
-    s73 integer DEFAULT 0 NOT NULL,
-    s74 integer DEFAULT 0 NOT NULL,
-    s75 integer DEFAULT 0 NOT NULL,
-    s76 integer DEFAULT 0 NOT NULL,
-    s77 integer DEFAULT 0 NOT NULL,
-    s78 integer DEFAULT 0 NOT NULL,
-    s79 integer DEFAULT 0 NOT NULL,
-    s80 integer DEFAULT 0 NOT NULL,
-    s81 integer DEFAULT 0 NOT NULL,
-    s82 integer DEFAULT 0 NOT NULL,
-    s83 integer DEFAULT 0 NOT NULL,
-    s84 integer DEFAULT 0 NOT NULL,
-    s85 integer DEFAULT 0 NOT NULL,
-    s86 integer DEFAULT 0 NOT NULL,
-    s87 integer DEFAULT 0 NOT NULL,
-    s88 integer DEFAULT 0 NOT NULL,
-    s89 integer DEFAULT 0 NOT NULL,
-    s90 integer DEFAULT 0 NOT NULL,
-    s91 integer DEFAULT 0 NOT NULL,
-    s92 integer DEFAULT 0 NOT NULL,
-    s93 integer DEFAULT 0 NOT NULL,
-    s94 integer DEFAULT 0 NOT NULL,
-    s95 integer DEFAULT 0 NOT NULL,
-    s96 integer DEFAULT 0 NOT NULL,
-    s97 integer DEFAULT 0 NOT NULL,
-    s98 integer DEFAULT 0 NOT NULL,
-    s99 integer DEFAULT 0 NOT NULL,
-    s100 integer DEFAULT 0 NOT NULL
-);
-
-
---
 -- Name: calendar_events; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE calendar_events (
+CREATE TABLE public.calendar_events (
     id bigint NOT NULL,
     title character varying(255),
     description text,
-    location_name text,
-    location_address text,
+    location_name character varying(255),
+    location_address character varying(255),
     start_at timestamp without time zone,
     end_at timestamp without time zone,
     context_id bigint NOT NULL,
@@ -1586,7 +1492,7 @@ CREATE TABLE calendar_events (
 -- Name: calendar_events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE calendar_events_id_seq
+CREATE SEQUENCE public.calendar_events_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1598,14 +1504,14 @@ CREATE SEQUENCE calendar_events_id_seq
 -- Name: calendar_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE calendar_events_id_seq OWNED BY calendar_events.id;
+ALTER SEQUENCE public.calendar_events_id_seq OWNED BY public.calendar_events.id;
 
 
 --
 -- Name: canvadocs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE canvadocs (
+CREATE TABLE public.canvadocs (
     id bigint NOT NULL,
     document_id character varying(255),
     process_state character varying(255),
@@ -1620,7 +1526,7 @@ CREATE TABLE canvadocs (
 -- Name: canvadocs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE canvadocs_id_seq
+CREATE SEQUENCE public.canvadocs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1632,14 +1538,14 @@ CREATE SEQUENCE canvadocs_id_seq
 -- Name: canvadocs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE canvadocs_id_seq OWNED BY canvadocs.id;
+ALTER SEQUENCE public.canvadocs_id_seq OWNED BY public.canvadocs.id;
 
 
 --
 -- Name: canvadocs_submissions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE canvadocs_submissions (
+CREATE TABLE public.canvadocs_submissions (
     id bigint NOT NULL,
     canvadoc_id bigint,
     crocodoc_document_id bigint,
@@ -1651,7 +1557,7 @@ CREATE TABLE canvadocs_submissions (
 -- Name: canvadocs_submissions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE canvadocs_submissions_id_seq
+CREATE SEQUENCE public.canvadocs_submissions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1663,14 +1569,14 @@ CREATE SEQUENCE canvadocs_submissions_id_seq
 -- Name: canvadocs_submissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE canvadocs_submissions_id_seq OWNED BY canvadocs_submissions.id;
+ALTER SEQUENCE public.canvadocs_submissions_id_seq OWNED BY public.canvadocs_submissions.id;
 
 
 --
 -- Name: cloned_items; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE cloned_items (
+CREATE TABLE public.cloned_items (
     id bigint NOT NULL,
     original_item_id bigint,
     original_item_type character varying(255),
@@ -1683,7 +1589,7 @@ CREATE TABLE cloned_items (
 -- Name: cloned_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE cloned_items_id_seq
+CREATE SEQUENCE public.cloned_items_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1695,14 +1601,14 @@ CREATE SEQUENCE cloned_items_id_seq
 -- Name: cloned_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE cloned_items_id_seq OWNED BY cloned_items.id;
+ALTER SEQUENCE public.cloned_items_id_seq OWNED BY public.cloned_items.id;
 
 
 --
 -- Name: collaborations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE collaborations (
+CREATE TABLE public.collaborations (
     id bigint NOT NULL,
     collaboration_type character varying(255),
     document_id character varying(255),
@@ -1727,7 +1633,7 @@ CREATE TABLE collaborations (
 -- Name: collaborations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE collaborations_id_seq
+CREATE SEQUENCE public.collaborations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1739,14 +1645,14 @@ CREATE SEQUENCE collaborations_id_seq
 -- Name: collaborations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE collaborations_id_seq OWNED BY collaborations.id;
+ALTER SEQUENCE public.collaborations_id_seq OWNED BY public.collaborations.id;
 
 
 --
 -- Name: collaborators; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE collaborators (
+CREATE TABLE public.collaborators (
     id bigint NOT NULL,
     user_id bigint,
     collaboration_id bigint,
@@ -1761,7 +1667,7 @@ CREATE TABLE collaborators (
 -- Name: collaborators_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE collaborators_id_seq
+CREATE SEQUENCE public.collaborators_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1773,14 +1679,14 @@ CREATE SEQUENCE collaborators_id_seq
 -- Name: collaborators_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE collaborators_id_seq OWNED BY collaborators.id;
+ALTER SEQUENCE public.collaborators_id_seq OWNED BY public.collaborators.id;
 
 
 --
 -- Name: communication_channels; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE communication_channels (
+CREATE TABLE public.communication_channels (
     id bigint NOT NULL,
     path character varying(255) NOT NULL,
     path_type character varying(255) DEFAULT 'email'::character varying NOT NULL,
@@ -1806,7 +1712,7 @@ CREATE TABLE communication_channels (
 -- Name: communication_channels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE communication_channels_id_seq
+CREATE SEQUENCE public.communication_channels_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1818,14 +1724,14 @@ CREATE SEQUENCE communication_channels_id_seq
 -- Name: communication_channels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE communication_channels_id_seq OWNED BY communication_channels.id;
+ALTER SEQUENCE public.communication_channels_id_seq OWNED BY public.communication_channels.id;
 
 
 --
 -- Name: content_exports; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE content_exports (
+CREATE TABLE public.content_exports (
     id bigint NOT NULL,
     user_id bigint,
     attachment_id bigint,
@@ -1845,7 +1751,7 @@ CREATE TABLE content_exports (
 -- Name: content_exports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE content_exports_id_seq
+CREATE SEQUENCE public.content_exports_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1857,14 +1763,14 @@ CREATE SEQUENCE content_exports_id_seq
 -- Name: content_exports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE content_exports_id_seq OWNED BY content_exports.id;
+ALTER SEQUENCE public.content_exports_id_seq OWNED BY public.content_exports.id;
 
 
 --
 -- Name: content_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE content_migrations (
+CREATE TABLE public.content_migrations (
     id bigint NOT NULL,
     context_id bigint NOT NULL,
     user_id bigint,
@@ -1889,7 +1795,7 @@ CREATE TABLE content_migrations (
 -- Name: content_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE content_migrations_id_seq
+CREATE SEQUENCE public.content_migrations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1901,14 +1807,14 @@ CREATE SEQUENCE content_migrations_id_seq
 -- Name: content_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE content_migrations_id_seq OWNED BY content_migrations.id;
+ALTER SEQUENCE public.content_migrations_id_seq OWNED BY public.content_migrations.id;
 
 
 --
 -- Name: content_participation_counts; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE content_participation_counts (
+CREATE TABLE public.content_participation_counts (
     id bigint NOT NULL,
     content_type character varying(255),
     context_type character varying(255),
@@ -1924,7 +1830,7 @@ CREATE TABLE content_participation_counts (
 -- Name: content_participation_counts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE content_participation_counts_id_seq
+CREATE SEQUENCE public.content_participation_counts_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1936,14 +1842,14 @@ CREATE SEQUENCE content_participation_counts_id_seq
 -- Name: content_participation_counts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE content_participation_counts_id_seq OWNED BY content_participation_counts.id;
+ALTER SEQUENCE public.content_participation_counts_id_seq OWNED BY public.content_participation_counts.id;
 
 
 --
 -- Name: content_participations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE content_participations (
+CREATE TABLE public.content_participations (
     id bigint NOT NULL,
     content_type character varying(255) NOT NULL,
     content_id bigint NOT NULL,
@@ -1956,7 +1862,7 @@ CREATE TABLE content_participations (
 -- Name: content_participations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE content_participations_id_seq
+CREATE SEQUENCE public.content_participations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1968,14 +1874,14 @@ CREATE SEQUENCE content_participations_id_seq
 -- Name: content_participations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE content_participations_id_seq OWNED BY content_participations.id;
+ALTER SEQUENCE public.content_participations_id_seq OWNED BY public.content_participations.id;
 
 
 --
 -- Name: content_tags; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE content_tags (
+CREATE TABLE public.content_tags (
     id bigint NOT NULL,
     content_id bigint,
     content_type character varying(255),
@@ -2008,7 +1914,7 @@ CREATE TABLE content_tags (
 -- Name: content_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE content_tags_id_seq
+CREATE SEQUENCE public.content_tags_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2020,14 +1926,14 @@ CREATE SEQUENCE content_tags_id_seq
 -- Name: content_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE content_tags_id_seq OWNED BY content_tags.id;
+ALTER SEQUENCE public.content_tags_id_seq OWNED BY public.content_tags.id;
 
 
 --
 -- Name: context_external_tool_assignment_lookups; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE context_external_tool_assignment_lookups (
+CREATE TABLE public.context_external_tool_assignment_lookups (
     id bigint NOT NULL,
     assignment_id bigint NOT NULL,
     context_external_tool_id bigint NOT NULL
@@ -2038,7 +1944,7 @@ CREATE TABLE context_external_tool_assignment_lookups (
 -- Name: context_external_tool_assignment_lookups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE context_external_tool_assignment_lookups_id_seq
+CREATE SEQUENCE public.context_external_tool_assignment_lookups_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2050,14 +1956,14 @@ CREATE SEQUENCE context_external_tool_assignment_lookups_id_seq
 -- Name: context_external_tool_assignment_lookups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE context_external_tool_assignment_lookups_id_seq OWNED BY context_external_tool_assignment_lookups.id;
+ALTER SEQUENCE public.context_external_tool_assignment_lookups_id_seq OWNED BY public.context_external_tool_assignment_lookups.id;
 
 
 --
 -- Name: context_external_tool_placements; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE context_external_tool_placements (
+CREATE TABLE public.context_external_tool_placements (
     id bigint NOT NULL,
     placement_type character varying(255),
     context_external_tool_id bigint NOT NULL
@@ -2068,7 +1974,7 @@ CREATE TABLE context_external_tool_placements (
 -- Name: context_external_tool_placements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE context_external_tool_placements_id_seq
+CREATE SEQUENCE public.context_external_tool_placements_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2080,14 +1986,14 @@ CREATE SEQUENCE context_external_tool_placements_id_seq
 -- Name: context_external_tool_placements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE context_external_tool_placements_id_seq OWNED BY context_external_tool_placements.id;
+ALTER SEQUENCE public.context_external_tool_placements_id_seq OWNED BY public.context_external_tool_placements.id;
 
 
 --
 -- Name: context_external_tools; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE context_external_tools (
+CREATE TABLE public.context_external_tools (
     id bigint NOT NULL,
     context_id bigint,
     context_type character varying(255),
@@ -2113,7 +2019,7 @@ CREATE TABLE context_external_tools (
 -- Name: context_external_tools_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE context_external_tools_id_seq
+CREATE SEQUENCE public.context_external_tools_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2125,14 +2031,14 @@ CREATE SEQUENCE context_external_tools_id_seq
 -- Name: context_external_tools_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE context_external_tools_id_seq OWNED BY context_external_tools.id;
+ALTER SEQUENCE public.context_external_tools_id_seq OWNED BY public.context_external_tools.id;
 
 
 --
 -- Name: context_module_progressions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE context_module_progressions (
+CREATE TABLE public.context_module_progressions (
     id bigint NOT NULL,
     context_module_id bigint,
     user_id bigint,
@@ -2154,7 +2060,7 @@ CREATE TABLE context_module_progressions (
 -- Name: context_module_progressions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE context_module_progressions_id_seq
+CREATE SEQUENCE public.context_module_progressions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2166,14 +2072,14 @@ CREATE SEQUENCE context_module_progressions_id_seq
 -- Name: context_module_progressions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE context_module_progressions_id_seq OWNED BY context_module_progressions.id;
+ALTER SEQUENCE public.context_module_progressions_id_seq OWNED BY public.context_module_progressions.id;
 
 
 --
 -- Name: context_modules; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE context_modules (
+CREATE TABLE public.context_modules (
     id bigint NOT NULL,
     context_id bigint NOT NULL,
     context_type character varying(255) NOT NULL,
@@ -2198,7 +2104,7 @@ CREATE TABLE context_modules (
 -- Name: context_modules_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE context_modules_id_seq
+CREATE SEQUENCE public.context_modules_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2210,14 +2116,14 @@ CREATE SEQUENCE context_modules_id_seq
 -- Name: context_modules_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE context_modules_id_seq OWNED BY context_modules.id;
+ALTER SEQUENCE public.context_modules_id_seq OWNED BY public.context_modules.id;
 
 
 --
 -- Name: conversation_batches; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE conversation_batches (
+CREATE TABLE public.conversation_batches (
     id bigint NOT NULL,
     workflow_state character varying(255) NOT NULL,
     user_id bigint NOT NULL,
@@ -2239,7 +2145,7 @@ CREATE TABLE conversation_batches (
 -- Name: conversation_batches_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE conversation_batches_id_seq
+CREATE SEQUENCE public.conversation_batches_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2251,14 +2157,14 @@ CREATE SEQUENCE conversation_batches_id_seq
 -- Name: conversation_batches_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE conversation_batches_id_seq OWNED BY conversation_batches.id;
+ALTER SEQUENCE public.conversation_batches_id_seq OWNED BY public.conversation_batches.id;
 
 
 --
 -- Name: conversation_message_participants; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE conversation_message_participants (
+CREATE TABLE public.conversation_message_participants (
     id bigint NOT NULL,
     conversation_message_id bigint,
     conversation_participant_id bigint,
@@ -2273,7 +2179,7 @@ CREATE TABLE conversation_message_participants (
 -- Name: conversation_message_participants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE conversation_message_participants_id_seq
+CREATE SEQUENCE public.conversation_message_participants_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2285,14 +2191,14 @@ CREATE SEQUENCE conversation_message_participants_id_seq
 -- Name: conversation_message_participants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE conversation_message_participants_id_seq OWNED BY conversation_message_participants.id;
+ALTER SEQUENCE public.conversation_message_participants_id_seq OWNED BY public.conversation_message_participants.id;
 
 
 --
 -- Name: conversation_messages; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE conversation_messages (
+CREATE TABLE public.conversation_messages (
     id bigint NOT NULL,
     conversation_id bigint,
     author_id bigint,
@@ -2316,7 +2222,7 @@ CREATE TABLE conversation_messages (
 -- Name: conversation_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE conversation_messages_id_seq
+CREATE SEQUENCE public.conversation_messages_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2328,14 +2234,14 @@ CREATE SEQUENCE conversation_messages_id_seq
 -- Name: conversation_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE conversation_messages_id_seq OWNED BY conversation_messages.id;
+ALTER SEQUENCE public.conversation_messages_id_seq OWNED BY public.conversation_messages.id;
 
 
 --
 -- Name: conversation_participants; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE conversation_participants (
+CREATE TABLE public.conversation_participants (
     id bigint NOT NULL,
     conversation_id bigint NOT NULL,
     user_id bigint NOT NULL,
@@ -2359,7 +2265,7 @@ CREATE TABLE conversation_participants (
 -- Name: conversation_participants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE conversation_participants_id_seq
+CREATE SEQUENCE public.conversation_participants_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2371,14 +2277,14 @@ CREATE SEQUENCE conversation_participants_id_seq
 -- Name: conversation_participants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE conversation_participants_id_seq OWNED BY conversation_participants.id;
+ALTER SEQUENCE public.conversation_participants_id_seq OWNED BY public.conversation_participants.id;
 
 
 --
 -- Name: conversations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE conversations (
+CREATE TABLE public.conversations (
     id bigint NOT NULL,
     private_hash character varying(255),
     has_attachments boolean DEFAULT false NOT NULL,
@@ -2396,7 +2302,7 @@ CREATE TABLE conversations (
 -- Name: conversations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE conversations_id_seq
+CREATE SEQUENCE public.conversations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2408,14 +2314,14 @@ CREATE SEQUENCE conversations_id_seq
 -- Name: conversations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE conversations_id_seq OWNED BY conversations.id;
+ALTER SEQUENCE public.conversations_id_seq OWNED BY public.conversations.id;
 
 
 --
 -- Name: course_account_associations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE course_account_associations (
+CREATE TABLE public.course_account_associations (
     id bigint NOT NULL,
     course_id bigint NOT NULL,
     account_id bigint NOT NULL,
@@ -2430,7 +2336,7 @@ CREATE TABLE course_account_associations (
 -- Name: course_account_associations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE course_account_associations_id_seq
+CREATE SEQUENCE public.course_account_associations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2442,14 +2348,14 @@ CREATE SEQUENCE course_account_associations_id_seq
 -- Name: course_account_associations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE course_account_associations_id_seq OWNED BY course_account_associations.id;
+ALTER SEQUENCE public.course_account_associations_id_seq OWNED BY public.course_account_associations.id;
 
 
 --
 -- Name: course_sections_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE course_sections_id_seq
+CREATE SEQUENCE public.course_sections_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2461,14 +2367,14 @@ CREATE SEQUENCE course_sections_id_seq
 -- Name: course_sections_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE course_sections_id_seq OWNED BY course_sections.id;
+ALTER SEQUENCE public.course_sections_id_seq OWNED BY public.course_sections.id;
 
 
 --
 -- Name: courses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE courses_id_seq
+CREATE SEQUENCE public.courses_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2480,14 +2386,14 @@ CREATE SEQUENCE courses_id_seq
 -- Name: courses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE courses_id_seq OWNED BY courses.id;
+ALTER SEQUENCE public.courses_id_seq OWNED BY public.courses.id;
 
 
 --
 -- Name: crocodoc_documents; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE crocodoc_documents (
+CREATE TABLE public.crocodoc_documents (
     id bigint NOT NULL,
     uuid character varying(255),
     process_state character varying(255),
@@ -2501,7 +2407,7 @@ CREATE TABLE crocodoc_documents (
 -- Name: crocodoc_documents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE crocodoc_documents_id_seq
+CREATE SEQUENCE public.crocodoc_documents_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2513,14 +2419,14 @@ CREATE SEQUENCE crocodoc_documents_id_seq
 -- Name: crocodoc_documents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE crocodoc_documents_id_seq OWNED BY crocodoc_documents.id;
+ALTER SEQUENCE public.crocodoc_documents_id_seq OWNED BY public.crocodoc_documents.id;
 
 
 --
 -- Name: custom_data; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE custom_data (
+CREATE TABLE public.custom_data (
     id bigint NOT NULL,
     data text,
     namespace character varying(255),
@@ -2534,7 +2440,7 @@ CREATE TABLE custom_data (
 -- Name: custom_data_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE custom_data_id_seq
+CREATE SEQUENCE public.custom_data_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2546,14 +2452,14 @@ CREATE SEQUENCE custom_data_id_seq
 -- Name: custom_data_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE custom_data_id_seq OWNED BY custom_data.id;
+ALTER SEQUENCE public.custom_data_id_seq OWNED BY public.custom_data.id;
 
 
 --
 -- Name: custom_gradebook_column_data; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE custom_gradebook_column_data (
+CREATE TABLE public.custom_gradebook_column_data (
     id bigint NOT NULL,
     content character varying(255) NOT NULL,
     user_id bigint NOT NULL,
@@ -2565,7 +2471,7 @@ CREATE TABLE custom_gradebook_column_data (
 -- Name: custom_gradebook_column_data_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE custom_gradebook_column_data_id_seq
+CREATE SEQUENCE public.custom_gradebook_column_data_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2577,14 +2483,14 @@ CREATE SEQUENCE custom_gradebook_column_data_id_seq
 -- Name: custom_gradebook_column_data_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE custom_gradebook_column_data_id_seq OWNED BY custom_gradebook_column_data.id;
+ALTER SEQUENCE public.custom_gradebook_column_data_id_seq OWNED BY public.custom_gradebook_column_data.id;
 
 
 --
 -- Name: custom_gradebook_columns; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE custom_gradebook_columns (
+CREATE TABLE public.custom_gradebook_columns (
     id bigint NOT NULL,
     title character varying(255) NOT NULL,
     "position" integer NOT NULL,
@@ -2600,7 +2506,7 @@ CREATE TABLE custom_gradebook_columns (
 -- Name: custom_gradebook_columns_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE custom_gradebook_columns_id_seq
+CREATE SEQUENCE public.custom_gradebook_columns_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2612,14 +2518,14 @@ CREATE SEQUENCE custom_gradebook_columns_id_seq
 -- Name: custom_gradebook_columns_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE custom_gradebook_columns_id_seq OWNED BY custom_gradebook_columns.id;
+ALTER SEQUENCE public.custom_gradebook_columns_id_seq OWNED BY public.custom_gradebook_columns.id;
 
 
 --
 -- Name: delayed_jobs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE delayed_jobs (
+CREATE TABLE public.delayed_jobs (
     id bigint NOT NULL,
     priority integer DEFAULT 0,
     attempts integer DEFAULT 0,
@@ -2646,7 +2552,7 @@ CREATE TABLE delayed_jobs (
 -- Name: delayed_jobs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE delayed_jobs_id_seq
+CREATE SEQUENCE public.delayed_jobs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2658,14 +2564,14 @@ CREATE SEQUENCE delayed_jobs_id_seq
 -- Name: delayed_jobs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE delayed_jobs_id_seq OWNED BY delayed_jobs.id;
+ALTER SEQUENCE public.delayed_jobs_id_seq OWNED BY public.delayed_jobs.id;
 
 
 --
 -- Name: delayed_messages; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE delayed_messages (
+CREATE TABLE public.delayed_messages (
     id bigint NOT NULL,
     notification_id bigint,
     notification_policy_id bigint,
@@ -2689,7 +2595,7 @@ CREATE TABLE delayed_messages (
 -- Name: delayed_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE delayed_messages_id_seq
+CREATE SEQUENCE public.delayed_messages_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2701,14 +2607,14 @@ CREATE SEQUENCE delayed_messages_id_seq
 -- Name: delayed_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE delayed_messages_id_seq OWNED BY delayed_messages.id;
+ALTER SEQUENCE public.delayed_messages_id_seq OWNED BY public.delayed_messages.id;
 
 
 --
 -- Name: delayed_notifications; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE delayed_notifications (
+CREATE TABLE public.delayed_notifications (
     id bigint NOT NULL,
     notification_id bigint NOT NULL,
     asset_id bigint NOT NULL,
@@ -2716,9 +2622,7 @@ CREATE TABLE delayed_notifications (
     recipient_keys text,
     workflow_state character varying(255) NOT NULL,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    asset_context_type character varying(255),
-    asset_context_id bigint
+    updated_at timestamp without time zone
 );
 
 
@@ -2726,7 +2630,7 @@ CREATE TABLE delayed_notifications (
 -- Name: delayed_notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE delayed_notifications_id_seq
+CREATE SEQUENCE public.delayed_notifications_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2738,14 +2642,14 @@ CREATE SEQUENCE delayed_notifications_id_seq
 -- Name: delayed_notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE delayed_notifications_id_seq OWNED BY delayed_notifications.id;
+ALTER SEQUENCE public.delayed_notifications_id_seq OWNED BY public.delayed_notifications.id;
 
 
 --
 -- Name: developer_keys; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE developer_keys (
+CREATE TABLE public.developer_keys (
     id bigint NOT NULL,
     api_key character varying(255),
     email character varying(255),
@@ -2774,7 +2678,7 @@ CREATE TABLE developer_keys (
 -- Name: developer_keys_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE developer_keys_id_seq
+CREATE SEQUENCE public.developer_keys_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2786,14 +2690,14 @@ CREATE SEQUENCE developer_keys_id_seq
 -- Name: developer_keys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE developer_keys_id_seq OWNED BY developer_keys.id;
+ALTER SEQUENCE public.developer_keys_id_seq OWNED BY public.developer_keys.id;
 
 
 --
 -- Name: discussion_entries; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE discussion_entries (
+CREATE TABLE public.discussion_entries (
     id bigint NOT NULL,
     message text,
     discussion_topic_id bigint,
@@ -2817,7 +2721,7 @@ CREATE TABLE discussion_entries (
 -- Name: discussion_entries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE discussion_entries_id_seq
+CREATE SEQUENCE public.discussion_entries_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2829,14 +2733,14 @@ CREATE SEQUENCE discussion_entries_id_seq
 -- Name: discussion_entries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE discussion_entries_id_seq OWNED BY discussion_entries.id;
+ALTER SEQUENCE public.discussion_entries_id_seq OWNED BY public.discussion_entries.id;
 
 
 --
 -- Name: discussion_entry_participants; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE discussion_entry_participants (
+CREATE TABLE public.discussion_entry_participants (
     id bigint NOT NULL,
     discussion_entry_id bigint NOT NULL,
     user_id bigint NOT NULL,
@@ -2850,7 +2754,7 @@ CREATE TABLE discussion_entry_participants (
 -- Name: discussion_entry_participants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE discussion_entry_participants_id_seq
+CREATE SEQUENCE public.discussion_entry_participants_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2862,14 +2766,14 @@ CREATE SEQUENCE discussion_entry_participants_id_seq
 -- Name: discussion_entry_participants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE discussion_entry_participants_id_seq OWNED BY discussion_entry_participants.id;
+ALTER SEQUENCE public.discussion_entry_participants_id_seq OWNED BY public.discussion_entry_participants.id;
 
 
 --
 -- Name: discussion_topic_materialized_views; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE discussion_topic_materialized_views (
+CREATE TABLE public.discussion_topic_materialized_views (
     discussion_topic_id bigint NOT NULL,
     json_structure character varying(10485760),
     participants_array character varying(10485760),
@@ -2884,7 +2788,7 @@ CREATE TABLE discussion_topic_materialized_views (
 -- Name: discussion_topic_participants; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE discussion_topic_participants (
+CREATE TABLE public.discussion_topic_participants (
     id bigint NOT NULL,
     discussion_topic_id bigint NOT NULL,
     user_id bigint NOT NULL,
@@ -2898,7 +2802,7 @@ CREATE TABLE discussion_topic_participants (
 -- Name: discussion_topic_participants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE discussion_topic_participants_id_seq
+CREATE SEQUENCE public.discussion_topic_participants_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2910,14 +2814,14 @@ CREATE SEQUENCE discussion_topic_participants_id_seq
 -- Name: discussion_topic_participants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE discussion_topic_participants_id_seq OWNED BY discussion_topic_participants.id;
+ALTER SEQUENCE public.discussion_topic_participants_id_seq OWNED BY public.discussion_topic_participants.id;
 
 
 --
 -- Name: discussion_topics; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE discussion_topics (
+CREATE TABLE public.discussion_topics (
     id bigint NOT NULL,
     title character varying(255),
     message text,
@@ -2964,7 +2868,7 @@ CREATE TABLE discussion_topics (
 -- Name: discussion_topics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE discussion_topics_id_seq
+CREATE SEQUENCE public.discussion_topics_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2976,14 +2880,14 @@ CREATE SEQUENCE discussion_topics_id_seq
 -- Name: discussion_topics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE discussion_topics_id_seq OWNED BY discussion_topics.id;
+ALTER SEQUENCE public.discussion_topics_id_seq OWNED BY public.discussion_topics.id;
 
 
 --
 -- Name: enrollment_dates_overrides; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE enrollment_dates_overrides (
+CREATE TABLE public.enrollment_dates_overrides (
     id bigint NOT NULL,
     enrollment_term_id bigint,
     enrollment_type character varying(255),
@@ -3000,7 +2904,7 @@ CREATE TABLE enrollment_dates_overrides (
 -- Name: enrollment_dates_overrides_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE enrollment_dates_overrides_id_seq
+CREATE SEQUENCE public.enrollment_dates_overrides_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3012,14 +2916,14 @@ CREATE SEQUENCE enrollment_dates_overrides_id_seq
 -- Name: enrollment_dates_overrides_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE enrollment_dates_overrides_id_seq OWNED BY enrollment_dates_overrides.id;
+ALTER SEQUENCE public.enrollment_dates_overrides_id_seq OWNED BY public.enrollment_dates_overrides.id;
 
 
 --
 -- Name: enrollment_states; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE enrollment_states (
+CREATE TABLE public.enrollment_states (
     enrollment_id bigint NOT NULL,
     state character varying(255),
     state_is_current boolean DEFAULT false NOT NULL,
@@ -3035,7 +2939,7 @@ CREATE TABLE enrollment_states (
 -- Name: enrollment_terms; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE enrollment_terms (
+CREATE TABLE public.enrollment_terms (
     id bigint NOT NULL,
     root_account_id bigint NOT NULL,
     name character varying(255),
@@ -3059,7 +2963,7 @@ CREATE TABLE enrollment_terms (
 -- Name: enrollment_terms_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE enrollment_terms_id_seq
+CREATE SEQUENCE public.enrollment_terms_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3071,14 +2975,14 @@ CREATE SEQUENCE enrollment_terms_id_seq
 -- Name: enrollment_terms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE enrollment_terms_id_seq OWNED BY enrollment_terms.id;
+ALTER SEQUENCE public.enrollment_terms_id_seq OWNED BY public.enrollment_terms.id;
 
 
 --
 -- Name: enrollments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE enrollments_id_seq
+CREATE SEQUENCE public.enrollments_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3090,14 +2994,14 @@ CREATE SEQUENCE enrollments_id_seq
 -- Name: enrollments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE enrollments_id_seq OWNED BY enrollments.id;
+ALTER SEQUENCE public.enrollments_id_seq OWNED BY public.enrollments.id;
 
 
 --
 -- Name: eportfolio_categories; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE eportfolio_categories (
+CREATE TABLE public.eportfolio_categories (
     id bigint NOT NULL,
     eportfolio_id bigint NOT NULL,
     name character varying(255),
@@ -3112,7 +3016,7 @@ CREATE TABLE eportfolio_categories (
 -- Name: eportfolio_categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE eportfolio_categories_id_seq
+CREATE SEQUENCE public.eportfolio_categories_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3124,14 +3028,14 @@ CREATE SEQUENCE eportfolio_categories_id_seq
 -- Name: eportfolio_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE eportfolio_categories_id_seq OWNED BY eportfolio_categories.id;
+ALTER SEQUENCE public.eportfolio_categories_id_seq OWNED BY public.eportfolio_categories.id;
 
 
 --
 -- Name: eportfolio_entries; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE eportfolio_entries (
+CREATE TABLE public.eportfolio_entries (
     id bigint NOT NULL,
     eportfolio_id bigint NOT NULL,
     eportfolio_category_id bigint NOT NULL,
@@ -3150,7 +3054,7 @@ CREATE TABLE eportfolio_entries (
 -- Name: eportfolio_entries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE eportfolio_entries_id_seq
+CREATE SEQUENCE public.eportfolio_entries_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3162,14 +3066,14 @@ CREATE SEQUENCE eportfolio_entries_id_seq
 -- Name: eportfolio_entries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE eportfolio_entries_id_seq OWNED BY eportfolio_entries.id;
+ALTER SEQUENCE public.eportfolio_entries_id_seq OWNED BY public.eportfolio_entries.id;
 
 
 --
 -- Name: eportfolios; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE eportfolios (
+CREATE TABLE public.eportfolios (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     name character varying(255),
@@ -3186,7 +3090,7 @@ CREATE TABLE eportfolios (
 -- Name: eportfolios_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE eportfolios_id_seq
+CREATE SEQUENCE public.eportfolios_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3198,14 +3102,14 @@ CREATE SEQUENCE eportfolios_id_seq
 -- Name: eportfolios_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE eportfolios_id_seq OWNED BY eportfolios.id;
+ALTER SEQUENCE public.eportfolios_id_seq OWNED BY public.eportfolios.id;
 
 
 --
 -- Name: epub_exports; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE epub_exports (
+CREATE TABLE public.epub_exports (
     id bigint NOT NULL,
     content_export_id bigint,
     course_id bigint,
@@ -3221,7 +3125,7 @@ CREATE TABLE epub_exports (
 -- Name: epub_exports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE epub_exports_id_seq
+CREATE SEQUENCE public.epub_exports_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3233,14 +3137,14 @@ CREATE SEQUENCE epub_exports_id_seq
 -- Name: epub_exports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE epub_exports_id_seq OWNED BY epub_exports.id;
+ALTER SEQUENCE public.epub_exports_id_seq OWNED BY public.epub_exports.id;
 
 
 --
 -- Name: error_reports; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE error_reports (
+CREATE TABLE public.error_reports (
     id bigint NOT NULL,
     backtrace text,
     url text,
@@ -3267,7 +3171,7 @@ CREATE TABLE error_reports (
 -- Name: error_reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE error_reports_id_seq
+CREATE SEQUENCE public.error_reports_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3279,14 +3183,14 @@ CREATE SEQUENCE error_reports_id_seq
 -- Name: error_reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE error_reports_id_seq OWNED BY error_reports.id;
+ALTER SEQUENCE public.error_reports_id_seq OWNED BY public.error_reports.id;
 
 
 --
 -- Name: event_stream_failures; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE event_stream_failures (
+CREATE TABLE public.event_stream_failures (
     id bigint NOT NULL,
     operation character varying(255) NOT NULL,
     event_stream character varying(255) NOT NULL,
@@ -3303,7 +3207,7 @@ CREATE TABLE event_stream_failures (
 -- Name: event_stream_failures_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE event_stream_failures_id_seq
+CREATE SEQUENCE public.event_stream_failures_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3315,14 +3219,14 @@ CREATE SEQUENCE event_stream_failures_id_seq
 -- Name: event_stream_failures_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE event_stream_failures_id_seq OWNED BY event_stream_failures.id;
+ALTER SEQUENCE public.event_stream_failures_id_seq OWNED BY public.event_stream_failures.id;
 
 
 --
 -- Name: external_feed_entries; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE external_feed_entries (
+CREATE TABLE public.external_feed_entries (
     id bigint NOT NULL,
     user_id bigint,
     external_feed_id bigint NOT NULL,
@@ -3348,7 +3252,7 @@ CREATE TABLE external_feed_entries (
 -- Name: external_feed_entries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE external_feed_entries_id_seq
+CREATE SEQUENCE public.external_feed_entries_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3360,14 +3264,14 @@ CREATE SEQUENCE external_feed_entries_id_seq
 -- Name: external_feed_entries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE external_feed_entries_id_seq OWNED BY external_feed_entries.id;
+ALTER SEQUENCE public.external_feed_entries_id_seq OWNED BY public.external_feed_entries.id;
 
 
 --
 -- Name: external_feeds; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE external_feeds (
+CREATE TABLE public.external_feeds (
     id bigint NOT NULL,
     user_id bigint,
     context_id bigint NOT NULL,
@@ -3389,7 +3293,7 @@ CREATE TABLE external_feeds (
 -- Name: external_feeds_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE external_feeds_id_seq
+CREATE SEQUENCE public.external_feeds_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3401,14 +3305,14 @@ CREATE SEQUENCE external_feeds_id_seq
 -- Name: external_feeds_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE external_feeds_id_seq OWNED BY external_feeds.id;
+ALTER SEQUENCE public.external_feeds_id_seq OWNED BY public.external_feeds.id;
 
 
 --
 -- Name: external_integration_keys; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE external_integration_keys (
+CREATE TABLE public.external_integration_keys (
     id bigint NOT NULL,
     context_id bigint NOT NULL,
     context_type character varying(255) NOT NULL,
@@ -3423,7 +3327,7 @@ CREATE TABLE external_integration_keys (
 -- Name: external_integration_keys_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE external_integration_keys_id_seq
+CREATE SEQUENCE public.external_integration_keys_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3435,14 +3339,14 @@ CREATE SEQUENCE external_integration_keys_id_seq
 -- Name: external_integration_keys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE external_integration_keys_id_seq OWNED BY external_integration_keys.id;
+ALTER SEQUENCE public.external_integration_keys_id_seq OWNED BY public.external_integration_keys.id;
 
 
 --
 -- Name: failed_jobs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE failed_jobs (
+CREATE TABLE public.failed_jobs (
     id bigint NOT NULL,
     priority integer DEFAULT 0,
     attempts integer DEFAULT 0,
@@ -3468,7 +3372,7 @@ CREATE TABLE failed_jobs (
 -- Name: failed_jobs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE failed_jobs_id_seq
+CREATE SEQUENCE public.failed_jobs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3480,14 +3384,14 @@ CREATE SEQUENCE failed_jobs_id_seq
 -- Name: failed_jobs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE failed_jobs_id_seq OWNED BY failed_jobs.id;
+ALTER SEQUENCE public.failed_jobs_id_seq OWNED BY public.failed_jobs.id;
 
 
 --
 -- Name: favorites; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE favorites (
+CREATE TABLE public.favorites (
     id bigint NOT NULL,
     user_id bigint,
     context_id bigint,
@@ -3501,7 +3405,7 @@ CREATE TABLE favorites (
 -- Name: favorites_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE favorites_id_seq
+CREATE SEQUENCE public.favorites_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3513,14 +3417,14 @@ CREATE SEQUENCE favorites_id_seq
 -- Name: favorites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE favorites_id_seq OWNED BY favorites.id;
+ALTER SEQUENCE public.favorites_id_seq OWNED BY public.favorites.id;
 
 
 --
 -- Name: feature_flags; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE feature_flags (
+CREATE TABLE public.feature_flags (
     id bigint NOT NULL,
     context_id bigint NOT NULL,
     context_type character varying(255) NOT NULL,
@@ -3535,7 +3439,7 @@ CREATE TABLE feature_flags (
 -- Name: feature_flags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE feature_flags_id_seq
+CREATE SEQUENCE public.feature_flags_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3547,14 +3451,14 @@ CREATE SEQUENCE feature_flags_id_seq
 -- Name: feature_flags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE feature_flags_id_seq OWNED BY feature_flags.id;
+ALTER SEQUENCE public.feature_flags_id_seq OWNED BY public.feature_flags.id;
 
 
 --
 -- Name: folders; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE folders (
+CREATE TABLE public.folders (
     id bigint NOT NULL,
     name character varying(255),
     full_name text,
@@ -3580,7 +3484,7 @@ CREATE TABLE folders (
 -- Name: folders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE folders_id_seq
+CREATE SEQUENCE public.folders_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3592,14 +3496,14 @@ CREATE SEQUENCE folders_id_seq
 -- Name: folders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE folders_id_seq OWNED BY folders.id;
+ALTER SEQUENCE public.folders_id_seq OWNED BY public.folders.id;
 
 
 --
 -- Name: gradebook_csvs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE gradebook_csvs (
+CREATE TABLE public.gradebook_csvs (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     attachment_id bigint NOT NULL,
@@ -3612,7 +3516,7 @@ CREATE TABLE gradebook_csvs (
 -- Name: gradebook_csvs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE gradebook_csvs_id_seq
+CREATE SEQUENCE public.gradebook_csvs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3624,14 +3528,14 @@ CREATE SEQUENCE gradebook_csvs_id_seq
 -- Name: gradebook_csvs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE gradebook_csvs_id_seq OWNED BY gradebook_csvs.id;
+ALTER SEQUENCE public.gradebook_csvs_id_seq OWNED BY public.gradebook_csvs.id;
 
 
 --
 -- Name: gradebook_uploads; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE gradebook_uploads (
+CREATE TABLE public.gradebook_uploads (
     id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -3646,7 +3550,7 @@ CREATE TABLE gradebook_uploads (
 -- Name: gradebook_uploads_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE gradebook_uploads_id_seq
+CREATE SEQUENCE public.gradebook_uploads_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3658,14 +3562,14 @@ CREATE SEQUENCE gradebook_uploads_id_seq
 -- Name: gradebook_uploads_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE gradebook_uploads_id_seq OWNED BY gradebook_uploads.id;
+ALTER SEQUENCE public.gradebook_uploads_id_seq OWNED BY public.gradebook_uploads.id;
 
 
 --
 -- Name: grading_period_groups; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE grading_period_groups (
+CREATE TABLE public.grading_period_groups (
     id bigint NOT NULL,
     course_id bigint,
     account_id bigint,
@@ -3682,7 +3586,7 @@ CREATE TABLE grading_period_groups (
 -- Name: grading_period_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE grading_period_groups_id_seq
+CREATE SEQUENCE public.grading_period_groups_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3694,14 +3598,14 @@ CREATE SEQUENCE grading_period_groups_id_seq
 -- Name: grading_period_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE grading_period_groups_id_seq OWNED BY grading_period_groups.id;
+ALTER SEQUENCE public.grading_period_groups_id_seq OWNED BY public.grading_period_groups.id;
 
 
 --
 -- Name: grading_periods; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE grading_periods (
+CREATE TABLE public.grading_periods (
     id bigint NOT NULL,
     weight double precision,
     start_date timestamp without time zone NOT NULL,
@@ -3719,7 +3623,7 @@ CREATE TABLE grading_periods (
 -- Name: grading_periods_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE grading_periods_id_seq
+CREATE SEQUENCE public.grading_periods_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3731,14 +3635,14 @@ CREATE SEQUENCE grading_periods_id_seq
 -- Name: grading_periods_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE grading_periods_id_seq OWNED BY grading_periods.id;
+ALTER SEQUENCE public.grading_periods_id_seq OWNED BY public.grading_periods.id;
 
 
 --
 -- Name: grading_standards; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE grading_standards (
+CREATE TABLE public.grading_standards (
     id bigint NOT NULL,
     title character varying(255),
     data text,
@@ -3759,7 +3663,7 @@ CREATE TABLE grading_standards (
 -- Name: grading_standards_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE grading_standards_id_seq
+CREATE SEQUENCE public.grading_standards_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3771,14 +3675,14 @@ CREATE SEQUENCE grading_standards_id_seq
 -- Name: grading_standards_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE grading_standards_id_seq OWNED BY grading_standards.id;
+ALTER SEQUENCE public.grading_standards_id_seq OWNED BY public.grading_standards.id;
 
 
 --
 -- Name: group_categories; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE group_categories (
+CREATE TABLE public.group_categories (
     id bigint NOT NULL,
     context_id bigint,
     context_type character varying(255),
@@ -3797,7 +3701,7 @@ CREATE TABLE group_categories (
 -- Name: group_categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE group_categories_id_seq
+CREATE SEQUENCE public.group_categories_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3809,14 +3713,14 @@ CREATE SEQUENCE group_categories_id_seq
 -- Name: group_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE group_categories_id_seq OWNED BY group_categories.id;
+ALTER SEQUENCE public.group_categories_id_seq OWNED BY public.group_categories.id;
 
 
 --
 -- Name: group_memberships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE group_memberships_id_seq
+CREATE SEQUENCE public.group_memberships_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3828,14 +3732,14 @@ CREATE SEQUENCE group_memberships_id_seq
 -- Name: group_memberships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE group_memberships_id_seq OWNED BY group_memberships.id;
+ALTER SEQUENCE public.group_memberships_id_seq OWNED BY public.group_memberships.id;
 
 
 --
 -- Name: groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE groups_id_seq
+CREATE SEQUENCE public.groups_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3847,14 +3751,14 @@ CREATE SEQUENCE groups_id_seq
 -- Name: groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
+ALTER SEQUENCE public.groups_id_seq OWNED BY public.groups.id;
 
 
 --
 -- Name: ignores; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE ignores (
+CREATE TABLE public.ignores (
     id bigint NOT NULL,
     asset_type character varying(255) NOT NULL,
     asset_id bigint NOT NULL,
@@ -3870,7 +3774,7 @@ CREATE TABLE ignores (
 -- Name: ignores_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE ignores_id_seq
+CREATE SEQUENCE public.ignores_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3882,14 +3786,14 @@ CREATE SEQUENCE ignores_id_seq
 -- Name: ignores_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE ignores_id_seq OWNED BY ignores.id;
+ALTER SEQUENCE public.ignores_id_seq OWNED BY public.ignores.id;
 
 
 --
 -- Name: late_policies; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE late_policies (
+CREATE TABLE public.late_policies (
     id bigint NOT NULL,
     course_id bigint NOT NULL,
     missing_submission_deduction_enabled boolean DEFAULT false NOT NULL,
@@ -3908,7 +3812,7 @@ CREATE TABLE late_policies (
 -- Name: late_policies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE late_policies_id_seq
+CREATE SEQUENCE public.late_policies_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3920,14 +3824,14 @@ CREATE SEQUENCE late_policies_id_seq
 -- Name: late_policies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE late_policies_id_seq OWNED BY late_policies.id;
+ALTER SEQUENCE public.late_policies_id_seq OWNED BY public.late_policies.id;
 
 
 --
 -- Name: learning_outcome_groups; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE learning_outcome_groups (
+CREATE TABLE public.learning_outcome_groups (
     id bigint NOT NULL,
     context_id bigint,
     context_type character varying(255),
@@ -3951,7 +3855,7 @@ CREATE TABLE learning_outcome_groups (
 -- Name: learning_outcome_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE learning_outcome_groups_id_seq
+CREATE SEQUENCE public.learning_outcome_groups_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3963,14 +3867,14 @@ CREATE SEQUENCE learning_outcome_groups_id_seq
 -- Name: learning_outcome_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE learning_outcome_groups_id_seq OWNED BY learning_outcome_groups.id;
+ALTER SEQUENCE public.learning_outcome_groups_id_seq OWNED BY public.learning_outcome_groups.id;
 
 
 --
 -- Name: learning_outcome_question_results; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE learning_outcome_question_results (
+CREATE TABLE public.learning_outcome_question_results (
     id bigint NOT NULL,
     learning_outcome_result_id bigint,
     learning_outcome_id bigint,
@@ -3996,7 +3900,7 @@ CREATE TABLE learning_outcome_question_results (
 -- Name: learning_outcome_question_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE learning_outcome_question_results_id_seq
+CREATE SEQUENCE public.learning_outcome_question_results_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4008,14 +3912,14 @@ CREATE SEQUENCE learning_outcome_question_results_id_seq
 -- Name: learning_outcome_question_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE learning_outcome_question_results_id_seq OWNED BY learning_outcome_question_results.id;
+ALTER SEQUENCE public.learning_outcome_question_results_id_seq OWNED BY public.learning_outcome_question_results.id;
 
 
 --
 -- Name: learning_outcome_results; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE learning_outcome_results (
+CREATE TABLE public.learning_outcome_results (
     id bigint NOT NULL,
     context_id bigint,
     context_type character varying(255),
@@ -4049,7 +3953,7 @@ CREATE TABLE learning_outcome_results (
 -- Name: learning_outcome_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE learning_outcome_results_id_seq
+CREATE SEQUENCE public.learning_outcome_results_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4061,14 +3965,14 @@ CREATE SEQUENCE learning_outcome_results_id_seq
 -- Name: learning_outcome_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE learning_outcome_results_id_seq OWNED BY learning_outcome_results.id;
+ALTER SEQUENCE public.learning_outcome_results_id_seq OWNED BY public.learning_outcome_results.id;
 
 
 --
 -- Name: learning_outcomes; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE learning_outcomes (
+CREATE TABLE public.learning_outcomes (
     id bigint NOT NULL,
     context_id bigint,
     context_type character varying(255),
@@ -4095,7 +3999,7 @@ CREATE TABLE learning_outcomes (
 -- Name: learning_outcomes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE learning_outcomes_id_seq
+CREATE SEQUENCE public.learning_outcomes_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4107,14 +4011,14 @@ CREATE SEQUENCE learning_outcomes_id_seq
 -- Name: learning_outcomes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE learning_outcomes_id_seq OWNED BY learning_outcomes.id;
+ALTER SEQUENCE public.learning_outcomes_id_seq OWNED BY public.learning_outcomes.id;
 
 
 --
 -- Name: live_assessments_assessments; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE live_assessments_assessments (
+CREATE TABLE public.live_assessments_assessments (
     id bigint NOT NULL,
     key character varying(255) NOT NULL,
     title character varying(255) NOT NULL,
@@ -4129,7 +4033,7 @@ CREATE TABLE live_assessments_assessments (
 -- Name: live_assessments_assessments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE live_assessments_assessments_id_seq
+CREATE SEQUENCE public.live_assessments_assessments_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4141,14 +4045,14 @@ CREATE SEQUENCE live_assessments_assessments_id_seq
 -- Name: live_assessments_assessments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE live_assessments_assessments_id_seq OWNED BY live_assessments_assessments.id;
+ALTER SEQUENCE public.live_assessments_assessments_id_seq OWNED BY public.live_assessments_assessments.id;
 
 
 --
 -- Name: live_assessments_results; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE live_assessments_results (
+CREATE TABLE public.live_assessments_results (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     assessor_id bigint NOT NULL,
@@ -4162,7 +4066,7 @@ CREATE TABLE live_assessments_results (
 -- Name: live_assessments_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE live_assessments_results_id_seq
+CREATE SEQUENCE public.live_assessments_results_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4174,14 +4078,14 @@ CREATE SEQUENCE live_assessments_results_id_seq
 -- Name: live_assessments_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE live_assessments_results_id_seq OWNED BY live_assessments_results.id;
+ALTER SEQUENCE public.live_assessments_results_id_seq OWNED BY public.live_assessments_results.id;
 
 
 --
 -- Name: live_assessments_submissions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE live_assessments_submissions (
+CREATE TABLE public.live_assessments_submissions (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     assessment_id bigint NOT NULL,
@@ -4197,7 +4101,7 @@ CREATE TABLE live_assessments_submissions (
 -- Name: live_assessments_submissions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE live_assessments_submissions_id_seq
+CREATE SEQUENCE public.live_assessments_submissions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4209,14 +4113,14 @@ CREATE SEQUENCE live_assessments_submissions_id_seq
 -- Name: live_assessments_submissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE live_assessments_submissions_id_seq OWNED BY live_assessments_submissions.id;
+ALTER SEQUENCE public.live_assessments_submissions_id_seq OWNED BY public.live_assessments_submissions.id;
 
 
 --
 -- Name: lti_message_handlers; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE lti_message_handlers (
+CREATE TABLE public.lti_message_handlers (
     id bigint NOT NULL,
     message_type character varying(255) NOT NULL,
     launch_path character varying(255) NOT NULL,
@@ -4233,7 +4137,7 @@ CREATE TABLE lti_message_handlers (
 -- Name: lti_message_handlers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE lti_message_handlers_id_seq
+CREATE SEQUENCE public.lti_message_handlers_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4245,14 +4149,14 @@ CREATE SEQUENCE lti_message_handlers_id_seq
 -- Name: lti_message_handlers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE lti_message_handlers_id_seq OWNED BY lti_message_handlers.id;
+ALTER SEQUENCE public.lti_message_handlers_id_seq OWNED BY public.lti_message_handlers.id;
 
 
 --
 -- Name: lti_product_families; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE lti_product_families (
+CREATE TABLE public.lti_product_families (
     id bigint NOT NULL,
     vendor_code character varying(255) NOT NULL,
     product_code character varying(255) NOT NULL,
@@ -4271,7 +4175,7 @@ CREATE TABLE lti_product_families (
 -- Name: lti_product_families_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE lti_product_families_id_seq
+CREATE SEQUENCE public.lti_product_families_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4283,14 +4187,14 @@ CREATE SEQUENCE lti_product_families_id_seq
 -- Name: lti_product_families_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE lti_product_families_id_seq OWNED BY lti_product_families.id;
+ALTER SEQUENCE public.lti_product_families_id_seq OWNED BY public.lti_product_families.id;
 
 
 --
 -- Name: lti_resource_handlers; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE lti_resource_handlers (
+CREATE TABLE public.lti_resource_handlers (
     id bigint NOT NULL,
     resource_type_code character varying(255) NOT NULL,
     placements character varying(255),
@@ -4307,7 +4211,7 @@ CREATE TABLE lti_resource_handlers (
 -- Name: lti_resource_handlers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE lti_resource_handlers_id_seq
+CREATE SEQUENCE public.lti_resource_handlers_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4319,14 +4223,14 @@ CREATE SEQUENCE lti_resource_handlers_id_seq
 -- Name: lti_resource_handlers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE lti_resource_handlers_id_seq OWNED BY lti_resource_handlers.id;
+ALTER SEQUENCE public.lti_resource_handlers_id_seq OWNED BY public.lti_resource_handlers.id;
 
 
 --
 -- Name: lti_resource_placements; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE lti_resource_placements (
+CREATE TABLE public.lti_resource_placements (
     id bigint NOT NULL,
     placement character varying(255) NOT NULL,
     created_at timestamp without time zone NOT NULL,
@@ -4339,7 +4243,7 @@ CREATE TABLE lti_resource_placements (
 -- Name: lti_resource_placements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE lti_resource_placements_id_seq
+CREATE SEQUENCE public.lti_resource_placements_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4351,14 +4255,14 @@ CREATE SEQUENCE lti_resource_placements_id_seq
 -- Name: lti_resource_placements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE lti_resource_placements_id_seq OWNED BY lti_resource_placements.id;
+ALTER SEQUENCE public.lti_resource_placements_id_seq OWNED BY public.lti_resource_placements.id;
 
 
 --
 -- Name: lti_tool_consumer_profiles; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE lti_tool_consumer_profiles (
+CREATE TABLE public.lti_tool_consumer_profiles (
     id bigint NOT NULL,
     services text,
     capabilities text,
@@ -4373,7 +4277,7 @@ CREATE TABLE lti_tool_consumer_profiles (
 -- Name: lti_tool_consumer_profiles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE lti_tool_consumer_profiles_id_seq
+CREATE SEQUENCE public.lti_tool_consumer_profiles_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4385,14 +4289,14 @@ CREATE SEQUENCE lti_tool_consumer_profiles_id_seq
 -- Name: lti_tool_consumer_profiles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE lti_tool_consumer_profiles_id_seq OWNED BY lti_tool_consumer_profiles.id;
+ALTER SEQUENCE public.lti_tool_consumer_profiles_id_seq OWNED BY public.lti_tool_consumer_profiles.id;
 
 
 --
 -- Name: lti_tool_proxies; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE lti_tool_proxies (
+CREATE TABLE public.lti_tool_proxies (
     id bigint NOT NULL,
     shared_secret text NOT NULL,
     guid character varying(255) NOT NULL,
@@ -4416,7 +4320,7 @@ CREATE TABLE lti_tool_proxies (
 -- Name: lti_tool_proxies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE lti_tool_proxies_id_seq
+CREATE SEQUENCE public.lti_tool_proxies_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4428,14 +4332,14 @@ CREATE SEQUENCE lti_tool_proxies_id_seq
 -- Name: lti_tool_proxies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE lti_tool_proxies_id_seq OWNED BY lti_tool_proxies.id;
+ALTER SEQUENCE public.lti_tool_proxies_id_seq OWNED BY public.lti_tool_proxies.id;
 
 
 --
 -- Name: lti_tool_proxy_bindings; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE lti_tool_proxy_bindings (
+CREATE TABLE public.lti_tool_proxy_bindings (
     id bigint NOT NULL,
     context_id bigint NOT NULL,
     context_type character varying(255) NOT NULL,
@@ -4450,7 +4354,7 @@ CREATE TABLE lti_tool_proxy_bindings (
 -- Name: lti_tool_proxy_bindings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE lti_tool_proxy_bindings_id_seq
+CREATE SEQUENCE public.lti_tool_proxy_bindings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4462,14 +4366,14 @@ CREATE SEQUENCE lti_tool_proxy_bindings_id_seq
 -- Name: lti_tool_proxy_bindings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE lti_tool_proxy_bindings_id_seq OWNED BY lti_tool_proxy_bindings.id;
+ALTER SEQUENCE public.lti_tool_proxy_bindings_id_seq OWNED BY public.lti_tool_proxy_bindings.id;
 
 
 --
 -- Name: lti_tool_settings; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE lti_tool_settings (
+CREATE TABLE public.lti_tool_settings (
     id bigint NOT NULL,
     tool_proxy_id bigint,
     context_id bigint,
@@ -4490,7 +4394,7 @@ CREATE TABLE lti_tool_settings (
 -- Name: lti_tool_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE lti_tool_settings_id_seq
+CREATE SEQUENCE public.lti_tool_settings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4502,14 +4406,14 @@ CREATE SEQUENCE lti_tool_settings_id_seq
 -- Name: lti_tool_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE lti_tool_settings_id_seq OWNED BY lti_tool_settings.id;
+ALTER SEQUENCE public.lti_tool_settings_id_seq OWNED BY public.lti_tool_settings.id;
 
 
 --
 -- Name: master_courses_child_content_tags; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE master_courses_child_content_tags (
+CREATE TABLE public.master_courses_child_content_tags (
     id bigint NOT NULL,
     child_subscription_id bigint NOT NULL,
     content_type character varying(255) NOT NULL,
@@ -4523,7 +4427,7 @@ CREATE TABLE master_courses_child_content_tags (
 -- Name: master_courses_child_content_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE master_courses_child_content_tags_id_seq
+CREATE SEQUENCE public.master_courses_child_content_tags_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4535,14 +4439,14 @@ CREATE SEQUENCE master_courses_child_content_tags_id_seq
 -- Name: master_courses_child_content_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE master_courses_child_content_tags_id_seq OWNED BY master_courses_child_content_tags.id;
+ALTER SEQUENCE public.master_courses_child_content_tags_id_seq OWNED BY public.master_courses_child_content_tags.id;
 
 
 --
 -- Name: master_courses_child_subscriptions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE master_courses_child_subscriptions (
+CREATE TABLE public.master_courses_child_subscriptions (
     id bigint NOT NULL,
     master_template_id bigint NOT NULL,
     child_course_id bigint NOT NULL,
@@ -4557,7 +4461,7 @@ CREATE TABLE master_courses_child_subscriptions (
 -- Name: master_courses_child_subscriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE master_courses_child_subscriptions_id_seq
+CREATE SEQUENCE public.master_courses_child_subscriptions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4569,14 +4473,14 @@ CREATE SEQUENCE master_courses_child_subscriptions_id_seq
 -- Name: master_courses_child_subscriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE master_courses_child_subscriptions_id_seq OWNED BY master_courses_child_subscriptions.id;
+ALTER SEQUENCE public.master_courses_child_subscriptions_id_seq OWNED BY public.master_courses_child_subscriptions.id;
 
 
 --
 -- Name: master_courses_master_content_tags; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE master_courses_master_content_tags (
+CREATE TABLE public.master_courses_master_content_tags (
     id bigint NOT NULL,
     master_template_id bigint NOT NULL,
     content_type character varying(255) NOT NULL,
@@ -4592,7 +4496,7 @@ CREATE TABLE master_courses_master_content_tags (
 -- Name: master_courses_master_content_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE master_courses_master_content_tags_id_seq
+CREATE SEQUENCE public.master_courses_master_content_tags_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4604,14 +4508,14 @@ CREATE SEQUENCE master_courses_master_content_tags_id_seq
 -- Name: master_courses_master_content_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE master_courses_master_content_tags_id_seq OWNED BY master_courses_master_content_tags.id;
+ALTER SEQUENCE public.master_courses_master_content_tags_id_seq OWNED BY public.master_courses_master_content_tags.id;
 
 
 --
 -- Name: master_courses_master_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE master_courses_master_migrations (
+CREATE TABLE public.master_courses_master_migrations (
     id bigint NOT NULL,
     master_template_id bigint NOT NULL,
     user_id bigint,
@@ -4633,7 +4537,7 @@ CREATE TABLE master_courses_master_migrations (
 -- Name: master_courses_master_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE master_courses_master_migrations_id_seq
+CREATE SEQUENCE public.master_courses_master_migrations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4645,14 +4549,14 @@ CREATE SEQUENCE master_courses_master_migrations_id_seq
 -- Name: master_courses_master_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE master_courses_master_migrations_id_seq OWNED BY master_courses_master_migrations.id;
+ALTER SEQUENCE public.master_courses_master_migrations_id_seq OWNED BY public.master_courses_master_migrations.id;
 
 
 --
 -- Name: master_courses_master_templates; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE master_courses_master_templates (
+CREATE TABLE public.master_courses_master_templates (
     id bigint NOT NULL,
     course_id bigint NOT NULL,
     full_course boolean DEFAULT true NOT NULL,
@@ -4670,7 +4574,7 @@ CREATE TABLE master_courses_master_templates (
 -- Name: master_courses_master_templates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE master_courses_master_templates_id_seq
+CREATE SEQUENCE public.master_courses_master_templates_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4682,14 +4586,14 @@ CREATE SEQUENCE master_courses_master_templates_id_seq
 -- Name: master_courses_master_templates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE master_courses_master_templates_id_seq OWNED BY master_courses_master_templates.id;
+ALTER SEQUENCE public.master_courses_master_templates_id_seq OWNED BY public.master_courses_master_templates.id;
 
 
 --
 -- Name: master_courses_migration_results; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE master_courses_migration_results (
+CREATE TABLE public.master_courses_migration_results (
     id bigint NOT NULL,
     master_migration_id bigint NOT NULL,
     content_migration_id bigint NOT NULL,
@@ -4704,7 +4608,7 @@ CREATE TABLE master_courses_migration_results (
 -- Name: master_courses_migration_results_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE master_courses_migration_results_id_seq
+CREATE SEQUENCE public.master_courses_migration_results_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4716,14 +4620,14 @@ CREATE SEQUENCE master_courses_migration_results_id_seq
 -- Name: master_courses_migration_results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE master_courses_migration_results_id_seq OWNED BY master_courses_migration_results.id;
+ALTER SEQUENCE public.master_courses_migration_results_id_seq OWNED BY public.master_courses_migration_results.id;
 
 
 --
 -- Name: media_objects; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE media_objects (
+CREATE TABLE public.media_objects (
     id bigint NOT NULL,
     user_id bigint,
     context_id bigint,
@@ -4750,7 +4654,7 @@ CREATE TABLE media_objects (
 -- Name: media_objects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE media_objects_id_seq
+CREATE SEQUENCE public.media_objects_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4762,14 +4666,14 @@ CREATE SEQUENCE media_objects_id_seq
 -- Name: media_objects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE media_objects_id_seq OWNED BY media_objects.id;
+ALTER SEQUENCE public.media_objects_id_seq OWNED BY public.media_objects.id;
 
 
 --
 -- Name: media_tracks; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE media_tracks (
+CREATE TABLE public.media_tracks (
     id bigint NOT NULL,
     user_id bigint,
     media_object_id bigint NOT NULL,
@@ -4785,7 +4689,7 @@ CREATE TABLE media_tracks (
 -- Name: media_tracks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE media_tracks_id_seq
+CREATE SEQUENCE public.media_tracks_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4797,14 +4701,14 @@ CREATE SEQUENCE media_tracks_id_seq
 -- Name: media_tracks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE media_tracks_id_seq OWNED BY media_tracks.id;
+ALTER SEQUENCE public.media_tracks_id_seq OWNED BY public.media_tracks.id;
 
 
 --
 -- Name: messages; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE messages (
+CREATE TABLE public.messages (
     id bigint NOT NULL,
     "to" text,
     "from" text,
@@ -4820,8 +4724,6 @@ CREATE TABLE messages (
     communication_channel_id bigint,
     context_id bigint,
     context_type character varying(255),
-    asset_context_id bigint,
-    asset_context_type character varying(255),
     user_id bigint,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -4840,7 +4742,7 @@ CREATE TABLE messages (
 -- Name: messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE messages_id_seq
+CREATE SEQUENCE public.messages_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4852,14 +4754,14 @@ CREATE SEQUENCE messages_id_seq
 -- Name: messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE messages_id_seq OWNED BY messages.id;
+ALTER SEQUENCE public.messages_id_seq OWNED BY public.messages.id;
 
 
 --
 -- Name: migration_issues; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE migration_issues (
+CREATE TABLE public.migration_issues (
     id bigint NOT NULL,
     content_migration_id bigint NOT NULL,
     description text,
@@ -4877,7 +4779,7 @@ CREATE TABLE migration_issues (
 -- Name: migration_issues_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE migration_issues_id_seq
+CREATE SEQUENCE public.migration_issues_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4889,14 +4791,14 @@ CREATE SEQUENCE migration_issues_id_seq
 -- Name: migration_issues_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE migration_issues_id_seq OWNED BY migration_issues.id;
+ALTER SEQUENCE public.migration_issues_id_seq OWNED BY public.migration_issues.id;
 
 
 --
 -- Name: moderated_grading_provisional_grades; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE moderated_grading_provisional_grades (
+CREATE TABLE public.moderated_grading_provisional_grades (
     id bigint NOT NULL,
     grade character varying(255),
     score double precision,
@@ -4915,7 +4817,7 @@ CREATE TABLE moderated_grading_provisional_grades (
 -- Name: moderated_grading_provisional_grades_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE moderated_grading_provisional_grades_id_seq
+CREATE SEQUENCE public.moderated_grading_provisional_grades_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4927,14 +4829,14 @@ CREATE SEQUENCE moderated_grading_provisional_grades_id_seq
 -- Name: moderated_grading_provisional_grades_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE moderated_grading_provisional_grades_id_seq OWNED BY moderated_grading_provisional_grades.id;
+ALTER SEQUENCE public.moderated_grading_provisional_grades_id_seq OWNED BY public.moderated_grading_provisional_grades.id;
 
 
 --
 -- Name: moderated_grading_selections; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE moderated_grading_selections (
+CREATE TABLE public.moderated_grading_selections (
     id bigint NOT NULL,
     assignment_id bigint NOT NULL,
     student_id bigint NOT NULL,
@@ -4948,7 +4850,7 @@ CREATE TABLE moderated_grading_selections (
 -- Name: moderated_grading_selections_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE moderated_grading_selections_id_seq
+CREATE SEQUENCE public.moderated_grading_selections_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4960,14 +4862,14 @@ CREATE SEQUENCE moderated_grading_selections_id_seq
 -- Name: moderated_grading_selections_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE moderated_grading_selections_id_seq OWNED BY moderated_grading_selections.id;
+ALTER SEQUENCE public.moderated_grading_selections_id_seq OWNED BY public.moderated_grading_selections.id;
 
 
 --
 -- Name: notification_endpoints; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE notification_endpoints (
+CREATE TABLE public.notification_endpoints (
     id bigint NOT NULL,
     access_token_id bigint NOT NULL,
     token character varying(255) NOT NULL,
@@ -4981,7 +4883,7 @@ CREATE TABLE notification_endpoints (
 -- Name: notification_endpoints_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE notification_endpoints_id_seq
+CREATE SEQUENCE public.notification_endpoints_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4993,14 +4895,14 @@ CREATE SEQUENCE notification_endpoints_id_seq
 -- Name: notification_endpoints_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE notification_endpoints_id_seq OWNED BY notification_endpoints.id;
+ALTER SEQUENCE public.notification_endpoints_id_seq OWNED BY public.notification_endpoints.id;
 
 
 --
 -- Name: notification_policies; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE notification_policies (
+CREATE TABLE public.notification_policies (
     id bigint NOT NULL,
     notification_id bigint,
     communication_channel_id bigint NOT NULL,
@@ -5014,7 +4916,7 @@ CREATE TABLE notification_policies (
 -- Name: notification_policies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE notification_policies_id_seq
+CREATE SEQUENCE public.notification_policies_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5026,14 +4928,14 @@ CREATE SEQUENCE notification_policies_id_seq
 -- Name: notification_policies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE notification_policies_id_seq OWNED BY notification_policies.id;
+ALTER SEQUENCE public.notification_policies_id_seq OWNED BY public.notification_policies.id;
 
 
 --
 -- Name: notifications; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE notifications (
+CREATE TABLE public.notifications (
     id bigint NOT NULL,
     workflow_state character varying(255) NOT NULL,
     name character varying(255),
@@ -5050,7 +4952,7 @@ CREATE TABLE notifications (
 -- Name: notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE notifications_id_seq
+CREATE SEQUENCE public.notifications_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5062,14 +4964,14 @@ CREATE SEQUENCE notifications_id_seq
 -- Name: notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE notifications_id_seq OWNED BY notifications.id;
+ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 
 --
 -- Name: oauth_requests; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE oauth_requests (
+CREATE TABLE public.oauth_requests (
     id bigint NOT NULL,
     token character varying(255),
     secret character varying(255),
@@ -5088,7 +4990,7 @@ CREATE TABLE oauth_requests (
 -- Name: oauth_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE oauth_requests_id_seq
+CREATE SEQUENCE public.oauth_requests_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5100,14 +5002,14 @@ CREATE SEQUENCE oauth_requests_id_seq
 -- Name: oauth_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE oauth_requests_id_seq OWNED BY oauth_requests.id;
+ALTER SEQUENCE public.oauth_requests_id_seq OWNED BY public.oauth_requests.id;
 
 
 --
 -- Name: one_time_passwords; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE one_time_passwords (
+CREATE TABLE public.one_time_passwords (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     code character varying NOT NULL,
@@ -5121,7 +5023,7 @@ CREATE TABLE one_time_passwords (
 -- Name: one_time_passwords_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE one_time_passwords_id_seq
+CREATE SEQUENCE public.one_time_passwords_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5133,14 +5035,14 @@ CREATE SEQUENCE one_time_passwords_id_seq
 -- Name: one_time_passwords_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE one_time_passwords_id_seq OWNED BY one_time_passwords.id;
+ALTER SEQUENCE public.one_time_passwords_id_seq OWNED BY public.one_time_passwords.id;
 
 
 --
 -- Name: originality_reports; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE originality_reports (
+CREATE TABLE public.originality_reports (
     id bigint NOT NULL,
     attachment_id bigint NOT NULL,
     originality_score double precision,
@@ -5159,7 +5061,7 @@ CREATE TABLE originality_reports (
 -- Name: originality_reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE originality_reports_id_seq
+CREATE SEQUENCE public.originality_reports_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5171,14 +5073,14 @@ CREATE SEQUENCE originality_reports_id_seq
 -- Name: originality_reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE originality_reports_id_seq OWNED BY originality_reports.id;
+ALTER SEQUENCE public.originality_reports_id_seq OWNED BY public.originality_reports.id;
 
 
 --
 -- Name: page_comments; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE page_comments (
+CREATE TABLE public.page_comments (
     id bigint NOT NULL,
     message text,
     page_id bigint,
@@ -5193,7 +5095,7 @@ CREATE TABLE page_comments (
 -- Name: page_comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE page_comments_id_seq
+CREATE SEQUENCE public.page_comments_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5205,14 +5107,14 @@ CREATE SEQUENCE page_comments_id_seq
 -- Name: page_comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE page_comments_id_seq OWNED BY page_comments.id;
+ALTER SEQUENCE public.page_comments_id_seq OWNED BY public.page_comments.id;
 
 
 --
 -- Name: page_views; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE page_views (
+CREATE TABLE public.page_views (
     request_id character varying(255) NOT NULL,
     session_id character varying(255),
     user_id bigint NOT NULL,
@@ -5241,43 +5143,10 @@ CREATE TABLE page_views (
 
 
 --
--- Name: page_views_rollups; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE page_views_rollups (
-    id bigint NOT NULL,
-    course_id bigint NOT NULL,
-    date date NOT NULL,
-    category character varying(255) NOT NULL,
-    views integer DEFAULT 0 NOT NULL,
-    participations integer DEFAULT 0 NOT NULL
-);
-
-
---
--- Name: page_views_rollups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE page_views_rollups_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: page_views_rollups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE page_views_rollups_id_seq OWNED BY page_views_rollups.id;
-
-
---
 -- Name: planner_notes; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE planner_notes (
+CREATE TABLE public.planner_notes (
     id bigint NOT NULL,
     todo_date timestamp without time zone NOT NULL,
     title character varying NOT NULL,
@@ -5294,7 +5163,7 @@ CREATE TABLE planner_notes (
 -- Name: planner_notes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE planner_notes_id_seq
+CREATE SEQUENCE public.planner_notes_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5306,14 +5175,14 @@ CREATE SEQUENCE planner_notes_id_seq
 -- Name: planner_notes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE planner_notes_id_seq OWNED BY planner_notes.id;
+ALTER SEQUENCE public.planner_notes_id_seq OWNED BY public.planner_notes.id;
 
 
 --
 -- Name: planner_overrides; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE planner_overrides (
+CREATE TABLE public.planner_overrides (
     id bigint NOT NULL,
     plannable_type character varying NOT NULL,
     plannable_id bigint NOT NULL,
@@ -5331,7 +5200,7 @@ CREATE TABLE planner_overrides (
 -- Name: planner_overrides_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE planner_overrides_id_seq
+CREATE SEQUENCE public.planner_overrides_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5343,14 +5212,14 @@ CREATE SEQUENCE planner_overrides_id_seq
 -- Name: planner_overrides_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE planner_overrides_id_seq OWNED BY planner_overrides.id;
+ALTER SEQUENCE public.planner_overrides_id_seq OWNED BY public.planner_overrides.id;
 
 
 --
 -- Name: plugin_settings; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE plugin_settings (
+CREATE TABLE public.plugin_settings (
     id bigint NOT NULL,
     name character varying(255) DEFAULT ''::character varying NOT NULL,
     settings text,
@@ -5364,7 +5233,7 @@ CREATE TABLE plugin_settings (
 -- Name: plugin_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE plugin_settings_id_seq
+CREATE SEQUENCE public.plugin_settings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5376,14 +5245,14 @@ CREATE SEQUENCE plugin_settings_id_seq
 -- Name: plugin_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE plugin_settings_id_seq OWNED BY plugin_settings.id;
+ALTER SEQUENCE public.plugin_settings_id_seq OWNED BY public.plugin_settings.id;
 
 
 --
 -- Name: polling_poll_choices; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE polling_poll_choices (
+CREATE TABLE public.polling_poll_choices (
     id bigint NOT NULL,
     text character varying(255),
     is_correct boolean DEFAULT false NOT NULL,
@@ -5398,7 +5267,7 @@ CREATE TABLE polling_poll_choices (
 -- Name: polling_poll_choices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE polling_poll_choices_id_seq
+CREATE SEQUENCE public.polling_poll_choices_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5410,14 +5279,14 @@ CREATE SEQUENCE polling_poll_choices_id_seq
 -- Name: polling_poll_choices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE polling_poll_choices_id_seq OWNED BY polling_poll_choices.id;
+ALTER SEQUENCE public.polling_poll_choices_id_seq OWNED BY public.polling_poll_choices.id;
 
 
 --
 -- Name: polling_poll_sessions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE polling_poll_sessions (
+CREATE TABLE public.polling_poll_sessions (
     id bigint NOT NULL,
     is_published boolean DEFAULT false NOT NULL,
     has_public_results boolean DEFAULT false NOT NULL,
@@ -5433,7 +5302,7 @@ CREATE TABLE polling_poll_sessions (
 -- Name: polling_poll_sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE polling_poll_sessions_id_seq
+CREATE SEQUENCE public.polling_poll_sessions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5445,14 +5314,14 @@ CREATE SEQUENCE polling_poll_sessions_id_seq
 -- Name: polling_poll_sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE polling_poll_sessions_id_seq OWNED BY polling_poll_sessions.id;
+ALTER SEQUENCE public.polling_poll_sessions_id_seq OWNED BY public.polling_poll_sessions.id;
 
 
 --
 -- Name: polling_poll_submissions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE polling_poll_submissions (
+CREATE TABLE public.polling_poll_submissions (
     id bigint NOT NULL,
     poll_id bigint NOT NULL,
     poll_choice_id bigint NOT NULL,
@@ -5467,7 +5336,7 @@ CREATE TABLE polling_poll_submissions (
 -- Name: polling_poll_submissions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE polling_poll_submissions_id_seq
+CREATE SEQUENCE public.polling_poll_submissions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5479,14 +5348,14 @@ CREATE SEQUENCE polling_poll_submissions_id_seq
 -- Name: polling_poll_submissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE polling_poll_submissions_id_seq OWNED BY polling_poll_submissions.id;
+ALTER SEQUENCE public.polling_poll_submissions_id_seq OWNED BY public.polling_poll_submissions.id;
 
 
 --
 -- Name: polling_polls; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE polling_polls (
+CREATE TABLE public.polling_polls (
     id bigint NOT NULL,
     question character varying(255),
     description character varying(255),
@@ -5500,7 +5369,7 @@ CREATE TABLE polling_polls (
 -- Name: polling_polls_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE polling_polls_id_seq
+CREATE SEQUENCE public.polling_polls_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5512,14 +5381,14 @@ CREATE SEQUENCE polling_polls_id_seq
 -- Name: polling_polls_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE polling_polls_id_seq OWNED BY polling_polls.id;
+ALTER SEQUENCE public.polling_polls_id_seq OWNED BY public.polling_polls.id;
 
 
 --
 -- Name: profiles; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE profiles (
+CREATE TABLE public.profiles (
     id bigint NOT NULL,
     root_account_id bigint NOT NULL,
     context_type character varying(255) NOT NULL,
@@ -5537,7 +5406,7 @@ CREATE TABLE profiles (
 -- Name: profiles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE profiles_id_seq
+CREATE SEQUENCE public.profiles_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5549,14 +5418,14 @@ CREATE SEQUENCE profiles_id_seq
 -- Name: profiles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE profiles_id_seq OWNED BY profiles.id;
+ALTER SEQUENCE public.profiles_id_seq OWNED BY public.profiles.id;
 
 
 --
 -- Name: progresses; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE progresses (
+CREATE TABLE public.progresses (
     id bigint NOT NULL,
     context_id bigint NOT NULL,
     context_type character varying(255) NOT NULL,
@@ -5577,7 +5446,7 @@ CREATE TABLE progresses (
 -- Name: progresses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE progresses_id_seq
+CREATE SEQUENCE public.progresses_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5589,14 +5458,14 @@ CREATE SEQUENCE progresses_id_seq
 -- Name: progresses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE progresses_id_seq OWNED BY progresses.id;
+ALTER SEQUENCE public.progresses_id_seq OWNED BY public.progresses.id;
 
 
 --
 -- Name: pseudonyms; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE pseudonyms (
+CREATE TABLE public.pseudonyms (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     account_id bigint NOT NULL,
@@ -5635,7 +5504,7 @@ CREATE TABLE pseudonyms (
 -- Name: pseudonyms_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE pseudonyms_id_seq
+CREATE SEQUENCE public.pseudonyms_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5647,14 +5516,14 @@ CREATE SEQUENCE pseudonyms_id_seq
 -- Name: pseudonyms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE pseudonyms_id_seq OWNED BY pseudonyms.id;
+ALTER SEQUENCE public.pseudonyms_id_seq OWNED BY public.pseudonyms.id;
 
 
 --
 -- Name: purgatories; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE purgatories (
+CREATE TABLE public.purgatories (
     id bigint NOT NULL,
     attachment_id bigint NOT NULL,
     deleted_by_user_id bigint,
@@ -5669,7 +5538,7 @@ CREATE TABLE purgatories (
 -- Name: purgatories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE purgatories_id_seq
+CREATE SEQUENCE public.purgatories_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5681,14 +5550,14 @@ CREATE SEQUENCE purgatories_id_seq
 -- Name: purgatories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE purgatories_id_seq OWNED BY purgatories.id;
+ALTER SEQUENCE public.purgatories_id_seq OWNED BY public.purgatories.id;
 
 
 --
 -- Name: quiz_groups; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE quiz_groups (
+CREATE TABLE public.quiz_groups (
     id bigint NOT NULL,
     quiz_id bigint NOT NULL,
     name character varying(255),
@@ -5706,7 +5575,7 @@ CREATE TABLE quiz_groups (
 -- Name: quiz_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE quiz_groups_id_seq
+CREATE SEQUENCE public.quiz_groups_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5718,14 +5587,14 @@ CREATE SEQUENCE quiz_groups_id_seq
 -- Name: quiz_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE quiz_groups_id_seq OWNED BY quiz_groups.id;
+ALTER SEQUENCE public.quiz_groups_id_seq OWNED BY public.quiz_groups.id;
 
 
 --
 -- Name: quiz_question_regrades; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE quiz_question_regrades (
+CREATE TABLE public.quiz_question_regrades (
     id bigint NOT NULL,
     quiz_regrade_id bigint NOT NULL,
     quiz_question_id bigint NOT NULL,
@@ -5739,7 +5608,7 @@ CREATE TABLE quiz_question_regrades (
 -- Name: quiz_question_regrades_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE quiz_question_regrades_id_seq
+CREATE SEQUENCE public.quiz_question_regrades_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5751,14 +5620,14 @@ CREATE SEQUENCE quiz_question_regrades_id_seq
 -- Name: quiz_question_regrades_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE quiz_question_regrades_id_seq OWNED BY quiz_question_regrades.id;
+ALTER SEQUENCE public.quiz_question_regrades_id_seq OWNED BY public.quiz_question_regrades.id;
 
 
 --
 -- Name: quiz_questions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE quiz_questions (
+CREATE TABLE public.quiz_questions (
     id bigint NOT NULL,
     quiz_id bigint,
     quiz_group_id bigint,
@@ -5778,7 +5647,7 @@ CREATE TABLE quiz_questions (
 -- Name: quiz_questions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE quiz_questions_id_seq
+CREATE SEQUENCE public.quiz_questions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5790,14 +5659,14 @@ CREATE SEQUENCE quiz_questions_id_seq
 -- Name: quiz_questions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE quiz_questions_id_seq OWNED BY quiz_questions.id;
+ALTER SEQUENCE public.quiz_questions_id_seq OWNED BY public.quiz_questions.id;
 
 
 --
 -- Name: quiz_regrade_runs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE quiz_regrade_runs (
+CREATE TABLE public.quiz_regrade_runs (
     id bigint NOT NULL,
     quiz_regrade_id bigint NOT NULL,
     started_at timestamp without time zone,
@@ -5811,7 +5680,7 @@ CREATE TABLE quiz_regrade_runs (
 -- Name: quiz_regrade_runs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE quiz_regrade_runs_id_seq
+CREATE SEQUENCE public.quiz_regrade_runs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5823,14 +5692,14 @@ CREATE SEQUENCE quiz_regrade_runs_id_seq
 -- Name: quiz_regrade_runs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE quiz_regrade_runs_id_seq OWNED BY quiz_regrade_runs.id;
+ALTER SEQUENCE public.quiz_regrade_runs_id_seq OWNED BY public.quiz_regrade_runs.id;
 
 
 --
 -- Name: quiz_regrades; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE quiz_regrades (
+CREATE TABLE public.quiz_regrades (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     quiz_id bigint NOT NULL,
@@ -5844,7 +5713,7 @@ CREATE TABLE quiz_regrades (
 -- Name: quiz_regrades_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE quiz_regrades_id_seq
+CREATE SEQUENCE public.quiz_regrades_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5856,14 +5725,14 @@ CREATE SEQUENCE quiz_regrades_id_seq
 -- Name: quiz_regrades_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE quiz_regrades_id_seq OWNED BY quiz_regrades.id;
+ALTER SEQUENCE public.quiz_regrades_id_seq OWNED BY public.quiz_regrades.id;
 
 
 --
 -- Name: quiz_statistics; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE quiz_statistics (
+CREATE TABLE public.quiz_statistics (
     id bigint NOT NULL,
     quiz_id bigint,
     includes_all_versions boolean,
@@ -5878,7 +5747,7 @@ CREATE TABLE quiz_statistics (
 -- Name: quiz_statistics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE quiz_statistics_id_seq
+CREATE SEQUENCE public.quiz_statistics_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5890,14 +5759,14 @@ CREATE SEQUENCE quiz_statistics_id_seq
 -- Name: quiz_statistics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE quiz_statistics_id_seq OWNED BY quiz_statistics.id;
+ALTER SEQUENCE public.quiz_statistics_id_seq OWNED BY public.quiz_statistics.id;
 
 
 --
 -- Name: quizzes; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE quizzes (
+CREATE TABLE public.quizzes (
     id bigint NOT NULL,
     title character varying(255),
     description text,
@@ -5950,26 +5819,26 @@ CREATE TABLE quizzes (
 -- Name: quiz_student_visibilities; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW quiz_student_visibilities AS
+CREATE VIEW public.quiz_student_visibilities AS
  SELECT DISTINCT q.id AS quiz_id,
     e.user_id,
     c.id AS course_id
-   FROM (((((((quizzes q
-     JOIN courses c ON (((q.context_id = c.id) AND ((q.context_type)::text = 'Course'::text))))
-     JOIN enrollments e ON (((e.course_id = c.id) AND ((e.type)::text = ANY (ARRAY[('StudentEnrollment'::character varying)::text, ('StudentViewEnrollment'::character varying)::text])) AND ((e.workflow_state)::text <> 'deleted'::text))))
-     JOIN course_sections cs ON (((cs.course_id = c.id) AND (e.course_section_id = cs.id))))
-     LEFT JOIN assignment_override_students aos ON (((aos.quiz_id = q.id) AND (aos.user_id = e.user_id))))
-     LEFT JOIN assignment_overrides ao ON (((ao.quiz_id = q.id) AND ((ao.workflow_state)::text = 'active'::text) AND ((((ao.set_type)::text = 'CourseSection'::text) AND (ao.set_id = cs.id)) OR (((ao.set_type)::text = 'ADHOC'::text) AND (ao.set_id IS NULL) AND (ao.id = aos.assignment_override_id))))))
-     LEFT JOIN assignments a ON (((a.context_id = q.context_id) AND ((a.submission_types)::text ~~ 'online_quiz'::text) AND (a.id = q.assignment_id))))
-     LEFT JOIN submissions s ON (((s.user_id = e.user_id) AND (s.assignment_id = a.id) AND (s.score IS NOT NULL))))
-  WHERE (((q.workflow_state)::text <> ALL (ARRAY[('deleted'::character varying)::text, ('unpublished'::character varying)::text])) AND (((q.only_visible_to_overrides = true) AND ((ao.id IS NOT NULL) OR (s.id IS NOT NULL))) OR (COALESCE(q.only_visible_to_overrides, false) = false)));
+   FROM (((((((public.quizzes q
+     JOIN public.courses c ON (((q.context_id = c.id) AND ((q.context_type)::text = 'Course'::text))))
+     JOIN public.enrollments e ON (((e.course_id = c.id) AND ((e.type)::text = ANY ((ARRAY['StudentEnrollment'::character varying, 'StudentViewEnrollment'::character varying])::text[])) AND ((e.workflow_state)::text <> 'deleted'::text))))
+     JOIN public.course_sections cs ON (((cs.course_id = c.id) AND (e.course_section_id = cs.id))))
+     LEFT JOIN public.assignment_override_students aos ON (((aos.quiz_id = q.id) AND (aos.user_id = e.user_id))))
+     LEFT JOIN public.assignment_overrides ao ON (((ao.quiz_id = q.id) AND ((ao.workflow_state)::text = 'active'::text) AND ((((ao.set_type)::text = 'CourseSection'::text) AND (ao.set_id = cs.id)) OR (((ao.set_type)::text = 'ADHOC'::text) AND (ao.set_id IS NULL) AND (ao.id = aos.assignment_override_id))))))
+     LEFT JOIN public.assignments a ON (((a.context_id = q.context_id) AND ((a.submission_types)::text ~~ 'online_quiz'::text) AND (a.id = q.assignment_id))))
+     LEFT JOIN public.submissions s ON (((s.user_id = e.user_id) AND (s.assignment_id = a.id) AND ((s.workflow_state)::text <> 'deleted'::text))))
+  WHERE (((q.workflow_state)::text <> ALL ((ARRAY['deleted'::character varying, 'unpublished'::character varying])::text[])) AND (((q.only_visible_to_overrides = true) AND ((ao.id IS NOT NULL) OR (s.id IS NOT NULL))) OR (COALESCE(q.only_visible_to_overrides, false) = false)));
 
 
 --
 -- Name: quiz_submission_events; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE quiz_submission_events (
+CREATE TABLE public.quiz_submission_events (
     id bigint NOT NULL,
     attempt integer NOT NULL,
     event_type character varying(255) NOT NULL,
@@ -5984,7 +5853,7 @@ CREATE TABLE quiz_submission_events (
 -- Name: quiz_submission_events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE quiz_submission_events_id_seq
+CREATE SEQUENCE public.quiz_submission_events_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5996,130 +5865,62 @@ CREATE SEQUENCE quiz_submission_events_id_seq
 -- Name: quiz_submission_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE quiz_submission_events_id_seq OWNED BY quiz_submission_events.id;
+ALTER SEQUENCE public.quiz_submission_events_id_seq OWNED BY public.quiz_submission_events.id;
 
 
 --
--- Name: quiz_submission_events_2018_12; Type: TABLE; Schema: public; Owner: -
+-- Name: quiz_submission_events_2019_11; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE quiz_submission_events_2018_12 (
-    id bigint DEFAULT nextval('quiz_submission_events_id_seq'::regclass),
+CREATE TABLE public.quiz_submission_events_2019_11 (
+    id bigint DEFAULT nextval('public.quiz_submission_events_id_seq'::regclass),
     attempt integer,
     event_type character varying(255),
     quiz_submission_id bigint,
     event_data text,
     created_at timestamp without time zone,
-    CONSTRAINT quiz_submission_events_2018_12_created_at_check CHECK (((created_at >= '2018-12-01 00:00:00'::timestamp without time zone) AND (created_at < '2019-01-01 00:00:00'::timestamp without time zone)))
+    CONSTRAINT quiz_submission_events_2019_11_created_at_check CHECK (((created_at >= '2019-11-01 00:00:00'::timestamp without time zone) AND (created_at < '2019-12-01 00:00:00'::timestamp without time zone)))
 )
-INHERITS (quiz_submission_events);
+INHERITS (public.quiz_submission_events);
 
 
 --
--- Name: quiz_submission_events_2019_1; Type: TABLE; Schema: public; Owner: -
+-- Name: quiz_submission_events_2019_12; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE quiz_submission_events_2019_1 (
-    id bigint DEFAULT nextval('quiz_submission_events_id_seq'::regclass),
+CREATE TABLE public.quiz_submission_events_2019_12 (
+    id bigint DEFAULT nextval('public.quiz_submission_events_id_seq'::regclass),
     attempt integer,
     event_type character varying(255),
     quiz_submission_id bigint,
     event_data text,
     created_at timestamp without time zone,
-    CONSTRAINT quiz_submission_events_2019_1_created_at_check CHECK (((created_at >= '2019-01-01 00:00:00'::timestamp without time zone) AND (created_at < '2019-02-01 00:00:00'::timestamp without time zone)))
+    CONSTRAINT quiz_submission_events_2019_12_created_at_check CHECK (((created_at >= '2019-12-01 00:00:00'::timestamp without time zone) AND (created_at < '2020-01-01 00:00:00'::timestamp without time zone)))
 )
-INHERITS (quiz_submission_events);
+INHERITS (public.quiz_submission_events);
 
 
 --
--- Name: quiz_submission_events_2019_2; Type: TABLE; Schema: public; Owner: -
+-- Name: quiz_submission_events_2020_1; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE quiz_submission_events_2019_2 (
-    id bigint DEFAULT nextval('quiz_submission_events_id_seq'::regclass),
+CREATE TABLE public.quiz_submission_events_2020_1 (
+    id bigint DEFAULT nextval('public.quiz_submission_events_id_seq'::regclass),
     attempt integer,
     event_type character varying(255),
     quiz_submission_id bigint,
     event_data text,
     created_at timestamp without time zone,
-    CONSTRAINT quiz_submission_events_2019_2_created_at_check CHECK (((created_at >= '2019-02-01 00:00:00'::timestamp without time zone) AND (created_at < '2019-03-01 00:00:00'::timestamp without time zone)))
+    CONSTRAINT quiz_submission_events_2020_1_created_at_check CHECK (((created_at >= '2020-01-01 00:00:00'::timestamp without time zone) AND (created_at < '2020-02-01 00:00:00'::timestamp without time zone)))
 )
-INHERITS (quiz_submission_events);
-
-
---
--- Name: quiz_submission_events_2019_3; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE quiz_submission_events_2019_3 (
-    id bigint DEFAULT nextval('quiz_submission_events_id_seq'::regclass),
-    attempt integer,
-    event_type character varying(255),
-    quiz_submission_id bigint,
-    event_data text,
-    created_at timestamp without time zone,
-    client_timestamp timestamp without time zone,
-    CONSTRAINT quiz_submission_events_2019_3_created_at_check CHECK (((created_at >= '2019-03-01 00:00:00'::timestamp without time zone) AND (created_at < '2019-04-01 00:00:00'::timestamp without time zone)))
-)
-INHERITS (quiz_submission_events);
-
-
---
--- Name: quiz_submission_events_2019_4; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE quiz_submission_events_2019_4 (
-    id bigint DEFAULT nextval('quiz_submission_events_id_seq'::regclass),
-    attempt integer,
-    event_type character varying(255),
-    quiz_submission_id bigint,
-    event_data text,
-    created_at timestamp without time zone,
-    client_timestamp timestamp without time zone,
-    CONSTRAINT quiz_submission_events_2019_4_created_at_check CHECK (((created_at >= '2019-04-01 00:00:00'::timestamp without time zone) AND (created_at < '2019-05-01 00:00:00'::timestamp without time zone)))
-)
-INHERITS (quiz_submission_events);
-
-
---
--- Name: quiz_submission_events_2019_5; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE quiz_submission_events_2019_5 (
-    id bigint DEFAULT nextval('quiz_submission_events_id_seq'::regclass),
-    attempt integer,
-    event_type character varying(255),
-    quiz_submission_id bigint,
-    event_data text,
-    created_at timestamp without time zone,
-    client_timestamp timestamp without time zone,
-    CONSTRAINT quiz_submission_events_2019_5_created_at_check CHECK (((created_at >= '2019-05-01 00:00:00'::timestamp without time zone) AND (created_at < '2019-06-01 00:00:00'::timestamp without time zone)))
-)
-INHERITS (quiz_submission_events);
-
-
---
--- Name: quiz_submission_events_2019_6; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE quiz_submission_events_2019_6 (
-    id bigint DEFAULT nextval('quiz_submission_events_id_seq'::regclass),
-    attempt integer,
-    event_type character varying(255),
-    quiz_submission_id bigint,
-    event_data text,
-    created_at timestamp without time zone,
-    client_timestamp timestamp without time zone,
-    CONSTRAINT quiz_submission_events_2019_6_created_at_check CHECK (((created_at >= '2019-06-01 00:00:00'::timestamp without time zone) AND (created_at < '2019-07-01 00:00:00'::timestamp without time zone)))
-)
-INHERITS (quiz_submission_events);
+INHERITS (public.quiz_submission_events);
 
 
 --
 -- Name: quiz_submission_snapshots; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE quiz_submission_snapshots (
+CREATE TABLE public.quiz_submission_snapshots (
     id bigint NOT NULL,
     quiz_submission_id bigint,
     attempt integer,
@@ -6133,7 +5934,7 @@ CREATE TABLE quiz_submission_snapshots (
 -- Name: quiz_submission_snapshots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE quiz_submission_snapshots_id_seq
+CREATE SEQUENCE public.quiz_submission_snapshots_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6145,14 +5946,14 @@ CREATE SEQUENCE quiz_submission_snapshots_id_seq
 -- Name: quiz_submission_snapshots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE quiz_submission_snapshots_id_seq OWNED BY quiz_submission_snapshots.id;
+ALTER SEQUENCE public.quiz_submission_snapshots_id_seq OWNED BY public.quiz_submission_snapshots.id;
 
 
 --
 -- Name: quiz_submissions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE quiz_submissions (
+CREATE TABLE public.quiz_submissions (
     id bigint NOT NULL,
     quiz_id bigint NOT NULL,
     quiz_version integer,
@@ -6188,7 +5989,7 @@ CREATE TABLE quiz_submissions (
 -- Name: quiz_submissions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE quiz_submissions_id_seq
+CREATE SEQUENCE public.quiz_submissions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6200,14 +6001,14 @@ CREATE SEQUENCE quiz_submissions_id_seq
 -- Name: quiz_submissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE quiz_submissions_id_seq OWNED BY quiz_submissions.id;
+ALTER SEQUENCE public.quiz_submissions_id_seq OWNED BY public.quiz_submissions.id;
 
 
 --
 -- Name: quizzes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE quizzes_id_seq
+CREATE SEQUENCE public.quizzes_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6219,14 +6020,14 @@ CREATE SEQUENCE quizzes_id_seq
 -- Name: quizzes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE quizzes_id_seq OWNED BY quizzes.id;
+ALTER SEQUENCE public.quizzes_id_seq OWNED BY public.quizzes.id;
 
 
 --
 -- Name: report_snapshots; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE report_snapshots (
+CREATE TABLE public.report_snapshots (
     id bigint NOT NULL,
     report_type character varying(255),
     data text,
@@ -6240,7 +6041,7 @@ CREATE TABLE report_snapshots (
 -- Name: report_snapshots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE report_snapshots_id_seq
+CREATE SEQUENCE public.report_snapshots_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6252,14 +6053,14 @@ CREATE SEQUENCE report_snapshots_id_seq
 -- Name: report_snapshots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE report_snapshots_id_seq OWNED BY report_snapshots.id;
+ALTER SEQUENCE public.report_snapshots_id_seq OWNED BY public.report_snapshots.id;
 
 
 --
 -- Name: role_overrides; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE role_overrides (
+CREATE TABLE public.role_overrides (
     id bigint NOT NULL,
     permission character varying(255),
     enabled boolean DEFAULT true NOT NULL,
@@ -6278,7 +6079,7 @@ CREATE TABLE role_overrides (
 -- Name: role_overrides_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE role_overrides_id_seq
+CREATE SEQUENCE public.role_overrides_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6290,14 +6091,14 @@ CREATE SEQUENCE role_overrides_id_seq
 -- Name: role_overrides_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE role_overrides_id_seq OWNED BY role_overrides.id;
+ALTER SEQUENCE public.role_overrides_id_seq OWNED BY public.role_overrides.id;
 
 
 --
 -- Name: roles; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE roles (
+CREATE TABLE public.roles (
     id bigint NOT NULL,
     name character varying(255) NOT NULL,
     base_role_type character varying(255) NOT NULL,
@@ -6314,7 +6115,7 @@ CREATE TABLE roles (
 -- Name: roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE roles_id_seq
+CREATE SEQUENCE public.roles_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6326,14 +6127,14 @@ CREATE SEQUENCE roles_id_seq
 -- Name: roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE roles_id_seq OWNED BY roles.id;
+ALTER SEQUENCE public.roles_id_seq OWNED BY public.roles.id;
 
 
 --
 -- Name: rubric_assessments; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE rubric_assessments (
+CREATE TABLE public.rubric_assessments (
     id bigint NOT NULL,
     user_id bigint,
     rubric_id bigint NOT NULL,
@@ -6355,7 +6156,7 @@ CREATE TABLE rubric_assessments (
 -- Name: rubric_assessments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE rubric_assessments_id_seq
+CREATE SEQUENCE public.rubric_assessments_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6367,14 +6168,14 @@ CREATE SEQUENCE rubric_assessments_id_seq
 -- Name: rubric_assessments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE rubric_assessments_id_seq OWNED BY rubric_assessments.id;
+ALTER SEQUENCE public.rubric_assessments_id_seq OWNED BY public.rubric_assessments.id;
 
 
 --
 -- Name: rubric_associations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE rubric_associations (
+CREATE TABLE public.rubric_associations (
     id bigint NOT NULL,
     rubric_id bigint NOT NULL,
     association_id bigint NOT NULL,
@@ -6398,7 +6199,7 @@ CREATE TABLE rubric_associations (
 -- Name: rubric_associations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE rubric_associations_id_seq
+CREATE SEQUENCE public.rubric_associations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6410,14 +6211,14 @@ CREATE SEQUENCE rubric_associations_id_seq
 -- Name: rubric_associations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE rubric_associations_id_seq OWNED BY rubric_associations.id;
+ALTER SEQUENCE public.rubric_associations_id_seq OWNED BY public.rubric_associations.id;
 
 
 --
 -- Name: rubrics; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE rubrics (
+CREATE TABLE public.rubrics (
     id bigint NOT NULL,
     user_id bigint,
     rubric_id bigint,
@@ -6445,7 +6246,7 @@ CREATE TABLE rubrics (
 -- Name: rubrics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE rubrics_id_seq
+CREATE SEQUENCE public.rubrics_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6457,14 +6258,14 @@ CREATE SEQUENCE rubrics_id_seq
 -- Name: rubrics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE rubrics_id_seq OWNED BY rubrics.id;
+ALTER SEQUENCE public.rubrics_id_seq OWNED BY public.rubrics.id;
 
 
 --
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE schema_migrations (
+CREATE TABLE public.schema_migrations (
     version character varying(255) NOT NULL
 );
 
@@ -6473,7 +6274,7 @@ CREATE TABLE schema_migrations (
 -- Name: scores; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE scores (
+CREATE TABLE public.scores (
     id bigint NOT NULL,
     enrollment_id bigint NOT NULL,
     grading_period_id bigint,
@@ -6489,7 +6290,7 @@ CREATE TABLE scores (
 -- Name: scores_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE scores_id_seq
+CREATE SEQUENCE public.scores_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6501,14 +6302,14 @@ CREATE SEQUENCE scores_id_seq
 -- Name: scores_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE scores_id_seq OWNED BY scores.id;
+ALTER SEQUENCE public.scores_id_seq OWNED BY public.scores.id;
 
 
 --
 -- Name: scribd_mime_types; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE scribd_mime_types (
+CREATE TABLE public.scribd_mime_types (
     id bigint NOT NULL,
     extension character varying(255),
     name character varying(255),
@@ -6521,7 +6322,7 @@ CREATE TABLE scribd_mime_types (
 -- Name: scribd_mime_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE scribd_mime_types_id_seq
+CREATE SEQUENCE public.scribd_mime_types_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6533,14 +6334,14 @@ CREATE SEQUENCE scribd_mime_types_id_seq
 -- Name: scribd_mime_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE scribd_mime_types_id_seq OWNED BY scribd_mime_types.id;
+ALTER SEQUENCE public.scribd_mime_types_id_seq OWNED BY public.scribd_mime_types.id;
 
 
 --
 -- Name: session_persistence_tokens; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE session_persistence_tokens (
+CREATE TABLE public.session_persistence_tokens (
     id bigint NOT NULL,
     token_salt character varying(255) NOT NULL,
     crypted_token character varying(255) NOT NULL,
@@ -6554,7 +6355,7 @@ CREATE TABLE session_persistence_tokens (
 -- Name: session_persistence_tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE session_persistence_tokens_id_seq
+CREATE SEQUENCE public.session_persistence_tokens_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6566,14 +6367,14 @@ CREATE SEQUENCE session_persistence_tokens_id_seq
 -- Name: session_persistence_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE session_persistence_tokens_id_seq OWNED BY session_persistence_tokens.id;
+ALTER SEQUENCE public.session_persistence_tokens_id_seq OWNED BY public.session_persistence_tokens.id;
 
 
 --
 -- Name: sessions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE sessions (
+CREATE TABLE public.sessions (
     id bigint NOT NULL,
     session_id character varying(255) NOT NULL,
     data text,
@@ -6586,7 +6387,7 @@ CREATE TABLE sessions (
 -- Name: sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE sessions_id_seq
+CREATE SEQUENCE public.sessions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6598,14 +6399,14 @@ CREATE SEQUENCE sessions_id_seq
 -- Name: sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE sessions_id_seq OWNED BY sessions.id;
+ALTER SEQUENCE public.sessions_id_seq OWNED BY public.sessions.id;
 
 
 --
 -- Name: settings; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE settings (
+CREATE TABLE public.settings (
     id bigint NOT NULL,
     name character varying(255),
     value text,
@@ -6618,7 +6419,7 @@ CREATE TABLE settings (
 -- Name: settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE settings_id_seq
+CREATE SEQUENCE public.settings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6630,14 +6431,14 @@ CREATE SEQUENCE settings_id_seq
 -- Name: settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE settings_id_seq OWNED BY settings.id;
+ALTER SEQUENCE public.settings_id_seq OWNED BY public.settings.id;
 
 
 --
 -- Name: shared_brand_configs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE shared_brand_configs (
+CREATE TABLE public.shared_brand_configs (
     id bigint NOT NULL,
     name character varying(255),
     account_id bigint,
@@ -6651,7 +6452,7 @@ CREATE TABLE shared_brand_configs (
 -- Name: shared_brand_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE shared_brand_configs_id_seq
+CREATE SEQUENCE public.shared_brand_configs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6663,14 +6464,14 @@ CREATE SEQUENCE shared_brand_configs_id_seq
 -- Name: shared_brand_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE shared_brand_configs_id_seq OWNED BY shared_brand_configs.id;
+ALTER SEQUENCE public.shared_brand_configs_id_seq OWNED BY public.shared_brand_configs.id;
 
 
 --
 -- Name: sis_batch_error_files; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE sis_batch_error_files (
+CREATE TABLE public.sis_batch_error_files (
     id bigint NOT NULL,
     sis_batch_id bigint NOT NULL,
     attachment_id bigint NOT NULL
@@ -6681,7 +6482,7 @@ CREATE TABLE sis_batch_error_files (
 -- Name: sis_batch_error_files_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE sis_batch_error_files_id_seq
+CREATE SEQUENCE public.sis_batch_error_files_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6693,14 +6494,14 @@ CREATE SEQUENCE sis_batch_error_files_id_seq
 -- Name: sis_batch_error_files_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE sis_batch_error_files_id_seq OWNED BY sis_batch_error_files.id;
+ALTER SEQUENCE public.sis_batch_error_files_id_seq OWNED BY public.sis_batch_error_files.id;
 
 
 --
 -- Name: sis_batches; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE sis_batches (
+CREATE TABLE public.sis_batches (
     id bigint NOT NULL,
     account_id bigint NOT NULL,
     ended_at timestamp without time zone,
@@ -6729,7 +6530,7 @@ CREATE TABLE sis_batches (
 -- Name: sis_batches_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE sis_batches_id_seq
+CREATE SEQUENCE public.sis_batches_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6741,14 +6542,14 @@ CREATE SEQUENCE sis_batches_id_seq
 -- Name: sis_batches_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE sis_batches_id_seq OWNED BY sis_batches.id;
+ALTER SEQUENCE public.sis_batches_id_seq OWNED BY public.sis_batches.id;
 
 
 --
 -- Name: sis_post_grades_statuses; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE sis_post_grades_statuses (
+CREATE TABLE public.sis_post_grades_statuses (
     id bigint NOT NULL,
     course_id bigint NOT NULL,
     course_section_id bigint,
@@ -6765,7 +6566,7 @@ CREATE TABLE sis_post_grades_statuses (
 -- Name: sis_post_grades_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE sis_post_grades_statuses_id_seq
+CREATE SEQUENCE public.sis_post_grades_statuses_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6777,14 +6578,14 @@ CREATE SEQUENCE sis_post_grades_statuses_id_seq
 -- Name: sis_post_grades_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE sis_post_grades_statuses_id_seq OWNED BY sis_post_grades_statuses.id;
+ALTER SEQUENCE public.sis_post_grades_statuses_id_seq OWNED BY public.sis_post_grades_statuses.id;
 
 
 --
 -- Name: stream_item_instances; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE stream_item_instances (
+CREATE TABLE public.stream_item_instances (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     stream_item_id bigint NOT NULL,
@@ -6799,7 +6600,7 @@ CREATE TABLE stream_item_instances (
 -- Name: stream_item_instances_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE stream_item_instances_id_seq
+CREATE SEQUENCE public.stream_item_instances_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6811,14 +6612,14 @@ CREATE SEQUENCE stream_item_instances_id_seq
 -- Name: stream_item_instances_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE stream_item_instances_id_seq OWNED BY stream_item_instances.id;
+ALTER SEQUENCE public.stream_item_instances_id_seq OWNED BY public.stream_item_instances.id;
 
 
 --
 -- Name: stream_items; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE stream_items (
+CREATE TABLE public.stream_items (
     id bigint NOT NULL,
     data text NOT NULL,
     created_at timestamp without time zone,
@@ -6835,7 +6636,7 @@ CREATE TABLE stream_items (
 -- Name: stream_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE stream_items_id_seq
+CREATE SEQUENCE public.stream_items_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6847,14 +6648,14 @@ CREATE SEQUENCE stream_items_id_seq
 -- Name: stream_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE stream_items_id_seq OWNED BY stream_items.id;
+ALTER SEQUENCE public.stream_items_id_seq OWNED BY public.stream_items.id;
 
 
 --
 -- Name: submission_comments; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE submission_comments (
+CREATE TABLE public.submission_comments (
     id bigint NOT NULL,
     comment text,
     submission_id bigint,
@@ -6882,7 +6683,7 @@ CREATE TABLE submission_comments (
 -- Name: submission_comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE submission_comments_id_seq
+CREATE SEQUENCE public.submission_comments_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6894,14 +6695,14 @@ CREATE SEQUENCE submission_comments_id_seq
 -- Name: submission_comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE submission_comments_id_seq OWNED BY submission_comments.id;
+ALTER SEQUENCE public.submission_comments_id_seq OWNED BY public.submission_comments.id;
 
 
 --
 -- Name: submission_versions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE submission_versions (
+CREATE TABLE public.submission_versions (
     id bigint NOT NULL,
     context_id bigint,
     context_type character varying(255),
@@ -6915,7 +6716,7 @@ CREATE TABLE submission_versions (
 -- Name: submission_versions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE submission_versions_id_seq
+CREATE SEQUENCE public.submission_versions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6927,14 +6728,14 @@ CREATE SEQUENCE submission_versions_id_seq
 -- Name: submission_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE submission_versions_id_seq OWNED BY submission_versions.id;
+ALTER SEQUENCE public.submission_versions_id_seq OWNED BY public.submission_versions.id;
 
 
 --
 -- Name: submissions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE submissions_id_seq
+CREATE SEQUENCE public.submissions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6946,14 +6747,14 @@ CREATE SEQUENCE submissions_id_seq
 -- Name: submissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE submissions_id_seq OWNED BY submissions.id;
+ALTER SEQUENCE public.submissions_id_seq OWNED BY public.submissions.id;
 
 
 --
 -- Name: switchman_shards; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE switchman_shards (
+CREATE TABLE public.switchman_shards (
     id bigint NOT NULL,
     name character varying(255),
     database_server_id character varying(255),
@@ -6966,7 +6767,7 @@ CREATE TABLE switchman_shards (
 -- Name: switchman_shards_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE switchman_shards_id_seq
+CREATE SEQUENCE public.switchman_shards_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6978,14 +6779,14 @@ CREATE SEQUENCE switchman_shards_id_seq
 -- Name: switchman_shards_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE switchman_shards_id_seq OWNED BY switchman_shards.id;
+ALTER SEQUENCE public.switchman_shards_id_seq OWNED BY public.switchman_shards.id;
 
 
 --
 -- Name: thumbnails; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE thumbnails (
+CREATE TABLE public.thumbnails (
     id bigint NOT NULL,
     parent_id bigint,
     content_type character varying(255) NOT NULL,
@@ -7005,7 +6806,7 @@ CREATE TABLE thumbnails (
 -- Name: thumbnails_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE thumbnails_id_seq
+CREATE SEQUENCE public.thumbnails_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7017,14 +6818,14 @@ CREATE SEQUENCE thumbnails_id_seq
 -- Name: thumbnails_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE thumbnails_id_seq OWNED BY thumbnails.id;
+ALTER SEQUENCE public.thumbnails_id_seq OWNED BY public.thumbnails.id;
 
 
 --
 -- Name: usage_rights; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE usage_rights (
+CREATE TABLE public.usage_rights (
     id bigint NOT NULL,
     context_id bigint NOT NULL,
     context_type character varying(255) NOT NULL,
@@ -7038,7 +6839,7 @@ CREATE TABLE usage_rights (
 -- Name: usage_rights_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE usage_rights_id_seq
+CREATE SEQUENCE public.usage_rights_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7050,14 +6851,14 @@ CREATE SEQUENCE usage_rights_id_seq
 -- Name: usage_rights_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE usage_rights_id_seq OWNED BY usage_rights.id;
+ALTER SEQUENCE public.usage_rights_id_seq OWNED BY public.usage_rights.id;
 
 
 --
 -- Name: user_account_associations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE user_account_associations (
+CREATE TABLE public.user_account_associations (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     account_id bigint NOT NULL,
@@ -7071,7 +6872,7 @@ CREATE TABLE user_account_associations (
 -- Name: user_account_associations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE user_account_associations_id_seq
+CREATE SEQUENCE public.user_account_associations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7083,14 +6884,14 @@ CREATE SEQUENCE user_account_associations_id_seq
 -- Name: user_account_associations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE user_account_associations_id_seq OWNED BY user_account_associations.id;
+ALTER SEQUENCE public.user_account_associations_id_seq OWNED BY public.user_account_associations.id;
 
 
 --
 -- Name: user_merge_data; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE user_merge_data (
+CREATE TABLE public.user_merge_data (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     from_user_id bigint NOT NULL,
@@ -7104,7 +6905,7 @@ CREATE TABLE user_merge_data (
 -- Name: user_merge_data_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE user_merge_data_id_seq
+CREATE SEQUENCE public.user_merge_data_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7116,14 +6917,14 @@ CREATE SEQUENCE user_merge_data_id_seq
 -- Name: user_merge_data_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE user_merge_data_id_seq OWNED BY user_merge_data.id;
+ALTER SEQUENCE public.user_merge_data_id_seq OWNED BY public.user_merge_data.id;
 
 
 --
 -- Name: user_merge_data_records; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE user_merge_data_records (
+CREATE TABLE public.user_merge_data_records (
     id bigint NOT NULL,
     user_merge_data_id bigint NOT NULL,
     context_id bigint NOT NULL,
@@ -7137,7 +6938,7 @@ CREATE TABLE user_merge_data_records (
 -- Name: user_merge_data_records_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE user_merge_data_records_id_seq
+CREATE SEQUENCE public.user_merge_data_records_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7149,14 +6950,14 @@ CREATE SEQUENCE user_merge_data_records_id_seq
 -- Name: user_merge_data_records_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE user_merge_data_records_id_seq OWNED BY user_merge_data_records.id;
+ALTER SEQUENCE public.user_merge_data_records_id_seq OWNED BY public.user_merge_data_records.id;
 
 
 --
 -- Name: user_notes; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE user_notes (
+CREATE TABLE public.user_notes (
     id bigint NOT NULL,
     user_id bigint,
     note text,
@@ -7173,7 +6974,7 @@ CREATE TABLE user_notes (
 -- Name: user_notes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE user_notes_id_seq
+CREATE SEQUENCE public.user_notes_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7185,14 +6986,14 @@ CREATE SEQUENCE user_notes_id_seq
 -- Name: user_notes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE user_notes_id_seq OWNED BY user_notes.id;
+ALTER SEQUENCE public.user_notes_id_seq OWNED BY public.user_notes.id;
 
 
 --
 -- Name: user_observers; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE user_observers (
+CREATE TABLE public.user_observers (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     observer_id bigint NOT NULL,
@@ -7207,7 +7008,7 @@ CREATE TABLE user_observers (
 -- Name: user_observers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE user_observers_id_seq
+CREATE SEQUENCE public.user_observers_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7219,14 +7020,14 @@ CREATE SEQUENCE user_observers_id_seq
 -- Name: user_observers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE user_observers_id_seq OWNED BY user_observers.id;
+ALTER SEQUENCE public.user_observers_id_seq OWNED BY public.user_observers.id;
 
 
 --
 -- Name: user_profile_links; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE user_profile_links (
+CREATE TABLE public.user_profile_links (
     id bigint NOT NULL,
     url character varying(4096),
     title character varying(255),
@@ -7240,7 +7041,7 @@ CREATE TABLE user_profile_links (
 -- Name: user_profile_links_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE user_profile_links_id_seq
+CREATE SEQUENCE public.user_profile_links_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7252,14 +7053,14 @@ CREATE SEQUENCE user_profile_links_id_seq
 -- Name: user_profile_links_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE user_profile_links_id_seq OWNED BY user_profile_links.id;
+ALTER SEQUENCE public.user_profile_links_id_seq OWNED BY public.user_profile_links.id;
 
 
 --
 -- Name: user_profiles; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE user_profiles (
+CREATE TABLE public.user_profiles (
     id bigint NOT NULL,
     bio text,
     title character varying(255),
@@ -7271,7 +7072,7 @@ CREATE TABLE user_profiles (
 -- Name: user_profiles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE user_profiles_id_seq
+CREATE SEQUENCE public.user_profiles_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7283,14 +7084,14 @@ CREATE SEQUENCE user_profiles_id_seq
 -- Name: user_profiles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE user_profiles_id_seq OWNED BY user_profiles.id;
+ALTER SEQUENCE public.user_profiles_id_seq OWNED BY public.user_profiles.id;
 
 
 --
 -- Name: user_services; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE user_services (
+CREATE TABLE public.user_services (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     token text,
@@ -7317,7 +7118,7 @@ CREATE TABLE user_services (
 -- Name: user_services_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE user_services_id_seq
+CREATE SEQUENCE public.user_services_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7329,14 +7130,14 @@ CREATE SEQUENCE user_services_id_seq
 -- Name: user_services_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE user_services_id_seq OWNED BY user_services.id;
+ALTER SEQUENCE public.user_services_id_seq OWNED BY public.user_services.id;
 
 
 --
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE users (
+CREATE TABLE public.users (
     id bigint NOT NULL,
     name character varying(255),
     sortable_name character varying(255),
@@ -7386,7 +7187,7 @@ CREATE TABLE users (
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE users_id_seq
+CREATE SEQUENCE public.users_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7398,14 +7199,14 @@ CREATE SEQUENCE users_id_seq
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE users_id_seq OWNED BY users.id;
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
 -- Name: versions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE versions (
+CREATE TABLE public.versions (
     id bigint NOT NULL,
     versionable_id bigint,
     versionable_type character varying(255),
@@ -7419,7 +7220,7 @@ CREATE TABLE versions (
 -- Name: versions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE versions_id_seq
+CREATE SEQUENCE public.versions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7431,15 +7232,15 @@ CREATE SEQUENCE versions_id_seq
 -- Name: versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE versions_id_seq OWNED BY versions.id;
+ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
 
 
 --
 -- Name: versions_0; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE versions_0 (
-    id bigint DEFAULT nextval('versions_id_seq'::regclass),
+CREATE TABLE public.versions_0 (
+    id bigint DEFAULT nextval('public.versions_id_seq'::regclass),
     versionable_id bigint,
     versionable_type character varying(255),
     number integer,
@@ -7447,15 +7248,15 @@ CREATE TABLE versions_0 (
     created_at timestamp without time zone,
     CONSTRAINT versions_0_versionable_id_check CHECK ((versionable_id < 5000000))
 )
-INHERITS (versions);
+INHERITS (public.versions);
 
 
 --
 -- Name: versions_1; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE versions_1 (
-    id bigint DEFAULT nextval('versions_id_seq'::regclass),
+CREATE TABLE public.versions_1 (
+    id bigint DEFAULT nextval('public.versions_id_seq'::regclass),
     versionable_id bigint,
     versionable_type character varying(255),
     number integer,
@@ -7463,30 +7264,14 @@ CREATE TABLE versions_1 (
     created_at timestamp without time zone,
     CONSTRAINT versions_1_versionable_id_check CHECK (((versionable_id >= 5000000) AND (versionable_id < 10000000)))
 )
-INHERITS (versions);
-
-
---
--- Name: versions_2; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE versions_2 (
-    id bigint DEFAULT nextval('versions_id_seq'::regclass),
-    versionable_id bigint,
-    versionable_type character varying(255),
-    number integer,
-    yaml text,
-    created_at timestamp without time zone,
-    CONSTRAINT versions_2_versionable_id_check CHECK (((versionable_id >= 10000000) AND (versionable_id < 15000000)))
-)
-INHERITS (versions);
+INHERITS (public.versions);
 
 
 --
 -- Name: web_conference_participants; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE web_conference_participants (
+CREATE TABLE public.web_conference_participants (
     id bigint NOT NULL,
     user_id bigint,
     web_conference_id bigint,
@@ -7500,7 +7285,7 @@ CREATE TABLE web_conference_participants (
 -- Name: web_conference_participants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE web_conference_participants_id_seq
+CREATE SEQUENCE public.web_conference_participants_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7512,14 +7297,14 @@ CREATE SEQUENCE web_conference_participants_id_seq
 -- Name: web_conference_participants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE web_conference_participants_id_seq OWNED BY web_conference_participants.id;
+ALTER SEQUENCE public.web_conference_participants_id_seq OWNED BY public.web_conference_participants.id;
 
 
 --
 -- Name: web_conferences; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE web_conferences (
+CREATE TABLE public.web_conferences (
     id bigint NOT NULL,
     title character varying(255) NOT NULL,
     conference_type character varying(255) NOT NULL,
@@ -7550,7 +7335,7 @@ CREATE TABLE web_conferences (
 -- Name: web_conferences_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE web_conferences_id_seq
+CREATE SEQUENCE public.web_conferences_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7562,14 +7347,14 @@ CREATE SEQUENCE web_conferences_id_seq
 -- Name: web_conferences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE web_conferences_id_seq OWNED BY web_conferences.id;
+ALTER SEQUENCE public.web_conferences_id_seq OWNED BY public.web_conferences.id;
 
 
 --
 -- Name: wiki_pages; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE wiki_pages (
+CREATE TABLE public.wiki_pages (
     id bigint NOT NULL,
     wiki_id bigint NOT NULL,
     title character varying(255),
@@ -7598,7 +7383,7 @@ CREATE TABLE wiki_pages (
 -- Name: wiki_pages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE wiki_pages_id_seq
+CREATE SEQUENCE public.wiki_pages_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7610,14 +7395,14 @@ CREATE SEQUENCE wiki_pages_id_seq
 -- Name: wiki_pages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE wiki_pages_id_seq OWNED BY wiki_pages.id;
+ALTER SEQUENCE public.wiki_pages_id_seq OWNED BY public.wiki_pages.id;
 
 
 --
 -- Name: wikis; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE wikis (
+CREATE TABLE public.wikis (
     id bigint NOT NULL,
     title character varying(255),
     created_at timestamp without time zone,
@@ -7631,7 +7416,7 @@ CREATE TABLE wikis (
 -- Name: wikis_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE wikis_id_seq
+CREATE SEQUENCE public.wikis_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7643,1288 +7428,1281 @@ CREATE SEQUENCE wikis_id_seq
 -- Name: wikis_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE wikis_id_seq OWNED BY wikis.id;
+ALTER SEQUENCE public.wikis_id_seq OWNED BY public.wikis.id;
 
 
 --
 -- Name: abstract_courses id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY abstract_courses ALTER COLUMN id SET DEFAULT nextval('abstract_courses_id_seq'::regclass);
+ALTER TABLE ONLY public.abstract_courses ALTER COLUMN id SET DEFAULT nextval('public.abstract_courses_id_seq'::regclass);
 
 
 --
 -- Name: access_tokens id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY access_tokens ALTER COLUMN id SET DEFAULT nextval('access_tokens_id_seq'::regclass);
+ALTER TABLE ONLY public.access_tokens ALTER COLUMN id SET DEFAULT nextval('public.access_tokens_id_seq'::regclass);
 
 
 --
 -- Name: account_authorization_configs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_authorization_configs ALTER COLUMN id SET DEFAULT nextval('account_authorization_configs_id_seq'::regclass);
+ALTER TABLE ONLY public.account_authorization_configs ALTER COLUMN id SET DEFAULT nextval('public.account_authorization_configs_id_seq'::regclass);
 
 
 --
 -- Name: account_notification_roles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_notification_roles ALTER COLUMN id SET DEFAULT nextval('account_notification_roles_id_seq'::regclass);
+ALTER TABLE ONLY public.account_notification_roles ALTER COLUMN id SET DEFAULT nextval('public.account_notification_roles_id_seq'::regclass);
 
 
 --
 -- Name: account_notifications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_notifications ALTER COLUMN id SET DEFAULT nextval('account_notifications_id_seq'::regclass);
+ALTER TABLE ONLY public.account_notifications ALTER COLUMN id SET DEFAULT nextval('public.account_notifications_id_seq'::regclass);
 
 
 --
 -- Name: account_reports id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_reports ALTER COLUMN id SET DEFAULT nextval('account_reports_id_seq'::regclass);
+ALTER TABLE ONLY public.account_reports ALTER COLUMN id SET DEFAULT nextval('public.account_reports_id_seq'::regclass);
 
 
 --
 -- Name: account_users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_users ALTER COLUMN id SET DEFAULT nextval('account_users_id_seq'::regclass);
+ALTER TABLE ONLY public.account_users ALTER COLUMN id SET DEFAULT nextval('public.account_users_id_seq'::regclass);
 
 
 --
 -- Name: accounts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY accounts ALTER COLUMN id SET DEFAULT nextval('accounts_id_seq'::regclass);
+ALTER TABLE ONLY public.accounts ALTER COLUMN id SET DEFAULT nextval('public.accounts_id_seq'::regclass);
 
 
 --
 -- Name: alert_criteria id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY alert_criteria ALTER COLUMN id SET DEFAULT nextval('alert_criteria_id_seq'::regclass);
+ALTER TABLE ONLY public.alert_criteria ALTER COLUMN id SET DEFAULT nextval('public.alert_criteria_id_seq'::regclass);
 
 
 --
 -- Name: alerts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY alerts ALTER COLUMN id SET DEFAULT nextval('alerts_id_seq'::regclass);
+ALTER TABLE ONLY public.alerts ALTER COLUMN id SET DEFAULT nextval('public.alerts_id_seq'::regclass);
 
 
 --
 -- Name: appointment_group_contexts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY appointment_group_contexts ALTER COLUMN id SET DEFAULT nextval('appointment_group_contexts_id_seq'::regclass);
+ALTER TABLE ONLY public.appointment_group_contexts ALTER COLUMN id SET DEFAULT nextval('public.appointment_group_contexts_id_seq'::regclass);
 
 
 --
 -- Name: appointment_group_sub_contexts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY appointment_group_sub_contexts ALTER COLUMN id SET DEFAULT nextval('appointment_group_sub_contexts_id_seq'::regclass);
+ALTER TABLE ONLY public.appointment_group_sub_contexts ALTER COLUMN id SET DEFAULT nextval('public.appointment_group_sub_contexts_id_seq'::regclass);
 
 
 --
 -- Name: appointment_groups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY appointment_groups ALTER COLUMN id SET DEFAULT nextval('appointment_groups_id_seq'::regclass);
+ALTER TABLE ONLY public.appointment_groups ALTER COLUMN id SET DEFAULT nextval('public.appointment_groups_id_seq'::regclass);
 
 
 --
 -- Name: assessment_question_bank_users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assessment_question_bank_users ALTER COLUMN id SET DEFAULT nextval('assessment_question_bank_users_id_seq'::regclass);
+ALTER TABLE ONLY public.assessment_question_bank_users ALTER COLUMN id SET DEFAULT nextval('public.assessment_question_bank_users_id_seq'::regclass);
 
 
 --
 -- Name: assessment_question_banks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assessment_question_banks ALTER COLUMN id SET DEFAULT nextval('assessment_question_banks_id_seq'::regclass);
+ALTER TABLE ONLY public.assessment_question_banks ALTER COLUMN id SET DEFAULT nextval('public.assessment_question_banks_id_seq'::regclass);
 
 
 --
 -- Name: assessment_questions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assessment_questions ALTER COLUMN id SET DEFAULT nextval('assessment_questions_id_seq'::regclass);
+ALTER TABLE ONLY public.assessment_questions ALTER COLUMN id SET DEFAULT nextval('public.assessment_questions_id_seq'::regclass);
 
 
 --
 -- Name: assessment_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assessment_requests ALTER COLUMN id SET DEFAULT nextval('assessment_requests_id_seq'::regclass);
+ALTER TABLE ONLY public.assessment_requests ALTER COLUMN id SET DEFAULT nextval('public.assessment_requests_id_seq'::regclass);
 
 
 --
 -- Name: asset_user_accesses id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY asset_user_accesses ALTER COLUMN id SET DEFAULT nextval('asset_user_accesses_id_seq'::regclass);
+ALTER TABLE ONLY public.asset_user_accesses ALTER COLUMN id SET DEFAULT nextval('public.asset_user_accesses_id_seq'::regclass);
 
 
 --
 -- Name: assignment_configuration_tool_lookups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignment_configuration_tool_lookups ALTER COLUMN id SET DEFAULT nextval('assignment_configuration_tool_lookups_id_seq'::regclass);
+ALTER TABLE ONLY public.assignment_configuration_tool_lookups ALTER COLUMN id SET DEFAULT nextval('public.assignment_configuration_tool_lookups_id_seq'::regclass);
 
 
 --
 -- Name: assignment_groups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignment_groups ALTER COLUMN id SET DEFAULT nextval('assignment_groups_id_seq'::regclass);
+ALTER TABLE ONLY public.assignment_groups ALTER COLUMN id SET DEFAULT nextval('public.assignment_groups_id_seq'::regclass);
 
 
 --
 -- Name: assignment_override_students id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignment_override_students ALTER COLUMN id SET DEFAULT nextval('assignment_override_students_id_seq'::regclass);
+ALTER TABLE ONLY public.assignment_override_students ALTER COLUMN id SET DEFAULT nextval('public.assignment_override_students_id_seq'::regclass);
 
 
 --
 -- Name: assignment_overrides id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignment_overrides ALTER COLUMN id SET DEFAULT nextval('assignment_overrides_id_seq'::regclass);
+ALTER TABLE ONLY public.assignment_overrides ALTER COLUMN id SET DEFAULT nextval('public.assignment_overrides_id_seq'::regclass);
 
 
 --
 -- Name: assignments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignments ALTER COLUMN id SET DEFAULT nextval('assignments_id_seq'::regclass);
+ALTER TABLE ONLY public.assignments ALTER COLUMN id SET DEFAULT nextval('public.assignments_id_seq'::regclass);
 
 
 --
 -- Name: attachment_associations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY attachment_associations ALTER COLUMN id SET DEFAULT nextval('attachment_associations_id_seq'::regclass);
+ALTER TABLE ONLY public.attachment_associations ALTER COLUMN id SET DEFAULT nextval('public.attachment_associations_id_seq'::regclass);
 
 
 --
 -- Name: attachments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY attachments ALTER COLUMN id SET DEFAULT nextval('attachments_id_seq'::regclass);
+ALTER TABLE ONLY public.attachments ALTER COLUMN id SET DEFAULT nextval('public.attachments_id_seq'::regclass);
 
 
 --
 -- Name: bookmarks_bookmarks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY bookmarks_bookmarks ALTER COLUMN id SET DEFAULT nextval('bookmarks_bookmarks_id_seq'::regclass);
+ALTER TABLE ONLY public.bookmarks_bookmarks ALTER COLUMN id SET DEFAULT nextval('public.bookmarks_bookmarks_id_seq'::regclass);
 
 
 --
 -- Name: calendar_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY calendar_events ALTER COLUMN id SET DEFAULT nextval('calendar_events_id_seq'::regclass);
+ALTER TABLE ONLY public.calendar_events ALTER COLUMN id SET DEFAULT nextval('public.calendar_events_id_seq'::regclass);
 
 
 --
 -- Name: canvadocs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY canvadocs ALTER COLUMN id SET DEFAULT nextval('canvadocs_id_seq'::regclass);
+ALTER TABLE ONLY public.canvadocs ALTER COLUMN id SET DEFAULT nextval('public.canvadocs_id_seq'::regclass);
 
 
 --
 -- Name: canvadocs_submissions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY canvadocs_submissions ALTER COLUMN id SET DEFAULT nextval('canvadocs_submissions_id_seq'::regclass);
+ALTER TABLE ONLY public.canvadocs_submissions ALTER COLUMN id SET DEFAULT nextval('public.canvadocs_submissions_id_seq'::regclass);
 
 
 --
 -- Name: cloned_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY cloned_items ALTER COLUMN id SET DEFAULT nextval('cloned_items_id_seq'::regclass);
+ALTER TABLE ONLY public.cloned_items ALTER COLUMN id SET DEFAULT nextval('public.cloned_items_id_seq'::regclass);
 
 
 --
 -- Name: collaborations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collaborations ALTER COLUMN id SET DEFAULT nextval('collaborations_id_seq'::regclass);
+ALTER TABLE ONLY public.collaborations ALTER COLUMN id SET DEFAULT nextval('public.collaborations_id_seq'::regclass);
 
 
 --
 -- Name: collaborators id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collaborators ALTER COLUMN id SET DEFAULT nextval('collaborators_id_seq'::regclass);
+ALTER TABLE ONLY public.collaborators ALTER COLUMN id SET DEFAULT nextval('public.collaborators_id_seq'::regclass);
 
 
 --
 -- Name: communication_channels id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY communication_channels ALTER COLUMN id SET DEFAULT nextval('communication_channels_id_seq'::regclass);
+ALTER TABLE ONLY public.communication_channels ALTER COLUMN id SET DEFAULT nextval('public.communication_channels_id_seq'::regclass);
 
 
 --
 -- Name: content_exports id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_exports ALTER COLUMN id SET DEFAULT nextval('content_exports_id_seq'::regclass);
+ALTER TABLE ONLY public.content_exports ALTER COLUMN id SET DEFAULT nextval('public.content_exports_id_seq'::regclass);
 
 
 --
 -- Name: content_migrations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_migrations ALTER COLUMN id SET DEFAULT nextval('content_migrations_id_seq'::regclass);
+ALTER TABLE ONLY public.content_migrations ALTER COLUMN id SET DEFAULT nextval('public.content_migrations_id_seq'::regclass);
 
 
 --
 -- Name: content_participation_counts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_participation_counts ALTER COLUMN id SET DEFAULT nextval('content_participation_counts_id_seq'::regclass);
+ALTER TABLE ONLY public.content_participation_counts ALTER COLUMN id SET DEFAULT nextval('public.content_participation_counts_id_seq'::regclass);
 
 
 --
 -- Name: content_participations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_participations ALTER COLUMN id SET DEFAULT nextval('content_participations_id_seq'::regclass);
+ALTER TABLE ONLY public.content_participations ALTER COLUMN id SET DEFAULT nextval('public.content_participations_id_seq'::regclass);
 
 
 --
 -- Name: content_tags id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_tags ALTER COLUMN id SET DEFAULT nextval('content_tags_id_seq'::regclass);
+ALTER TABLE ONLY public.content_tags ALTER COLUMN id SET DEFAULT nextval('public.content_tags_id_seq'::regclass);
 
 
 --
 -- Name: context_external_tool_assignment_lookups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_external_tool_assignment_lookups ALTER COLUMN id SET DEFAULT nextval('context_external_tool_assignment_lookups_id_seq'::regclass);
+ALTER TABLE ONLY public.context_external_tool_assignment_lookups ALTER COLUMN id SET DEFAULT nextval('public.context_external_tool_assignment_lookups_id_seq'::regclass);
 
 
 --
 -- Name: context_external_tool_placements id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_external_tool_placements ALTER COLUMN id SET DEFAULT nextval('context_external_tool_placements_id_seq'::regclass);
+ALTER TABLE ONLY public.context_external_tool_placements ALTER COLUMN id SET DEFAULT nextval('public.context_external_tool_placements_id_seq'::regclass);
 
 
 --
 -- Name: context_external_tools id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_external_tools ALTER COLUMN id SET DEFAULT nextval('context_external_tools_id_seq'::regclass);
+ALTER TABLE ONLY public.context_external_tools ALTER COLUMN id SET DEFAULT nextval('public.context_external_tools_id_seq'::regclass);
 
 
 --
 -- Name: context_module_progressions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_module_progressions ALTER COLUMN id SET DEFAULT nextval('context_module_progressions_id_seq'::regclass);
+ALTER TABLE ONLY public.context_module_progressions ALTER COLUMN id SET DEFAULT nextval('public.context_module_progressions_id_seq'::regclass);
 
 
 --
 -- Name: context_modules id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_modules ALTER COLUMN id SET DEFAULT nextval('context_modules_id_seq'::regclass);
+ALTER TABLE ONLY public.context_modules ALTER COLUMN id SET DEFAULT nextval('public.context_modules_id_seq'::regclass);
 
 
 --
 -- Name: conversation_batches id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY conversation_batches ALTER COLUMN id SET DEFAULT nextval('conversation_batches_id_seq'::regclass);
+ALTER TABLE ONLY public.conversation_batches ALTER COLUMN id SET DEFAULT nextval('public.conversation_batches_id_seq'::regclass);
 
 
 --
 -- Name: conversation_message_participants id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY conversation_message_participants ALTER COLUMN id SET DEFAULT nextval('conversation_message_participants_id_seq'::regclass);
+ALTER TABLE ONLY public.conversation_message_participants ALTER COLUMN id SET DEFAULT nextval('public.conversation_message_participants_id_seq'::regclass);
 
 
 --
 -- Name: conversation_messages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY conversation_messages ALTER COLUMN id SET DEFAULT nextval('conversation_messages_id_seq'::regclass);
+ALTER TABLE ONLY public.conversation_messages ALTER COLUMN id SET DEFAULT nextval('public.conversation_messages_id_seq'::regclass);
 
 
 --
 -- Name: conversation_participants id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY conversation_participants ALTER COLUMN id SET DEFAULT nextval('conversation_participants_id_seq'::regclass);
+ALTER TABLE ONLY public.conversation_participants ALTER COLUMN id SET DEFAULT nextval('public.conversation_participants_id_seq'::regclass);
 
 
 --
 -- Name: conversations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY conversations ALTER COLUMN id SET DEFAULT nextval('conversations_id_seq'::regclass);
+ALTER TABLE ONLY public.conversations ALTER COLUMN id SET DEFAULT nextval('public.conversations_id_seq'::regclass);
 
 
 --
 -- Name: course_account_associations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY course_account_associations ALTER COLUMN id SET DEFAULT nextval('course_account_associations_id_seq'::regclass);
+ALTER TABLE ONLY public.course_account_associations ALTER COLUMN id SET DEFAULT nextval('public.course_account_associations_id_seq'::regclass);
 
 
 --
 -- Name: course_sections id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY course_sections ALTER COLUMN id SET DEFAULT nextval('course_sections_id_seq'::regclass);
+ALTER TABLE ONLY public.course_sections ALTER COLUMN id SET DEFAULT nextval('public.course_sections_id_seq'::regclass);
 
 
 --
 -- Name: courses id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY courses ALTER COLUMN id SET DEFAULT nextval('courses_id_seq'::regclass);
+ALTER TABLE ONLY public.courses ALTER COLUMN id SET DEFAULT nextval('public.courses_id_seq'::regclass);
 
 
 --
 -- Name: crocodoc_documents id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY crocodoc_documents ALTER COLUMN id SET DEFAULT nextval('crocodoc_documents_id_seq'::regclass);
+ALTER TABLE ONLY public.crocodoc_documents ALTER COLUMN id SET DEFAULT nextval('public.crocodoc_documents_id_seq'::regclass);
 
 
 --
 -- Name: custom_data id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY custom_data ALTER COLUMN id SET DEFAULT nextval('custom_data_id_seq'::regclass);
+ALTER TABLE ONLY public.custom_data ALTER COLUMN id SET DEFAULT nextval('public.custom_data_id_seq'::regclass);
 
 
 --
 -- Name: custom_gradebook_column_data id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY custom_gradebook_column_data ALTER COLUMN id SET DEFAULT nextval('custom_gradebook_column_data_id_seq'::regclass);
+ALTER TABLE ONLY public.custom_gradebook_column_data ALTER COLUMN id SET DEFAULT nextval('public.custom_gradebook_column_data_id_seq'::regclass);
 
 
 --
 -- Name: custom_gradebook_columns id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY custom_gradebook_columns ALTER COLUMN id SET DEFAULT nextval('custom_gradebook_columns_id_seq'::regclass);
+ALTER TABLE ONLY public.custom_gradebook_columns ALTER COLUMN id SET DEFAULT nextval('public.custom_gradebook_columns_id_seq'::regclass);
 
 
 --
 -- Name: delayed_jobs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY delayed_jobs ALTER COLUMN id SET DEFAULT nextval('delayed_jobs_id_seq'::regclass);
+ALTER TABLE ONLY public.delayed_jobs ALTER COLUMN id SET DEFAULT nextval('public.delayed_jobs_id_seq'::regclass);
 
 
 --
 -- Name: delayed_messages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY delayed_messages ALTER COLUMN id SET DEFAULT nextval('delayed_messages_id_seq'::regclass);
+ALTER TABLE ONLY public.delayed_messages ALTER COLUMN id SET DEFAULT nextval('public.delayed_messages_id_seq'::regclass);
 
 
 --
 -- Name: delayed_notifications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY delayed_notifications ALTER COLUMN id SET DEFAULT nextval('delayed_notifications_id_seq'::regclass);
+ALTER TABLE ONLY public.delayed_notifications ALTER COLUMN id SET DEFAULT nextval('public.delayed_notifications_id_seq'::regclass);
 
 
 --
 -- Name: developer_keys id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY developer_keys ALTER COLUMN id SET DEFAULT nextval('developer_keys_id_seq'::regclass);
+ALTER TABLE ONLY public.developer_keys ALTER COLUMN id SET DEFAULT nextval('public.developer_keys_id_seq'::regclass);
 
 
 --
 -- Name: discussion_entries id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_entries ALTER COLUMN id SET DEFAULT nextval('discussion_entries_id_seq'::regclass);
+ALTER TABLE ONLY public.discussion_entries ALTER COLUMN id SET DEFAULT nextval('public.discussion_entries_id_seq'::regclass);
 
 
 --
 -- Name: discussion_entry_participants id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_entry_participants ALTER COLUMN id SET DEFAULT nextval('discussion_entry_participants_id_seq'::regclass);
+ALTER TABLE ONLY public.discussion_entry_participants ALTER COLUMN id SET DEFAULT nextval('public.discussion_entry_participants_id_seq'::regclass);
 
 
 --
 -- Name: discussion_topic_participants id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topic_participants ALTER COLUMN id SET DEFAULT nextval('discussion_topic_participants_id_seq'::regclass);
+ALTER TABLE ONLY public.discussion_topic_participants ALTER COLUMN id SET DEFAULT nextval('public.discussion_topic_participants_id_seq'::regclass);
 
 
 --
 -- Name: discussion_topics id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topics ALTER COLUMN id SET DEFAULT nextval('discussion_topics_id_seq'::regclass);
+ALTER TABLE ONLY public.discussion_topics ALTER COLUMN id SET DEFAULT nextval('public.discussion_topics_id_seq'::regclass);
 
 
 --
 -- Name: enrollment_dates_overrides id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollment_dates_overrides ALTER COLUMN id SET DEFAULT nextval('enrollment_dates_overrides_id_seq'::regclass);
+ALTER TABLE ONLY public.enrollment_dates_overrides ALTER COLUMN id SET DEFAULT nextval('public.enrollment_dates_overrides_id_seq'::regclass);
 
 
 --
 -- Name: enrollment_terms id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollment_terms ALTER COLUMN id SET DEFAULT nextval('enrollment_terms_id_seq'::regclass);
+ALTER TABLE ONLY public.enrollment_terms ALTER COLUMN id SET DEFAULT nextval('public.enrollment_terms_id_seq'::regclass);
 
 
 --
 -- Name: enrollments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollments ALTER COLUMN id SET DEFAULT nextval('enrollments_id_seq'::regclass);
+ALTER TABLE ONLY public.enrollments ALTER COLUMN id SET DEFAULT nextval('public.enrollments_id_seq'::regclass);
 
 
 --
 -- Name: eportfolio_categories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY eportfolio_categories ALTER COLUMN id SET DEFAULT nextval('eportfolio_categories_id_seq'::regclass);
+ALTER TABLE ONLY public.eportfolio_categories ALTER COLUMN id SET DEFAULT nextval('public.eportfolio_categories_id_seq'::regclass);
 
 
 --
 -- Name: eportfolio_entries id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY eportfolio_entries ALTER COLUMN id SET DEFAULT nextval('eportfolio_entries_id_seq'::regclass);
+ALTER TABLE ONLY public.eportfolio_entries ALTER COLUMN id SET DEFAULT nextval('public.eportfolio_entries_id_seq'::regclass);
 
 
 --
 -- Name: eportfolios id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY eportfolios ALTER COLUMN id SET DEFAULT nextval('eportfolios_id_seq'::regclass);
+ALTER TABLE ONLY public.eportfolios ALTER COLUMN id SET DEFAULT nextval('public.eportfolios_id_seq'::regclass);
 
 
 --
 -- Name: epub_exports id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY epub_exports ALTER COLUMN id SET DEFAULT nextval('epub_exports_id_seq'::regclass);
+ALTER TABLE ONLY public.epub_exports ALTER COLUMN id SET DEFAULT nextval('public.epub_exports_id_seq'::regclass);
 
 
 --
 -- Name: error_reports id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY error_reports ALTER COLUMN id SET DEFAULT nextval('error_reports_id_seq'::regclass);
+ALTER TABLE ONLY public.error_reports ALTER COLUMN id SET DEFAULT nextval('public.error_reports_id_seq'::regclass);
 
 
 --
 -- Name: event_stream_failures id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY event_stream_failures ALTER COLUMN id SET DEFAULT nextval('event_stream_failures_id_seq'::regclass);
+ALTER TABLE ONLY public.event_stream_failures ALTER COLUMN id SET DEFAULT nextval('public.event_stream_failures_id_seq'::regclass);
 
 
 --
 -- Name: external_feed_entries id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY external_feed_entries ALTER COLUMN id SET DEFAULT nextval('external_feed_entries_id_seq'::regclass);
+ALTER TABLE ONLY public.external_feed_entries ALTER COLUMN id SET DEFAULT nextval('public.external_feed_entries_id_seq'::regclass);
 
 
 --
 -- Name: external_feeds id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY external_feeds ALTER COLUMN id SET DEFAULT nextval('external_feeds_id_seq'::regclass);
+ALTER TABLE ONLY public.external_feeds ALTER COLUMN id SET DEFAULT nextval('public.external_feeds_id_seq'::regclass);
 
 
 --
 -- Name: external_integration_keys id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY external_integration_keys ALTER COLUMN id SET DEFAULT nextval('external_integration_keys_id_seq'::regclass);
+ALTER TABLE ONLY public.external_integration_keys ALTER COLUMN id SET DEFAULT nextval('public.external_integration_keys_id_seq'::regclass);
 
 
 --
 -- Name: failed_jobs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY failed_jobs ALTER COLUMN id SET DEFAULT nextval('failed_jobs_id_seq'::regclass);
+ALTER TABLE ONLY public.failed_jobs ALTER COLUMN id SET DEFAULT nextval('public.failed_jobs_id_seq'::regclass);
 
 
 --
 -- Name: favorites id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY favorites ALTER COLUMN id SET DEFAULT nextval('favorites_id_seq'::regclass);
+ALTER TABLE ONLY public.favorites ALTER COLUMN id SET DEFAULT nextval('public.favorites_id_seq'::regclass);
 
 
 --
 -- Name: feature_flags id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY feature_flags ALTER COLUMN id SET DEFAULT nextval('feature_flags_id_seq'::regclass);
+ALTER TABLE ONLY public.feature_flags ALTER COLUMN id SET DEFAULT nextval('public.feature_flags_id_seq'::regclass);
 
 
 --
 -- Name: folders id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY folders ALTER COLUMN id SET DEFAULT nextval('folders_id_seq'::regclass);
+ALTER TABLE ONLY public.folders ALTER COLUMN id SET DEFAULT nextval('public.folders_id_seq'::regclass);
 
 
 --
 -- Name: gradebook_csvs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY gradebook_csvs ALTER COLUMN id SET DEFAULT nextval('gradebook_csvs_id_seq'::regclass);
+ALTER TABLE ONLY public.gradebook_csvs ALTER COLUMN id SET DEFAULT nextval('public.gradebook_csvs_id_seq'::regclass);
 
 
 --
 -- Name: gradebook_uploads id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY gradebook_uploads ALTER COLUMN id SET DEFAULT nextval('gradebook_uploads_id_seq'::regclass);
+ALTER TABLE ONLY public.gradebook_uploads ALTER COLUMN id SET DEFAULT nextval('public.gradebook_uploads_id_seq'::regclass);
 
 
 --
 -- Name: grading_period_groups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY grading_period_groups ALTER COLUMN id SET DEFAULT nextval('grading_period_groups_id_seq'::regclass);
+ALTER TABLE ONLY public.grading_period_groups ALTER COLUMN id SET DEFAULT nextval('public.grading_period_groups_id_seq'::regclass);
 
 
 --
 -- Name: grading_periods id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY grading_periods ALTER COLUMN id SET DEFAULT nextval('grading_periods_id_seq'::regclass);
+ALTER TABLE ONLY public.grading_periods ALTER COLUMN id SET DEFAULT nextval('public.grading_periods_id_seq'::regclass);
 
 
 --
 -- Name: grading_standards id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY grading_standards ALTER COLUMN id SET DEFAULT nextval('grading_standards_id_seq'::regclass);
+ALTER TABLE ONLY public.grading_standards ALTER COLUMN id SET DEFAULT nextval('public.grading_standards_id_seq'::regclass);
 
 
 --
 -- Name: group_categories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY group_categories ALTER COLUMN id SET DEFAULT nextval('group_categories_id_seq'::regclass);
+ALTER TABLE ONLY public.group_categories ALTER COLUMN id SET DEFAULT nextval('public.group_categories_id_seq'::regclass);
 
 
 --
 -- Name: group_memberships id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY group_memberships ALTER COLUMN id SET DEFAULT nextval('group_memberships_id_seq'::regclass);
+ALTER TABLE ONLY public.group_memberships ALTER COLUMN id SET DEFAULT nextval('public.group_memberships_id_seq'::regclass);
 
 
 --
 -- Name: groups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::regclass);
+ALTER TABLE ONLY public.groups ALTER COLUMN id SET DEFAULT nextval('public.groups_id_seq'::regclass);
 
 
 --
 -- Name: ignores id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY ignores ALTER COLUMN id SET DEFAULT nextval('ignores_id_seq'::regclass);
+ALTER TABLE ONLY public.ignores ALTER COLUMN id SET DEFAULT nextval('public.ignores_id_seq'::regclass);
 
 
 --
 -- Name: late_policies id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY late_policies ALTER COLUMN id SET DEFAULT nextval('late_policies_id_seq'::regclass);
+ALTER TABLE ONLY public.late_policies ALTER COLUMN id SET DEFAULT nextval('public.late_policies_id_seq'::regclass);
 
 
 --
 -- Name: learning_outcome_groups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY learning_outcome_groups ALTER COLUMN id SET DEFAULT nextval('learning_outcome_groups_id_seq'::regclass);
+ALTER TABLE ONLY public.learning_outcome_groups ALTER COLUMN id SET DEFAULT nextval('public.learning_outcome_groups_id_seq'::regclass);
 
 
 --
 -- Name: learning_outcome_question_results id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY learning_outcome_question_results ALTER COLUMN id SET DEFAULT nextval('learning_outcome_question_results_id_seq'::regclass);
+ALTER TABLE ONLY public.learning_outcome_question_results ALTER COLUMN id SET DEFAULT nextval('public.learning_outcome_question_results_id_seq'::regclass);
 
 
 --
 -- Name: learning_outcome_results id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY learning_outcome_results ALTER COLUMN id SET DEFAULT nextval('learning_outcome_results_id_seq'::regclass);
+ALTER TABLE ONLY public.learning_outcome_results ALTER COLUMN id SET DEFAULT nextval('public.learning_outcome_results_id_seq'::regclass);
 
 
 --
 -- Name: learning_outcomes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY learning_outcomes ALTER COLUMN id SET DEFAULT nextval('learning_outcomes_id_seq'::regclass);
+ALTER TABLE ONLY public.learning_outcomes ALTER COLUMN id SET DEFAULT nextval('public.learning_outcomes_id_seq'::regclass);
 
 
 --
 -- Name: live_assessments_assessments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY live_assessments_assessments ALTER COLUMN id SET DEFAULT nextval('live_assessments_assessments_id_seq'::regclass);
+ALTER TABLE ONLY public.live_assessments_assessments ALTER COLUMN id SET DEFAULT nextval('public.live_assessments_assessments_id_seq'::regclass);
 
 
 --
 -- Name: live_assessments_results id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY live_assessments_results ALTER COLUMN id SET DEFAULT nextval('live_assessments_results_id_seq'::regclass);
+ALTER TABLE ONLY public.live_assessments_results ALTER COLUMN id SET DEFAULT nextval('public.live_assessments_results_id_seq'::regclass);
 
 
 --
 -- Name: live_assessments_submissions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY live_assessments_submissions ALTER COLUMN id SET DEFAULT nextval('live_assessments_submissions_id_seq'::regclass);
+ALTER TABLE ONLY public.live_assessments_submissions ALTER COLUMN id SET DEFAULT nextval('public.live_assessments_submissions_id_seq'::regclass);
 
 
 --
 -- Name: lti_message_handlers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_message_handlers ALTER COLUMN id SET DEFAULT nextval('lti_message_handlers_id_seq'::regclass);
+ALTER TABLE ONLY public.lti_message_handlers ALTER COLUMN id SET DEFAULT nextval('public.lti_message_handlers_id_seq'::regclass);
 
 
 --
 -- Name: lti_product_families id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_product_families ALTER COLUMN id SET DEFAULT nextval('lti_product_families_id_seq'::regclass);
+ALTER TABLE ONLY public.lti_product_families ALTER COLUMN id SET DEFAULT nextval('public.lti_product_families_id_seq'::regclass);
 
 
 --
 -- Name: lti_resource_handlers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_resource_handlers ALTER COLUMN id SET DEFAULT nextval('lti_resource_handlers_id_seq'::regclass);
+ALTER TABLE ONLY public.lti_resource_handlers ALTER COLUMN id SET DEFAULT nextval('public.lti_resource_handlers_id_seq'::regclass);
 
 
 --
 -- Name: lti_resource_placements id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_resource_placements ALTER COLUMN id SET DEFAULT nextval('lti_resource_placements_id_seq'::regclass);
+ALTER TABLE ONLY public.lti_resource_placements ALTER COLUMN id SET DEFAULT nextval('public.lti_resource_placements_id_seq'::regclass);
 
 
 --
 -- Name: lti_tool_consumer_profiles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_tool_consumer_profiles ALTER COLUMN id SET DEFAULT nextval('lti_tool_consumer_profiles_id_seq'::regclass);
+ALTER TABLE ONLY public.lti_tool_consumer_profiles ALTER COLUMN id SET DEFAULT nextval('public.lti_tool_consumer_profiles_id_seq'::regclass);
 
 
 --
 -- Name: lti_tool_proxies id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_tool_proxies ALTER COLUMN id SET DEFAULT nextval('lti_tool_proxies_id_seq'::regclass);
+ALTER TABLE ONLY public.lti_tool_proxies ALTER COLUMN id SET DEFAULT nextval('public.lti_tool_proxies_id_seq'::regclass);
 
 
 --
 -- Name: lti_tool_proxy_bindings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_tool_proxy_bindings ALTER COLUMN id SET DEFAULT nextval('lti_tool_proxy_bindings_id_seq'::regclass);
+ALTER TABLE ONLY public.lti_tool_proxy_bindings ALTER COLUMN id SET DEFAULT nextval('public.lti_tool_proxy_bindings_id_seq'::regclass);
 
 
 --
 -- Name: lti_tool_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_tool_settings ALTER COLUMN id SET DEFAULT nextval('lti_tool_settings_id_seq'::regclass);
+ALTER TABLE ONLY public.lti_tool_settings ALTER COLUMN id SET DEFAULT nextval('public.lti_tool_settings_id_seq'::regclass);
 
 
 --
 -- Name: master_courses_child_content_tags id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_child_content_tags ALTER COLUMN id SET DEFAULT nextval('master_courses_child_content_tags_id_seq'::regclass);
+ALTER TABLE ONLY public.master_courses_child_content_tags ALTER COLUMN id SET DEFAULT nextval('public.master_courses_child_content_tags_id_seq'::regclass);
 
 
 --
 -- Name: master_courses_child_subscriptions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_child_subscriptions ALTER COLUMN id SET DEFAULT nextval('master_courses_child_subscriptions_id_seq'::regclass);
+ALTER TABLE ONLY public.master_courses_child_subscriptions ALTER COLUMN id SET DEFAULT nextval('public.master_courses_child_subscriptions_id_seq'::regclass);
 
 
 --
 -- Name: master_courses_master_content_tags id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_master_content_tags ALTER COLUMN id SET DEFAULT nextval('master_courses_master_content_tags_id_seq'::regclass);
+ALTER TABLE ONLY public.master_courses_master_content_tags ALTER COLUMN id SET DEFAULT nextval('public.master_courses_master_content_tags_id_seq'::regclass);
 
 
 --
 -- Name: master_courses_master_migrations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_master_migrations ALTER COLUMN id SET DEFAULT nextval('master_courses_master_migrations_id_seq'::regclass);
+ALTER TABLE ONLY public.master_courses_master_migrations ALTER COLUMN id SET DEFAULT nextval('public.master_courses_master_migrations_id_seq'::regclass);
 
 
 --
 -- Name: master_courses_master_templates id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_master_templates ALTER COLUMN id SET DEFAULT nextval('master_courses_master_templates_id_seq'::regclass);
+ALTER TABLE ONLY public.master_courses_master_templates ALTER COLUMN id SET DEFAULT nextval('public.master_courses_master_templates_id_seq'::regclass);
 
 
 --
 -- Name: master_courses_migration_results id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_migration_results ALTER COLUMN id SET DEFAULT nextval('master_courses_migration_results_id_seq'::regclass);
+ALTER TABLE ONLY public.master_courses_migration_results ALTER COLUMN id SET DEFAULT nextval('public.master_courses_migration_results_id_seq'::regclass);
 
 
 --
 -- Name: media_objects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY media_objects ALTER COLUMN id SET DEFAULT nextval('media_objects_id_seq'::regclass);
+ALTER TABLE ONLY public.media_objects ALTER COLUMN id SET DEFAULT nextval('public.media_objects_id_seq'::regclass);
 
 
 --
 -- Name: media_tracks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY media_tracks ALTER COLUMN id SET DEFAULT nextval('media_tracks_id_seq'::regclass);
+ALTER TABLE ONLY public.media_tracks ALTER COLUMN id SET DEFAULT nextval('public.media_tracks_id_seq'::regclass);
 
 
 --
 -- Name: messages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY messages ALTER COLUMN id SET DEFAULT nextval('messages_id_seq'::regclass);
+ALTER TABLE ONLY public.messages ALTER COLUMN id SET DEFAULT nextval('public.messages_id_seq'::regclass);
 
 
 --
 -- Name: migration_issues id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY migration_issues ALTER COLUMN id SET DEFAULT nextval('migration_issues_id_seq'::regclass);
+ALTER TABLE ONLY public.migration_issues ALTER COLUMN id SET DEFAULT nextval('public.migration_issues_id_seq'::regclass);
 
 
 --
 -- Name: moderated_grading_provisional_grades id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY moderated_grading_provisional_grades ALTER COLUMN id SET DEFAULT nextval('moderated_grading_provisional_grades_id_seq'::regclass);
+ALTER TABLE ONLY public.moderated_grading_provisional_grades ALTER COLUMN id SET DEFAULT nextval('public.moderated_grading_provisional_grades_id_seq'::regclass);
 
 
 --
 -- Name: moderated_grading_selections id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY moderated_grading_selections ALTER COLUMN id SET DEFAULT nextval('moderated_grading_selections_id_seq'::regclass);
+ALTER TABLE ONLY public.moderated_grading_selections ALTER COLUMN id SET DEFAULT nextval('public.moderated_grading_selections_id_seq'::regclass);
 
 
 --
 -- Name: notification_endpoints id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY notification_endpoints ALTER COLUMN id SET DEFAULT nextval('notification_endpoints_id_seq'::regclass);
+ALTER TABLE ONLY public.notification_endpoints ALTER COLUMN id SET DEFAULT nextval('public.notification_endpoints_id_seq'::regclass);
 
 
 --
 -- Name: notification_policies id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY notification_policies ALTER COLUMN id SET DEFAULT nextval('notification_policies_id_seq'::regclass);
+ALTER TABLE ONLY public.notification_policies ALTER COLUMN id SET DEFAULT nextval('public.notification_policies_id_seq'::regclass);
 
 
 --
 -- Name: notifications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY notifications ALTER COLUMN id SET DEFAULT nextval('notifications_id_seq'::regclass);
+ALTER TABLE ONLY public.notifications ALTER COLUMN id SET DEFAULT nextval('public.notifications_id_seq'::regclass);
 
 
 --
 -- Name: oauth_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY oauth_requests ALTER COLUMN id SET DEFAULT nextval('oauth_requests_id_seq'::regclass);
+ALTER TABLE ONLY public.oauth_requests ALTER COLUMN id SET DEFAULT nextval('public.oauth_requests_id_seq'::regclass);
 
 
 --
 -- Name: one_time_passwords id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY one_time_passwords ALTER COLUMN id SET DEFAULT nextval('one_time_passwords_id_seq'::regclass);
+ALTER TABLE ONLY public.one_time_passwords ALTER COLUMN id SET DEFAULT nextval('public.one_time_passwords_id_seq'::regclass);
 
 
 --
 -- Name: originality_reports id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY originality_reports ALTER COLUMN id SET DEFAULT nextval('originality_reports_id_seq'::regclass);
+ALTER TABLE ONLY public.originality_reports ALTER COLUMN id SET DEFAULT nextval('public.originality_reports_id_seq'::regclass);
 
 
 --
 -- Name: page_comments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY page_comments ALTER COLUMN id SET DEFAULT nextval('page_comments_id_seq'::regclass);
-
-
---
--- Name: page_views_rollups id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY page_views_rollups ALTER COLUMN id SET DEFAULT nextval('page_views_rollups_id_seq'::regclass);
+ALTER TABLE ONLY public.page_comments ALTER COLUMN id SET DEFAULT nextval('public.page_comments_id_seq'::regclass);
 
 
 --
 -- Name: planner_notes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY planner_notes ALTER COLUMN id SET DEFAULT nextval('planner_notes_id_seq'::regclass);
+ALTER TABLE ONLY public.planner_notes ALTER COLUMN id SET DEFAULT nextval('public.planner_notes_id_seq'::regclass);
 
 
 --
 -- Name: planner_overrides id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY planner_overrides ALTER COLUMN id SET DEFAULT nextval('planner_overrides_id_seq'::regclass);
+ALTER TABLE ONLY public.planner_overrides ALTER COLUMN id SET DEFAULT nextval('public.planner_overrides_id_seq'::regclass);
 
 
 --
 -- Name: plugin_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY plugin_settings ALTER COLUMN id SET DEFAULT nextval('plugin_settings_id_seq'::regclass);
+ALTER TABLE ONLY public.plugin_settings ALTER COLUMN id SET DEFAULT nextval('public.plugin_settings_id_seq'::regclass);
 
 
 --
 -- Name: polling_poll_choices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY polling_poll_choices ALTER COLUMN id SET DEFAULT nextval('polling_poll_choices_id_seq'::regclass);
+ALTER TABLE ONLY public.polling_poll_choices ALTER COLUMN id SET DEFAULT nextval('public.polling_poll_choices_id_seq'::regclass);
 
 
 --
 -- Name: polling_poll_sessions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY polling_poll_sessions ALTER COLUMN id SET DEFAULT nextval('polling_poll_sessions_id_seq'::regclass);
+ALTER TABLE ONLY public.polling_poll_sessions ALTER COLUMN id SET DEFAULT nextval('public.polling_poll_sessions_id_seq'::regclass);
 
 
 --
 -- Name: polling_poll_submissions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY polling_poll_submissions ALTER COLUMN id SET DEFAULT nextval('polling_poll_submissions_id_seq'::regclass);
+ALTER TABLE ONLY public.polling_poll_submissions ALTER COLUMN id SET DEFAULT nextval('public.polling_poll_submissions_id_seq'::regclass);
 
 
 --
 -- Name: polling_polls id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY polling_polls ALTER COLUMN id SET DEFAULT nextval('polling_polls_id_seq'::regclass);
+ALTER TABLE ONLY public.polling_polls ALTER COLUMN id SET DEFAULT nextval('public.polling_polls_id_seq'::regclass);
 
 
 --
 -- Name: profiles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY profiles ALTER COLUMN id SET DEFAULT nextval('profiles_id_seq'::regclass);
+ALTER TABLE ONLY public.profiles ALTER COLUMN id SET DEFAULT nextval('public.profiles_id_seq'::regclass);
 
 
 --
 -- Name: progresses id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY progresses ALTER COLUMN id SET DEFAULT nextval('progresses_id_seq'::regclass);
+ALTER TABLE ONLY public.progresses ALTER COLUMN id SET DEFAULT nextval('public.progresses_id_seq'::regclass);
 
 
 --
 -- Name: pseudonyms id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pseudonyms ALTER COLUMN id SET DEFAULT nextval('pseudonyms_id_seq'::regclass);
+ALTER TABLE ONLY public.pseudonyms ALTER COLUMN id SET DEFAULT nextval('public.pseudonyms_id_seq'::regclass);
 
 
 --
 -- Name: purgatories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY purgatories ALTER COLUMN id SET DEFAULT nextval('purgatories_id_seq'::regclass);
+ALTER TABLE ONLY public.purgatories ALTER COLUMN id SET DEFAULT nextval('public.purgatories_id_seq'::regclass);
 
 
 --
 -- Name: quiz_groups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_groups ALTER COLUMN id SET DEFAULT nextval('quiz_groups_id_seq'::regclass);
+ALTER TABLE ONLY public.quiz_groups ALTER COLUMN id SET DEFAULT nextval('public.quiz_groups_id_seq'::regclass);
 
 
 --
 -- Name: quiz_question_regrades id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_question_regrades ALTER COLUMN id SET DEFAULT nextval('quiz_question_regrades_id_seq'::regclass);
+ALTER TABLE ONLY public.quiz_question_regrades ALTER COLUMN id SET DEFAULT nextval('public.quiz_question_regrades_id_seq'::regclass);
 
 
 --
 -- Name: quiz_questions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_questions ALTER COLUMN id SET DEFAULT nextval('quiz_questions_id_seq'::regclass);
+ALTER TABLE ONLY public.quiz_questions ALTER COLUMN id SET DEFAULT nextval('public.quiz_questions_id_seq'::regclass);
 
 
 --
 -- Name: quiz_regrade_runs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_regrade_runs ALTER COLUMN id SET DEFAULT nextval('quiz_regrade_runs_id_seq'::regclass);
+ALTER TABLE ONLY public.quiz_regrade_runs ALTER COLUMN id SET DEFAULT nextval('public.quiz_regrade_runs_id_seq'::regclass);
 
 
 --
 -- Name: quiz_regrades id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_regrades ALTER COLUMN id SET DEFAULT nextval('quiz_regrades_id_seq'::regclass);
+ALTER TABLE ONLY public.quiz_regrades ALTER COLUMN id SET DEFAULT nextval('public.quiz_regrades_id_seq'::regclass);
 
 
 --
 -- Name: quiz_statistics id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_statistics ALTER COLUMN id SET DEFAULT nextval('quiz_statistics_id_seq'::regclass);
+ALTER TABLE ONLY public.quiz_statistics ALTER COLUMN id SET DEFAULT nextval('public.quiz_statistics_id_seq'::regclass);
 
 
 --
 -- Name: quiz_submission_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_submission_events ALTER COLUMN id SET DEFAULT nextval('quiz_submission_events_id_seq'::regclass);
+ALTER TABLE ONLY public.quiz_submission_events ALTER COLUMN id SET DEFAULT nextval('public.quiz_submission_events_id_seq'::regclass);
 
 
 --
 -- Name: quiz_submission_snapshots id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_submission_snapshots ALTER COLUMN id SET DEFAULT nextval('quiz_submission_snapshots_id_seq'::regclass);
+ALTER TABLE ONLY public.quiz_submission_snapshots ALTER COLUMN id SET DEFAULT nextval('public.quiz_submission_snapshots_id_seq'::regclass);
 
 
 --
 -- Name: quiz_submissions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_submissions ALTER COLUMN id SET DEFAULT nextval('quiz_submissions_id_seq'::regclass);
+ALTER TABLE ONLY public.quiz_submissions ALTER COLUMN id SET DEFAULT nextval('public.quiz_submissions_id_seq'::regclass);
 
 
 --
 -- Name: quizzes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quizzes ALTER COLUMN id SET DEFAULT nextval('quizzes_id_seq'::regclass);
+ALTER TABLE ONLY public.quizzes ALTER COLUMN id SET DEFAULT nextval('public.quizzes_id_seq'::regclass);
 
 
 --
 -- Name: report_snapshots id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY report_snapshots ALTER COLUMN id SET DEFAULT nextval('report_snapshots_id_seq'::regclass);
+ALTER TABLE ONLY public.report_snapshots ALTER COLUMN id SET DEFAULT nextval('public.report_snapshots_id_seq'::regclass);
 
 
 --
 -- Name: role_overrides id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY role_overrides ALTER COLUMN id SET DEFAULT nextval('role_overrides_id_seq'::regclass);
+ALTER TABLE ONLY public.role_overrides ALTER COLUMN id SET DEFAULT nextval('public.role_overrides_id_seq'::regclass);
 
 
 --
 -- Name: roles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
+ALTER TABLE ONLY public.roles ALTER COLUMN id SET DEFAULT nextval('public.roles_id_seq'::regclass);
 
 
 --
 -- Name: rubric_assessments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY rubric_assessments ALTER COLUMN id SET DEFAULT nextval('rubric_assessments_id_seq'::regclass);
+ALTER TABLE ONLY public.rubric_assessments ALTER COLUMN id SET DEFAULT nextval('public.rubric_assessments_id_seq'::regclass);
 
 
 --
 -- Name: rubric_associations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY rubric_associations ALTER COLUMN id SET DEFAULT nextval('rubric_associations_id_seq'::regclass);
+ALTER TABLE ONLY public.rubric_associations ALTER COLUMN id SET DEFAULT nextval('public.rubric_associations_id_seq'::regclass);
 
 
 --
 -- Name: rubrics id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY rubrics ALTER COLUMN id SET DEFAULT nextval('rubrics_id_seq'::regclass);
+ALTER TABLE ONLY public.rubrics ALTER COLUMN id SET DEFAULT nextval('public.rubrics_id_seq'::regclass);
 
 
 --
 -- Name: scores id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY scores ALTER COLUMN id SET DEFAULT nextval('scores_id_seq'::regclass);
+ALTER TABLE ONLY public.scores ALTER COLUMN id SET DEFAULT nextval('public.scores_id_seq'::regclass);
 
 
 --
 -- Name: scribd_mime_types id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY scribd_mime_types ALTER COLUMN id SET DEFAULT nextval('scribd_mime_types_id_seq'::regclass);
+ALTER TABLE ONLY public.scribd_mime_types ALTER COLUMN id SET DEFAULT nextval('public.scribd_mime_types_id_seq'::regclass);
 
 
 --
 -- Name: session_persistence_tokens id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY session_persistence_tokens ALTER COLUMN id SET DEFAULT nextval('session_persistence_tokens_id_seq'::regclass);
+ALTER TABLE ONLY public.session_persistence_tokens ALTER COLUMN id SET DEFAULT nextval('public.session_persistence_tokens_id_seq'::regclass);
 
 
 --
 -- Name: sessions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sessions ALTER COLUMN id SET DEFAULT nextval('sessions_id_seq'::regclass);
+ALTER TABLE ONLY public.sessions ALTER COLUMN id SET DEFAULT nextval('public.sessions_id_seq'::regclass);
 
 
 --
 -- Name: settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY settings ALTER COLUMN id SET DEFAULT nextval('settings_id_seq'::regclass);
+ALTER TABLE ONLY public.settings ALTER COLUMN id SET DEFAULT nextval('public.settings_id_seq'::regclass);
 
 
 --
 -- Name: shared_brand_configs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY shared_brand_configs ALTER COLUMN id SET DEFAULT nextval('shared_brand_configs_id_seq'::regclass);
+ALTER TABLE ONLY public.shared_brand_configs ALTER COLUMN id SET DEFAULT nextval('public.shared_brand_configs_id_seq'::regclass);
 
 
 --
 -- Name: sis_batch_error_files id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sis_batch_error_files ALTER COLUMN id SET DEFAULT nextval('sis_batch_error_files_id_seq'::regclass);
+ALTER TABLE ONLY public.sis_batch_error_files ALTER COLUMN id SET DEFAULT nextval('public.sis_batch_error_files_id_seq'::regclass);
 
 
 --
 -- Name: sis_batches id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sis_batches ALTER COLUMN id SET DEFAULT nextval('sis_batches_id_seq'::regclass);
+ALTER TABLE ONLY public.sis_batches ALTER COLUMN id SET DEFAULT nextval('public.sis_batches_id_seq'::regclass);
 
 
 --
 -- Name: sis_post_grades_statuses id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sis_post_grades_statuses ALTER COLUMN id SET DEFAULT nextval('sis_post_grades_statuses_id_seq'::regclass);
+ALTER TABLE ONLY public.sis_post_grades_statuses ALTER COLUMN id SET DEFAULT nextval('public.sis_post_grades_statuses_id_seq'::regclass);
 
 
 --
 -- Name: stream_item_instances id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY stream_item_instances ALTER COLUMN id SET DEFAULT nextval('stream_item_instances_id_seq'::regclass);
+ALTER TABLE ONLY public.stream_item_instances ALTER COLUMN id SET DEFAULT nextval('public.stream_item_instances_id_seq'::regclass);
 
 
 --
 -- Name: stream_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY stream_items ALTER COLUMN id SET DEFAULT nextval('stream_items_id_seq'::regclass);
+ALTER TABLE ONLY public.stream_items ALTER COLUMN id SET DEFAULT nextval('public.stream_items_id_seq'::regclass);
 
 
 --
 -- Name: submission_comments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submission_comments ALTER COLUMN id SET DEFAULT nextval('submission_comments_id_seq'::regclass);
+ALTER TABLE ONLY public.submission_comments ALTER COLUMN id SET DEFAULT nextval('public.submission_comments_id_seq'::regclass);
 
 
 --
 -- Name: submission_versions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submission_versions ALTER COLUMN id SET DEFAULT nextval('submission_versions_id_seq'::regclass);
+ALTER TABLE ONLY public.submission_versions ALTER COLUMN id SET DEFAULT nextval('public.submission_versions_id_seq'::regclass);
 
 
 --
 -- Name: submissions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submissions ALTER COLUMN id SET DEFAULT nextval('submissions_id_seq'::regclass);
+ALTER TABLE ONLY public.submissions ALTER COLUMN id SET DEFAULT nextval('public.submissions_id_seq'::regclass);
 
 
 --
 -- Name: switchman_shards id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY switchman_shards ALTER COLUMN id SET DEFAULT nextval('switchman_shards_id_seq'::regclass);
+ALTER TABLE ONLY public.switchman_shards ALTER COLUMN id SET DEFAULT nextval('public.switchman_shards_id_seq'::regclass);
 
 
 --
 -- Name: thumbnails id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY thumbnails ALTER COLUMN id SET DEFAULT nextval('thumbnails_id_seq'::regclass);
+ALTER TABLE ONLY public.thumbnails ALTER COLUMN id SET DEFAULT nextval('public.thumbnails_id_seq'::regclass);
 
 
 --
 -- Name: usage_rights id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY usage_rights ALTER COLUMN id SET DEFAULT nextval('usage_rights_id_seq'::regclass);
+ALTER TABLE ONLY public.usage_rights ALTER COLUMN id SET DEFAULT nextval('public.usage_rights_id_seq'::regclass);
 
 
 --
 -- Name: user_account_associations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_account_associations ALTER COLUMN id SET DEFAULT nextval('user_account_associations_id_seq'::regclass);
+ALTER TABLE ONLY public.user_account_associations ALTER COLUMN id SET DEFAULT nextval('public.user_account_associations_id_seq'::regclass);
 
 
 --
 -- Name: user_merge_data id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_merge_data ALTER COLUMN id SET DEFAULT nextval('user_merge_data_id_seq'::regclass);
+ALTER TABLE ONLY public.user_merge_data ALTER COLUMN id SET DEFAULT nextval('public.user_merge_data_id_seq'::regclass);
 
 
 --
 -- Name: user_merge_data_records id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_merge_data_records ALTER COLUMN id SET DEFAULT nextval('user_merge_data_records_id_seq'::regclass);
+ALTER TABLE ONLY public.user_merge_data_records ALTER COLUMN id SET DEFAULT nextval('public.user_merge_data_records_id_seq'::regclass);
 
 
 --
 -- Name: user_notes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_notes ALTER COLUMN id SET DEFAULT nextval('user_notes_id_seq'::regclass);
+ALTER TABLE ONLY public.user_notes ALTER COLUMN id SET DEFAULT nextval('public.user_notes_id_seq'::regclass);
 
 
 --
 -- Name: user_observers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_observers ALTER COLUMN id SET DEFAULT nextval('user_observers_id_seq'::regclass);
+ALTER TABLE ONLY public.user_observers ALTER COLUMN id SET DEFAULT nextval('public.user_observers_id_seq'::regclass);
 
 
 --
 -- Name: user_profile_links id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_profile_links ALTER COLUMN id SET DEFAULT nextval('user_profile_links_id_seq'::regclass);
+ALTER TABLE ONLY public.user_profile_links ALTER COLUMN id SET DEFAULT nextval('public.user_profile_links_id_seq'::regclass);
 
 
 --
 -- Name: user_profiles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_profiles ALTER COLUMN id SET DEFAULT nextval('user_profiles_id_seq'::regclass);
+ALTER TABLE ONLY public.user_profiles ALTER COLUMN id SET DEFAULT nextval('public.user_profiles_id_seq'::regclass);
 
 
 --
 -- Name: user_services id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_services ALTER COLUMN id SET DEFAULT nextval('user_services_id_seq'::regclass);
+ALTER TABLE ONLY public.user_services ALTER COLUMN id SET DEFAULT nextval('public.user_services_id_seq'::regclass);
 
 
 --
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
 
 
 --
 -- Name: versions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY versions ALTER COLUMN id SET DEFAULT nextval('versions_id_seq'::regclass);
+ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.versions_id_seq'::regclass);
 
 
 --
 -- Name: web_conference_participants id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY web_conference_participants ALTER COLUMN id SET DEFAULT nextval('web_conference_participants_id_seq'::regclass);
+ALTER TABLE ONLY public.web_conference_participants ALTER COLUMN id SET DEFAULT nextval('public.web_conference_participants_id_seq'::regclass);
 
 
 --
 -- Name: web_conferences id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY web_conferences ALTER COLUMN id SET DEFAULT nextval('web_conferences_id_seq'::regclass);
+ALTER TABLE ONLY public.web_conferences ALTER COLUMN id SET DEFAULT nextval('public.web_conferences_id_seq'::regclass);
 
 
 --
 -- Name: wiki_pages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY wiki_pages ALTER COLUMN id SET DEFAULT nextval('wiki_pages_id_seq'::regclass);
+ALTER TABLE ONLY public.wiki_pages ALTER COLUMN id SET DEFAULT nextval('public.wiki_pages_id_seq'::regclass);
 
 
 --
 -- Name: wikis id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY wikis ALTER COLUMN id SET DEFAULT nextval('wikis_id_seq'::regclass);
+ALTER TABLE ONLY public.wikis ALTER COLUMN id SET DEFAULT nextval('public.wikis_id_seq'::regclass);
 
 
 --
 -- Name: abstract_courses abstract_courses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY abstract_courses
+ALTER TABLE ONLY public.abstract_courses
     ADD CONSTRAINT abstract_courses_pkey PRIMARY KEY (id);
 
 
@@ -8932,7 +8710,7 @@ ALTER TABLE ONLY abstract_courses
 -- Name: access_tokens access_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY access_tokens
+ALTER TABLE ONLY public.access_tokens
     ADD CONSTRAINT access_tokens_pkey PRIMARY KEY (id);
 
 
@@ -8940,7 +8718,7 @@ ALTER TABLE ONLY access_tokens
 -- Name: account_authorization_configs account_authorization_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_authorization_configs
+ALTER TABLE ONLY public.account_authorization_configs
     ADD CONSTRAINT account_authorization_configs_pkey PRIMARY KEY (id);
 
 
@@ -8948,7 +8726,7 @@ ALTER TABLE ONLY account_authorization_configs
 -- Name: account_notification_roles account_notification_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_notification_roles
+ALTER TABLE ONLY public.account_notification_roles
     ADD CONSTRAINT account_notification_roles_pkey PRIMARY KEY (id);
 
 
@@ -8956,7 +8734,7 @@ ALTER TABLE ONLY account_notification_roles
 -- Name: account_notifications account_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_notifications
+ALTER TABLE ONLY public.account_notifications
     ADD CONSTRAINT account_notifications_pkey PRIMARY KEY (id);
 
 
@@ -8964,7 +8742,7 @@ ALTER TABLE ONLY account_notifications
 -- Name: account_reports account_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_reports
+ALTER TABLE ONLY public.account_reports
     ADD CONSTRAINT account_reports_pkey PRIMARY KEY (id);
 
 
@@ -8972,7 +8750,7 @@ ALTER TABLE ONLY account_reports
 -- Name: account_users account_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_users
+ALTER TABLE ONLY public.account_users
     ADD CONSTRAINT account_users_pkey PRIMARY KEY (id);
 
 
@@ -8980,7 +8758,7 @@ ALTER TABLE ONLY account_users
 -- Name: accounts accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY accounts
+ALTER TABLE ONLY public.accounts
     ADD CONSTRAINT accounts_pkey PRIMARY KEY (id);
 
 
@@ -8988,7 +8766,7 @@ ALTER TABLE ONLY accounts
 -- Name: alert_criteria alert_criteria_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY alert_criteria
+ALTER TABLE ONLY public.alert_criteria
     ADD CONSTRAINT alert_criteria_pkey PRIMARY KEY (id);
 
 
@@ -8996,7 +8774,7 @@ ALTER TABLE ONLY alert_criteria
 -- Name: alerts alerts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY alerts
+ALTER TABLE ONLY public.alerts
     ADD CONSTRAINT alerts_pkey PRIMARY KEY (id);
 
 
@@ -9004,7 +8782,7 @@ ALTER TABLE ONLY alerts
 -- Name: appointment_group_contexts appointment_group_contexts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY appointment_group_contexts
+ALTER TABLE ONLY public.appointment_group_contexts
     ADD CONSTRAINT appointment_group_contexts_pkey PRIMARY KEY (id);
 
 
@@ -9012,7 +8790,7 @@ ALTER TABLE ONLY appointment_group_contexts
 -- Name: appointment_group_sub_contexts appointment_group_sub_contexts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY appointment_group_sub_contexts
+ALTER TABLE ONLY public.appointment_group_sub_contexts
     ADD CONSTRAINT appointment_group_sub_contexts_pkey PRIMARY KEY (id);
 
 
@@ -9020,7 +8798,7 @@ ALTER TABLE ONLY appointment_group_sub_contexts
 -- Name: appointment_groups appointment_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY appointment_groups
+ALTER TABLE ONLY public.appointment_groups
     ADD CONSTRAINT appointment_groups_pkey PRIMARY KEY (id);
 
 
@@ -9028,7 +8806,7 @@ ALTER TABLE ONLY appointment_groups
 -- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY ar_internal_metadata
+ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
 
 
@@ -9036,7 +8814,7 @@ ALTER TABLE ONLY ar_internal_metadata
 -- Name: assessment_question_bank_users assessment_question_bank_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assessment_question_bank_users
+ALTER TABLE ONLY public.assessment_question_bank_users
     ADD CONSTRAINT assessment_question_bank_users_pkey PRIMARY KEY (id);
 
 
@@ -9044,7 +8822,7 @@ ALTER TABLE ONLY assessment_question_bank_users
 -- Name: assessment_question_banks assessment_question_banks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assessment_question_banks
+ALTER TABLE ONLY public.assessment_question_banks
     ADD CONSTRAINT assessment_question_banks_pkey PRIMARY KEY (id);
 
 
@@ -9052,7 +8830,7 @@ ALTER TABLE ONLY assessment_question_banks
 -- Name: assessment_questions assessment_questions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assessment_questions
+ALTER TABLE ONLY public.assessment_questions
     ADD CONSTRAINT assessment_questions_pkey PRIMARY KEY (id);
 
 
@@ -9060,7 +8838,7 @@ ALTER TABLE ONLY assessment_questions
 -- Name: assessment_requests assessment_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assessment_requests
+ALTER TABLE ONLY public.assessment_requests
     ADD CONSTRAINT assessment_requests_pkey PRIMARY KEY (id);
 
 
@@ -9068,7 +8846,7 @@ ALTER TABLE ONLY assessment_requests
 -- Name: asset_user_accesses asset_user_accesses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY asset_user_accesses
+ALTER TABLE ONLY public.asset_user_accesses
     ADD CONSTRAINT asset_user_accesses_pkey PRIMARY KEY (id);
 
 
@@ -9076,7 +8854,7 @@ ALTER TABLE ONLY asset_user_accesses
 -- Name: assignment_configuration_tool_lookups assignment_configuration_tool_lookups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignment_configuration_tool_lookups
+ALTER TABLE ONLY public.assignment_configuration_tool_lookups
     ADD CONSTRAINT assignment_configuration_tool_lookups_pkey PRIMARY KEY (id);
 
 
@@ -9084,7 +8862,7 @@ ALTER TABLE ONLY assignment_configuration_tool_lookups
 -- Name: assignment_groups assignment_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignment_groups
+ALTER TABLE ONLY public.assignment_groups
     ADD CONSTRAINT assignment_groups_pkey PRIMARY KEY (id);
 
 
@@ -9092,7 +8870,7 @@ ALTER TABLE ONLY assignment_groups
 -- Name: assignment_override_students assignment_override_students_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignment_override_students
+ALTER TABLE ONLY public.assignment_override_students
     ADD CONSTRAINT assignment_override_students_pkey PRIMARY KEY (id);
 
 
@@ -9100,7 +8878,7 @@ ALTER TABLE ONLY assignment_override_students
 -- Name: assignment_overrides assignment_overrides_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignment_overrides
+ALTER TABLE ONLY public.assignment_overrides
     ADD CONSTRAINT assignment_overrides_pkey PRIMARY KEY (id);
 
 
@@ -9108,7 +8886,7 @@ ALTER TABLE ONLY assignment_overrides
 -- Name: assignments assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignments
+ALTER TABLE ONLY public.assignments
     ADD CONSTRAINT assignments_pkey PRIMARY KEY (id);
 
 
@@ -9116,7 +8894,7 @@ ALTER TABLE ONLY assignments
 -- Name: attachment_associations attachment_associations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY attachment_associations
+ALTER TABLE ONLY public.attachment_associations
     ADD CONSTRAINT attachment_associations_pkey PRIMARY KEY (id);
 
 
@@ -9124,7 +8902,7 @@ ALTER TABLE ONLY attachment_associations
 -- Name: attachments attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY attachments
+ALTER TABLE ONLY public.attachments
     ADD CONSTRAINT attachments_pkey PRIMARY KEY (id);
 
 
@@ -9132,7 +8910,7 @@ ALTER TABLE ONLY attachments
 -- Name: bookmarks_bookmarks bookmarks_bookmarks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY bookmarks_bookmarks
+ALTER TABLE ONLY public.bookmarks_bookmarks
     ADD CONSTRAINT bookmarks_bookmarks_pkey PRIMARY KEY (id);
 
 
@@ -9140,23 +8918,15 @@ ALTER TABLE ONLY bookmarks_bookmarks
 -- Name: brand_configs brand_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY brand_configs
+ALTER TABLE ONLY public.brand_configs
     ADD CONSTRAINT brand_configs_pkey PRIMARY KEY (md5);
-
-
---
--- Name: cached_grade_distributions cached_grade_distributions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY cached_grade_distributions
-    ADD CONSTRAINT cached_grade_distributions_pkey PRIMARY KEY (course_id);
 
 
 --
 -- Name: calendar_events calendar_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY calendar_events
+ALTER TABLE ONLY public.calendar_events
     ADD CONSTRAINT calendar_events_pkey PRIMARY KEY (id);
 
 
@@ -9164,7 +8934,7 @@ ALTER TABLE ONLY calendar_events
 -- Name: canvadocs canvadocs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY canvadocs
+ALTER TABLE ONLY public.canvadocs
     ADD CONSTRAINT canvadocs_pkey PRIMARY KEY (id);
 
 
@@ -9172,7 +8942,7 @@ ALTER TABLE ONLY canvadocs
 -- Name: canvadocs_submissions canvadocs_submissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY canvadocs_submissions
+ALTER TABLE ONLY public.canvadocs_submissions
     ADD CONSTRAINT canvadocs_submissions_pkey PRIMARY KEY (id);
 
 
@@ -9180,7 +8950,7 @@ ALTER TABLE ONLY canvadocs_submissions
 -- Name: cloned_items cloned_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY cloned_items
+ALTER TABLE ONLY public.cloned_items
     ADD CONSTRAINT cloned_items_pkey PRIMARY KEY (id);
 
 
@@ -9188,7 +8958,7 @@ ALTER TABLE ONLY cloned_items
 -- Name: collaborations collaborations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collaborations
+ALTER TABLE ONLY public.collaborations
     ADD CONSTRAINT collaborations_pkey PRIMARY KEY (id);
 
 
@@ -9196,7 +8966,7 @@ ALTER TABLE ONLY collaborations
 -- Name: collaborators collaborators_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collaborators
+ALTER TABLE ONLY public.collaborators
     ADD CONSTRAINT collaborators_pkey PRIMARY KEY (id);
 
 
@@ -9204,7 +8974,7 @@ ALTER TABLE ONLY collaborators
 -- Name: communication_channels communication_channels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY communication_channels
+ALTER TABLE ONLY public.communication_channels
     ADD CONSTRAINT communication_channels_pkey PRIMARY KEY (id);
 
 
@@ -9212,7 +8982,7 @@ ALTER TABLE ONLY communication_channels
 -- Name: content_exports content_exports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_exports
+ALTER TABLE ONLY public.content_exports
     ADD CONSTRAINT content_exports_pkey PRIMARY KEY (id);
 
 
@@ -9220,7 +8990,7 @@ ALTER TABLE ONLY content_exports
 -- Name: content_migrations content_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_migrations
+ALTER TABLE ONLY public.content_migrations
     ADD CONSTRAINT content_migrations_pkey PRIMARY KEY (id);
 
 
@@ -9228,7 +8998,7 @@ ALTER TABLE ONLY content_migrations
 -- Name: content_participation_counts content_participation_counts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_participation_counts
+ALTER TABLE ONLY public.content_participation_counts
     ADD CONSTRAINT content_participation_counts_pkey PRIMARY KEY (id);
 
 
@@ -9236,7 +9006,7 @@ ALTER TABLE ONLY content_participation_counts
 -- Name: content_participations content_participations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_participations
+ALTER TABLE ONLY public.content_participations
     ADD CONSTRAINT content_participations_pkey PRIMARY KEY (id);
 
 
@@ -9244,7 +9014,7 @@ ALTER TABLE ONLY content_participations
 -- Name: content_tags content_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_tags
+ALTER TABLE ONLY public.content_tags
     ADD CONSTRAINT content_tags_pkey PRIMARY KEY (id);
 
 
@@ -9252,7 +9022,7 @@ ALTER TABLE ONLY content_tags
 -- Name: context_external_tool_assignment_lookups context_external_tool_assignment_lookups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_external_tool_assignment_lookups
+ALTER TABLE ONLY public.context_external_tool_assignment_lookups
     ADD CONSTRAINT context_external_tool_assignment_lookups_pkey PRIMARY KEY (id);
 
 
@@ -9260,7 +9030,7 @@ ALTER TABLE ONLY context_external_tool_assignment_lookups
 -- Name: context_external_tool_placements context_external_tool_placements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_external_tool_placements
+ALTER TABLE ONLY public.context_external_tool_placements
     ADD CONSTRAINT context_external_tool_placements_pkey PRIMARY KEY (id);
 
 
@@ -9268,7 +9038,7 @@ ALTER TABLE ONLY context_external_tool_placements
 -- Name: context_external_tools context_external_tools_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_external_tools
+ALTER TABLE ONLY public.context_external_tools
     ADD CONSTRAINT context_external_tools_pkey PRIMARY KEY (id);
 
 
@@ -9276,7 +9046,7 @@ ALTER TABLE ONLY context_external_tools
 -- Name: context_module_progressions context_module_progressions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_module_progressions
+ALTER TABLE ONLY public.context_module_progressions
     ADD CONSTRAINT context_module_progressions_pkey PRIMARY KEY (id);
 
 
@@ -9284,7 +9054,7 @@ ALTER TABLE ONLY context_module_progressions
 -- Name: context_modules context_modules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_modules
+ALTER TABLE ONLY public.context_modules
     ADD CONSTRAINT context_modules_pkey PRIMARY KEY (id);
 
 
@@ -9292,7 +9062,7 @@ ALTER TABLE ONLY context_modules
 -- Name: conversation_batches conversation_batches_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY conversation_batches
+ALTER TABLE ONLY public.conversation_batches
     ADD CONSTRAINT conversation_batches_pkey PRIMARY KEY (id);
 
 
@@ -9300,7 +9070,7 @@ ALTER TABLE ONLY conversation_batches
 -- Name: conversation_message_participants conversation_message_participants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY conversation_message_participants
+ALTER TABLE ONLY public.conversation_message_participants
     ADD CONSTRAINT conversation_message_participants_pkey PRIMARY KEY (id);
 
 
@@ -9308,7 +9078,7 @@ ALTER TABLE ONLY conversation_message_participants
 -- Name: conversation_messages conversation_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY conversation_messages
+ALTER TABLE ONLY public.conversation_messages
     ADD CONSTRAINT conversation_messages_pkey PRIMARY KEY (id);
 
 
@@ -9316,7 +9086,7 @@ ALTER TABLE ONLY conversation_messages
 -- Name: conversation_participants conversation_participants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY conversation_participants
+ALTER TABLE ONLY public.conversation_participants
     ADD CONSTRAINT conversation_participants_pkey PRIMARY KEY (id);
 
 
@@ -9324,7 +9094,7 @@ ALTER TABLE ONLY conversation_participants
 -- Name: conversations conversations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY conversations
+ALTER TABLE ONLY public.conversations
     ADD CONSTRAINT conversations_pkey PRIMARY KEY (id);
 
 
@@ -9332,7 +9102,7 @@ ALTER TABLE ONLY conversations
 -- Name: course_account_associations course_account_associations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY course_account_associations
+ALTER TABLE ONLY public.course_account_associations
     ADD CONSTRAINT course_account_associations_pkey PRIMARY KEY (id);
 
 
@@ -9340,7 +9110,7 @@ ALTER TABLE ONLY course_account_associations
 -- Name: course_sections course_sections_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY course_sections
+ALTER TABLE ONLY public.course_sections
     ADD CONSTRAINT course_sections_pkey PRIMARY KEY (id);
 
 
@@ -9348,7 +9118,7 @@ ALTER TABLE ONLY course_sections
 -- Name: courses courses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY courses
+ALTER TABLE ONLY public.courses
     ADD CONSTRAINT courses_pkey PRIMARY KEY (id);
 
 
@@ -9356,7 +9126,7 @@ ALTER TABLE ONLY courses
 -- Name: crocodoc_documents crocodoc_documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY crocodoc_documents
+ALTER TABLE ONLY public.crocodoc_documents
     ADD CONSTRAINT crocodoc_documents_pkey PRIMARY KEY (id);
 
 
@@ -9364,7 +9134,7 @@ ALTER TABLE ONLY crocodoc_documents
 -- Name: custom_data custom_data_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY custom_data
+ALTER TABLE ONLY public.custom_data
     ADD CONSTRAINT custom_data_pkey PRIMARY KEY (id);
 
 
@@ -9372,7 +9142,7 @@ ALTER TABLE ONLY custom_data
 -- Name: custom_gradebook_column_data custom_gradebook_column_data_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY custom_gradebook_column_data
+ALTER TABLE ONLY public.custom_gradebook_column_data
     ADD CONSTRAINT custom_gradebook_column_data_pkey PRIMARY KEY (id);
 
 
@@ -9380,7 +9150,7 @@ ALTER TABLE ONLY custom_gradebook_column_data
 -- Name: custom_gradebook_columns custom_gradebook_columns_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY custom_gradebook_columns
+ALTER TABLE ONLY public.custom_gradebook_columns
     ADD CONSTRAINT custom_gradebook_columns_pkey PRIMARY KEY (id);
 
 
@@ -9388,7 +9158,7 @@ ALTER TABLE ONLY custom_gradebook_columns
 -- Name: delayed_jobs delayed_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY delayed_jobs
+ALTER TABLE ONLY public.delayed_jobs
     ADD CONSTRAINT delayed_jobs_pkey PRIMARY KEY (id);
 
 
@@ -9396,7 +9166,7 @@ ALTER TABLE ONLY delayed_jobs
 -- Name: delayed_messages delayed_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY delayed_messages
+ALTER TABLE ONLY public.delayed_messages
     ADD CONSTRAINT delayed_messages_pkey PRIMARY KEY (id);
 
 
@@ -9404,7 +9174,7 @@ ALTER TABLE ONLY delayed_messages
 -- Name: delayed_notifications delayed_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY delayed_notifications
+ALTER TABLE ONLY public.delayed_notifications
     ADD CONSTRAINT delayed_notifications_pkey PRIMARY KEY (id);
 
 
@@ -9412,7 +9182,7 @@ ALTER TABLE ONLY delayed_notifications
 -- Name: developer_keys developer_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY developer_keys
+ALTER TABLE ONLY public.developer_keys
     ADD CONSTRAINT developer_keys_pkey PRIMARY KEY (id);
 
 
@@ -9420,7 +9190,7 @@ ALTER TABLE ONLY developer_keys
 -- Name: discussion_entries discussion_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_entries
+ALTER TABLE ONLY public.discussion_entries
     ADD CONSTRAINT discussion_entries_pkey PRIMARY KEY (id);
 
 
@@ -9428,7 +9198,7 @@ ALTER TABLE ONLY discussion_entries
 -- Name: discussion_entry_participants discussion_entry_participants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_entry_participants
+ALTER TABLE ONLY public.discussion_entry_participants
     ADD CONSTRAINT discussion_entry_participants_pkey PRIMARY KEY (id);
 
 
@@ -9436,7 +9206,7 @@ ALTER TABLE ONLY discussion_entry_participants
 -- Name: discussion_topic_materialized_views discussion_topic_materialized_views_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topic_materialized_views
+ALTER TABLE ONLY public.discussion_topic_materialized_views
     ADD CONSTRAINT discussion_topic_materialized_views_pkey PRIMARY KEY (discussion_topic_id);
 
 
@@ -9444,7 +9214,7 @@ ALTER TABLE ONLY discussion_topic_materialized_views
 -- Name: discussion_topic_participants discussion_topic_participants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topic_participants
+ALTER TABLE ONLY public.discussion_topic_participants
     ADD CONSTRAINT discussion_topic_participants_pkey PRIMARY KEY (id);
 
 
@@ -9452,7 +9222,7 @@ ALTER TABLE ONLY discussion_topic_participants
 -- Name: discussion_topics discussion_topics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topics
+ALTER TABLE ONLY public.discussion_topics
     ADD CONSTRAINT discussion_topics_pkey PRIMARY KEY (id);
 
 
@@ -9460,7 +9230,7 @@ ALTER TABLE ONLY discussion_topics
 -- Name: enrollment_dates_overrides enrollment_dates_overrides_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollment_dates_overrides
+ALTER TABLE ONLY public.enrollment_dates_overrides
     ADD CONSTRAINT enrollment_dates_overrides_pkey PRIMARY KEY (id);
 
 
@@ -9468,7 +9238,7 @@ ALTER TABLE ONLY enrollment_dates_overrides
 -- Name: enrollment_states enrollment_states_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollment_states
+ALTER TABLE ONLY public.enrollment_states
     ADD CONSTRAINT enrollment_states_pkey PRIMARY KEY (enrollment_id);
 
 
@@ -9476,7 +9246,7 @@ ALTER TABLE ONLY enrollment_states
 -- Name: enrollment_terms enrollment_terms_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollment_terms
+ALTER TABLE ONLY public.enrollment_terms
     ADD CONSTRAINT enrollment_terms_pkey PRIMARY KEY (id);
 
 
@@ -9484,7 +9254,7 @@ ALTER TABLE ONLY enrollment_terms
 -- Name: enrollments enrollments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollments
+ALTER TABLE ONLY public.enrollments
     ADD CONSTRAINT enrollments_pkey PRIMARY KEY (id);
 
 
@@ -9492,7 +9262,7 @@ ALTER TABLE ONLY enrollments
 -- Name: eportfolio_categories eportfolio_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY eportfolio_categories
+ALTER TABLE ONLY public.eportfolio_categories
     ADD CONSTRAINT eportfolio_categories_pkey PRIMARY KEY (id);
 
 
@@ -9500,7 +9270,7 @@ ALTER TABLE ONLY eportfolio_categories
 -- Name: eportfolio_entries eportfolio_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY eportfolio_entries
+ALTER TABLE ONLY public.eportfolio_entries
     ADD CONSTRAINT eportfolio_entries_pkey PRIMARY KEY (id);
 
 
@@ -9508,7 +9278,7 @@ ALTER TABLE ONLY eportfolio_entries
 -- Name: eportfolios eportfolios_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY eportfolios
+ALTER TABLE ONLY public.eportfolios
     ADD CONSTRAINT eportfolios_pkey PRIMARY KEY (id);
 
 
@@ -9516,7 +9286,7 @@ ALTER TABLE ONLY eportfolios
 -- Name: epub_exports epub_exports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY epub_exports
+ALTER TABLE ONLY public.epub_exports
     ADD CONSTRAINT epub_exports_pkey PRIMARY KEY (id);
 
 
@@ -9524,7 +9294,7 @@ ALTER TABLE ONLY epub_exports
 -- Name: error_reports error_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY error_reports
+ALTER TABLE ONLY public.error_reports
     ADD CONSTRAINT error_reports_pkey PRIMARY KEY (id);
 
 
@@ -9532,7 +9302,7 @@ ALTER TABLE ONLY error_reports
 -- Name: event_stream_failures event_stream_failures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY event_stream_failures
+ALTER TABLE ONLY public.event_stream_failures
     ADD CONSTRAINT event_stream_failures_pkey PRIMARY KEY (id);
 
 
@@ -9540,7 +9310,7 @@ ALTER TABLE ONLY event_stream_failures
 -- Name: external_feed_entries external_feed_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY external_feed_entries
+ALTER TABLE ONLY public.external_feed_entries
     ADD CONSTRAINT external_feed_entries_pkey PRIMARY KEY (id);
 
 
@@ -9548,7 +9318,7 @@ ALTER TABLE ONLY external_feed_entries
 -- Name: external_feeds external_feeds_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY external_feeds
+ALTER TABLE ONLY public.external_feeds
     ADD CONSTRAINT external_feeds_pkey PRIMARY KEY (id);
 
 
@@ -9556,7 +9326,7 @@ ALTER TABLE ONLY external_feeds
 -- Name: external_integration_keys external_integration_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY external_integration_keys
+ALTER TABLE ONLY public.external_integration_keys
     ADD CONSTRAINT external_integration_keys_pkey PRIMARY KEY (id);
 
 
@@ -9564,7 +9334,7 @@ ALTER TABLE ONLY external_integration_keys
 -- Name: failed_jobs failed_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY failed_jobs
+ALTER TABLE ONLY public.failed_jobs
     ADD CONSTRAINT failed_jobs_pkey PRIMARY KEY (id);
 
 
@@ -9572,7 +9342,7 @@ ALTER TABLE ONLY failed_jobs
 -- Name: favorites favorites_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY favorites
+ALTER TABLE ONLY public.favorites
     ADD CONSTRAINT favorites_pkey PRIMARY KEY (id);
 
 
@@ -9580,7 +9350,7 @@ ALTER TABLE ONLY favorites
 -- Name: feature_flags feature_flags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY feature_flags
+ALTER TABLE ONLY public.feature_flags
     ADD CONSTRAINT feature_flags_pkey PRIMARY KEY (id);
 
 
@@ -9588,7 +9358,7 @@ ALTER TABLE ONLY feature_flags
 -- Name: folders folders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY folders
+ALTER TABLE ONLY public.folders
     ADD CONSTRAINT folders_pkey PRIMARY KEY (id);
 
 
@@ -9596,7 +9366,7 @@ ALTER TABLE ONLY folders
 -- Name: gradebook_csvs gradebook_csvs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY gradebook_csvs
+ALTER TABLE ONLY public.gradebook_csvs
     ADD CONSTRAINT gradebook_csvs_pkey PRIMARY KEY (id);
 
 
@@ -9604,7 +9374,7 @@ ALTER TABLE ONLY gradebook_csvs
 -- Name: gradebook_uploads gradebook_uploads_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY gradebook_uploads
+ALTER TABLE ONLY public.gradebook_uploads
     ADD CONSTRAINT gradebook_uploads_pkey PRIMARY KEY (id);
 
 
@@ -9612,7 +9382,7 @@ ALTER TABLE ONLY gradebook_uploads
 -- Name: grading_period_groups grading_period_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY grading_period_groups
+ALTER TABLE ONLY public.grading_period_groups
     ADD CONSTRAINT grading_period_groups_pkey PRIMARY KEY (id);
 
 
@@ -9620,7 +9390,7 @@ ALTER TABLE ONLY grading_period_groups
 -- Name: grading_periods grading_periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY grading_periods
+ALTER TABLE ONLY public.grading_periods
     ADD CONSTRAINT grading_periods_pkey PRIMARY KEY (id);
 
 
@@ -9628,7 +9398,7 @@ ALTER TABLE ONLY grading_periods
 -- Name: grading_standards grading_standards_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY grading_standards
+ALTER TABLE ONLY public.grading_standards
     ADD CONSTRAINT grading_standards_pkey PRIMARY KEY (id);
 
 
@@ -9636,7 +9406,7 @@ ALTER TABLE ONLY grading_standards
 -- Name: group_categories group_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY group_categories
+ALTER TABLE ONLY public.group_categories
     ADD CONSTRAINT group_categories_pkey PRIMARY KEY (id);
 
 
@@ -9644,7 +9414,7 @@ ALTER TABLE ONLY group_categories
 -- Name: group_memberships group_memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY group_memberships
+ALTER TABLE ONLY public.group_memberships
     ADD CONSTRAINT group_memberships_pkey PRIMARY KEY (id);
 
 
@@ -9652,7 +9422,7 @@ ALTER TABLE ONLY group_memberships
 -- Name: groups groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups
+ALTER TABLE ONLY public.groups
     ADD CONSTRAINT groups_pkey PRIMARY KEY (id);
 
 
@@ -9660,7 +9430,7 @@ ALTER TABLE ONLY groups
 -- Name: ignores ignores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY ignores
+ALTER TABLE ONLY public.ignores
     ADD CONSTRAINT ignores_pkey PRIMARY KEY (id);
 
 
@@ -9668,7 +9438,7 @@ ALTER TABLE ONLY ignores
 -- Name: late_policies late_policies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY late_policies
+ALTER TABLE ONLY public.late_policies
     ADD CONSTRAINT late_policies_pkey PRIMARY KEY (id);
 
 
@@ -9676,7 +9446,7 @@ ALTER TABLE ONLY late_policies
 -- Name: learning_outcome_groups learning_outcome_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY learning_outcome_groups
+ALTER TABLE ONLY public.learning_outcome_groups
     ADD CONSTRAINT learning_outcome_groups_pkey PRIMARY KEY (id);
 
 
@@ -9684,7 +9454,7 @@ ALTER TABLE ONLY learning_outcome_groups
 -- Name: learning_outcome_question_results learning_outcome_question_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY learning_outcome_question_results
+ALTER TABLE ONLY public.learning_outcome_question_results
     ADD CONSTRAINT learning_outcome_question_results_pkey PRIMARY KEY (id);
 
 
@@ -9692,7 +9462,7 @@ ALTER TABLE ONLY learning_outcome_question_results
 -- Name: learning_outcome_results learning_outcome_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY learning_outcome_results
+ALTER TABLE ONLY public.learning_outcome_results
     ADD CONSTRAINT learning_outcome_results_pkey PRIMARY KEY (id);
 
 
@@ -9700,7 +9470,7 @@ ALTER TABLE ONLY learning_outcome_results
 -- Name: learning_outcomes learning_outcomes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY learning_outcomes
+ALTER TABLE ONLY public.learning_outcomes
     ADD CONSTRAINT learning_outcomes_pkey PRIMARY KEY (id);
 
 
@@ -9708,7 +9478,7 @@ ALTER TABLE ONLY learning_outcomes
 -- Name: live_assessments_assessments live_assessments_assessments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY live_assessments_assessments
+ALTER TABLE ONLY public.live_assessments_assessments
     ADD CONSTRAINT live_assessments_assessments_pkey PRIMARY KEY (id);
 
 
@@ -9716,7 +9486,7 @@ ALTER TABLE ONLY live_assessments_assessments
 -- Name: live_assessments_results live_assessments_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY live_assessments_results
+ALTER TABLE ONLY public.live_assessments_results
     ADD CONSTRAINT live_assessments_results_pkey PRIMARY KEY (id);
 
 
@@ -9724,7 +9494,7 @@ ALTER TABLE ONLY live_assessments_results
 -- Name: live_assessments_submissions live_assessments_submissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY live_assessments_submissions
+ALTER TABLE ONLY public.live_assessments_submissions
     ADD CONSTRAINT live_assessments_submissions_pkey PRIMARY KEY (id);
 
 
@@ -9732,7 +9502,7 @@ ALTER TABLE ONLY live_assessments_submissions
 -- Name: lti_message_handlers lti_message_handlers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_message_handlers
+ALTER TABLE ONLY public.lti_message_handlers
     ADD CONSTRAINT lti_message_handlers_pkey PRIMARY KEY (id);
 
 
@@ -9740,7 +9510,7 @@ ALTER TABLE ONLY lti_message_handlers
 -- Name: lti_product_families lti_product_families_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_product_families
+ALTER TABLE ONLY public.lti_product_families
     ADD CONSTRAINT lti_product_families_pkey PRIMARY KEY (id);
 
 
@@ -9748,7 +9518,7 @@ ALTER TABLE ONLY lti_product_families
 -- Name: lti_resource_handlers lti_resource_handlers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_resource_handlers
+ALTER TABLE ONLY public.lti_resource_handlers
     ADD CONSTRAINT lti_resource_handlers_pkey PRIMARY KEY (id);
 
 
@@ -9756,7 +9526,7 @@ ALTER TABLE ONLY lti_resource_handlers
 -- Name: lti_resource_placements lti_resource_placements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_resource_placements
+ALTER TABLE ONLY public.lti_resource_placements
     ADD CONSTRAINT lti_resource_placements_pkey PRIMARY KEY (id);
 
 
@@ -9764,7 +9534,7 @@ ALTER TABLE ONLY lti_resource_placements
 -- Name: lti_tool_consumer_profiles lti_tool_consumer_profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_tool_consumer_profiles
+ALTER TABLE ONLY public.lti_tool_consumer_profiles
     ADD CONSTRAINT lti_tool_consumer_profiles_pkey PRIMARY KEY (id);
 
 
@@ -9772,7 +9542,7 @@ ALTER TABLE ONLY lti_tool_consumer_profiles
 -- Name: lti_tool_proxies lti_tool_proxies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_tool_proxies
+ALTER TABLE ONLY public.lti_tool_proxies
     ADD CONSTRAINT lti_tool_proxies_pkey PRIMARY KEY (id);
 
 
@@ -9780,7 +9550,7 @@ ALTER TABLE ONLY lti_tool_proxies
 -- Name: lti_tool_proxy_bindings lti_tool_proxy_bindings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_tool_proxy_bindings
+ALTER TABLE ONLY public.lti_tool_proxy_bindings
     ADD CONSTRAINT lti_tool_proxy_bindings_pkey PRIMARY KEY (id);
 
 
@@ -9788,7 +9558,7 @@ ALTER TABLE ONLY lti_tool_proxy_bindings
 -- Name: lti_tool_settings lti_tool_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_tool_settings
+ALTER TABLE ONLY public.lti_tool_settings
     ADD CONSTRAINT lti_tool_settings_pkey PRIMARY KEY (id);
 
 
@@ -9796,7 +9566,7 @@ ALTER TABLE ONLY lti_tool_settings
 -- Name: master_courses_child_content_tags master_courses_child_content_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_child_content_tags
+ALTER TABLE ONLY public.master_courses_child_content_tags
     ADD CONSTRAINT master_courses_child_content_tags_pkey PRIMARY KEY (id);
 
 
@@ -9804,7 +9574,7 @@ ALTER TABLE ONLY master_courses_child_content_tags
 -- Name: master_courses_child_subscriptions master_courses_child_subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_child_subscriptions
+ALTER TABLE ONLY public.master_courses_child_subscriptions
     ADD CONSTRAINT master_courses_child_subscriptions_pkey PRIMARY KEY (id);
 
 
@@ -9812,7 +9582,7 @@ ALTER TABLE ONLY master_courses_child_subscriptions
 -- Name: master_courses_master_content_tags master_courses_master_content_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_master_content_tags
+ALTER TABLE ONLY public.master_courses_master_content_tags
     ADD CONSTRAINT master_courses_master_content_tags_pkey PRIMARY KEY (id);
 
 
@@ -9820,7 +9590,7 @@ ALTER TABLE ONLY master_courses_master_content_tags
 -- Name: master_courses_master_migrations master_courses_master_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_master_migrations
+ALTER TABLE ONLY public.master_courses_master_migrations
     ADD CONSTRAINT master_courses_master_migrations_pkey PRIMARY KEY (id);
 
 
@@ -9828,7 +9598,7 @@ ALTER TABLE ONLY master_courses_master_migrations
 -- Name: master_courses_master_templates master_courses_master_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_master_templates
+ALTER TABLE ONLY public.master_courses_master_templates
     ADD CONSTRAINT master_courses_master_templates_pkey PRIMARY KEY (id);
 
 
@@ -9836,7 +9606,7 @@ ALTER TABLE ONLY master_courses_master_templates
 -- Name: master_courses_migration_results master_courses_migration_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_migration_results
+ALTER TABLE ONLY public.master_courses_migration_results
     ADD CONSTRAINT master_courses_migration_results_pkey PRIMARY KEY (id);
 
 
@@ -9844,7 +9614,7 @@ ALTER TABLE ONLY master_courses_migration_results
 -- Name: media_objects media_objects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY media_objects
+ALTER TABLE ONLY public.media_objects
     ADD CONSTRAINT media_objects_pkey PRIMARY KEY (id);
 
 
@@ -9852,7 +9622,7 @@ ALTER TABLE ONLY media_objects
 -- Name: media_tracks media_tracks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY media_tracks
+ALTER TABLE ONLY public.media_tracks
     ADD CONSTRAINT media_tracks_pkey PRIMARY KEY (id);
 
 
@@ -9860,7 +9630,7 @@ ALTER TABLE ONLY media_tracks
 -- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY messages
+ALTER TABLE ONLY public.messages
     ADD CONSTRAINT messages_pkey PRIMARY KEY (id);
 
 
@@ -9868,7 +9638,7 @@ ALTER TABLE ONLY messages
 -- Name: migration_issues migration_issues_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY migration_issues
+ALTER TABLE ONLY public.migration_issues
     ADD CONSTRAINT migration_issues_pkey PRIMARY KEY (id);
 
 
@@ -9876,7 +9646,7 @@ ALTER TABLE ONLY migration_issues
 -- Name: moderated_grading_provisional_grades moderated_grading_provisional_grades_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY moderated_grading_provisional_grades
+ALTER TABLE ONLY public.moderated_grading_provisional_grades
     ADD CONSTRAINT moderated_grading_provisional_grades_pkey PRIMARY KEY (id);
 
 
@@ -9884,7 +9654,7 @@ ALTER TABLE ONLY moderated_grading_provisional_grades
 -- Name: moderated_grading_selections moderated_grading_selections_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY moderated_grading_selections
+ALTER TABLE ONLY public.moderated_grading_selections
     ADD CONSTRAINT moderated_grading_selections_pkey PRIMARY KEY (id);
 
 
@@ -9892,7 +9662,7 @@ ALTER TABLE ONLY moderated_grading_selections
 -- Name: notification_endpoints notification_endpoints_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY notification_endpoints
+ALTER TABLE ONLY public.notification_endpoints
     ADD CONSTRAINT notification_endpoints_pkey PRIMARY KEY (id);
 
 
@@ -9900,7 +9670,7 @@ ALTER TABLE ONLY notification_endpoints
 -- Name: notification_policies notification_policies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY notification_policies
+ALTER TABLE ONLY public.notification_policies
     ADD CONSTRAINT notification_policies_pkey PRIMARY KEY (id);
 
 
@@ -9908,7 +9678,7 @@ ALTER TABLE ONLY notification_policies
 -- Name: notifications notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY notifications
+ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_pkey PRIMARY KEY (id);
 
 
@@ -9916,7 +9686,7 @@ ALTER TABLE ONLY notifications
 -- Name: oauth_requests oauth_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY oauth_requests
+ALTER TABLE ONLY public.oauth_requests
     ADD CONSTRAINT oauth_requests_pkey PRIMARY KEY (id);
 
 
@@ -9924,7 +9694,7 @@ ALTER TABLE ONLY oauth_requests
 -- Name: one_time_passwords one_time_passwords_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY one_time_passwords
+ALTER TABLE ONLY public.one_time_passwords
     ADD CONSTRAINT one_time_passwords_pkey PRIMARY KEY (id);
 
 
@@ -9932,7 +9702,7 @@ ALTER TABLE ONLY one_time_passwords
 -- Name: originality_reports originality_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY originality_reports
+ALTER TABLE ONLY public.originality_reports
     ADD CONSTRAINT originality_reports_pkey PRIMARY KEY (id);
 
 
@@ -9940,7 +9710,7 @@ ALTER TABLE ONLY originality_reports
 -- Name: page_comments page_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY page_comments
+ALTER TABLE ONLY public.page_comments
     ADD CONSTRAINT page_comments_pkey PRIMARY KEY (id);
 
 
@@ -9948,23 +9718,15 @@ ALTER TABLE ONLY page_comments
 -- Name: page_views page_views_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY page_views
+ALTER TABLE ONLY public.page_views
     ADD CONSTRAINT page_views_pkey PRIMARY KEY (request_id);
-
-
---
--- Name: page_views_rollups page_views_rollups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY page_views_rollups
-    ADD CONSTRAINT page_views_rollups_pkey PRIMARY KEY (id);
 
 
 --
 -- Name: planner_notes planner_notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY planner_notes
+ALTER TABLE ONLY public.planner_notes
     ADD CONSTRAINT planner_notes_pkey PRIMARY KEY (id);
 
 
@@ -9972,7 +9734,7 @@ ALTER TABLE ONLY planner_notes
 -- Name: planner_overrides planner_overrides_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY planner_overrides
+ALTER TABLE ONLY public.planner_overrides
     ADD CONSTRAINT planner_overrides_pkey PRIMARY KEY (id);
 
 
@@ -9980,7 +9742,7 @@ ALTER TABLE ONLY planner_overrides
 -- Name: plugin_settings plugin_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY plugin_settings
+ALTER TABLE ONLY public.plugin_settings
     ADD CONSTRAINT plugin_settings_pkey PRIMARY KEY (id);
 
 
@@ -9988,7 +9750,7 @@ ALTER TABLE ONLY plugin_settings
 -- Name: polling_poll_choices polling_poll_choices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY polling_poll_choices
+ALTER TABLE ONLY public.polling_poll_choices
     ADD CONSTRAINT polling_poll_choices_pkey PRIMARY KEY (id);
 
 
@@ -9996,7 +9758,7 @@ ALTER TABLE ONLY polling_poll_choices
 -- Name: polling_poll_sessions polling_poll_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY polling_poll_sessions
+ALTER TABLE ONLY public.polling_poll_sessions
     ADD CONSTRAINT polling_poll_sessions_pkey PRIMARY KEY (id);
 
 
@@ -10004,7 +9766,7 @@ ALTER TABLE ONLY polling_poll_sessions
 -- Name: polling_poll_submissions polling_poll_submissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY polling_poll_submissions
+ALTER TABLE ONLY public.polling_poll_submissions
     ADD CONSTRAINT polling_poll_submissions_pkey PRIMARY KEY (id);
 
 
@@ -10012,7 +9774,7 @@ ALTER TABLE ONLY polling_poll_submissions
 -- Name: polling_polls polling_polls_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY polling_polls
+ALTER TABLE ONLY public.polling_polls
     ADD CONSTRAINT polling_polls_pkey PRIMARY KEY (id);
 
 
@@ -10020,7 +9782,7 @@ ALTER TABLE ONLY polling_polls
 -- Name: profiles profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY profiles
+ALTER TABLE ONLY public.profiles
     ADD CONSTRAINT profiles_pkey PRIMARY KEY (id);
 
 
@@ -10028,7 +9790,7 @@ ALTER TABLE ONLY profiles
 -- Name: progresses progresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY progresses
+ALTER TABLE ONLY public.progresses
     ADD CONSTRAINT progresses_pkey PRIMARY KEY (id);
 
 
@@ -10036,7 +9798,7 @@ ALTER TABLE ONLY progresses
 -- Name: pseudonyms pseudonyms_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pseudonyms
+ALTER TABLE ONLY public.pseudonyms
     ADD CONSTRAINT pseudonyms_pkey PRIMARY KEY (id);
 
 
@@ -10044,7 +9806,7 @@ ALTER TABLE ONLY pseudonyms
 -- Name: purgatories purgatories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY purgatories
+ALTER TABLE ONLY public.purgatories
     ADD CONSTRAINT purgatories_pkey PRIMARY KEY (id);
 
 
@@ -10052,7 +9814,7 @@ ALTER TABLE ONLY purgatories
 -- Name: quiz_groups quiz_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_groups
+ALTER TABLE ONLY public.quiz_groups
     ADD CONSTRAINT quiz_groups_pkey PRIMARY KEY (id);
 
 
@@ -10060,7 +9822,7 @@ ALTER TABLE ONLY quiz_groups
 -- Name: quiz_question_regrades quiz_question_regrades_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_question_regrades
+ALTER TABLE ONLY public.quiz_question_regrades
     ADD CONSTRAINT quiz_question_regrades_pkey PRIMARY KEY (id);
 
 
@@ -10068,7 +9830,7 @@ ALTER TABLE ONLY quiz_question_regrades
 -- Name: quiz_questions quiz_questions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_questions
+ALTER TABLE ONLY public.quiz_questions
     ADD CONSTRAINT quiz_questions_pkey PRIMARY KEY (id);
 
 
@@ -10076,7 +9838,7 @@ ALTER TABLE ONLY quiz_questions
 -- Name: quiz_regrade_runs quiz_regrade_runs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_regrade_runs
+ALTER TABLE ONLY public.quiz_regrade_runs
     ADD CONSTRAINT quiz_regrade_runs_pkey PRIMARY KEY (id);
 
 
@@ -10084,7 +9846,7 @@ ALTER TABLE ONLY quiz_regrade_runs
 -- Name: quiz_regrades quiz_regrades_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_regrades
+ALTER TABLE ONLY public.quiz_regrades
     ADD CONSTRAINT quiz_regrades_pkey PRIMARY KEY (id);
 
 
@@ -10092,71 +9854,39 @@ ALTER TABLE ONLY quiz_regrades
 -- Name: quiz_statistics quiz_statistics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_statistics
+ALTER TABLE ONLY public.quiz_statistics
     ADD CONSTRAINT quiz_statistics_pkey PRIMARY KEY (id);
 
 
 --
--- Name: quiz_submission_events_2018_12 quiz_submission_events_2018_12_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: quiz_submission_events_2019_11 quiz_submission_events_2019_11_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_submission_events_2018_12
-    ADD CONSTRAINT quiz_submission_events_2018_12_pkey PRIMARY KEY (id);
-
-
---
--- Name: quiz_submission_events_2019_1 quiz_submission_events_2019_1_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY quiz_submission_events_2019_1
-    ADD CONSTRAINT quiz_submission_events_2019_1_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.quiz_submission_events_2019_11
+    ADD CONSTRAINT quiz_submission_events_2019_11_pkey PRIMARY KEY (id);
 
 
 --
--- Name: quiz_submission_events_2019_2 quiz_submission_events_2019_2_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: quiz_submission_events_2019_12 quiz_submission_events_2019_12_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_submission_events_2019_2
-    ADD CONSTRAINT quiz_submission_events_2019_2_pkey PRIMARY KEY (id);
-
-
---
--- Name: quiz_submission_events_2019_3 quiz_submission_events_2019_3_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY quiz_submission_events_2019_3
-    ADD CONSTRAINT quiz_submission_events_2019_3_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.quiz_submission_events_2019_12
+    ADD CONSTRAINT quiz_submission_events_2019_12_pkey PRIMARY KEY (id);
 
 
 --
--- Name: quiz_submission_events_2019_4 quiz_submission_events_2019_4_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: quiz_submission_events_2020_1 quiz_submission_events_2020_1_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_submission_events_2019_4
-    ADD CONSTRAINT quiz_submission_events_2019_4_pkey PRIMARY KEY (id);
-
-
---
--- Name: quiz_submission_events_2019_5 quiz_submission_events_2019_5_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY quiz_submission_events_2019_5
-    ADD CONSTRAINT quiz_submission_events_2019_5_pkey PRIMARY KEY (id);
-
-
---
--- Name: quiz_submission_events_2019_6 quiz_submission_events_2019_6_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY quiz_submission_events_2019_6
-    ADD CONSTRAINT quiz_submission_events_2019_6_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.quiz_submission_events_2020_1
+    ADD CONSTRAINT quiz_submission_events_2020_1_pkey PRIMARY KEY (id);
 
 
 --
 -- Name: quiz_submission_events quiz_submission_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_submission_events
+ALTER TABLE ONLY public.quiz_submission_events
     ADD CONSTRAINT quiz_submission_events_pkey PRIMARY KEY (id);
 
 
@@ -10164,7 +9894,7 @@ ALTER TABLE ONLY quiz_submission_events
 -- Name: quiz_submission_snapshots quiz_submission_snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_submission_snapshots
+ALTER TABLE ONLY public.quiz_submission_snapshots
     ADD CONSTRAINT quiz_submission_snapshots_pkey PRIMARY KEY (id);
 
 
@@ -10172,7 +9902,7 @@ ALTER TABLE ONLY quiz_submission_snapshots
 -- Name: quiz_submissions quiz_submissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_submissions
+ALTER TABLE ONLY public.quiz_submissions
     ADD CONSTRAINT quiz_submissions_pkey PRIMARY KEY (id);
 
 
@@ -10180,7 +9910,7 @@ ALTER TABLE ONLY quiz_submissions
 -- Name: quizzes quizzes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quizzes
+ALTER TABLE ONLY public.quizzes
     ADD CONSTRAINT quizzes_pkey PRIMARY KEY (id);
 
 
@@ -10188,7 +9918,7 @@ ALTER TABLE ONLY quizzes
 -- Name: report_snapshots report_snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY report_snapshots
+ALTER TABLE ONLY public.report_snapshots
     ADD CONSTRAINT report_snapshots_pkey PRIMARY KEY (id);
 
 
@@ -10196,7 +9926,7 @@ ALTER TABLE ONLY report_snapshots
 -- Name: role_overrides role_overrides_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY role_overrides
+ALTER TABLE ONLY public.role_overrides
     ADD CONSTRAINT role_overrides_pkey PRIMARY KEY (id);
 
 
@@ -10204,7 +9934,7 @@ ALTER TABLE ONLY role_overrides
 -- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY roles
+ALTER TABLE ONLY public.roles
     ADD CONSTRAINT roles_pkey PRIMARY KEY (id);
 
 
@@ -10212,7 +9942,7 @@ ALTER TABLE ONLY roles
 -- Name: rubric_assessments rubric_assessments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY rubric_assessments
+ALTER TABLE ONLY public.rubric_assessments
     ADD CONSTRAINT rubric_assessments_pkey PRIMARY KEY (id);
 
 
@@ -10220,7 +9950,7 @@ ALTER TABLE ONLY rubric_assessments
 -- Name: rubric_associations rubric_associations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY rubric_associations
+ALTER TABLE ONLY public.rubric_associations
     ADD CONSTRAINT rubric_associations_pkey PRIMARY KEY (id);
 
 
@@ -10228,7 +9958,7 @@ ALTER TABLE ONLY rubric_associations
 -- Name: rubrics rubrics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY rubrics
+ALTER TABLE ONLY public.rubrics
     ADD CONSTRAINT rubrics_pkey PRIMARY KEY (id);
 
 
@@ -10236,7 +9966,7 @@ ALTER TABLE ONLY rubrics
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY schema_migrations
+ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
 
 
@@ -10244,7 +9974,7 @@ ALTER TABLE ONLY schema_migrations
 -- Name: scores scores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY scores
+ALTER TABLE ONLY public.scores
     ADD CONSTRAINT scores_pkey PRIMARY KEY (id);
 
 
@@ -10252,7 +9982,7 @@ ALTER TABLE ONLY scores
 -- Name: scribd_mime_types scribd_mime_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY scribd_mime_types
+ALTER TABLE ONLY public.scribd_mime_types
     ADD CONSTRAINT scribd_mime_types_pkey PRIMARY KEY (id);
 
 
@@ -10260,7 +9990,7 @@ ALTER TABLE ONLY scribd_mime_types
 -- Name: session_persistence_tokens session_persistence_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY session_persistence_tokens
+ALTER TABLE ONLY public.session_persistence_tokens
     ADD CONSTRAINT session_persistence_tokens_pkey PRIMARY KEY (id);
 
 
@@ -10268,7 +9998,7 @@ ALTER TABLE ONLY session_persistence_tokens
 -- Name: sessions sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sessions
+ALTER TABLE ONLY public.sessions
     ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
 
 
@@ -10276,7 +10006,7 @@ ALTER TABLE ONLY sessions
 -- Name: settings settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY settings
+ALTER TABLE ONLY public.settings
     ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
 
 
@@ -10284,7 +10014,7 @@ ALTER TABLE ONLY settings
 -- Name: shared_brand_configs shared_brand_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY shared_brand_configs
+ALTER TABLE ONLY public.shared_brand_configs
     ADD CONSTRAINT shared_brand_configs_pkey PRIMARY KEY (id);
 
 
@@ -10292,7 +10022,7 @@ ALTER TABLE ONLY shared_brand_configs
 -- Name: sis_batch_error_files sis_batch_error_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sis_batch_error_files
+ALTER TABLE ONLY public.sis_batch_error_files
     ADD CONSTRAINT sis_batch_error_files_pkey PRIMARY KEY (id);
 
 
@@ -10300,7 +10030,7 @@ ALTER TABLE ONLY sis_batch_error_files
 -- Name: sis_batches sis_batches_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sis_batches
+ALTER TABLE ONLY public.sis_batches
     ADD CONSTRAINT sis_batches_pkey PRIMARY KEY (id);
 
 
@@ -10308,7 +10038,7 @@ ALTER TABLE ONLY sis_batches
 -- Name: sis_post_grades_statuses sis_post_grades_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sis_post_grades_statuses
+ALTER TABLE ONLY public.sis_post_grades_statuses
     ADD CONSTRAINT sis_post_grades_statuses_pkey PRIMARY KEY (id);
 
 
@@ -10316,7 +10046,7 @@ ALTER TABLE ONLY sis_post_grades_statuses
 -- Name: stream_item_instances stream_item_instances_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY stream_item_instances
+ALTER TABLE ONLY public.stream_item_instances
     ADD CONSTRAINT stream_item_instances_pkey PRIMARY KEY (id);
 
 
@@ -10324,7 +10054,7 @@ ALTER TABLE ONLY stream_item_instances
 -- Name: stream_items stream_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY stream_items
+ALTER TABLE ONLY public.stream_items
     ADD CONSTRAINT stream_items_pkey PRIMARY KEY (id);
 
 
@@ -10332,7 +10062,7 @@ ALTER TABLE ONLY stream_items
 -- Name: submission_comments submission_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submission_comments
+ALTER TABLE ONLY public.submission_comments
     ADD CONSTRAINT submission_comments_pkey PRIMARY KEY (id);
 
 
@@ -10340,7 +10070,7 @@ ALTER TABLE ONLY submission_comments
 -- Name: submission_versions submission_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submission_versions
+ALTER TABLE ONLY public.submission_versions
     ADD CONSTRAINT submission_versions_pkey PRIMARY KEY (id);
 
 
@@ -10348,7 +10078,7 @@ ALTER TABLE ONLY submission_versions
 -- Name: submissions submissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submissions
+ALTER TABLE ONLY public.submissions
     ADD CONSTRAINT submissions_pkey PRIMARY KEY (id);
 
 
@@ -10356,7 +10086,7 @@ ALTER TABLE ONLY submissions
 -- Name: switchman_shards switchman_shards_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY switchman_shards
+ALTER TABLE ONLY public.switchman_shards
     ADD CONSTRAINT switchman_shards_pkey PRIMARY KEY (id);
 
 
@@ -10364,7 +10094,7 @@ ALTER TABLE ONLY switchman_shards
 -- Name: thumbnails thumbnails_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY thumbnails
+ALTER TABLE ONLY public.thumbnails
     ADD CONSTRAINT thumbnails_pkey PRIMARY KEY (id);
 
 
@@ -10372,7 +10102,7 @@ ALTER TABLE ONLY thumbnails
 -- Name: usage_rights usage_rights_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY usage_rights
+ALTER TABLE ONLY public.usage_rights
     ADD CONSTRAINT usage_rights_pkey PRIMARY KEY (id);
 
 
@@ -10380,7 +10110,7 @@ ALTER TABLE ONLY usage_rights
 -- Name: user_account_associations user_account_associations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_account_associations
+ALTER TABLE ONLY public.user_account_associations
     ADD CONSTRAINT user_account_associations_pkey PRIMARY KEY (id);
 
 
@@ -10388,7 +10118,7 @@ ALTER TABLE ONLY user_account_associations
 -- Name: user_merge_data user_merge_data_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_merge_data
+ALTER TABLE ONLY public.user_merge_data
     ADD CONSTRAINT user_merge_data_pkey PRIMARY KEY (id);
 
 
@@ -10396,7 +10126,7 @@ ALTER TABLE ONLY user_merge_data
 -- Name: user_merge_data_records user_merge_data_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_merge_data_records
+ALTER TABLE ONLY public.user_merge_data_records
     ADD CONSTRAINT user_merge_data_records_pkey PRIMARY KEY (id);
 
 
@@ -10404,7 +10134,7 @@ ALTER TABLE ONLY user_merge_data_records
 -- Name: user_notes user_notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_notes
+ALTER TABLE ONLY public.user_notes
     ADD CONSTRAINT user_notes_pkey PRIMARY KEY (id);
 
 
@@ -10412,7 +10142,7 @@ ALTER TABLE ONLY user_notes
 -- Name: user_observers user_observers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_observers
+ALTER TABLE ONLY public.user_observers
     ADD CONSTRAINT user_observers_pkey PRIMARY KEY (id);
 
 
@@ -10420,7 +10150,7 @@ ALTER TABLE ONLY user_observers
 -- Name: user_profile_links user_profile_links_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_profile_links
+ALTER TABLE ONLY public.user_profile_links
     ADD CONSTRAINT user_profile_links_pkey PRIMARY KEY (id);
 
 
@@ -10428,7 +10158,7 @@ ALTER TABLE ONLY user_profile_links
 -- Name: user_profiles user_profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_profiles
+ALTER TABLE ONLY public.user_profiles
     ADD CONSTRAINT user_profiles_pkey PRIMARY KEY (id);
 
 
@@ -10436,7 +10166,7 @@ ALTER TABLE ONLY user_profiles
 -- Name: user_services user_services_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_services
+ALTER TABLE ONLY public.user_services
     ADD CONSTRAINT user_services_pkey PRIMARY KEY (id);
 
 
@@ -10444,7 +10174,7 @@ ALTER TABLE ONLY user_services
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY users
+ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
 
@@ -10452,7 +10182,7 @@ ALTER TABLE ONLY users
 -- Name: versions_0 versions_0_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY versions_0
+ALTER TABLE ONLY public.versions_0
     ADD CONSTRAINT versions_0_pkey PRIMARY KEY (id);
 
 
@@ -10460,23 +10190,15 @@ ALTER TABLE ONLY versions_0
 -- Name: versions_1 versions_1_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY versions_1
+ALTER TABLE ONLY public.versions_1
     ADD CONSTRAINT versions_1_pkey PRIMARY KEY (id);
-
-
---
--- Name: versions_2 versions_2_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY versions_2
-    ADD CONSTRAINT versions_2_pkey PRIMARY KEY (id);
 
 
 --
 -- Name: versions versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY versions
+ALTER TABLE ONLY public.versions
     ADD CONSTRAINT versions_pkey PRIMARY KEY (id);
 
 
@@ -10484,7 +10206,7 @@ ALTER TABLE ONLY versions
 -- Name: web_conference_participants web_conference_participants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY web_conference_participants
+ALTER TABLE ONLY public.web_conference_participants
     ADD CONSTRAINT web_conference_participants_pkey PRIMARY KEY (id);
 
 
@@ -10492,7 +10214,7 @@ ALTER TABLE ONLY web_conference_participants
 -- Name: web_conferences web_conferences_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY web_conferences
+ALTER TABLE ONLY public.web_conferences
     ADD CONSTRAINT web_conferences_pkey PRIMARY KEY (id);
 
 
@@ -10500,7 +10222,7 @@ ALTER TABLE ONLY web_conferences
 -- Name: wiki_pages wiki_pages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY wiki_pages
+ALTER TABLE ONLY public.wiki_pages
     ADD CONSTRAINT wiki_pages_pkey PRIMARY KEY (id);
 
 
@@ -10508,7 +10230,7 @@ ALTER TABLE ONLY wiki_pages
 -- Name: wikis wikis_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY wikis
+ALTER TABLE ONLY public.wikis
     ADD CONSTRAINT wikis_pkey PRIMARY KEY (id);
 
 
@@ -10723,6 +10445,13 @@ CREATE INDEX index_account_notifications_by_account_and_timespan ON public.accou
 
 
 --
+-- Name: index_account_notifications_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_account_notifications_on_user_id ON public.account_notifications USING btree (user_id);
+
+
+--
 -- Name: index_account_reports_latest_per_account; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10737,10 +10466,24 @@ CREATE INDEX index_account_reports_on_attachment_id ON public.account_reports US
 
 
 --
+-- Name: index_account_reports_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_account_reports_on_user_id ON public.account_reports USING btree (user_id);
+
+
+--
 -- Name: index_account_users_on_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_account_users_on_account_id ON public.account_users USING btree (account_id);
+
+
+--
+-- Name: index_account_users_on_sis_batch_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_account_users_on_sis_batch_id ON public.account_users USING btree (sis_batch_id) WHERE (sis_batch_id IS NOT NULL);
 
 
 --
@@ -11332,6 +11075,13 @@ CREATE INDEX index_content_exports_on_content_migration_id ON public.content_exp
 
 
 --
+-- Name: index_content_exports_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_content_exports_on_user_id ON public.content_exports USING btree (user_id) WHERE (user_id IS NOT NULL);
+
+
+--
 -- Name: index_content_migrations_on_attachment_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11367,10 +11117,24 @@ CREATE INDEX index_content_migrations_on_source_course_id ON public.content_migr
 
 
 --
+-- Name: index_content_migrations_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_content_migrations_on_user_id ON public.content_migrations USING btree (user_id) WHERE (user_id IS NOT NULL);
+
+
+--
 -- Name: index_content_participation_counts_uniquely; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_content_participation_counts_uniquely ON public.content_participation_counts USING btree (context_id, context_type, user_id, content_type);
+
+
+--
+-- Name: index_content_participations_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_content_participations_on_user_id ON public.content_participations USING btree (user_id);
 
 
 --
@@ -11696,6 +11460,13 @@ CREATE UNIQUE INDEX index_custom_data_on_user_id_and_namespace ON public.custom_
 
 
 --
+-- Name: index_custom_gradebook_column_data_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_custom_gradebook_column_data_on_user_id ON public.custom_gradebook_column_data USING btree (user_id);
+
+
+--
 -- Name: index_custom_gradebook_column_data_unique_column_and_user; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11759,6 +11530,13 @@ CREATE INDEX index_discussion_entries_for_topic ON public.discussion_entries USI
 
 
 --
+-- Name: index_discussion_entries_on_editor_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discussion_entries_on_editor_id ON public.discussion_entries USING btree (editor_id) WHERE (editor_id IS NOT NULL);
+
+
+--
 -- Name: index_discussion_entries_on_parent_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11777,6 +11555,20 @@ CREATE INDEX index_discussion_entries_on_user_id ON public.discussion_entries US
 --
 
 CREATE INDEX index_discussion_entries_root_entry ON public.discussion_entries USING btree (root_entry_id, workflow_state, created_at);
+
+
+--
+-- Name: index_discussion_entry_participants_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discussion_entry_participants_on_user_id ON public.discussion_entry_participants USING btree (user_id);
+
+
+--
+-- Name: index_discussion_topic_participants_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discussion_topic_participants_on_user_id ON public.discussion_topic_participants USING btree (user_id);
 
 
 --
@@ -11805,6 +11597,13 @@ CREATE INDEX index_discussion_topics_on_context_and_last_reply_at ON public.disc
 --
 
 CREATE INDEX index_discussion_topics_on_context_id_and_position ON public.discussion_topics USING btree (context_id, "position");
+
+
+--
+-- Name: index_discussion_topics_on_editor_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_discussion_topics_on_editor_id ON public.discussion_topics USING btree (editor_id) WHERE (editor_id IS NOT NULL);
 
 
 --
@@ -12074,6 +11873,13 @@ CREATE INDEX index_external_feed_entries_on_url ON public.external_feed_entries 
 
 
 --
+-- Name: index_external_feed_entries_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_external_feed_entries_on_user_id ON public.external_feed_entries USING btree (user_id) WHERE (user_id IS NOT NULL);
+
+
+--
 -- Name: index_external_feed_entries_on_uuid; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -12085,6 +11891,13 @@ CREATE INDEX index_external_feed_entries_on_uuid ON public.external_feed_entries
 --
 
 CREATE INDEX index_external_feeds_on_context_id_and_context_type ON public.external_feeds USING btree (context_id, context_type);
+
+
+--
+-- Name: index_external_feeds_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_external_feeds_on_user_id ON public.external_feeds USING btree (user_id) WHERE (user_id IS NOT NULL);
 
 
 --
@@ -12200,6 +12013,13 @@ CREATE INDEX index_gradebook_uploads_on_progress_id ON public.gradebook_uploads 
 
 
 --
+-- Name: index_gradebook_uploads_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_gradebook_uploads_on_user_id ON public.gradebook_uploads USING btree (user_id);
+
+
+--
 -- Name: index_grading_period_groups_on_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -12246,6 +12066,13 @@ CREATE INDEX index_grading_standards_on_context_code ON public.grading_standards
 --
 
 CREATE INDEX index_grading_standards_on_context_id_and_context_type ON public.grading_standards USING btree (context_id, context_type);
+
+
+--
+-- Name: index_grading_standards_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_grading_standards_on_user_id ON public.grading_standards USING btree (user_id) WHERE (user_id IS NOT NULL);
 
 
 --
@@ -12326,6 +12153,13 @@ CREATE INDEX index_groups_on_group_category_id ON public.groups USING btree (gro
 
 
 --
+-- Name: index_groups_on_leader_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_groups_on_leader_id ON public.groups USING btree (leader_id) WHERE (leader_id IS NOT NULL);
+
+
+--
 -- Name: index_groups_on_sis_batch_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -12358,6 +12192,13 @@ CREATE INDEX index_groups_on_wiki_id ON public.groups USING btree (wiki_id) WHER
 --
 
 CREATE UNIQUE INDEX index_ignores_on_asset_and_user_id_and_purpose ON public.ignores USING btree (asset_id, asset_type, user_id, purpose);
+
+
+--
+-- Name: index_ignores_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ignores_on_user_id ON public.ignores USING btree (user_id);
 
 
 --
@@ -12466,10 +12307,24 @@ CREATE INDEX index_live_assessments_results_on_assessment_id_and_user_id ON publ
 
 
 --
+-- Name: index_live_assessments_results_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_live_assessments_results_on_user_id ON public.live_assessments_results USING btree (user_id);
+
+
+--
 -- Name: index_live_assessments_submissions_on_assessment_id_and_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_live_assessments_submissions_on_assessment_id_and_user_id ON public.live_assessments_submissions USING btree (assessment_id, user_id);
+
+
+--
+-- Name: index_live_assessments_submissions_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_live_assessments_submissions_on_user_id ON public.live_assessments_submissions USING btree (user_id);
 
 
 --
@@ -12641,6 +12496,13 @@ CREATE INDEX index_media_objects_on_root_account_id ON public.media_objects USIN
 
 
 --
+-- Name: index_media_objects_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_media_objects_on_user_id ON public.media_objects USING btree (user_id) WHERE (user_id IS NOT NULL);
+
+
+--
 -- Name: index_messages_on_communication_channel_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -12680,6 +12542,13 @@ CREATE INDEX index_messages_user_id_dispatch_at_to_email ON public.messages USIN
 --
 
 CREATE INDEX index_migration_issues_on_content_migration_id ON public.migration_issues USING btree (content_migration_id);
+
+
+--
+-- Name: index_moderated_grading_provisional_grades_on_scorer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_moderated_grading_provisional_grades_on_scorer_id ON public.moderated_grading_provisional_grades USING btree (scorer_id);
 
 
 --
@@ -12729,6 +12598,13 @@ CREATE INDEX index_notification_policies_on_notification_id ON public.notificati
 --
 
 CREATE UNIQUE INDEX index_notifications_unique_on_name ON public.notifications USING btree (name);
+
+
+--
+-- Name: index_oauth_requests_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_oauth_requests_on_user_id ON public.oauth_requests USING btree (user_id) WHERE (user_id IS NOT NULL);
 
 
 --
@@ -12816,24 +12692,17 @@ CREATE INDEX index_page_views_on_context_type_and_context_id ON public.page_view
 
 
 --
+-- Name: index_page_views_on_real_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_page_views_on_real_user_id ON public.page_views USING btree (real_user_id) WHERE (real_user_id IS NOT NULL);
+
+
+--
 -- Name: index_page_views_on_user_id_and_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_page_views_on_user_id_and_created_at ON public.page_views USING btree (user_id, created_at);
-
-
---
--- Name: index_page_views_rollups_on_course_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_page_views_rollups_on_course_id ON public.page_views_rollups USING btree (course_id);
-
-
---
--- Name: index_page_views_rollups_on_course_id_and_date_and_category; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_page_views_rollups_on_course_id_and_date_and_category ON public.page_views_rollups USING btree (course_id, date, category);
 
 
 --
@@ -12855,6 +12724,13 @@ CREATE INDEX index_planner_notes_on_user_id ON public.planner_notes USING btree 
 --
 
 CREATE UNIQUE INDEX index_planner_overrides_on_plannable_and_user ON public.planner_overrides USING btree (plannable_type, plannable_id, user_id);
+
+
+--
+-- Name: index_planner_overrides_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_planner_overrides_on_user_id ON public.planner_overrides USING btree (user_id);
 
 
 --
@@ -13033,6 +12909,13 @@ CREATE UNIQUE INDEX index_purgatories_on_attachment_id ON public.purgatories USI
 
 
 --
+-- Name: index_purgatories_on_deleted_by_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_purgatories_on_deleted_by_user_id ON public.purgatories USING btree (deleted_by_user_id);
+
+
+--
 -- Name: index_qqr_on_qq_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -13065,6 +12948,13 @@ CREATE INDEX index_quiz_questions_on_assessment_question_id ON public.quiz_quest
 --
 
 CREATE UNIQUE INDEX index_quiz_regrades_on_quiz_id_and_quiz_version ON public.quiz_regrades USING btree (quiz_id, quiz_version);
+
+
+--
+-- Name: index_quiz_regrades_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_quiz_regrades_on_user_id ON public.quiz_regrades USING btree (user_id);
 
 
 --
@@ -13355,6 +13245,13 @@ CREATE INDEX index_sis_batches_on_errors_attachment_id ON public.sis_batches USI
 
 
 --
+-- Name: index_sis_batches_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sis_batches_on_user_id ON public.sis_batches USING btree (user_id) WHERE (user_id IS NOT NULL);
+
+
+--
 -- Name: index_sis_batches_pending_for_accounts; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -13470,7 +13367,7 @@ CREATE UNIQUE INDEX index_submission_versions ON public.submission_versions USIN
 -- Name: index_submissions_needs_grading; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_submissions_needs_grading ON public.submissions USING btree (assignment_id) WHERE ((submission_type IS NOT NULL) AND ((excused = false) OR (excused IS NULL)) AND (((workflow_state)::text = 'pending_review'::text) OR (((workflow_state)::text = ANY (ARRAY[('submitted'::character varying)::text, ('graded'::character varying)::text])) AND ((score IS NULL) OR (NOT grade_matches_current_submission)))));
+CREATE INDEX index_submissions_needs_grading ON public.submissions USING btree (assignment_id) WHERE ((submission_type IS NOT NULL) AND ((excused = false) OR (excused IS NULL)) AND (((workflow_state)::text = 'pending_review'::text) OR (((workflow_state)::text = ANY ((ARRAY['submitted'::character varying, 'graded'::character varying])::text[])) AND ((score IS NULL) OR (NOT grade_matches_current_submission)))));
 
 
 --
@@ -13565,6 +13462,76 @@ CREATE UNIQUE INDEX index_topic_participant_on_topic_id_and_user_id ON public.di
 
 
 --
+-- Name: index_trgm_communication_channels_path; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_trgm_communication_channels_path ON public.communication_channels USING gist (lower((path)::text) public.gist_trgm_ops);
+
+
+--
+-- Name: index_trgm_courses_composite_search; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_trgm_courses_composite_search ON public.courses USING gist ((((((COALESCE(lower((name)::text), ''::text) || ' '::text) || COALESCE(lower((sis_source_id)::text), ''::text)) || ' '::text) || COALESCE(lower((course_code)::text), ''::text))) public.gist_trgm_ops);
+
+
+--
+-- Name: index_trgm_courses_course_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_trgm_courses_course_code ON public.courses USING gist (lower((course_code)::text) public.gist_trgm_ops);
+
+
+--
+-- Name: index_trgm_courses_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_trgm_courses_name ON public.courses USING gist (lower((name)::text) public.gist_trgm_ops);
+
+
+--
+-- Name: index_trgm_courses_sis_source_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_trgm_courses_sis_source_id ON public.courses USING gist (lower((sis_source_id)::text) public.gist_trgm_ops);
+
+
+--
+-- Name: index_trgm_pseudonyms_sis_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_trgm_pseudonyms_sis_user_id ON public.pseudonyms USING gist (lower((sis_user_id)::text) public.gist_trgm_ops);
+
+
+--
+-- Name: index_trgm_pseudonyms_unique_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_trgm_pseudonyms_unique_id ON public.pseudonyms USING gist (lower((unique_id)::text) public.gist_trgm_ops);
+
+
+--
+-- Name: index_trgm_users_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_trgm_users_name ON public.users USING gist (lower((name)::text) public.gist_trgm_ops);
+
+
+--
+-- Name: index_trgm_users_name_active_only; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_trgm_users_name_active_only ON public.users USING gist (lower((name)::text) public.gist_trgm_ops) WHERE ((workflow_state)::text = ANY (ARRAY[('registered'::character varying)::text, ('pre_registered'::character varying)::text]));
+
+
+--
+-- Name: index_trgm_users_short_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_trgm_users_short_name ON public.users USING gist (lower((short_name)::text) public.gist_trgm_ops);
+
+
+--
 -- Name: index_user_account_associations_on_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -13607,6 +13574,13 @@ CREATE INDEX index_user_merge_data_records_on_user_merge_data_id ON public.user_
 
 
 --
+-- Name: index_user_notes_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_notes_on_created_by_id ON public.user_notes USING btree (created_by_id);
+
+
+--
 -- Name: index_user_notes_on_user_id_and_workflow_state; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -13639,6 +13613,13 @@ CREATE UNIQUE INDEX index_user_observers_on_user_id_and_observer_id ON public.us
 --
 
 CREATE INDEX index_user_observers_on_workflow_state ON public.user_observers USING btree (workflow_state);
+
+
+--
+-- Name: index_user_profiles_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_profiles_on_user_id ON public.user_profiles USING btree (user_id);
 
 
 --
@@ -13789,101 +13770,45 @@ CREATE INDEX quiz_questions_quiz_group_id ON public.quiz_questions USING btree (
 
 
 --
--- Name: quiz_submission_events_2018_12_created_at_idx; Type: INDEX; Schema: public; Owner: -
+-- Name: quiz_submission_events_2019_11_created_at_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quiz_submission_events_2018_12_created_at_idx ON public.quiz_submission_events_2018_12 USING btree (created_at);
-
-
---
--- Name: quiz_submission_events_2018_1_quiz_submission_id_attempt_cr_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX quiz_submission_events_2018_1_quiz_submission_id_attempt_cr_idx ON public.quiz_submission_events_2018_12 USING btree (quiz_submission_id, attempt, created_at);
+CREATE INDEX quiz_submission_events_2019_11_created_at_idx ON public.quiz_submission_events_2019_11 USING btree (created_at);
 
 
 --
--- Name: quiz_submission_events_2019_1_created_at_idx; Type: INDEX; Schema: public; Owner: -
+-- Name: quiz_submission_events_2019_12_created_at_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quiz_submission_events_2019_1_created_at_idx ON public.quiz_submission_events_2019_1 USING btree (created_at);
+CREATE INDEX quiz_submission_events_2019_12_created_at_idx ON public.quiz_submission_events_2019_12 USING btree (created_at);
+
+
+--
+-- Name: quiz_submission_events_2019_1_quiz_submission_id_attempt_c_idx1; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX quiz_submission_events_2019_1_quiz_submission_id_attempt_c_idx1 ON public.quiz_submission_events_2019_12 USING btree (quiz_submission_id, attempt, created_at);
 
 
 --
 -- Name: quiz_submission_events_2019_1_quiz_submission_id_attempt_cr_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quiz_submission_events_2019_1_quiz_submission_id_attempt_cr_idx ON public.quiz_submission_events_2019_1 USING btree (quiz_submission_id, attempt, created_at);
+CREATE INDEX quiz_submission_events_2019_1_quiz_submission_id_attempt_cr_idx ON public.quiz_submission_events_2019_11 USING btree (quiz_submission_id, attempt, created_at);
 
 
 --
--- Name: quiz_submission_events_2019_2_created_at_idx; Type: INDEX; Schema: public; Owner: -
+-- Name: quiz_submission_events_2020_1_created_at_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quiz_submission_events_2019_2_created_at_idx ON public.quiz_submission_events_2019_2 USING btree (created_at);
-
-
---
--- Name: quiz_submission_events_2019_2_quiz_submission_id_attempt_cr_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX quiz_submission_events_2019_2_quiz_submission_id_attempt_cr_idx ON public.quiz_submission_events_2019_2 USING btree (quiz_submission_id, attempt, created_at);
+CREATE INDEX quiz_submission_events_2020_1_created_at_idx ON public.quiz_submission_events_2020_1 USING btree (created_at);
 
 
 --
--- Name: quiz_submission_events_2019_3_created_at_idx; Type: INDEX; Schema: public; Owner: -
+-- Name: quiz_submission_events_2020_1_quiz_submission_id_attempt_cr_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX quiz_submission_events_2019_3_created_at_idx ON public.quiz_submission_events_2019_3 USING btree (created_at);
-
-
---
--- Name: quiz_submission_events_2019_3_quiz_submission_id_attempt_cr_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX quiz_submission_events_2019_3_quiz_submission_id_attempt_cr_idx ON public.quiz_submission_events_2019_3 USING btree (quiz_submission_id, attempt, created_at);
-
-
---
--- Name: quiz_submission_events_2019_4_created_at_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX quiz_submission_events_2019_4_created_at_idx ON public.quiz_submission_events_2019_4 USING btree (created_at);
-
-
---
--- Name: quiz_submission_events_2019_4_quiz_submission_id_attempt_cr_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX quiz_submission_events_2019_4_quiz_submission_id_attempt_cr_idx ON public.quiz_submission_events_2019_4 USING btree (quiz_submission_id, attempt, created_at);
-
-
---
--- Name: quiz_submission_events_2019_5_created_at_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX quiz_submission_events_2019_5_created_at_idx ON public.quiz_submission_events_2019_5 USING btree (created_at);
-
-
---
--- Name: quiz_submission_events_2019_5_quiz_submission_id_attempt_cr_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX quiz_submission_events_2019_5_quiz_submission_id_attempt_cr_idx ON public.quiz_submission_events_2019_5 USING btree (quiz_submission_id, attempt, created_at);
-
-
---
--- Name: quiz_submission_events_2019_6_created_at_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX quiz_submission_events_2019_6_created_at_idx ON public.quiz_submission_events_2019_6 USING btree (created_at);
-
-
---
--- Name: quiz_submission_events_2019_6_quiz_submission_id_attempt_cr_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX quiz_submission_events_2019_6_quiz_submission_id_attempt_cr_idx ON public.quiz_submission_events_2019_6 USING btree (quiz_submission_id, attempt, created_at);
+CREATE INDEX quiz_submission_events_2020_1_quiz_submission_id_attempt_cr_idx ON public.quiz_submission_events_2020_1 USING btree (quiz_submission_id, attempt, created_at);
 
 
 --
@@ -13915,24 +13840,17 @@ CREATE INDEX usage_rights_context_idx ON public.usage_rights USING btree (contex
 
 
 --
--- Name: versions_0_versionable_id_versionable_type_number_idx; Type: INDEX; Schema: public; Owner: -
+-- Name: versions_0_versionable_id_versionable_type_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX versions_0_versionable_id_versionable_type_number_idx ON public.versions_0 USING btree (versionable_id, versionable_type, number);
-
-
---
--- Name: versions_1_versionable_id_versionable_type_number_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX versions_1_versionable_id_versionable_type_number_idx ON public.versions_1 USING btree (versionable_id, versionable_type, number);
+CREATE INDEX versions_0_versionable_id_versionable_type_idx ON public.versions_0 USING btree (versionable_id, versionable_type);
 
 
 --
--- Name: versions_2_versionable_id_versionable_type_number_idx; Type: INDEX; Schema: public; Owner: -
+-- Name: versions_1_versionable_id_versionable_type_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX versions_2_versionable_id_versionable_type_number_idx ON public.versions_2 USING btree (versionable_id, versionable_type, number);
+CREATE INDEX versions_1_versionable_id_versionable_type_idx ON public.versions_1 USING btree (versionable_id, versionable_type);
 
 
 --
@@ -13946,2374 +13864,2326 @@ CREATE INDEX ws_sa ON public.delayed_messages USING btree (workflow_state, send_
 -- Name: delayed_jobs delayed_jobs_after_delete_row_tr; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER delayed_jobs_after_delete_row_tr AFTER DELETE ON public.delayed_jobs FOR EACH ROW WHEN (((old.strand IS NOT NULL) AND (old.next_in_strand = true))) EXECUTE PROCEDURE delayed_jobs_after_delete_row_tr_fn();
+CREATE TRIGGER delayed_jobs_after_delete_row_tr AFTER DELETE ON public.delayed_jobs FOR EACH ROW WHEN (((old.strand IS NOT NULL) AND (old.next_in_strand = true))) EXECUTE PROCEDURE public.delayed_jobs_after_delete_row_tr_fn();
 
 
 --
 -- Name: delayed_jobs delayed_jobs_before_insert_row_tr; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER delayed_jobs_before_insert_row_tr BEFORE INSERT ON public.delayed_jobs FOR EACH ROW WHEN ((new.strand IS NOT NULL)) EXECUTE PROCEDURE delayed_jobs_before_insert_row_tr_fn();
+CREATE TRIGGER delayed_jobs_before_insert_row_tr BEFORE INSERT ON public.delayed_jobs FOR EACH ROW WHEN ((new.strand IS NOT NULL)) EXECUTE PROCEDURE public.delayed_jobs_before_insert_row_tr_fn();
 
 
 --
 -- Name: master_courses_master_templates fk_rails_01b5db190c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_master_templates
-    ADD CONSTRAINT fk_rails_01b5db190c FOREIGN KEY (course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.master_courses_master_templates
+    ADD CONSTRAINT fk_rails_01b5db190c FOREIGN KEY (course_id) REFERENCES public.courses(id);
 
 
 --
 -- Name: polling_poll_submissions fk_rails_01fa2ef709; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY polling_poll_submissions
-    ADD CONSTRAINT fk_rails_01fa2ef709 FOREIGN KEY (poll_session_id) REFERENCES polling_poll_sessions(id);
+ALTER TABLE ONLY public.polling_poll_submissions
+    ADD CONSTRAINT fk_rails_01fa2ef709 FOREIGN KEY (poll_session_id) REFERENCES public.polling_poll_sessions(id);
 
 
 --
 -- Name: sis_post_grades_statuses fk_rails_0221897d5f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sis_post_grades_statuses
-    ADD CONSTRAINT fk_rails_0221897d5f FOREIGN KEY (course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.sis_post_grades_statuses
+    ADD CONSTRAINT fk_rails_0221897d5f FOREIGN KEY (course_id) REFERENCES public.courses(id);
 
 
 --
 -- Name: sis_batches fk_rails_0235dd4ff6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sis_batches
-    ADD CONSTRAINT fk_rails_0235dd4ff6 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.sis_batches
+    ADD CONSTRAINT fk_rails_0235dd4ff6 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: collaborators fk_rails_02c23caf02; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collaborators
-    ADD CONSTRAINT fk_rails_02c23caf02 FOREIGN KEY (collaboration_id) REFERENCES collaborations(id);
+ALTER TABLE ONLY public.collaborators
+    ADD CONSTRAINT fk_rails_02c23caf02 FOREIGN KEY (collaboration_id) REFERENCES public.collaborations(id);
 
 
 --
 -- Name: context_modules fk_rails_03f6fc5c38; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_modules
-    ADD CONSTRAINT fk_rails_03f6fc5c38 FOREIGN KEY (cloned_item_id) REFERENCES cloned_items(id);
+ALTER TABLE ONLY public.context_modules
+    ADD CONSTRAINT fk_rails_03f6fc5c38 FOREIGN KEY (cloned_item_id) REFERENCES public.cloned_items(id);
 
 
 --
 -- Name: lti_message_handlers fk_rails_0446c78346; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_message_handlers
-    ADD CONSTRAINT fk_rails_0446c78346 FOREIGN KEY (resource_handler_id) REFERENCES lti_resource_handlers(id);
+ALTER TABLE ONLY public.lti_message_handlers
+    ADD CONSTRAINT fk_rails_0446c78346 FOREIGN KEY (resource_handler_id) REFERENCES public.lti_resource_handlers(id);
 
 
 --
 -- Name: quiz_submissions fk_rails_04850db4b4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_submissions
-    ADD CONSTRAINT fk_rails_04850db4b4 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.quiz_submissions
+    ADD CONSTRAINT fk_rails_04850db4b4 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: content_migrations fk_rails_04f446621a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_migrations
-    ADD CONSTRAINT fk_rails_04f446621a FOREIGN KEY (child_subscription_id) REFERENCES master_courses_child_subscriptions(id);
+ALTER TABLE ONLY public.content_migrations
+    ADD CONSTRAINT fk_rails_04f446621a FOREIGN KEY (child_subscription_id) REFERENCES public.master_courses_child_subscriptions(id);
 
 
 --
 -- Name: moderated_grading_selections fk_rails_05e761621e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY moderated_grading_selections
-    ADD CONSTRAINT fk_rails_05e761621e FOREIGN KEY (student_id) REFERENCES users(id);
+ALTER TABLE ONLY public.moderated_grading_selections
+    ADD CONSTRAINT fk_rails_05e761621e FOREIGN KEY (student_id) REFERENCES public.users(id);
 
 
 --
 -- Name: notification_policies fk_rails_065136b4a1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY notification_policies
-    ADD CONSTRAINT fk_rails_065136b4a1 FOREIGN KEY (communication_channel_id) REFERENCES communication_channels(id);
+ALTER TABLE ONLY public.notification_policies
+    ADD CONSTRAINT fk_rails_065136b4a1 FOREIGN KEY (communication_channel_id) REFERENCES public.communication_channels(id);
 
 
 --
 -- Name: media_objects fk_rails_06a85e3af6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY media_objects
-    ADD CONSTRAINT fk_rails_06a85e3af6 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.media_objects
+    ADD CONSTRAINT fk_rails_06a85e3af6 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: sis_post_grades_statuses fk_rails_07ef291b5d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sis_post_grades_statuses
-    ADD CONSTRAINT fk_rails_07ef291b5d FOREIGN KEY (course_section_id) REFERENCES course_sections(id);
+ALTER TABLE ONLY public.sis_post_grades_statuses
+    ADD CONSTRAINT fk_rails_07ef291b5d FOREIGN KEY (course_section_id) REFERENCES public.course_sections(id);
 
 
 --
 -- Name: content_exports fk_rails_08b467f95d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_exports
-    ADD CONSTRAINT fk_rails_08b467f95d FOREIGN KEY (attachment_id) REFERENCES attachments(id);
+ALTER TABLE ONLY public.content_exports
+    ADD CONSTRAINT fk_rails_08b467f95d FOREIGN KEY (attachment_id) REFERENCES public.attachments(id);
 
 
 --
 -- Name: content_tags fk_rails_0ad9c826f2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_tags
-    ADD CONSTRAINT fk_rails_0ad9c826f2 FOREIGN KEY (context_module_id) REFERENCES context_modules(id);
+ALTER TABLE ONLY public.content_tags
+    ADD CONSTRAINT fk_rails_0ad9c826f2 FOREIGN KEY (context_module_id) REFERENCES public.context_modules(id);
 
 
 --
 -- Name: discussion_topics fk_rails_0b0ccee25f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topics
-    ADD CONSTRAINT fk_rails_0b0ccee25f FOREIGN KEY (group_category_id) REFERENCES group_categories(id);
+ALTER TABLE ONLY public.discussion_topics
+    ADD CONSTRAINT fk_rails_0b0ccee25f FOREIGN KEY (group_category_id) REFERENCES public.group_categories(id);
 
 
 --
 -- Name: calendar_events fk_rails_0e82f26e3c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY calendar_events
-    ADD CONSTRAINT fk_rails_0e82f26e3c FOREIGN KEY (parent_calendar_event_id) REFERENCES calendar_events(id);
+ALTER TABLE ONLY public.calendar_events
+    ADD CONSTRAINT fk_rails_0e82f26e3c FOREIGN KEY (parent_calendar_event_id) REFERENCES public.calendar_events(id);
 
 
 --
 -- Name: canvadocs fk_rails_0e9b385b60; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY canvadocs
-    ADD CONSTRAINT fk_rails_0e9b385b60 FOREIGN KEY (attachment_id) REFERENCES attachments(id);
+ALTER TABLE ONLY public.canvadocs
+    ADD CONSTRAINT fk_rails_0e9b385b60 FOREIGN KEY (attachment_id) REFERENCES public.attachments(id);
 
 
 --
 -- Name: pseudonyms fk_rails_0f9b2ab873; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pseudonyms
-    ADD CONSTRAINT fk_rails_0f9b2ab873 FOREIGN KEY (account_id) REFERENCES accounts(id);
-
-
---
--- Name: page_views_rollups fk_rails_0ff7f19312; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY page_views_rollups
-    ADD CONSTRAINT fk_rails_0ff7f19312 FOREIGN KEY (course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.pseudonyms
+    ADD CONSTRAINT fk_rails_0f9b2ab873 FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: submissions fk_rails_11ec1c51e8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submissions
-    ADD CONSTRAINT fk_rails_11ec1c51e8 FOREIGN KEY (group_id) REFERENCES groups(id);
+ALTER TABLE ONLY public.submissions
+    ADD CONSTRAINT fk_rails_11ec1c51e8 FOREIGN KEY (group_id) REFERENCES public.groups(id);
 
 
 --
 -- Name: group_memberships fk_rails_1208c3cc2d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY group_memberships
-    ADD CONSTRAINT fk_rails_1208c3cc2d FOREIGN KEY (sis_batch_id) REFERENCES sis_batches(id);
+ALTER TABLE ONLY public.group_memberships
+    ADD CONSTRAINT fk_rails_1208c3cc2d FOREIGN KEY (sis_batch_id) REFERENCES public.sis_batches(id);
 
 
 --
 -- Name: page_views fk_rails_13a4e75c00; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY page_views
-    ADD CONSTRAINT fk_rails_13a4e75c00 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.page_views
+    ADD CONSTRAINT fk_rails_13a4e75c00 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: polling_poll_sessions fk_rails_13d9535afd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY polling_poll_sessions
-    ADD CONSTRAINT fk_rails_13d9535afd FOREIGN KEY (course_section_id) REFERENCES course_sections(id);
+ALTER TABLE ONLY public.polling_poll_sessions
+    ADD CONSTRAINT fk_rails_13d9535afd FOREIGN KEY (course_section_id) REFERENCES public.course_sections(id);
 
 
 --
 -- Name: master_courses_child_content_tags fk_rails_1421b96805; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_child_content_tags
-    ADD CONSTRAINT fk_rails_1421b96805 FOREIGN KEY (child_subscription_id) REFERENCES master_courses_child_subscriptions(id);
+ALTER TABLE ONLY public.master_courses_child_content_tags
+    ADD CONSTRAINT fk_rails_1421b96805 FOREIGN KEY (child_subscription_id) REFERENCES public.master_courses_child_subscriptions(id);
 
 
 --
 -- Name: group_memberships fk_rails_14271168a1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY group_memberships
-    ADD CONSTRAINT fk_rails_14271168a1 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.group_memberships
+    ADD CONSTRAINT fk_rails_14271168a1 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: wiki_pages fk_rails_154906ae4a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY wiki_pages
-    ADD CONSTRAINT fk_rails_154906ae4a FOREIGN KEY (cloned_item_id) REFERENCES cloned_items(id);
+ALTER TABLE ONLY public.wiki_pages
+    ADD CONSTRAINT fk_rails_154906ae4a FOREIGN KEY (cloned_item_id) REFERENCES public.cloned_items(id);
 
 
 --
 -- Name: courses fk_rails_187ebba5f6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY courses
-    ADD CONSTRAINT fk_rails_187ebba5f6 FOREIGN KEY (sis_batch_id) REFERENCES sis_batches(id);
+ALTER TABLE ONLY public.courses
+    ADD CONSTRAINT fk_rails_187ebba5f6 FOREIGN KEY (sis_batch_id) REFERENCES public.sis_batches(id);
 
 
 --
 -- Name: profiles fk_rails_1c415318fc; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY profiles
-    ADD CONSTRAINT fk_rails_1c415318fc FOREIGN KEY (root_account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.profiles
+    ADD CONSTRAINT fk_rails_1c415318fc FOREIGN KEY (root_account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: bookmarks_bookmarks fk_rails_1c845e4204; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY bookmarks_bookmarks
-    ADD CONSTRAINT fk_rails_1c845e4204 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.bookmarks_bookmarks
+    ADD CONSTRAINT fk_rails_1c845e4204 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: discussion_topics fk_rails_1d19e2eea5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topics
-    ADD CONSTRAINT fk_rails_1d19e2eea5 FOREIGN KEY (external_feed_id) REFERENCES external_feeds(id);
+ALTER TABLE ONLY public.discussion_topics
+    ADD CONSTRAINT fk_rails_1d19e2eea5 FOREIGN KEY (external_feed_id) REFERENCES public.external_feeds(id);
 
 
 --
 -- Name: migration_issues fk_rails_1d79ad9705; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY migration_issues
-    ADD CONSTRAINT fk_rails_1d79ad9705 FOREIGN KEY (content_migration_id) REFERENCES content_migrations(id);
+ALTER TABLE ONLY public.migration_issues
+    ADD CONSTRAINT fk_rails_1d79ad9705 FOREIGN KEY (content_migration_id) REFERENCES public.content_migrations(id);
 
 
 --
 -- Name: account_reports fk_rails_1ee483dd34; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_reports
-    ADD CONSTRAINT fk_rails_1ee483dd34 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.account_reports
+    ADD CONSTRAINT fk_rails_1ee483dd34 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: polling_poll_submissions fk_rails_21612c7e9a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY polling_poll_submissions
-    ADD CONSTRAINT fk_rails_21612c7e9a FOREIGN KEY (poll_choice_id) REFERENCES polling_poll_choices(id);
+ALTER TABLE ONLY public.polling_poll_submissions
+    ADD CONSTRAINT fk_rails_21612c7e9a FOREIGN KEY (poll_choice_id) REFERENCES public.polling_poll_choices(id);
 
 
 --
 -- Name: learning_outcome_groups fk_rails_2359cb17b0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY learning_outcome_groups
-    ADD CONSTRAINT fk_rails_2359cb17b0 FOREIGN KEY (root_learning_outcome_group_id) REFERENCES learning_outcome_groups(id);
-
-
---
--- Name: quiz_submission_events_2019_4 fk_rails_23bbda5091; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY quiz_submission_events_2019_4
-    ADD CONSTRAINT fk_rails_23bbda5091 FOREIGN KEY (quiz_submission_id) REFERENCES quiz_submissions(id);
+ALTER TABLE ONLY public.learning_outcome_groups
+    ADD CONSTRAINT fk_rails_2359cb17b0 FOREIGN KEY (root_learning_outcome_group_id) REFERENCES public.learning_outcome_groups(id);
 
 
 --
 -- Name: enrollment_states fk_rails_2583b53a28; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollment_states
-    ADD CONSTRAINT fk_rails_2583b53a28 FOREIGN KEY (enrollment_id) REFERENCES enrollments(id);
+ALTER TABLE ONLY public.enrollment_states
+    ADD CONSTRAINT fk_rails_2583b53a28 FOREIGN KEY (enrollment_id) REFERENCES public.enrollments(id);
 
 
 --
 -- Name: media_objects fk_rails_25b24c5e66; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY media_objects
-    ADD CONSTRAINT fk_rails_25b24c5e66 FOREIGN KEY (root_account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.media_objects
+    ADD CONSTRAINT fk_rails_25b24c5e66 FOREIGN KEY (root_account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: polling_polls fk_rails_2742c5bc84; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY polling_polls
-    ADD CONSTRAINT fk_rails_2742c5bc84 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.polling_polls
+    ADD CONSTRAINT fk_rails_2742c5bc84 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: context_external_tools fk_rails_27d8c7c29b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_external_tools
-    ADD CONSTRAINT fk_rails_27d8c7c29b FOREIGN KEY (cloned_item_id) REFERENCES cloned_items(id);
+ALTER TABLE ONLY public.context_external_tools
+    ADD CONSTRAINT fk_rails_27d8c7c29b FOREIGN KEY (cloned_item_id) REFERENCES public.cloned_items(id);
 
 
 --
 -- Name: sis_batches fk_rails_289263ccc7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sis_batches
-    ADD CONSTRAINT fk_rails_289263ccc7 FOREIGN KEY (errors_attachment_id) REFERENCES attachments(id);
+ALTER TABLE ONLY public.sis_batches
+    ADD CONSTRAINT fk_rails_289263ccc7 FOREIGN KEY (errors_attachment_id) REFERENCES public.attachments(id);
 
 
 --
 -- Name: assignments fk_rails_289e40e18c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignments
-    ADD CONSTRAINT fk_rails_289e40e18c FOREIGN KEY (cloned_item_id) REFERENCES cloned_items(id);
+ALTER TABLE ONLY public.assignments
+    ADD CONSTRAINT fk_rails_289e40e18c FOREIGN KEY (cloned_item_id) REFERENCES public.cloned_items(id);
+
+
+--
+-- Name: quiz_submission_events_2020_1 fk_rails_291a8bb4c2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.quiz_submission_events_2020_1
+    ADD CONSTRAINT fk_rails_291a8bb4c2 FOREIGN KEY (quiz_submission_id) REFERENCES public.quiz_submissions(id);
 
 
 --
 -- Name: discussion_entries fk_rails_2a02569030; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_entries
-    ADD CONSTRAINT fk_rails_2a02569030 FOREIGN KEY (root_entry_id) REFERENCES discussion_entries(id);
+ALTER TABLE ONLY public.discussion_entries
+    ADD CONSTRAINT fk_rails_2a02569030 FOREIGN KEY (root_entry_id) REFERENCES public.discussion_entries(id);
 
 
 --
 -- Name: quiz_submission_events fk_rails_2d873134e2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_submission_events
-    ADD CONSTRAINT fk_rails_2d873134e2 FOREIGN KEY (quiz_submission_id) REFERENCES quiz_submissions(id);
+ALTER TABLE ONLY public.quiz_submission_events
+    ADD CONSTRAINT fk_rails_2d873134e2 FOREIGN KEY (quiz_submission_id) REFERENCES public.quiz_submissions(id);
 
 
 --
 -- Name: assignment_groups fk_rails_2d906abe72; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignment_groups
-    ADD CONSTRAINT fk_rails_2d906abe72 FOREIGN KEY (cloned_item_id) REFERENCES cloned_items(id);
+ALTER TABLE ONLY public.assignment_groups
+    ADD CONSTRAINT fk_rails_2d906abe72 FOREIGN KEY (cloned_item_id) REFERENCES public.cloned_items(id);
 
 
 --
 -- Name: enrollments fk_rails_2e119501f4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollments
-    ADD CONSTRAINT fk_rails_2e119501f4 FOREIGN KEY (course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.enrollments
+    ADD CONSTRAINT fk_rails_2e119501f4 FOREIGN KEY (course_id) REFERENCES public.courses(id);
 
 
 --
 -- Name: abstract_courses fk_rails_3077d9a014; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY abstract_courses
-    ADD CONSTRAINT fk_rails_3077d9a014 FOREIGN KEY (root_account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.abstract_courses
+    ADD CONSTRAINT fk_rails_3077d9a014 FOREIGN KEY (root_account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: planner_notes fk_rails_3255427de8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY planner_notes
-    ADD CONSTRAINT fk_rails_3255427de8 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.planner_notes
+    ADD CONSTRAINT fk_rails_3255427de8 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: assessment_requests fk_rails_33d90b7c30; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assessment_requests
-    ADD CONSTRAINT fk_rails_33d90b7c30 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.assessment_requests
+    ADD CONSTRAINT fk_rails_33d90b7c30 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: discussion_topic_materialized_views fk_rails_34dd2d679a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topic_materialized_views
-    ADD CONSTRAINT fk_rails_34dd2d679a FOREIGN KEY (discussion_topic_id) REFERENCES discussion_topics(id);
+ALTER TABLE ONLY public.discussion_topic_materialized_views
+    ADD CONSTRAINT fk_rails_34dd2d679a FOREIGN KEY (discussion_topic_id) REFERENCES public.discussion_topics(id);
 
 
 --
 -- Name: learning_outcome_groups fk_rails_34f901d115; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY learning_outcome_groups
-    ADD CONSTRAINT fk_rails_34f901d115 FOREIGN KEY (learning_outcome_group_id) REFERENCES learning_outcome_groups(id);
+ALTER TABLE ONLY public.learning_outcome_groups
+    ADD CONSTRAINT fk_rails_34f901d115 FOREIGN KEY (learning_outcome_group_id) REFERENCES public.learning_outcome_groups(id);
 
 
 --
 -- Name: enrollment_dates_overrides fk_rails_356b7d0ddc; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollment_dates_overrides
-    ADD CONSTRAINT fk_rails_356b7d0ddc FOREIGN KEY (enrollment_term_id) REFERENCES enrollment_terms(id);
+ALTER TABLE ONLY public.enrollment_dates_overrides
+    ADD CONSTRAINT fk_rails_356b7d0ddc FOREIGN KEY (enrollment_term_id) REFERENCES public.enrollment_terms(id);
 
 
 --
 -- Name: originality_reports fk_rails_36c981e3e7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY originality_reports
-    ADD CONSTRAINT fk_rails_36c981e3e7 FOREIGN KEY (submission_id) REFERENCES submissions(id);
+ALTER TABLE ONLY public.originality_reports
+    ADD CONSTRAINT fk_rails_36c981e3e7 FOREIGN KEY (submission_id) REFERENCES public.submissions(id);
 
 
 --
 -- Name: grading_standards fk_rails_38b90db7a8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY grading_standards
-    ADD CONSTRAINT fk_rails_38b90db7a8 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.grading_standards
+    ADD CONSTRAINT fk_rails_38b90db7a8 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: discussion_topic_participants fk_rails_3b8c3c44d8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topic_participants
-    ADD CONSTRAINT fk_rails_3b8c3c44d8 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.discussion_topic_participants
+    ADD CONSTRAINT fk_rails_3b8c3c44d8 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: groups fk_rails_3c368b24c7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_rails_3c368b24c7 FOREIGN KEY (leader_id) REFERENCES users(id);
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT fk_rails_3c368b24c7 FOREIGN KEY (leader_id) REFERENCES public.users(id);
 
 
 --
 -- Name: epub_exports fk_rails_3c608dd796; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY epub_exports
-    ADD CONSTRAINT fk_rails_3c608dd796 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.epub_exports
+    ADD CONSTRAINT fk_rails_3c608dd796 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: delayed_messages fk_rails_3d428ac9f1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY delayed_messages
-    ADD CONSTRAINT fk_rails_3d428ac9f1 FOREIGN KEY (communication_channel_id) REFERENCES communication_channels(id);
+ALTER TABLE ONLY public.delayed_messages
+    ADD CONSTRAINT fk_rails_3d428ac9f1 FOREIGN KEY (communication_channel_id) REFERENCES public.communication_channels(id);
 
 
 --
 -- Name: collaborators fk_rails_3d4aaacbb1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collaborators
-    ADD CONSTRAINT fk_rails_3d4aaacbb1 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.collaborators
+    ADD CONSTRAINT fk_rails_3d4aaacbb1 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: collaborations fk_rails_3e8ae0af8a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collaborations
-    ADD CONSTRAINT fk_rails_3e8ae0af8a FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.collaborations
+    ADD CONSTRAINT fk_rails_3e8ae0af8a FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: shared_brand_configs fk_rails_3f25f5e6fa; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY shared_brand_configs
-    ADD CONSTRAINT fk_rails_3f25f5e6fa FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.shared_brand_configs
+    ADD CONSTRAINT fk_rails_3f25f5e6fa FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: assessment_requests fk_rails_400dc27246; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assessment_requests
-    ADD CONSTRAINT fk_rails_400dc27246 FOREIGN KEY (asset_id) REFERENCES submissions(id);
+ALTER TABLE ONLY public.assessment_requests
+    ADD CONSTRAINT fk_rails_400dc27246 FOREIGN KEY (asset_id) REFERENCES public.submissions(id);
 
 
 --
 -- Name: courses fk_rails_4309898d02; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY courses
-    ADD CONSTRAINT fk_rails_4309898d02 FOREIGN KEY (wiki_id) REFERENCES wikis(id);
+ALTER TABLE ONLY public.courses
+    ADD CONSTRAINT fk_rails_4309898d02 FOREIGN KEY (wiki_id) REFERENCES public.wikis(id);
 
 
 --
 -- Name: role_overrides fk_rails_4412996802; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY role_overrides
-    ADD CONSTRAINT fk_rails_4412996802 FOREIGN KEY (role_id) REFERENCES roles(id);
+ALTER TABLE ONLY public.role_overrides
+    ADD CONSTRAINT fk_rails_4412996802 FOREIGN KEY (role_id) REFERENCES public.roles(id);
 
 
 --
 -- Name: context_external_tool_assignment_lookups fk_rails_445c77bd4c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_external_tool_assignment_lookups
-    ADD CONSTRAINT fk_rails_445c77bd4c FOREIGN KEY (assignment_id) REFERENCES assignments(id);
+ALTER TABLE ONLY public.context_external_tool_assignment_lookups
+    ADD CONSTRAINT fk_rails_445c77bd4c FOREIGN KEY (assignment_id) REFERENCES public.assignments(id);
 
 
 --
 -- Name: learning_outcome_results fk_rails_453d9421c4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY learning_outcome_results
-    ADD CONSTRAINT fk_rails_453d9421c4 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.learning_outcome_results
+    ADD CONSTRAINT fk_rails_453d9421c4 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: user_merge_data_records fk_rails_4579cd8750; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_merge_data_records
-    ADD CONSTRAINT fk_rails_4579cd8750 FOREIGN KEY (user_merge_data_id) REFERENCES user_merge_data(id);
+ALTER TABLE ONLY public.user_merge_data_records
+    ADD CONSTRAINT fk_rails_4579cd8750 FOREIGN KEY (user_merge_data_id) REFERENCES public.user_merge_data(id);
 
 
 --
 -- Name: moderated_grading_provisional_grades fk_rails_46d61d78e3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY moderated_grading_provisional_grades
-    ADD CONSTRAINT fk_rails_46d61d78e3 FOREIGN KEY (scorer_id) REFERENCES users(id);
+ALTER TABLE ONLY public.moderated_grading_provisional_grades
+    ADD CONSTRAINT fk_rails_46d61d78e3 FOREIGN KEY (scorer_id) REFERENCES public.users(id);
 
 
 --
 -- Name: content_migrations fk_rails_471c20026b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_migrations
-    ADD CONSTRAINT fk_rails_471c20026b FOREIGN KEY (overview_attachment_id) REFERENCES attachments(id);
+ALTER TABLE ONLY public.content_migrations
+    ADD CONSTRAINT fk_rails_471c20026b FOREIGN KEY (overview_attachment_id) REFERENCES public.attachments(id);
 
 
 --
 -- Name: quiz_submissions fk_rails_473863d022; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_submissions
-    ADD CONSTRAINT fk_rails_473863d022 FOREIGN KEY (quiz_id) REFERENCES quizzes(id);
+ALTER TABLE ONLY public.quiz_submissions
+    ADD CONSTRAINT fk_rails_473863d022 FOREIGN KEY (quiz_id) REFERENCES public.quizzes(id);
 
 
 --
 -- Name: eportfolio_entries fk_rails_482dbada33; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY eportfolio_entries
-    ADD CONSTRAINT fk_rails_482dbada33 FOREIGN KEY (eportfolio_category_id) REFERENCES eportfolio_categories(id);
+ALTER TABLE ONLY public.eportfolio_entries
+    ADD CONSTRAINT fk_rails_482dbada33 FOREIGN KEY (eportfolio_category_id) REFERENCES public.eportfolio_categories(id);
 
 
 --
 -- Name: master_courses_master_migrations fk_rails_48befa8db6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_master_migrations
-    ADD CONSTRAINT fk_rails_48befa8db6 FOREIGN KEY (master_template_id) REFERENCES master_courses_master_templates(id);
+ALTER TABLE ONLY public.master_courses_master_migrations
+    ADD CONSTRAINT fk_rails_48befa8db6 FOREIGN KEY (master_template_id) REFERENCES public.master_courses_master_templates(id);
 
 
 --
 -- Name: user_merge_data fk_rails_4993c3792e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_merge_data
-    ADD CONSTRAINT fk_rails_4993c3792e FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.user_merge_data
+    ADD CONSTRAINT fk_rails_4993c3792e FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: course_sections fk_rails_4a0eb6ebbb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY course_sections
-    ADD CONSTRAINT fk_rails_4a0eb6ebbb FOREIGN KEY (root_account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.course_sections
+    ADD CONSTRAINT fk_rails_4a0eb6ebbb FOREIGN KEY (root_account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: discussion_topics fk_rails_4aac5d137c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topics
-    ADD CONSTRAINT fk_rails_4aac5d137c FOREIGN KEY (root_topic_id) REFERENCES discussion_topics(id);
+ALTER TABLE ONLY public.discussion_topics
+    ADD CONSTRAINT fk_rails_4aac5d137c FOREIGN KEY (root_topic_id) REFERENCES public.discussion_topics(id);
 
 
 --
 -- Name: eportfolios fk_rails_4c2dbd440f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY eportfolios
-    ADD CONSTRAINT fk_rails_4c2dbd440f FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.eportfolios
+    ADD CONSTRAINT fk_rails_4c2dbd440f FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: quiz_regrades fk_rails_4cf8b252f4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_regrades
-    ADD CONSTRAINT fk_rails_4cf8b252f4 FOREIGN KEY (quiz_id) REFERENCES quizzes(id);
+ALTER TABLE ONLY public.quiz_regrades
+    ADD CONSTRAINT fk_rails_4cf8b252f4 FOREIGN KEY (quiz_id) REFERENCES public.quizzes(id);
 
 
 --
 -- Name: gradebook_csvs fk_rails_4d8cd84eb3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY gradebook_csvs
-    ADD CONSTRAINT fk_rails_4d8cd84eb3 FOREIGN KEY (progress_id) REFERENCES progresses(id);
+ALTER TABLE ONLY public.gradebook_csvs
+    ADD CONSTRAINT fk_rails_4d8cd84eb3 FOREIGN KEY (progress_id) REFERENCES public.progresses(id);
 
 
 --
 -- Name: course_account_associations fk_rails_4e21d15465; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY course_account_associations
-    ADD CONSTRAINT fk_rails_4e21d15465 FOREIGN KEY (course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.course_account_associations
+    ADD CONSTRAINT fk_rails_4e21d15465 FOREIGN KEY (course_id) REFERENCES public.courses(id);
 
 
 --
 -- Name: gradebook_uploads fk_rails_4e38efab60; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY gradebook_uploads
-    ADD CONSTRAINT fk_rails_4e38efab60 FOREIGN KEY (progress_id) REFERENCES progresses(id);
+ALTER TABLE ONLY public.gradebook_uploads
+    ADD CONSTRAINT fk_rails_4e38efab60 FOREIGN KEY (progress_id) REFERENCES public.progresses(id);
 
 
 --
 -- Name: quiz_statistics fk_rails_4e39b123dd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_statistics
-    ADD CONSTRAINT fk_rails_4e39b123dd FOREIGN KEY (quiz_id) REFERENCES quizzes(id);
+ALTER TABLE ONLY public.quiz_statistics
+    ADD CONSTRAINT fk_rails_4e39b123dd FOREIGN KEY (quiz_id) REFERENCES public.quizzes(id);
 
 
 --
 -- Name: user_observers fk_rails_506aea5479; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_observers
-    ADD CONSTRAINT fk_rails_506aea5479 FOREIGN KEY (observer_id) REFERENCES users(id);
+ALTER TABLE ONLY public.user_observers
+    ADD CONSTRAINT fk_rails_506aea5479 FOREIGN KEY (observer_id) REFERENCES public.users(id);
 
 
 --
 -- Name: enrollment_terms fk_rails_51e8498073; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollment_terms
-    ADD CONSTRAINT fk_rails_51e8498073 FOREIGN KEY (grading_period_group_id) REFERENCES grading_period_groups(id);
+ALTER TABLE ONLY public.enrollment_terms
+    ADD CONSTRAINT fk_rails_51e8498073 FOREIGN KEY (grading_period_group_id) REFERENCES public.grading_period_groups(id);
 
 
 --
 -- Name: assignment_override_students fk_rails_5215564217; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignment_override_students
-    ADD CONSTRAINT fk_rails_5215564217 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.assignment_override_students
+    ADD CONSTRAINT fk_rails_5215564217 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: polling_poll_sessions fk_rails_52ebcb3ce8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY polling_poll_sessions
-    ADD CONSTRAINT fk_rails_52ebcb3ce8 FOREIGN KEY (course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.polling_poll_sessions
+    ADD CONSTRAINT fk_rails_52ebcb3ce8 FOREIGN KEY (course_id) REFERENCES public.courses(id);
 
 
 --
 -- Name: enrollments fk_rails_56c4ec50d6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollments
-    ADD CONSTRAINT fk_rails_56c4ec50d6 FOREIGN KEY (sis_batch_id) REFERENCES sis_batches(id);
+ALTER TABLE ONLY public.enrollments
+    ADD CONSTRAINT fk_rails_56c4ec50d6 FOREIGN KEY (sis_batch_id) REFERENCES public.sis_batches(id);
 
 
 --
 -- Name: custom_gradebook_columns fk_rails_571a48e40d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY custom_gradebook_columns
-    ADD CONSTRAINT fk_rails_571a48e40d FOREIGN KEY (course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.custom_gradebook_columns
+    ADD CONSTRAINT fk_rails_571a48e40d FOREIGN KEY (course_id) REFERENCES public.courses(id);
 
 
 --
 -- Name: lti_tool_proxies fk_rails_57f8b9857d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_tool_proxies
-    ADD CONSTRAINT fk_rails_57f8b9857d FOREIGN KEY (product_family_id) REFERENCES lti_product_families(id);
+ALTER TABLE ONLY public.lti_tool_proxies
+    ADD CONSTRAINT fk_rails_57f8b9857d FOREIGN KEY (product_family_id) REFERENCES public.lti_product_families(id);
 
 
 --
 -- Name: pseudonyms fk_rails_587e86bf60; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pseudonyms
-    ADD CONSTRAINT fk_rails_587e86bf60 FOREIGN KEY (authentication_provider_id) REFERENCES account_authorization_configs(id);
-
-
---
--- Name: quiz_submission_events_2019_3 fk_rails_5889aa933d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY quiz_submission_events_2019_3
-    ADD CONSTRAINT fk_rails_5889aa933d FOREIGN KEY (quiz_submission_id) REFERENCES quiz_submissions(id);
+ALTER TABLE ONLY public.pseudonyms
+    ADD CONSTRAINT fk_rails_587e86bf60 FOREIGN KEY (authentication_provider_id) REFERENCES public.account_authorization_configs(id);
 
 
 --
 -- Name: account_reports fk_rails_58e7f750a2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_reports
-    ADD CONSTRAINT fk_rails_58e7f750a2 FOREIGN KEY (attachment_id) REFERENCES attachments(id);
+ALTER TABLE ONLY public.account_reports
+    ADD CONSTRAINT fk_rails_58e7f750a2 FOREIGN KEY (attachment_id) REFERENCES public.attachments(id);
 
 
 --
 -- Name: assignment_overrides fk_rails_58f8ee369b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignment_overrides
-    ADD CONSTRAINT fk_rails_58f8ee369b FOREIGN KEY (assignment_id) REFERENCES assignments(id);
+ALTER TABLE ONLY public.assignment_overrides
+    ADD CONSTRAINT fk_rails_58f8ee369b FOREIGN KEY (assignment_id) REFERENCES public.assignments(id);
 
 
 --
 -- Name: account_notification_roles fk_rails_5948b12a95; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_notification_roles
-    ADD CONSTRAINT fk_rails_5948b12a95 FOREIGN KEY (account_notification_id) REFERENCES account_notifications(id);
+ALTER TABLE ONLY public.account_notification_roles
+    ADD CONSTRAINT fk_rails_5948b12a95 FOREIGN KEY (account_notification_id) REFERENCES public.account_notifications(id);
 
 
 --
 -- Name: sis_batches fk_rails_5cc4e38775; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sis_batches
-    ADD CONSTRAINT fk_rails_5cc4e38775 FOREIGN KEY (batch_mode_term_id) REFERENCES enrollment_terms(id);
+ALTER TABLE ONLY public.sis_batches
+    ADD CONSTRAINT fk_rails_5cc4e38775 FOREIGN KEY (batch_mode_term_id) REFERENCES public.enrollment_terms(id);
 
 
 --
 -- Name: submissions fk_rails_5d48b8a034; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submissions
-    ADD CONSTRAINT fk_rails_5d48b8a034 FOREIGN KEY (media_object_id) REFERENCES media_objects(id);
+ALTER TABLE ONLY public.submissions
+    ADD CONSTRAINT fk_rails_5d48b8a034 FOREIGN KEY (media_object_id) REFERENCES public.media_objects(id);
 
 
 --
 -- Name: accounts fk_rails_5de7ad5dec; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY accounts
-    ADD CONSTRAINT fk_rails_5de7ad5dec FOREIGN KEY (root_account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT fk_rails_5de7ad5dec FOREIGN KEY (root_account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: web_conference_participants fk_rails_5e4063e908; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY web_conference_participants
-    ADD CONSTRAINT fk_rails_5e4063e908 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.web_conference_participants
+    ADD CONSTRAINT fk_rails_5e4063e908 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: planner_overrides fk_rails_5fa99aedd0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY planner_overrides
-    ADD CONSTRAINT fk_rails_5fa99aedd0 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.planner_overrides
+    ADD CONSTRAINT fk_rails_5fa99aedd0 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: gradebook_csvs fk_rails_60f1713674; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY gradebook_csvs
-    ADD CONSTRAINT fk_rails_60f1713674 FOREIGN KEY (course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.gradebook_csvs
+    ADD CONSTRAINT fk_rails_60f1713674 FOREIGN KEY (course_id) REFERENCES public.courses(id);
 
 
 --
 -- Name: course_sections fk_rails_616bd9cbd0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY course_sections
-    ADD CONSTRAINT fk_rails_616bd9cbd0 FOREIGN KEY (course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.course_sections
+    ADD CONSTRAINT fk_rails_616bd9cbd0 FOREIGN KEY (course_id) REFERENCES public.courses(id);
 
 
 --
 -- Name: submissions fk_rails_61cac0823d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submissions
-    ADD CONSTRAINT fk_rails_61cac0823d FOREIGN KEY (assignment_id) REFERENCES assignments(id);
+ALTER TABLE ONLY public.submissions
+    ADD CONSTRAINT fk_rails_61cac0823d FOREIGN KEY (assignment_id) REFERENCES public.assignments(id);
 
 
 --
 -- Name: groups fk_rails_61d69a1dcf; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_rails_61d69a1dcf FOREIGN KEY (sis_batch_id) REFERENCES sis_batches(id);
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT fk_rails_61d69a1dcf FOREIGN KEY (sis_batch_id) REFERENCES public.sis_batches(id);
 
 
 --
 -- Name: live_assessments_results fk_rails_61dcfeb426; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY live_assessments_results
-    ADD CONSTRAINT fk_rails_61dcfeb426 FOREIGN KEY (assessment_id) REFERENCES live_assessments_assessments(id);
+ALTER TABLE ONLY public.live_assessments_results
+    ADD CONSTRAINT fk_rails_61dcfeb426 FOREIGN KEY (assessment_id) REFERENCES public.live_assessments_assessments(id);
 
 
 --
 -- Name: accounts fk_rails_630eca7263; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY accounts
-    ADD CONSTRAINT fk_rails_630eca7263 FOREIGN KEY (sis_batch_id) REFERENCES sis_batches(id);
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT fk_rails_630eca7263 FOREIGN KEY (sis_batch_id) REFERENCES public.sis_batches(id);
 
 
 --
 -- Name: enrollments fk_rails_6359366b63; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollments
-    ADD CONSTRAINT fk_rails_6359366b63 FOREIGN KEY (associated_user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.enrollments
+    ADD CONSTRAINT fk_rails_6359366b63 FOREIGN KEY (associated_user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: content_exports fk_rails_6364a4a05e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_exports
-    ADD CONSTRAINT fk_rails_6364a4a05e FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.content_exports
+    ADD CONSTRAINT fk_rails_6364a4a05e FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: oauth_requests fk_rails_6471c0c593; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY oauth_requests
-    ADD CONSTRAINT fk_rails_6471c0c593 FOREIGN KEY (user_id) REFERENCES users(id);
-
-
---
--- Name: quiz_submission_events_2018_12 fk_rails_64a1536925; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY quiz_submission_events_2018_12
-    ADD CONSTRAINT fk_rails_64a1536925 FOREIGN KEY (quiz_submission_id) REFERENCES quiz_submissions(id);
+ALTER TABLE ONLY public.oauth_requests
+    ADD CONSTRAINT fk_rails_6471c0c593 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: web_conference_participants fk_rails_652989382e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY web_conference_participants
-    ADD CONSTRAINT fk_rails_652989382e FOREIGN KEY (web_conference_id) REFERENCES web_conferences(id);
+ALTER TABLE ONLY public.web_conference_participants
+    ADD CONSTRAINT fk_rails_652989382e FOREIGN KEY (web_conference_id) REFERENCES public.web_conferences(id);
 
 
 --
 -- Name: shared_brand_configs fk_rails_669597e153; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY shared_brand_configs
-    ADD CONSTRAINT fk_rails_669597e153 FOREIGN KEY (brand_config_md5) REFERENCES brand_configs(md5);
+ALTER TABLE ONLY public.shared_brand_configs
+    ADD CONSTRAINT fk_rails_669597e153 FOREIGN KEY (brand_config_md5) REFERENCES public.brand_configs(md5);
 
 
 --
 -- Name: discussion_topics fk_rails_6791d1877c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topics
-    ADD CONSTRAINT fk_rails_6791d1877c FOREIGN KEY (old_assignment_id) REFERENCES assignments(id);
+ALTER TABLE ONLY public.discussion_topics
+    ADD CONSTRAINT fk_rails_6791d1877c FOREIGN KEY (old_assignment_id) REFERENCES public.assignments(id);
 
 
 --
 -- Name: account_users fk_rails_685e030c15; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_users
-    ADD CONSTRAINT fk_rails_685e030c15 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.account_users
+    ADD CONSTRAINT fk_rails_685e030c15 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: master_courses_master_templates fk_rails_69a6430b11; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_master_templates
-    ADD CONSTRAINT fk_rails_69a6430b11 FOREIGN KEY (active_migration_id) REFERENCES master_courses_master_migrations(id);
+ALTER TABLE ONLY public.master_courses_master_templates
+    ADD CONSTRAINT fk_rails_69a6430b11 FOREIGN KEY (active_migration_id) REFERENCES public.master_courses_master_migrations(id);
 
 
 --
 -- Name: submission_comments fk_rails_6a44347cb4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submission_comments
-    ADD CONSTRAINT fk_rails_6a44347cb4 FOREIGN KEY (provisional_grade_id) REFERENCES moderated_grading_provisional_grades(id);
+ALTER TABLE ONLY public.submission_comments
+    ADD CONSTRAINT fk_rails_6a44347cb4 FOREIGN KEY (provisional_grade_id) REFERENCES public.moderated_grading_provisional_grades(id);
 
 
 --
 -- Name: user_observers fk_rails_6e626831b8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_observers
-    ADD CONSTRAINT fk_rails_6e626831b8 FOREIGN KEY (user_id) REFERENCES users(id);
-
-
---
--- Name: cached_grade_distributions fk_rails_6f9ee01cc7; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY cached_grade_distributions
-    ADD CONSTRAINT fk_rails_6f9ee01cc7 FOREIGN KEY (course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.user_observers
+    ADD CONSTRAINT fk_rails_6e626831b8 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: grading_period_groups fk_rails_712c487e43; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY grading_period_groups
-    ADD CONSTRAINT fk_rails_712c487e43 FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.grading_period_groups
+    ADD CONSTRAINT fk_rails_712c487e43 FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: course_account_associations fk_rails_7225a78aa5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY course_account_associations
-    ADD CONSTRAINT fk_rails_7225a78aa5 FOREIGN KEY (course_section_id) REFERENCES course_sections(id);
+ALTER TABLE ONLY public.course_account_associations
+    ADD CONSTRAINT fk_rails_7225a78aa5 FOREIGN KEY (course_section_id) REFERENCES public.course_sections(id);
 
 
 --
 -- Name: originality_reports fk_rails_72d6122dfb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY originality_reports
-    ADD CONSTRAINT fk_rails_72d6122dfb FOREIGN KEY (originality_report_attachment_id) REFERENCES attachments(id);
+ALTER TABLE ONLY public.originality_reports
+    ADD CONSTRAINT fk_rails_72d6122dfb FOREIGN KEY (originality_report_attachment_id) REFERENCES public.attachments(id);
 
 
 --
 -- Name: context_module_progressions fk_rails_736970326a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_module_progressions
-    ADD CONSTRAINT fk_rails_736970326a FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.context_module_progressions
+    ADD CONSTRAINT fk_rails_736970326a FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: content_tags fk_rails_7376a606b8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_tags
-    ADD CONSTRAINT fk_rails_7376a606b8 FOREIGN KEY (cloned_item_id) REFERENCES cloned_items(id);
+ALTER TABLE ONLY public.content_tags
+    ADD CONSTRAINT fk_rails_7376a606b8 FOREIGN KEY (cloned_item_id) REFERENCES public.cloned_items(id);
 
 
 --
 -- Name: assignment_configuration_tool_lookups fk_rails_73f7ea9f92; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignment_configuration_tool_lookups
-    ADD CONSTRAINT fk_rails_73f7ea9f92 FOREIGN KEY (assignment_id) REFERENCES assignments(id);
+ALTER TABLE ONLY public.assignment_configuration_tool_lookups
+    ADD CONSTRAINT fk_rails_73f7ea9f92 FOREIGN KEY (assignment_id) REFERENCES public.assignments(id);
 
 
 --
 -- Name: wiki_pages fk_rails_74a0fa180b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY wiki_pages
-    ADD CONSTRAINT fk_rails_74a0fa180b FOREIGN KEY (assignment_id) REFERENCES assignments(id);
+ALTER TABLE ONLY public.wiki_pages
+    ADD CONSTRAINT fk_rails_74a0fa180b FOREIGN KEY (assignment_id) REFERENCES public.assignments(id);
 
 
 --
 -- Name: stream_item_instances fk_rails_75522c5fd3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY stream_item_instances
-    ADD CONSTRAINT fk_rails_75522c5fd3 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.stream_item_instances
+    ADD CONSTRAINT fk_rails_75522c5fd3 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: calendar_events fk_rails_75957d2da8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY calendar_events
-    ADD CONSTRAINT fk_rails_75957d2da8 FOREIGN KEY (cloned_item_id) REFERENCES cloned_items(id);
+ALTER TABLE ONLY public.calendar_events
+    ADD CONSTRAINT fk_rails_75957d2da8 FOREIGN KEY (cloned_item_id) REFERENCES public.cloned_items(id);
 
 
 --
 -- Name: live_assessments_results fk_rails_768405ee04; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY live_assessments_results
-    ADD CONSTRAINT fk_rails_768405ee04 FOREIGN KEY (assessor_id) REFERENCES users(id);
+ALTER TABLE ONLY public.live_assessments_results
+    ADD CONSTRAINT fk_rails_768405ee04 FOREIGN KEY (assessor_id) REFERENCES public.users(id);
 
 
 --
 -- Name: external_feeds fk_rails_7727e39b38; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY external_feeds
-    ADD CONSTRAINT fk_rails_7727e39b38 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.external_feeds
+    ADD CONSTRAINT fk_rails_7727e39b38 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: user_account_associations fk_rails_77e6070def; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_account_associations
-    ADD CONSTRAINT fk_rails_77e6070def FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.user_account_associations
+    ADD CONSTRAINT fk_rails_77e6070def FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: page_comments fk_rails_78ced27005; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY page_comments
-    ADD CONSTRAINT fk_rails_78ced27005 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.page_comments
+    ADD CONSTRAINT fk_rails_78ced27005 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: account_notification_roles fk_rails_794b06ff0e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_notification_roles
-    ADD CONSTRAINT fk_rails_794b06ff0e FOREIGN KEY (role_id) REFERENCES roles(id);
+ALTER TABLE ONLY public.account_notification_roles
+    ADD CONSTRAINT fk_rails_794b06ff0e FOREIGN KEY (role_id) REFERENCES public.roles(id);
 
 
 --
 -- Name: epub_exports fk_rails_7b64484d53; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY epub_exports
-    ADD CONSTRAINT fk_rails_7b64484d53 FOREIGN KEY (content_export_id) REFERENCES content_exports(id);
+ALTER TABLE ONLY public.epub_exports
+    ADD CONSTRAINT fk_rails_7b64484d53 FOREIGN KEY (content_export_id) REFERENCES public.content_exports(id);
 
 
 --
 -- Name: roles fk_rails_7c71253d78; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY roles
-    ADD CONSTRAINT fk_rails_7c71253d78 FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.roles
+    ADD CONSTRAINT fk_rails_7c71253d78 FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: lti_resource_handlers fk_rails_7cca6549c4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_resource_handlers
-    ADD CONSTRAINT fk_rails_7cca6549c4 FOREIGN KEY (tool_proxy_id) REFERENCES lti_tool_proxies(id);
+ALTER TABLE ONLY public.lti_resource_handlers
+    ADD CONSTRAINT fk_rails_7cca6549c4 FOREIGN KEY (tool_proxy_id) REFERENCES public.lti_tool_proxies(id);
 
 
 --
 -- Name: roles fk_rails_7d4ded04e1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY roles
-    ADD CONSTRAINT fk_rails_7d4ded04e1 FOREIGN KEY (root_account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.roles
+    ADD CONSTRAINT fk_rails_7d4ded04e1 FOREIGN KEY (root_account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: course_account_associations fk_rails_7d50d15200; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY course_account_associations
-    ADD CONSTRAINT fk_rails_7d50d15200 FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.course_account_associations
+    ADD CONSTRAINT fk_rails_7d50d15200 FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: groups fk_rails_7d60528287; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_rails_7d60528287 FOREIGN KEY (root_account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT fk_rails_7d60528287 FOREIGN KEY (root_account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: quiz_regrades fk_rails_8116556edd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_regrades
-    ADD CONSTRAINT fk_rails_8116556edd FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.quiz_regrades
+    ADD CONSTRAINT fk_rails_8116556edd FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: delayed_messages fk_rails_81d84c7a3d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY delayed_messages
-    ADD CONSTRAINT fk_rails_81d84c7a3d FOREIGN KEY (notification_policy_id) REFERENCES notification_policies(id);
+ALTER TABLE ONLY public.delayed_messages
+    ADD CONSTRAINT fk_rails_81d84c7a3d FOREIGN KEY (notification_policy_id) REFERENCES public.notification_policies(id);
 
 
 --
 -- Name: epub_exports fk_rails_8229c54d0d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY epub_exports
-    ADD CONSTRAINT fk_rails_8229c54d0d FOREIGN KEY (course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.epub_exports
+    ADD CONSTRAINT fk_rails_8229c54d0d FOREIGN KEY (course_id) REFERENCES public.courses(id);
 
 
 --
 -- Name: master_courses_child_subscriptions fk_rails_831debb6b9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_child_subscriptions
-    ADD CONSTRAINT fk_rails_831debb6b9 FOREIGN KEY (master_template_id) REFERENCES master_courses_master_templates(id);
+ALTER TABLE ONLY public.master_courses_child_subscriptions
+    ADD CONSTRAINT fk_rails_831debb6b9 FOREIGN KEY (master_template_id) REFERENCES public.master_courses_master_templates(id);
 
 
 --
 -- Name: discussion_entries fk_rails_846fecac98; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_entries
-    ADD CONSTRAINT fk_rails_846fecac98 FOREIGN KEY (editor_id) REFERENCES users(id);
+ALTER TABLE ONLY public.discussion_entries
+    ADD CONSTRAINT fk_rails_846fecac98 FOREIGN KEY (editor_id) REFERENCES public.users(id);
 
 
 --
 -- Name: role_overrides fk_rails_8571d0f354; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY role_overrides
-    ADD CONSTRAINT fk_rails_8571d0f354 FOREIGN KEY (context_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.role_overrides
+    ADD CONSTRAINT fk_rails_8571d0f354 FOREIGN KEY (context_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: account_reports fk_rails_865683f386; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_reports
-    ADD CONSTRAINT fk_rails_865683f386 FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.account_reports
+    ADD CONSTRAINT fk_rails_865683f386 FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: discussion_entry_participants fk_rails_86a01cf993; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_entry_participants
-    ADD CONSTRAINT fk_rails_86a01cf993 FOREIGN KEY (discussion_entry_id) REFERENCES discussion_entries(id);
+ALTER TABLE ONLY public.discussion_entry_participants
+    ADD CONSTRAINT fk_rails_86a01cf993 FOREIGN KEY (discussion_entry_id) REFERENCES public.discussion_entries(id);
 
 
 --
 -- Name: sis_post_grades_statuses fk_rails_870e38a0e6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sis_post_grades_statuses
-    ADD CONSTRAINT fk_rails_870e38a0e6 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.sis_post_grades_statuses
+    ADD CONSTRAINT fk_rails_870e38a0e6 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: user_profiles fk_rails_87a6352e58; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_profiles
-    ADD CONSTRAINT fk_rails_87a6352e58 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.user_profiles
+    ADD CONSTRAINT fk_rails_87a6352e58 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: abstract_courses fk_rails_87ef57da5a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY abstract_courses
-    ADD CONSTRAINT fk_rails_87ef57da5a FOREIGN KEY (enrollment_term_id) REFERENCES enrollment_terms(id);
+ALTER TABLE ONLY public.abstract_courses
+    ADD CONSTRAINT fk_rails_87ef57da5a FOREIGN KEY (enrollment_term_id) REFERENCES public.enrollment_terms(id);
 
 
 --
 -- Name: course_sections fk_rails_88559b4f6d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY course_sections
-    ADD CONSTRAINT fk_rails_88559b4f6d FOREIGN KEY (enrollment_term_id) REFERENCES enrollment_terms(id);
+ALTER TABLE ONLY public.course_sections
+    ADD CONSTRAINT fk_rails_88559b4f6d FOREIGN KEY (enrollment_term_id) REFERENCES public.enrollment_terms(id);
 
 
 --
 -- Name: polling_poll_submissions fk_rails_8993f10747; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY polling_poll_submissions
-    ADD CONSTRAINT fk_rails_8993f10747 FOREIGN KEY (poll_id) REFERENCES polling_polls(id);
+ALTER TABLE ONLY public.polling_poll_submissions
+    ADD CONSTRAINT fk_rails_8993f10747 FOREIGN KEY (poll_id) REFERENCES public.polling_polls(id);
 
 
 --
 -- Name: discussion_entries fk_rails_8a7187368b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_entries
-    ADD CONSTRAINT fk_rails_8a7187368b FOREIGN KEY (parent_id) REFERENCES discussion_entries(id);
+ALTER TABLE ONLY public.discussion_entries
+    ADD CONSTRAINT fk_rails_8a7187368b FOREIGN KEY (parent_id) REFERENCES public.discussion_entries(id);
 
 
 --
 -- Name: master_courses_migration_results fk_rails_8a84ef8416; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_migration_results
-    ADD CONSTRAINT fk_rails_8a84ef8416 FOREIGN KEY (master_migration_id) REFERENCES master_courses_master_migrations(id);
+ALTER TABLE ONLY public.master_courses_migration_results
+    ADD CONSTRAINT fk_rails_8a84ef8416 FOREIGN KEY (master_migration_id) REFERENCES public.master_courses_master_migrations(id);
 
 
 --
 -- Name: submissions fk_rails_8d85741475; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submissions
-    ADD CONSTRAINT fk_rails_8d85741475 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.submissions
+    ADD CONSTRAINT fk_rails_8d85741475 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: user_account_associations fk_rails_8ec6f29c88; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_account_associations
-    ADD CONSTRAINT fk_rails_8ec6f29c88 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.user_account_associations
+    ADD CONSTRAINT fk_rails_8ec6f29c88 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: courses fk_rails_8f8adab10c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY courses
-    ADD CONSTRAINT fk_rails_8f8adab10c FOREIGN KEY (root_account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.courses
+    ADD CONSTRAINT fk_rails_8f8adab10c FOREIGN KEY (root_account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: ignores fk_rails_9089e0c809; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY ignores
-    ADD CONSTRAINT fk_rails_9089e0c809 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.ignores
+    ADD CONSTRAINT fk_rails_9089e0c809 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: live_assessments_submissions fk_rails_924ff0872d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY live_assessments_submissions
-    ADD CONSTRAINT fk_rails_924ff0872d FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.live_assessments_submissions
+    ADD CONSTRAINT fk_rails_924ff0872d FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: master_courses_master_content_tags fk_rails_925590350a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_master_content_tags
-    ADD CONSTRAINT fk_rails_925590350a FOREIGN KEY (master_template_id) REFERENCES master_courses_master_templates(id);
+ALTER TABLE ONLY public.master_courses_master_content_tags
+    ADD CONSTRAINT fk_rails_925590350a FOREIGN KEY (master_template_id) REFERENCES public.master_courses_master_templates(id);
 
 
 --
 -- Name: calendar_events fk_rails_930e3c0bf4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY calendar_events
-    ADD CONSTRAINT fk_rails_930e3c0bf4 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.calendar_events
+    ADD CONSTRAINT fk_rails_930e3c0bf4 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: account_authorization_configs fk_rails_94e00def24; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_authorization_configs
-    ADD CONSTRAINT fk_rails_94e00def24 FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.account_authorization_configs
+    ADD CONSTRAINT fk_rails_94e00def24 FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: master_courses_child_subscriptions fk_rails_95aad9cf8d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_child_subscriptions
-    ADD CONSTRAINT fk_rails_95aad9cf8d FOREIGN KEY (child_course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.master_courses_child_subscriptions
+    ADD CONSTRAINT fk_rails_95aad9cf8d FOREIGN KEY (child_course_id) REFERENCES public.courses(id);
 
 
 --
 -- Name: access_tokens fk_rails_96fc070778; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY access_tokens
-    ADD CONSTRAINT fk_rails_96fc070778 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.access_tokens
+    ADD CONSTRAINT fk_rails_96fc070778 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: report_snapshots fk_rails_983ad88e61; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY report_snapshots
-    ADD CONSTRAINT fk_rails_983ad88e61 FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.report_snapshots
+    ADD CONSTRAINT fk_rails_983ad88e61 FOREIGN KEY (account_id) REFERENCES public.accounts(id);
+
+
+--
+-- Name: quiz_submission_events_2019_11 fk_rails_9893ac4ce9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.quiz_submission_events_2019_11
+    ADD CONSTRAINT fk_rails_9893ac4ce9 FOREIGN KEY (quiz_submission_id) REFERENCES public.quiz_submissions(id);
 
 
 --
 -- Name: discussion_topics fk_rails_98edc2f77e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topics
-    ADD CONSTRAINT fk_rails_98edc2f77e FOREIGN KEY (assignment_id) REFERENCES assignments(id);
+ALTER TABLE ONLY public.discussion_topics
+    ADD CONSTRAINT fk_rails_98edc2f77e FOREIGN KEY (assignment_id) REFERENCES public.assignments(id);
 
 
 --
 -- Name: conversation_message_participants fk_rails_992a8b9e13; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY conversation_message_participants
-    ADD CONSTRAINT fk_rails_992a8b9e13 FOREIGN KEY (conversation_message_id) REFERENCES conversation_messages(id);
+ALTER TABLE ONLY public.conversation_message_participants
+    ADD CONSTRAINT fk_rails_992a8b9e13 FOREIGN KEY (conversation_message_id) REFERENCES public.conversation_messages(id);
 
 
 --
 -- Name: discussion_topics fk_rails_99a031cbb1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topics
-    ADD CONSTRAINT fk_rails_99a031cbb1 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.discussion_topics
+    ADD CONSTRAINT fk_rails_99a031cbb1 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: wiki_pages fk_rails_9a0e88e669; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY wiki_pages
-    ADD CONSTRAINT fk_rails_9a0e88e669 FOREIGN KEY (old_assignment_id) REFERENCES assignments(id);
+ALTER TABLE ONLY public.wiki_pages
+    ADD CONSTRAINT fk_rails_9a0e88e669 FOREIGN KEY (old_assignment_id) REFERENCES public.assignments(id);
 
 
 --
 -- Name: account_notifications fk_rails_9a3f0df4a1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_notifications
-    ADD CONSTRAINT fk_rails_9a3f0df4a1 FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.account_notifications
+    ADD CONSTRAINT fk_rails_9a3f0df4a1 FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: discussion_entries fk_rails_9b275b5da7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_entries
-    ADD CONSTRAINT fk_rails_9b275b5da7 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.discussion_entries
+    ADD CONSTRAINT fk_rails_9b275b5da7 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: discussion_topics fk_rails_9b3acbc3f8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topics
-    ADD CONSTRAINT fk_rails_9b3acbc3f8 FOREIGN KEY (attachment_id) REFERENCES attachments(id);
+ALTER TABLE ONLY public.discussion_topics
+    ADD CONSTRAINT fk_rails_9b3acbc3f8 FOREIGN KEY (attachment_id) REFERENCES public.attachments(id);
 
 
 --
 -- Name: lti_tool_proxy_bindings fk_rails_9b5d93b5c3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_tool_proxy_bindings
-    ADD CONSTRAINT fk_rails_9b5d93b5c3 FOREIGN KEY (tool_proxy_id) REFERENCES lti_tool_proxies(id);
+ALTER TABLE ONLY public.lti_tool_proxy_bindings
+    ADD CONSTRAINT fk_rails_9b5d93b5c3 FOREIGN KEY (tool_proxy_id) REFERENCES public.lti_tool_proxies(id);
 
 
 --
 -- Name: pseudonyms fk_rails_9b98a5d814; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pseudonyms
-    ADD CONSTRAINT fk_rails_9b98a5d814 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.pseudonyms
+    ADD CONSTRAINT fk_rails_9b98a5d814 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: user_notes fk_rails_9bcd528c60; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_notes
-    ADD CONSTRAINT fk_rails_9bcd528c60 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.user_notes
+    ADD CONSTRAINT fk_rails_9bcd528c60 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: content_migrations fk_rails_9bdc9d1482; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_migrations
-    ADD CONSTRAINT fk_rails_9bdc9d1482 FOREIGN KEY (attachment_id) REFERENCES attachments(id);
+ALTER TABLE ONLY public.content_migrations
+    ADD CONSTRAINT fk_rails_9bdc9d1482 FOREIGN KEY (attachment_id) REFERENCES public.attachments(id);
 
 
 --
 -- Name: abstract_courses fk_rails_9c92877701; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY abstract_courses
-    ADD CONSTRAINT fk_rails_9c92877701 FOREIGN KEY (sis_batch_id) REFERENCES sis_batches(id);
+ALTER TABLE ONLY public.abstract_courses
+    ADD CONSTRAINT fk_rails_9c92877701 FOREIGN KEY (sis_batch_id) REFERENCES public.sis_batches(id);
 
 
 --
 -- Name: sis_batch_error_files fk_rails_9cbb444c5f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sis_batch_error_files
-    ADD CONSTRAINT fk_rails_9cbb444c5f FOREIGN KEY (sis_batch_id) REFERENCES sis_batches(id);
+ALTER TABLE ONLY public.sis_batch_error_files
+    ADD CONSTRAINT fk_rails_9cbb444c5f FOREIGN KEY (sis_batch_id) REFERENCES public.sis_batches(id);
 
 
 --
 -- Name: context_module_progressions fk_rails_9cc1157b30; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_module_progressions
-    ADD CONSTRAINT fk_rails_9cc1157b30 FOREIGN KEY (context_module_id) REFERENCES context_modules(id);
+ALTER TABLE ONLY public.context_module_progressions
+    ADD CONSTRAINT fk_rails_9cc1157b30 FOREIGN KEY (context_module_id) REFERENCES public.context_modules(id);
 
 
 --
 -- Name: grading_periods fk_rails_9cc118401a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY grading_periods
-    ADD CONSTRAINT fk_rails_9cc118401a FOREIGN KEY (grading_period_group_id) REFERENCES grading_period_groups(id);
+ALTER TABLE ONLY public.grading_periods
+    ADD CONSTRAINT fk_rails_9cc118401a FOREIGN KEY (grading_period_group_id) REFERENCES public.grading_period_groups(id);
 
 
 --
 -- Name: submissions fk_rails_9e3ddda320; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submissions
-    ADD CONSTRAINT fk_rails_9e3ddda320 FOREIGN KEY (grading_period_id) REFERENCES grading_periods(id);
+ALTER TABLE ONLY public.submissions
+    ADD CONSTRAINT fk_rails_9e3ddda320 FOREIGN KEY (grading_period_id) REFERENCES public.grading_periods(id);
 
 
 --
 -- Name: rubric_associations fk_rails_9e5239a751; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY rubric_associations
-    ADD CONSTRAINT fk_rails_9e5239a751 FOREIGN KEY (rubric_id) REFERENCES rubrics(id);
+ALTER TABLE ONLY public.rubric_associations
+    ADD CONSTRAINT fk_rails_9e5239a751 FOREIGN KEY (rubric_id) REFERENCES public.rubrics(id);
 
 
 --
 -- Name: folders fk_rails_9f43470a04; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY folders
-    ADD CONSTRAINT fk_rails_9f43470a04 FOREIGN KEY (parent_folder_id) REFERENCES folders(id);
+ALTER TABLE ONLY public.folders
+    ADD CONSTRAINT fk_rails_9f43470a04 FOREIGN KEY (parent_folder_id) REFERENCES public.folders(id);
 
 
 --
 -- Name: quizzes fk_rails_9f9beaf05c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quizzes
-    ADD CONSTRAINT fk_rails_9f9beaf05c FOREIGN KEY (assignment_id) REFERENCES assignments(id);
+ALTER TABLE ONLY public.quizzes
+    ADD CONSTRAINT fk_rails_9f9beaf05c FOREIGN KEY (assignment_id) REFERENCES public.assignments(id);
 
 
 --
 -- Name: assignment_override_students fk_rails_9ffe0aa305; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignment_override_students
-    ADD CONSTRAINT fk_rails_9ffe0aa305 FOREIGN KEY (assignment_id) REFERENCES assignments(id);
+ALTER TABLE ONLY public.assignment_override_students
+    ADD CONSTRAINT fk_rails_9ffe0aa305 FOREIGN KEY (assignment_id) REFERENCES public.assignments(id);
 
 
 --
 -- Name: learning_outcome_results fk_rails_a093f5ae6a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY learning_outcome_results
-    ADD CONSTRAINT fk_rails_a093f5ae6a FOREIGN KEY (learning_outcome_id) REFERENCES learning_outcomes(id);
+ALTER TABLE ONLY public.learning_outcome_results
+    ADD CONSTRAINT fk_rails_a093f5ae6a FOREIGN KEY (learning_outcome_id) REFERENCES public.learning_outcomes(id);
 
 
 --
 -- Name: content_participations fk_rails_a223bf6cde; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_participations
-    ADD CONSTRAINT fk_rails_a223bf6cde FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.content_participations
+    ADD CONSTRAINT fk_rails_a223bf6cde FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: polling_poll_submissions fk_rails_a327cfe658; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY polling_poll_submissions
-    ADD CONSTRAINT fk_rails_a327cfe658 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.polling_poll_submissions
+    ADD CONSTRAINT fk_rails_a327cfe658 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: eportfolio_entries fk_rails_a3aa9184de; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY eportfolio_entries
-    ADD CONSTRAINT fk_rails_a3aa9184de FOREIGN KEY (eportfolio_id) REFERENCES eportfolios(id);
+ALTER TABLE ONLY public.eportfolio_entries
+    ADD CONSTRAINT fk_rails_a3aa9184de FOREIGN KEY (eportfolio_id) REFERENCES public.eportfolios(id);
 
 
 --
 -- Name: moderated_grading_selections fk_rails_a4904a6da8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY moderated_grading_selections
-    ADD CONSTRAINT fk_rails_a4904a6da8 FOREIGN KEY (selected_provisional_grade_id) REFERENCES moderated_grading_provisional_grades(id);
+ALTER TABLE ONLY public.moderated_grading_selections
+    ADD CONSTRAINT fk_rails_a4904a6da8 FOREIGN KEY (selected_provisional_grade_id) REFERENCES public.moderated_grading_provisional_grades(id);
 
 
 --
 -- Name: rubric_assessments fk_rails_a502a63cbe; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY rubric_assessments
-    ADD CONSTRAINT fk_rails_a502a63cbe FOREIGN KEY (assessor_id) REFERENCES users(id);
+ALTER TABLE ONLY public.rubric_assessments
+    ADD CONSTRAINT fk_rails_a502a63cbe FOREIGN KEY (assessor_id) REFERENCES public.users(id);
 
 
 --
 -- Name: submission_comments fk_rails_a62b09d198; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submission_comments
-    ADD CONSTRAINT fk_rails_a62b09d198 FOREIGN KEY (author_id) REFERENCES users(id);
+ALTER TABLE ONLY public.submission_comments
+    ADD CONSTRAINT fk_rails_a62b09d198 FOREIGN KEY (author_id) REFERENCES public.users(id);
 
 
 --
 -- Name: scores fk_rails_a8b66a0a6e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY scores
-    ADD CONSTRAINT fk_rails_a8b66a0a6e FOREIGN KEY (enrollment_id) REFERENCES enrollments(id);
+ALTER TABLE ONLY public.scores
+    ADD CONSTRAINT fk_rails_a8b66a0a6e FOREIGN KEY (enrollment_id) REFERENCES public.enrollments(id);
 
 
 --
 -- Name: rubrics fk_rails_aa80454086; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY rubrics
-    ADD CONSTRAINT fk_rails_aa80454086 FOREIGN KEY (rubric_id) REFERENCES rubrics(id);
+ALTER TABLE ONLY public.rubrics
+    ADD CONSTRAINT fk_rails_aa80454086 FOREIGN KEY (rubric_id) REFERENCES public.rubrics(id);
 
 
 --
 -- Name: pseudonyms fk_rails_aabcbf9874; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pseudonyms
-    ADD CONSTRAINT fk_rails_aabcbf9874 FOREIGN KEY (sis_batch_id) REFERENCES sis_batches(id);
+ALTER TABLE ONLY public.pseudonyms
+    ADD CONSTRAINT fk_rails_aabcbf9874 FOREIGN KEY (sis_batch_id) REFERENCES public.sis_batches(id);
 
 
 --
 -- Name: page_views fk_rails_ab13cc7e9a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY page_views
-    ADD CONSTRAINT fk_rails_ab13cc7e9a FOREIGN KEY (real_user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.page_views
+    ADD CONSTRAINT fk_rails_ab13cc7e9a FOREIGN KEY (real_user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: eportfolio_categories fk_rails_ab14eddd76; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY eportfolio_categories
-    ADD CONSTRAINT fk_rails_ab14eddd76 FOREIGN KEY (eportfolio_id) REFERENCES eportfolios(id);
+ALTER TABLE ONLY public.eportfolio_categories
+    ADD CONSTRAINT fk_rails_ab14eddd76 FOREIGN KEY (eportfolio_id) REFERENCES public.eportfolios(id);
 
 
 --
 -- Name: lti_tool_consumer_profiles fk_rails_acb13d57c3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_tool_consumer_profiles
-    ADD CONSTRAINT fk_rails_acb13d57c3 FOREIGN KEY (developer_key_id) REFERENCES developer_keys(id);
+ALTER TABLE ONLY public.lti_tool_consumer_profiles
+    ADD CONSTRAINT fk_rails_acb13d57c3 FOREIGN KEY (developer_key_id) REFERENCES public.developer_keys(id);
 
 
 --
 -- Name: sis_batch_error_files fk_rails_acbeaca29c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sis_batch_error_files
-    ADD CONSTRAINT fk_rails_acbeaca29c FOREIGN KEY (attachment_id) REFERENCES attachments(id);
+ALTER TABLE ONLY public.sis_batch_error_files
+    ADD CONSTRAINT fk_rails_acbeaca29c FOREIGN KEY (attachment_id) REFERENCES public.attachments(id);
 
 
 --
 -- Name: wiki_pages fk_rails_adcd926cb8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY wiki_pages
-    ADD CONSTRAINT fk_rails_adcd926cb8 FOREIGN KEY (wiki_id) REFERENCES wikis(id);
+ALTER TABLE ONLY public.wiki_pages
+    ADD CONSTRAINT fk_rails_adcd926cb8 FOREIGN KEY (wiki_id) REFERENCES public.wikis(id);
 
 
 --
 -- Name: accounts fk_rails_add3a59cd7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY accounts
-    ADD CONSTRAINT fk_rails_add3a59cd7 FOREIGN KEY (parent_account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT fk_rails_add3a59cd7 FOREIGN KEY (parent_account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: master_courses_master_content_tags fk_rails_af398d5991; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_master_content_tags
-    ADD CONSTRAINT fk_rails_af398d5991 FOREIGN KEY (current_migration_id) REFERENCES master_courses_master_migrations(id);
+ALTER TABLE ONLY public.master_courses_master_content_tags
+    ADD CONSTRAINT fk_rails_af398d5991 FOREIGN KEY (current_migration_id) REFERENCES public.master_courses_master_migrations(id);
 
 
 --
 -- Name: moderated_grading_provisional_grades fk_rails_afa87e4ebc; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY moderated_grading_provisional_grades
-    ADD CONSTRAINT fk_rails_afa87e4ebc FOREIGN KEY (submission_id) REFERENCES submissions(id);
+ALTER TABLE ONLY public.moderated_grading_provisional_grades
+    ADD CONSTRAINT fk_rails_afa87e4ebc FOREIGN KEY (submission_id) REFERENCES public.submissions(id);
 
 
 --
 -- Name: one_time_passwords fk_rails_afd10ae0cb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY one_time_passwords
-    ADD CONSTRAINT fk_rails_afd10ae0cb FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.one_time_passwords
+    ADD CONSTRAINT fk_rails_afd10ae0cb FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: custom_gradebook_column_data fk_rails_b2d446b0b0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY custom_gradebook_column_data
-    ADD CONSTRAINT fk_rails_b2d446b0b0 FOREIGN KEY (custom_gradebook_column_id) REFERENCES custom_gradebook_columns(id);
+ALTER TABLE ONLY public.custom_gradebook_column_data
+    ADD CONSTRAINT fk_rails_b2d446b0b0 FOREIGN KEY (custom_gradebook_column_id) REFERENCES public.custom_gradebook_columns(id);
 
 
 --
 -- Name: gradebook_csvs fk_rails_b4531da5e9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY gradebook_csvs
-    ADD CONSTRAINT fk_rails_b4531da5e9 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.gradebook_csvs
+    ADD CONSTRAINT fk_rails_b4531da5e9 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: grading_period_groups fk_rails_b4ea3168bc; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY grading_period_groups
-    ADD CONSTRAINT fk_rails_b4ea3168bc FOREIGN KEY (course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.grading_period_groups
+    ADD CONSTRAINT fk_rails_b4ea3168bc FOREIGN KEY (course_id) REFERENCES public.courses(id);
 
 
 --
 -- Name: user_notes fk_rails_b5a898af1b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_notes
-    ADD CONSTRAINT fk_rails_b5a898af1b FOREIGN KEY (created_by_id) REFERENCES users(id);
+ALTER TABLE ONLY public.user_notes
+    ADD CONSTRAINT fk_rails_b5a898af1b FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
 -- Name: rubrics fk_rails_b5b6f45923; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY rubrics
-    ADD CONSTRAINT fk_rails_b5b6f45923 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.rubrics
+    ADD CONSTRAINT fk_rails_b5b6f45923 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: attachments fk_rails_b6a31db404; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY attachments
-    ADD CONSTRAINT fk_rails_b6a31db404 FOREIGN KEY (root_attachment_id) REFERENCES attachments(id);
+ALTER TABLE ONLY public.attachments
+    ADD CONSTRAINT fk_rails_b6a31db404 FOREIGN KEY (root_attachment_id) REFERENCES public.attachments(id);
 
 
 --
 -- Name: attachments fk_rails_b7c6788fce; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY attachments
-    ADD CONSTRAINT fk_rails_b7c6788fce FOREIGN KEY (replacement_attachment_id) REFERENCES attachments(id);
+ALTER TABLE ONLY public.attachments
+    ADD CONSTRAINT fk_rails_b7c6788fce FOREIGN KEY (replacement_attachment_id) REFERENCES public.attachments(id);
 
 
 --
 -- Name: master_courses_migration_results fk_rails_ba9413706c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_migration_results
-    ADD CONSTRAINT fk_rails_ba9413706c FOREIGN KEY (child_subscription_id) REFERENCES master_courses_child_subscriptions(id);
+ALTER TABLE ONLY public.master_courses_migration_results
+    ADD CONSTRAINT fk_rails_ba9413706c FOREIGN KEY (child_subscription_id) REFERENCES public.master_courses_child_subscriptions(id);
 
 
 --
 -- Name: collaborators fk_rails_baeba1010a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collaborators
-    ADD CONSTRAINT fk_rails_baeba1010a FOREIGN KEY (group_id) REFERENCES groups(id);
+ALTER TABLE ONLY public.collaborators
+    ADD CONSTRAINT fk_rails_baeba1010a FOREIGN KEY (group_id) REFERENCES public.groups(id);
 
 
 --
 -- Name: scores fk_rails_baf45f32a0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY scores
-    ADD CONSTRAINT fk_rails_baf45f32a0 FOREIGN KEY (grading_period_id) REFERENCES grading_periods(id);
+ALTER TABLE ONLY public.scores
+    ADD CONSTRAINT fk_rails_baf45f32a0 FOREIGN KEY (grading_period_id) REFERENCES public.grading_periods(id);
 
 
 --
 -- Name: enrollments fk_rails_bbf3738e95; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollments
-    ADD CONSTRAINT fk_rails_bbf3738e95 FOREIGN KEY (course_section_id) REFERENCES course_sections(id);
+ALTER TABLE ONLY public.enrollments
+    ADD CONSTRAINT fk_rails_bbf3738e95 FOREIGN KEY (course_section_id) REFERENCES public.course_sections(id);
 
 
 --
 -- Name: custom_gradebook_column_data fk_rails_bc039f962e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY custom_gradebook_column_data
-    ADD CONSTRAINT fk_rails_bc039f962e FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.custom_gradebook_column_data
+    ADD CONSTRAINT fk_rails_bc039f962e FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: moderated_grading_selections fk_rails_bc609b6673; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY moderated_grading_selections
-    ADD CONSTRAINT fk_rails_bc609b6673 FOREIGN KEY (assignment_id) REFERENCES assignments(id);
+ALTER TABLE ONLY public.moderated_grading_selections
+    ADD CONSTRAINT fk_rails_bc609b6673 FOREIGN KEY (assignment_id) REFERENCES public.assignments(id);
 
 
 --
 -- Name: assignment_overrides fk_rails_bc94d484ff; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignment_overrides
-    ADD CONSTRAINT fk_rails_bc94d484ff FOREIGN KEY (quiz_id) REFERENCES quizzes(id);
+ALTER TABLE ONLY public.assignment_overrides
+    ADD CONSTRAINT fk_rails_bc94d484ff FOREIGN KEY (quiz_id) REFERENCES public.quizzes(id);
 
 
 --
 -- Name: assignments fk_rails_be38f24036; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignments
-    ADD CONSTRAINT fk_rails_be38f24036 FOREIGN KEY (group_category_id) REFERENCES group_categories(id);
+ALTER TABLE ONLY public.assignments
+    ADD CONSTRAINT fk_rails_be38f24036 FOREIGN KEY (group_category_id) REFERENCES public.group_categories(id);
 
 
 --
 -- Name: content_exports fk_rails_be83a37440; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_exports
-    ADD CONSTRAINT fk_rails_be83a37440 FOREIGN KEY (content_migration_id) REFERENCES content_migrations(id);
+ALTER TABLE ONLY public.content_exports
+    ADD CONSTRAINT fk_rails_be83a37440 FOREIGN KEY (content_migration_id) REFERENCES public.content_migrations(id);
 
 
 --
 -- Name: content_migrations fk_rails_c1bf6cc5e9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_migrations
-    ADD CONSTRAINT fk_rails_c1bf6cc5e9 FOREIGN KEY (exported_attachment_id) REFERENCES attachments(id);
+ALTER TABLE ONLY public.content_migrations
+    ADD CONSTRAINT fk_rails_c1bf6cc5e9 FOREIGN KEY (exported_attachment_id) REFERENCES public.attachments(id);
 
 
 --
 -- Name: content_migrations fk_rails_c345a5b6d1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_migrations
-    ADD CONSTRAINT fk_rails_c345a5b6d1 FOREIGN KEY (source_course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.content_migrations
+    ADD CONSTRAINT fk_rails_c345a5b6d1 FOREIGN KEY (source_course_id) REFERENCES public.courses(id);
 
 
 --
 -- Name: discussion_entry_participants fk_rails_c376b0a4c9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_entry_participants
-    ADD CONSTRAINT fk_rails_c376b0a4c9 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.discussion_entry_participants
+    ADD CONSTRAINT fk_rails_c376b0a4c9 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: abstract_courses fk_rails_c38b94c5bc; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY abstract_courses
-    ADD CONSTRAINT fk_rails_c38b94c5bc FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.abstract_courses
+    ADD CONSTRAINT fk_rails_c38b94c5bc FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: conversation_messages fk_rails_c3c322d882; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY conversation_messages
-    ADD CONSTRAINT fk_rails_c3c322d882 FOREIGN KEY (conversation_id) REFERENCES conversations(id);
+ALTER TABLE ONLY public.conversation_messages
+    ADD CONSTRAINT fk_rails_c3c322d882 FOREIGN KEY (conversation_id) REFERENCES public.conversations(id);
 
 
 --
 -- Name: courses fk_rails_c47c5058d9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY courses
-    ADD CONSTRAINT fk_rails_c47c5058d9 FOREIGN KEY (abstract_course_id) REFERENCES abstract_courses(id);
+ALTER TABLE ONLY public.courses
+    ADD CONSTRAINT fk_rails_c47c5058d9 FOREIGN KEY (abstract_course_id) REFERENCES public.abstract_courses(id);
 
 
 --
 -- Name: polling_poll_choices fk_rails_c6c7f35cfc; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY polling_poll_choices
-    ADD CONSTRAINT fk_rails_c6c7f35cfc FOREIGN KEY (poll_id) REFERENCES polling_polls(id);
+ALTER TABLE ONLY public.polling_poll_choices
+    ADD CONSTRAINT fk_rails_c6c7f35cfc FOREIGN KEY (poll_id) REFERENCES public.polling_polls(id);
 
 
 --
 -- Name: learning_outcome_results fk_rails_c7ade34f0a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY learning_outcome_results
-    ADD CONSTRAINT fk_rails_c7ade34f0a FOREIGN KEY (content_tag_id) REFERENCES content_tags(id);
+ALTER TABLE ONLY public.learning_outcome_results
+    ADD CONSTRAINT fk_rails_c7ade34f0a FOREIGN KEY (content_tag_id) REFERENCES public.content_tags(id);
 
 
 --
 -- Name: external_feed_entries fk_rails_c8030518e8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY external_feed_entries
-    ADD CONSTRAINT fk_rails_c8030518e8 FOREIGN KEY (external_feed_id) REFERENCES external_feeds(id);
+ALTER TABLE ONLY public.external_feed_entries
+    ADD CONSTRAINT fk_rails_c8030518e8 FOREIGN KEY (external_feed_id) REFERENCES public.external_feeds(id);
 
 
 --
 -- Name: assessment_requests fk_rails_c86f7bbc12; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assessment_requests
-    ADD CONSTRAINT fk_rails_c86f7bbc12 FOREIGN KEY (assessor_id) REFERENCES users(id);
+ALTER TABLE ONLY public.assessment_requests
+    ADD CONSTRAINT fk_rails_c86f7bbc12 FOREIGN KEY (assessor_id) REFERENCES public.users(id);
 
 
 --
 -- Name: quizzes fk_rails_c8bbad8938; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quizzes
-    ADD CONSTRAINT fk_rails_c8bbad8938 FOREIGN KEY (cloned_item_id) REFERENCES cloned_items(id);
+ALTER TABLE ONLY public.quizzes
+    ADD CONSTRAINT fk_rails_c8bbad8938 FOREIGN KEY (cloned_item_id) REFERENCES public.cloned_items(id);
 
 
 --
 -- Name: content_migrations fk_rails_c8d17d44ae; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_migrations
-    ADD CONSTRAINT fk_rails_c8d17d44ae FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.content_migrations
+    ADD CONSTRAINT fk_rails_c8d17d44ae FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: purgatories fk_rails_c906487417; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY purgatories
-    ADD CONSTRAINT fk_rails_c906487417 FOREIGN KEY (attachment_id) REFERENCES attachments(id);
+ALTER TABLE ONLY public.purgatories
+    ADD CONSTRAINT fk_rails_c906487417 FOREIGN KEY (attachment_id) REFERENCES public.attachments(id);
 
 
 --
 -- Name: account_users fk_rails_c96445f213; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_users
-    ADD CONSTRAINT fk_rails_c96445f213 FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.account_users
+    ADD CONSTRAINT fk_rails_c96445f213 FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: enrollment_terms fk_rails_cb0782c2d2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollment_terms
-    ADD CONSTRAINT fk_rails_cb0782c2d2 FOREIGN KEY (sis_batch_id) REFERENCES sis_batches(id);
+ALTER TABLE ONLY public.enrollment_terms
+    ADD CONSTRAINT fk_rails_cb0782c2d2 FOREIGN KEY (sis_batch_id) REFERENCES public.sis_batches(id);
 
 
 --
 -- Name: content_tags fk_rails_cbe0e9b21a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_tags
-    ADD CONSTRAINT fk_rails_cbe0e9b21a FOREIGN KEY (learning_outcome_id) REFERENCES learning_outcomes(id);
+ALTER TABLE ONLY public.content_tags
+    ADD CONSTRAINT fk_rails_cbe0e9b21a FOREIGN KEY (learning_outcome_id) REFERENCES public.learning_outcomes(id);
 
 
 --
 -- Name: rubric_assessments fk_rails_cbe6352121; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY rubric_assessments
-    ADD CONSTRAINT fk_rails_cbe6352121 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.rubric_assessments
+    ADD CONSTRAINT fk_rails_cbe6352121 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: communication_channels fk_rails_cd70d006a2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY communication_channels
-    ADD CONSTRAINT fk_rails_cd70d006a2 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.communication_channels
+    ADD CONSTRAINT fk_rails_cd70d006a2 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: assessment_requests fk_rails_cef87e7126; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assessment_requests
-    ADD CONSTRAINT fk_rails_cef87e7126 FOREIGN KEY (rubric_association_id) REFERENCES rubric_associations(id);
-
-
---
--- Name: quiz_submission_events_2019_5 fk_rails_cf44cf4263; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY quiz_submission_events_2019_5
-    ADD CONSTRAINT fk_rails_cf44cf4263 FOREIGN KEY (quiz_submission_id) REFERENCES quiz_submissions(id);
+ALTER TABLE ONLY public.assessment_requests
+    ADD CONSTRAINT fk_rails_cef87e7126 FOREIGN KEY (rubric_association_id) REFERENCES public.rubric_associations(id);
 
 
 --
 -- Name: originality_reports fk_rails_cf97449410; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY originality_reports
-    ADD CONSTRAINT fk_rails_cf97449410 FOREIGN KEY (attachment_id) REFERENCES attachments(id);
+ALTER TABLE ONLY public.originality_reports
+    ADD CONSTRAINT fk_rails_cf97449410 FOREIGN KEY (attachment_id) REFERENCES public.attachments(id);
 
 
 --
 -- Name: group_memberships fk_rails_d05778f88b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY group_memberships
-    ADD CONSTRAINT fk_rails_d05778f88b FOREIGN KEY (group_id) REFERENCES groups(id);
+ALTER TABLE ONLY public.group_memberships
+    ADD CONSTRAINT fk_rails_d05778f88b FOREIGN KEY (group_id) REFERENCES public.groups(id);
 
 
 --
 -- Name: conversation_batches fk_rails_d068cb6c53; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY conversation_batches
-    ADD CONSTRAINT fk_rails_d068cb6c53 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.conversation_batches
+    ADD CONSTRAINT fk_rails_d068cb6c53 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: favorites fk_rails_d15744e438; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY favorites
-    ADD CONSTRAINT fk_rails_d15744e438 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.favorites
+    ADD CONSTRAINT fk_rails_d15744e438 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: quiz_submission_events_2019_12 fk_rails_d1c9ef9d6b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.quiz_submission_events_2019_12
+    ADD CONSTRAINT fk_rails_d1c9ef9d6b FOREIGN KEY (quiz_submission_id) REFERENCES public.quiz_submissions(id);
 
 
 --
 -- Name: enrollments fk_rails_d1e7d10c0a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollments
-    ADD CONSTRAINT fk_rails_d1e7d10c0a FOREIGN KEY (role_id) REFERENCES roles(id);
+ALTER TABLE ONLY public.enrollments
+    ADD CONSTRAINT fk_rails_d1e7d10c0a FOREIGN KEY (role_id) REFERENCES public.roles(id);
 
 
 --
 -- Name: purgatories fk_rails_d1f5462acf; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY purgatories
-    ADD CONSTRAINT fk_rails_d1f5462acf FOREIGN KEY (deleted_by_user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.purgatories
+    ADD CONSTRAINT fk_rails_d1f5462acf FOREIGN KEY (deleted_by_user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: attachments fk_rails_d24085bab5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY attachments
-    ADD CONSTRAINT fk_rails_d24085bab5 FOREIGN KEY (usage_rights_id) REFERENCES usage_rights(id);
+ALTER TABLE ONLY public.attachments
+    ADD CONSTRAINT fk_rails_d24085bab5 FOREIGN KEY (usage_rights_id) REFERENCES public.usage_rights(id);
 
 
 --
 -- Name: groups fk_rails_d2e3c28a2f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_rails_d2e3c28a2f FOREIGN KEY (group_category_id) REFERENCES group_categories(id);
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT fk_rails_d2e3c28a2f FOREIGN KEY (group_category_id) REFERENCES public.group_categories(id);
 
 
 --
 -- Name: rubric_assessments fk_rails_d38b350cb8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY rubric_assessments
-    ADD CONSTRAINT fk_rails_d38b350cb8 FOREIGN KEY (rubric_association_id) REFERENCES rubric_associations(id);
+ALTER TABLE ONLY public.rubric_assessments
+    ADD CONSTRAINT fk_rails_d38b350cb8 FOREIGN KEY (rubric_association_id) REFERENCES public.rubric_associations(id);
 
 
 --
 -- Name: conversation_batches fk_rails_d421fc74f4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY conversation_batches
-    ADD CONSTRAINT fk_rails_d421fc74f4 FOREIGN KEY (root_conversation_message_id) REFERENCES conversation_messages(id);
-
-
---
--- Name: quiz_submission_events_2019_2 fk_rails_d691281c4b; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY quiz_submission_events_2019_2
-    ADD CONSTRAINT fk_rails_d691281c4b FOREIGN KEY (quiz_submission_id) REFERENCES quiz_submissions(id);
+ALTER TABLE ONLY public.conversation_batches
+    ADD CONSTRAINT fk_rails_d421fc74f4 FOREIGN KEY (root_conversation_message_id) REFERENCES public.conversation_messages(id);
 
 
 --
 -- Name: gradebook_uploads fk_rails_d6c567f720; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY gradebook_uploads
-    ADD CONSTRAINT fk_rails_d6c567f720 FOREIGN KEY (course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.gradebook_uploads
+    ADD CONSTRAINT fk_rails_d6c567f720 FOREIGN KEY (course_id) REFERENCES public.courses(id);
 
 
 --
 -- Name: folders fk_rails_da2ad09897; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY folders
-    ADD CONSTRAINT fk_rails_da2ad09897 FOREIGN KEY (cloned_item_id) REFERENCES cloned_items(id);
+ALTER TABLE ONLY public.folders
+    ADD CONSTRAINT fk_rails_da2ad09897 FOREIGN KEY (cloned_item_id) REFERENCES public.cloned_items(id);
 
 
 --
 -- Name: discussion_topics fk_rails_da3248778d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topics
-    ADD CONSTRAINT fk_rails_da3248778d FOREIGN KEY (cloned_item_id) REFERENCES cloned_items(id);
-
-
---
--- Name: quiz_submission_events_2019_1 fk_rails_dba8402ced; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY quiz_submission_events_2019_1
-    ADD CONSTRAINT fk_rails_dba8402ced FOREIGN KEY (quiz_submission_id) REFERENCES quiz_submissions(id);
+ALTER TABLE ONLY public.discussion_topics
+    ADD CONSTRAINT fk_rails_da3248778d FOREIGN KEY (cloned_item_id) REFERENCES public.cloned_items(id);
 
 
 --
 -- Name: context_external_tool_placements fk_rails_dbbdbf40e7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_external_tool_placements
-    ADD CONSTRAINT fk_rails_dbbdbf40e7 FOREIGN KEY (context_external_tool_id) REFERENCES context_external_tools(id);
+ALTER TABLE ONLY public.context_external_tool_placements
+    ADD CONSTRAINT fk_rails_dbbdbf40e7 FOREIGN KEY (context_external_tool_id) REFERENCES public.context_external_tools(id);
 
 
 --
 -- Name: notification_endpoints fk_rails_de537fc04f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY notification_endpoints
-    ADD CONSTRAINT fk_rails_de537fc04f FOREIGN KEY (access_token_id) REFERENCES access_tokens(id);
+ALTER TABLE ONLY public.notification_endpoints
+    ADD CONSTRAINT fk_rails_de537fc04f FOREIGN KEY (access_token_id) REFERENCES public.access_tokens(id);
 
 
 --
 -- Name: enrollments fk_rails_df257dd853; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollments
-    ADD CONSTRAINT fk_rails_df257dd853 FOREIGN KEY (root_account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.enrollments
+    ADD CONSTRAINT fk_rails_df257dd853 FOREIGN KEY (root_account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: wiki_pages fk_rails_df5fec60ce; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY wiki_pages
-    ADD CONSTRAINT fk_rails_df5fec60ce FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.wiki_pages
+    ADD CONSTRAINT fk_rails_df5fec60ce FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: external_feed_entries fk_rails_e0397e1d17; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY external_feed_entries
-    ADD CONSTRAINT fk_rails_e0397e1d17 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.external_feed_entries
+    ADD CONSTRAINT fk_rails_e0397e1d17 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: course_sections fk_rails_e050b590bb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY course_sections
-    ADD CONSTRAINT fk_rails_e050b590bb FOREIGN KEY (sis_batch_id) REFERENCES sis_batches(id);
+ALTER TABLE ONLY public.course_sections
+    ADD CONSTRAINT fk_rails_e050b590bb FOREIGN KEY (sis_batch_id) REFERENCES public.sis_batches(id);
 
 
 --
 -- Name: course_sections fk_rails_e0676f34c7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY course_sections
-    ADD CONSTRAINT fk_rails_e0676f34c7 FOREIGN KEY (nonxlist_course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.course_sections
+    ADD CONSTRAINT fk_rails_e0676f34c7 FOREIGN KEY (nonxlist_course_id) REFERENCES public.courses(id);
 
 
 --
 -- Name: enrollment_terms fk_rails_e182f18b93; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollment_terms
-    ADD CONSTRAINT fk_rails_e182f18b93 FOREIGN KEY (root_account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.enrollment_terms
+    ADD CONSTRAINT fk_rails_e182f18b93 FOREIGN KEY (root_account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: discussion_entries fk_rails_e329dc15c5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_entries
-    ADD CONSTRAINT fk_rails_e329dc15c5 FOREIGN KEY (discussion_topic_id) REFERENCES discussion_topics(id);
+ALTER TABLE ONLY public.discussion_entries
+    ADD CONSTRAINT fk_rails_e329dc15c5 FOREIGN KEY (discussion_topic_id) REFERENCES public.discussion_topics(id);
 
 
 --
 -- Name: assignment_override_students fk_rails_e35e8eee60; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignment_override_students
-    ADD CONSTRAINT fk_rails_e35e8eee60 FOREIGN KEY (quiz_id) REFERENCES quizzes(id);
+ALTER TABLE ONLY public.assignment_override_students
+    ADD CONSTRAINT fk_rails_e35e8eee60 FOREIGN KEY (quiz_id) REFERENCES public.quizzes(id);
 
 
 --
 -- Name: submission_comments fk_rails_e4ff9f0115; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submission_comments
-    ADD CONSTRAINT fk_rails_e4ff9f0115 FOREIGN KEY (submission_id) REFERENCES submissions(id);
+ALTER TABLE ONLY public.submission_comments
+    ADD CONSTRAINT fk_rails_e4ff9f0115 FOREIGN KEY (submission_id) REFERENCES public.submissions(id);
 
 
 --
 -- Name: groups fk_rails_e5b00ef0e2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_rails_e5b00ef0e2 FOREIGN KEY (wiki_id) REFERENCES wikis(id);
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT fk_rails_e5b00ef0e2 FOREIGN KEY (wiki_id) REFERENCES public.wikis(id);
 
 
 --
 -- Name: lti_product_families fk_rails_e64cbae7bd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_product_families
-    ADD CONSTRAINT fk_rails_e64cbae7bd FOREIGN KEY (root_account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.lti_product_families
+    ADD CONSTRAINT fk_rails_e64cbae7bd FOREIGN KEY (root_account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: quiz_question_regrades fk_rails_e6cc08d5f1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_question_regrades
-    ADD CONSTRAINT fk_rails_e6cc08d5f1 FOREIGN KEY (quiz_question_id) REFERENCES quiz_questions(id);
+ALTER TABLE ONLY public.quiz_question_regrades
+    ADD CONSTRAINT fk_rails_e6cc08d5f1 FOREIGN KEY (quiz_question_id) REFERENCES public.quiz_questions(id);
 
 
 --
 -- Name: quiz_regrade_runs fk_rails_e7282f482b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_regrade_runs
-    ADD CONSTRAINT fk_rails_e7282f482b FOREIGN KEY (quiz_regrade_id) REFERENCES quiz_regrades(id);
+ALTER TABLE ONLY public.quiz_regrade_runs
+    ADD CONSTRAINT fk_rails_e7282f482b FOREIGN KEY (quiz_regrade_id) REFERENCES public.quiz_regrades(id);
 
 
 --
 -- Name: web_conferences fk_rails_e776d94dd2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY web_conferences
-    ADD CONSTRAINT fk_rails_e776d94dd2 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.web_conferences
+    ADD CONSTRAINT fk_rails_e776d94dd2 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: user_profile_links fk_rails_e7feec0134; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_profile_links
-    ADD CONSTRAINT fk_rails_e7feec0134 FOREIGN KEY (user_profile_id) REFERENCES user_profiles(id);
+ALTER TABLE ONLY public.user_profile_links
+    ADD CONSTRAINT fk_rails_e7feec0134 FOREIGN KEY (user_profile_id) REFERENCES public.user_profiles(id);
 
 
 --
 -- Name: gradebook_uploads fk_rails_e845504309; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY gradebook_uploads
-    ADD CONSTRAINT fk_rails_e845504309 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.gradebook_uploads
+    ADD CONSTRAINT fk_rails_e845504309 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: enrollments fk_rails_e860e0e46b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY enrollments
-    ADD CONSTRAINT fk_rails_e860e0e46b FOREIGN KEY (user_id) REFERENCES users(id);
-
-
---
--- Name: quiz_submission_events_2019_6 fk_rails_e89cf60eab; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY quiz_submission_events_2019_6
-    ADD CONSTRAINT fk_rails_e89cf60eab FOREIGN KEY (quiz_submission_id) REFERENCES quiz_submissions(id);
+ALTER TABLE ONLY public.enrollments
+    ADD CONSTRAINT fk_rails_e860e0e46b FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: live_assessments_submissions fk_rails_e9f0498f2a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY live_assessments_submissions
-    ADD CONSTRAINT fk_rails_e9f0498f2a FOREIGN KEY (assessment_id) REFERENCES live_assessments_assessments(id);
+ALTER TABLE ONLY public.live_assessments_submissions
+    ADD CONSTRAINT fk_rails_e9f0498f2a FOREIGN KEY (assessment_id) REFERENCES public.live_assessments_assessments(id);
 
 
 --
 -- Name: assignment_override_students fk_rails_ea26ada45d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY assignment_override_students
-    ADD CONSTRAINT fk_rails_ea26ada45d FOREIGN KEY (assignment_override_id) REFERENCES assignment_overrides(id);
+ALTER TABLE ONLY public.assignment_override_students
+    ADD CONSTRAINT fk_rails_ea26ada45d FOREIGN KEY (assignment_override_id) REFERENCES public.assignment_overrides(id);
 
 
 --
 -- Name: rubric_assessments fk_rails_eadf99bbb0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY rubric_assessments
-    ADD CONSTRAINT fk_rails_eadf99bbb0 FOREIGN KEY (rubric_id) REFERENCES rubrics(id);
+ALTER TABLE ONLY public.rubric_assessments
+    ADD CONSTRAINT fk_rails_eadf99bbb0 FOREIGN KEY (rubric_id) REFERENCES public.rubrics(id);
 
 
 --
 -- Name: late_policies fk_rails_eb4f0c93ce; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY late_policies
-    ADD CONSTRAINT fk_rails_eb4f0c93ce FOREIGN KEY (course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.late_policies
+    ADD CONSTRAINT fk_rails_eb4f0c93ce FOREIGN KEY (course_id) REFERENCES public.courses(id);
 
 
 --
 -- Name: lti_message_handlers fk_rails_ec356d0f96; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_message_handlers
-    ADD CONSTRAINT fk_rails_ec356d0f96 FOREIGN KEY (tool_proxy_id) REFERENCES lti_tool_proxies(id);
+ALTER TABLE ONLY public.lti_message_handlers
+    ADD CONSTRAINT fk_rails_ec356d0f96 FOREIGN KEY (tool_proxy_id) REFERENCES public.lti_tool_proxies(id);
 
 
 --
 -- Name: groups fk_rails_ed4ff9a299; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_rails_ed4ff9a299 FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT fk_rails_ed4ff9a299 FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: submissions fk_rails_ee2f0735cd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY submissions
-    ADD CONSTRAINT fk_rails_ee2f0735cd FOREIGN KEY (quiz_submission_id) REFERENCES quiz_submissions(id);
+ALTER TABLE ONLY public.submissions
+    ADD CONSTRAINT fk_rails_ee2f0735cd FOREIGN KEY (quiz_submission_id) REFERENCES public.quiz_submissions(id);
 
 
 --
 -- Name: discussion_topics fk_rails_ef64949942; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topics
-    ADD CONSTRAINT fk_rails_ef64949942 FOREIGN KEY (editor_id) REFERENCES users(id);
+ALTER TABLE ONLY public.discussion_topics
+    ADD CONSTRAINT fk_rails_ef64949942 FOREIGN KEY (editor_id) REFERENCES public.users(id);
 
 
 --
 -- Name: courses fk_rails_f4449a81f6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY courses
-    ADD CONSTRAINT fk_rails_f4449a81f6 FOREIGN KEY (enrollment_term_id) REFERENCES enrollment_terms(id);
+ALTER TABLE ONLY public.courses
+    ADD CONSTRAINT fk_rails_f4449a81f6 FOREIGN KEY (enrollment_term_id) REFERENCES public.enrollment_terms(id);
 
 
 --
 -- Name: account_users fk_rails_f685686f18; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_users
-    ADD CONSTRAINT fk_rails_f685686f18 FOREIGN KEY (role_id) REFERENCES roles(id);
+ALTER TABLE ONLY public.account_users
+    ADD CONSTRAINT fk_rails_f685686f18 FOREIGN KEY (role_id) REFERENCES public.roles(id);
 
 
 --
 -- Name: accounts fk_rails_f7353907b2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY accounts
-    ADD CONSTRAINT fk_rails_f7353907b2 FOREIGN KEY (brand_config_md5) REFERENCES brand_configs(md5);
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT fk_rails_f7353907b2 FOREIGN KEY (brand_config_md5) REFERENCES public.brand_configs(md5);
 
 
 --
 -- Name: quiz_question_regrades fk_rails_f7834fb23d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY quiz_question_regrades
-    ADD CONSTRAINT fk_rails_f7834fb23d FOREIGN KEY (quiz_regrade_id) REFERENCES quiz_regrades(id);
+ALTER TABLE ONLY public.quiz_question_regrades
+    ADD CONSTRAINT fk_rails_f7834fb23d FOREIGN KEY (quiz_regrade_id) REFERENCES public.quiz_regrades(id);
 
 
 --
 -- Name: account_notifications fk_rails_f83172407d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_notifications
-    ADD CONSTRAINT fk_rails_f83172407d FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.account_notifications
+    ADD CONSTRAINT fk_rails_f83172407d FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: context_external_tool_assignment_lookups fk_rails_f904968ac0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY context_external_tool_assignment_lookups
-    ADD CONSTRAINT fk_rails_f904968ac0 FOREIGN KEY (context_external_tool_id) REFERENCES context_external_tools(id);
+ALTER TABLE ONLY public.context_external_tool_assignment_lookups
+    ADD CONSTRAINT fk_rails_f904968ac0 FOREIGN KEY (context_external_tool_id) REFERENCES public.context_external_tools(id);
 
 
 --
 -- Name: master_courses_migration_results fk_rails_f94a4e9f5d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY master_courses_migration_results
-    ADD CONSTRAINT fk_rails_f94a4e9f5d FOREIGN KEY (content_migration_id) REFERENCES content_migrations(id);
+ALTER TABLE ONLY public.master_courses_migration_results
+    ADD CONSTRAINT fk_rails_f94a4e9f5d FOREIGN KEY (content_migration_id) REFERENCES public.content_migrations(id);
 
 
 --
 -- Name: alert_criteria fk_rails_f95d56943d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY alert_criteria
-    ADD CONSTRAINT fk_rails_f95d56943d FOREIGN KEY (alert_id) REFERENCES alerts(id);
+ALTER TABLE ONLY public.alert_criteria
+    ADD CONSTRAINT fk_rails_f95d56943d FOREIGN KEY (alert_id) REFERENCES public.alerts(id);
 
 
 --
 -- Name: courses fk_rails_f9bb591b41; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY courses
-    ADD CONSTRAINT fk_rails_f9bb591b41 FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.courses
+    ADD CONSTRAINT fk_rails_f9bb591b41 FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: courses fk_rails_fa9ac2c08c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY courses
-    ADD CONSTRAINT fk_rails_fa9ac2c08c FOREIGN KEY (template_course_id) REFERENCES courses(id);
+ALTER TABLE ONLY public.courses
+    ADD CONSTRAINT fk_rails_fa9ac2c08c FOREIGN KEY (template_course_id) REFERENCES public.courses(id);
 
 
 --
 -- Name: discussion_topic_participants fk_rails_fb902be971; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY discussion_topic_participants
-    ADD CONSTRAINT fk_rails_fb902be971 FOREIGN KEY (discussion_topic_id) REFERENCES discussion_topics(id);
+ALTER TABLE ONLY public.discussion_topic_participants
+    ADD CONSTRAINT fk_rails_fb902be971 FOREIGN KEY (discussion_topic_id) REFERENCES public.discussion_topics(id);
 
 
 --
 -- Name: session_persistence_tokens fk_rails_fc3a4b8b9e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY session_persistence_tokens
-    ADD CONSTRAINT fk_rails_fc3a4b8b9e FOREIGN KEY (pseudonym_id) REFERENCES pseudonyms(id);
+ALTER TABLE ONLY public.session_persistence_tokens
+    ADD CONSTRAINT fk_rails_fc3a4b8b9e FOREIGN KEY (pseudonym_id) REFERENCES public.pseudonyms(id);
 
 
 --
 -- Name: lti_resource_placements fk_rails_fc443660f6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY lti_resource_placements
-    ADD CONSTRAINT fk_rails_fc443660f6 FOREIGN KEY (message_handler_id) REFERENCES lti_message_handlers(id);
+ALTER TABLE ONLY public.lti_resource_placements
+    ADD CONSTRAINT fk_rails_fc443660f6 FOREIGN KEY (message_handler_id) REFERENCES public.lti_message_handlers(id);
 
 
 --
 -- Name: user_services fk_rails_fea9a826f7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_services
-    ADD CONSTRAINT fk_rails_fea9a826f7 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.user_services
+    ADD CONSTRAINT fk_rails_fea9a826f7 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: moderated_grading_provisional_grades provisional_grades_source_provisional_grade_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY moderated_grading_provisional_grades
-    ADD CONSTRAINT provisional_grades_source_provisional_grade_fk FOREIGN KEY (source_provisional_grade_id) REFERENCES moderated_grading_provisional_grades(id);
+ALTER TABLE ONLY public.moderated_grading_provisional_grades
+    ADD CONSTRAINT provisional_grades_source_provisional_grade_fk FOREIGN KEY (source_provisional_grade_id) REFERENCES public.moderated_grading_provisional_grades(id);
 
 
 --
@@ -16557,7 +16427,6 @@ INSERT INTO "public"."schema_migrations" (version) VALUES
 ('20120505003400'),
 ('20120510004759'),
 ('20120511173314'),
-('20120514210003'),
 ('20120514215405'),
 ('20120515055355'),
 ('20120516152445'),
@@ -16566,9 +16435,7 @@ INSERT INTO "public"."schema_migrations" (version) VALUES
 ('20120517222224'),
 ('20120518154752'),
 ('20120518160716'),
-('20120518205324'),
 ('20120518212446'),
-('20120518214904'),
 ('20120522145514'),
 ('20120522163145'),
 ('20120523145010'),
@@ -16635,8 +16502,6 @@ INSERT INTO "public"."schema_migrations" (version) VALUES
 ('20120927184213'),
 ('20121001190034'),
 ('20121003200645'),
-('20121010191027'),
-('20121016150454'),
 ('20121016230032'),
 ('20121017124430'),
 ('20121017165813'),
@@ -16645,14 +16510,11 @@ INSERT INTO "public"."schema_migrations" (version) VALUES
 ('20121019185800'),
 ('20121029182508'),
 ('20121029214423'),
-('20121107163612'),
 ('20121112230145'),
 ('20121113002813'),
 ('20121115205740'),
 ('20121115210333'),
 ('20121115220718'),
-('20121115220719'),
-('20121119172516'),
 ('20121119201743'),
 ('20121120180117'),
 ('20121126224708'),
@@ -16701,7 +16563,6 @@ INSERT INTO "public"."schema_migrations" (version) VALUES
 ('20130313141722'),
 ('20130313162706'),
 ('20130319120204'),
-('20130320130305'),
 ('20130320190243'),
 ('20130325204913'),
 ('20130326210659'),
@@ -16722,7 +16583,6 @@ INSERT INTO "public"."schema_migrations" (version) VALUES
 ('20130430215057'),
 ('20130502200753'),
 ('20130506191104'),
-('20130506222834'),
 ('20130508214241'),
 ('20130509173346'),
 ('20130511131825'),
@@ -16737,8 +16597,6 @@ INSERT INTO "public"."schema_migrations" (version) VALUES
 ('20130523162832'),
 ('20130524164516'),
 ('20130528204902'),
-('20130529183448'),
-('20130531124900'),
 ('20130531135600'),
 ('20130531140200'),
 ('20130603181545'),
@@ -16768,7 +16626,6 @@ INSERT INTO "public"."schema_migrations" (version) VALUES
 ('20130708201319'),
 ('20130712230314'),
 ('20130719192808'),
-('20130723162245'),
 ('20130724222101'),
 ('20130726205640'),
 ('20130726230550'),
@@ -16797,7 +16654,6 @@ INSERT INTO "public"."schema_migrations" (version) VALUES
 ('20130918193333'),
 ('20130924153118'),
 ('20130924163929'),
-('20131001193111'),
 ('20131001193112'),
 ('20131003195758'),
 ('20131003202023'),
@@ -16849,7 +16705,6 @@ INSERT INTO "public"."schema_migrations" (version) VALUES
 ('20140205171002'),
 ('20140206203334'),
 ('20140224212704'),
-('20140224212705'),
 ('20140227171812'),
 ('20140228201739'),
 ('20140303160957'),
@@ -17106,7 +16961,6 @@ INSERT INTO "public"."schema_migrations" (version) VALUES
 ('20160108163429'),
 ('20160115234310'),
 ('20160119170221'),
-('20160119183554'),
 ('20160120201216'),
 ('20160122192633'),
 ('20160127184059'),
@@ -17216,7 +17070,6 @@ INSERT INTO "public"."schema_migrations" (version) VALUES
 ('20161117205800'),
 ('20161118195821'),
 ('20161122174824'),
-('20161123165140'),
 ('20161128200025'),
 ('20161128205000'),
 ('20161128205705'),
@@ -17310,7 +17163,6 @@ INSERT INTO "public"."schema_migrations" (version) VALUES
 ('20170612221227'),
 ('20170613174429'),
 ('20170614020503'),
-('20170619191157'),
 ('20170621223249'),
 ('20170622150127'),
 ('20170624070039'),
@@ -17325,14 +17177,22 @@ INSERT INTO "public"."schema_migrations" (version) VALUES
 ('20170714191148'),
 ('20170714192323'),
 ('20170716050447'),
+('20170717222046'),
 ('20170719210808'),
 ('20170725164505'),
+('20170725225210'),
 ('20170726210632'),
 ('20170807165803'),
+('20170815103759'),
 ('20170815152603'),
 ('20170818154348'),
+('20170818200231'),
+('20170822223328'),
+('20170824064214'),
 ('20170828143250'),
 ('20170830204122'),
+('20170831163208'),
+('20170906012531'),
 ('20170919065515');
 
 

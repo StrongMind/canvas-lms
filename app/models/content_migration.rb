@@ -405,6 +405,7 @@ class ContentMigration < ActiveRecord::Base
     if !self.migration_settings.has_key?(:overwrite_quizzes)
       self.migration_settings[:overwrite_quizzes] = for_course_copy? || for_master_course_import? || (self.migration_type && self.migration_type == 'canvas_cartridge_importer')
     end
+    self.migration_settings.reverse_merge!(:prefer_existing_tools => true) if self.migration_type == 'common_cartridge_importer' # default to true
 
     check_quiz_id_prepender
   end
@@ -598,6 +599,7 @@ class ContentMigration < ActiveRecord::Base
           add_skipped_item(child_tag)
         else
           Rails.logger.debug("syncing deletion of #{content.asset_string} from master course")
+          content.skip_downstream_changes!
           content.destroy
         end
       end

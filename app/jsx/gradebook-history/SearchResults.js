@@ -50,11 +50,16 @@ class SearchResultsComponent extends Component {
     fetchHistoryStatus: string.isRequired,
     caption: node.isRequired,
     historyItems: arrayOf(shape({
-      after: string.isRequired,
+      anonymous: bool.isRequired,
       assignment: string.isRequired,
-      before: string.isRequired,
       date: string.isRequired,
+      displayAsPoints: bool.isRequired,
       grader: string.isRequired,
+      gradeAfter: string.isRequired,
+      gradeBefore: string.isRequired,
+      id: string.isRequired,
+      pointsPossibleAfter: string.isRequired,
+      pointsPossibleBefore: string.isRequired,
       student: string.isRequired
     })).isRequired,
     nextPage: string.isRequired,
@@ -62,7 +67,7 @@ class SearchResultsComponent extends Component {
   };
 
   componentDidMount () {
-    document.addEventListener('scroll', this.handleScroll);
+    this.attachListeners();
   }
 
   componentDidUpdate (prevProps) {
@@ -74,18 +79,33 @@ class SearchResultsComponent extends Component {
     if (prevProps.historyItems.length < this.props.historyItems.length) {
       $.screenReaderFlashMessage(I18n.t('More results were added at the bottom of the page.'));
     }
+
+    this.attachListeners();
+  }
+
+  componentWillUnmount () {
+    this.detachListeners();
   }
 
   getNextPage = () => {
-    if (!this.props.requestingResults && this.props.nextPage) {
+    if (!this.props.requestingResults && this.props.nextPage && nearPageBottom()) {
       this.props.getNextPage(this.props.nextPage);
+      this.detachListeners();
     }
   }
 
-  handleScroll = () => {
-    if (nearPageBottom()) {
-      this.getNextPage();
+  attachListeners = () => {
+    if (this.props.requestingResults || !this.props.nextPage) {
+      return;
     }
+
+    document.addEventListener('scroll', this.getNextPage);
+    window.addEventListener('resize', this.getNextPage);
+  }
+
+  detachListeners = () => {
+    document.removeEventListener('scroll', this.getNextPage);
+    window.removeEventListener('resize', this.getNextPage);
   }
 
   hasHistory () {
