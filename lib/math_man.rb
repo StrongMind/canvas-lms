@@ -52,7 +52,9 @@ module MathMan
     end
 
     def with_plugin_settings
+      dynamic_settings = Canvas::DynamicSettings.find('math-man')
       plugin_settings = Canvas::Plugin.find(:mathman).settings
+      raise "math-man not properly configured in consul" if !dynamic_settings[:base_url] && Rails.env.production?
       settings = {
         base_url: ENV['MATHMAN_BASE_URL'],
         use_for_mml: plugin_settings[:use_for_mml],
