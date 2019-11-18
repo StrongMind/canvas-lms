@@ -35,7 +35,9 @@
 
     gtag('config', 'UA-36373320-13');
 
-    <%= gtag('config', gtag) if gtag %>
+    <% if gtag %>
+      gtag('config', <%= gtag %>)
+    <% end %>
   </script>
 
   <meta charset="utf-8">
