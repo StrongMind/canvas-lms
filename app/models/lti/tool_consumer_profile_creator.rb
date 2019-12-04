@@ -36,7 +36,7 @@ module Lti
           }.freeze
         }.freeze,
         product_name: {
-          default_value: 'Canvas by Instructure',
+          default_value: 'Courseware by StrongMind',
           key: 'product.name'
         }.freeze
       }.freeze

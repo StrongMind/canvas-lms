@@ -62,7 +62,7 @@ module CC::Exporter::Epub
           title.file_as = "#{title} ePub"
           title.display_seq = 1
         end
-        b.add_creator('Canvas by Instructure') do |creator|
+        b.add_creator('Courseware by StrongMind') do |creator|
           creator.display_seq = 1
         end
       end

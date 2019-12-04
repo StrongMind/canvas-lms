@@ -3339,7 +3339,7 @@ ja:
   canvas_alert_invited_course_as_role_type_9ed79ce3: "Canvas アラート - コースに招待されています: %{role_type}として%{course}へ"
   canvas_alert_invited_course_as_role_type_ea825937: "Canvas アラート - コースに招待されています: %{role_type}として"
   canvas_attribute_eaa7e31a: "Canvas 属性"
-  canvas_by_instructure_1490381: "Canvas by Instructure"
+  canvas_by_instructure_1490381: "Courseware by StrongMind"
   canvas_cartridge_description: "これは、Canvas のエクスポートを JSON 形式の中間ファイルに変換し、インポートできるようにします。"
   canvas_cartridge_display: "Canvas コモン カートリッジ"
   canvas_cartridge_file_description: "Canvas コース エクスポート パッケージ"
@@ -16901,7 +16901,7 @@ ja:
     android_banner_author: "Instructure Inc."
     android_banner_in_google_play: "Google Play"
     android_banner_price: 無料
-    android_banner_title: "Canvas by Instructure"
+    android_banner_title: "Courseware by StrongMind"
     android_banner_view_button: 表示
   snapshots_6e1806b4: スナップショット
   snapshots_are_backups_of_your_canvas_trial_taking__f18bd571: "スナップショットは、Canvas トライアルのバックアップです。スナップショットを作成すると、スナップショットの瞬間のトライアルの状態を完全に記録する、一意の「バージョン」が作成されます。"

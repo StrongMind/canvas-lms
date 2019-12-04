@@ -19,7 +19,7 @@
 <%# Customer-brandable dashboard right-sidebar logo %>
 <% if brand_variable("ic-brand-right-sidebar-logo") != "" %>
 <div class="ic-sidebar-logo">
-  <%= image_tag(brand_variable("ic-brand-right-sidebar-logo"), :class => "ic-sidebar-logo__image", :alt => "Canvas by Instructure") %>
+  <%= image_tag(brand_variable("ic-brand-right-sidebar-logo"), :class => "ic-sidebar-logo__image", :alt => "Courseware by StrongMind") %>
 </div>
 <% end %>
 <%= render partial: 'cs_alerts' if TeacherEnrollment.where(user_id: @current_user.id).present? %>

@@ -3001,7 +3001,7 @@ en:
   canvas_alert_invited_course_as_role_type_9ed79ce3: "Canvas Alert - Invited: %{course} as %{role_type}"
   canvas_alert_invited_course_as_role_type_ea825937: "Canvas Alert - Invited: course as %{role_type}"
   canvas_attribute_eaa7e31a: "Canvas Attribute"
-  canvas_by_instructure_1490381: "Canvas by Instructure"
+  canvas_by_instructure_1490381: "Courseware by StrongMind"
   canvas_cartridge_description: "This enables converting a canvas export to the intermediary json format to be imported"
   canvas_cartridge_display: "Canvas Common Cartridge"
   canvas_cartridge_file_description: "Canvas Course Export Package"

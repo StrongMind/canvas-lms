@@ -3347,7 +3347,7 @@ en-AU:
   canvas_alert_invited_course_as_role_type_9ed79ce3: "Canvas Alert - Invited: %{course} as %{role_type}"
   canvas_alert_invited_course_as_role_type_ea825937: "Canvas Alert - Invited: course as %{role_type}"
   canvas_attribute_eaa7e31a: "Canvas Attribute"
-  canvas_by_instructure_1490381: "Canvas by Instructure"
+  canvas_by_instructure_1490381: "Courseware by StrongMind"
   canvas_cartridge_description: "This enables converting a canvas export to the intermediary json format to be imported"
   canvas_cartridge_display: "Canvas Common Cartridge"
   canvas_cartridge_file_description: "Canvas Course Export Package"
@@ -16966,7 +16966,7 @@ en-AU:
     android_banner_author: "Instructure Inc."
     android_banner_in_google_play: "In Google Play"
     android_banner_price: FREE
-    android_banner_title: "Canvas by Instructure"
+    android_banner_title: "Courseware by StrongMind"
     android_banner_view_button: VIEW
   snapshots_6e1806b4: Snapshots
   snapshots_are_backups_of_your_canvas_trial_taking__f18bd571: "Snapshots are backups of your Canvas trial. Taking a snapshot will create a unique \"version\", making a perfect record of the state of your trial at the moment of the snapshot."

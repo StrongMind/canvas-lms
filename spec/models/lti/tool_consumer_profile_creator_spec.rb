@@ -53,7 +53,7 @@ module Lti
 
       it 'creates the product info' do
         product_info = tcp_creator.create.product_instance.product_info
-        expect(product_info.product_name.default_value).to eq 'Canvas by Instructure'
+        expect(product_info.product_name.default_value).to eq 'Courseware by StrongMind'
         expect(product_info.product_version).to eq 'none'
         expect(product_info.product_family).to be_a IMS::LTI::Models::ProductFamily
       end

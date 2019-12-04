@@ -3390,7 +3390,7 @@ pl:
   canvas_alert_invited_course_as_role_type_9ed79ce3: "Alert systemu Canvas — otrzymanie zaproszenia: na  %{course}  jako %{role_type}"
   canvas_alert_invited_course_as_role_type_ea825937: "Alert systemu Canvas — otrzymanie zaproszenia  jako %{role_type}"
   canvas_attribute_eaa7e31a: "Właściwości Canvas"
-  canvas_by_instructure_1490381: "Canvas by Instructure"
+  canvas_by_instructure_1490381: "Courseware by StrongMind"
   canvas_cartridge_description: "Umożliwia konwersję eksportu z systemu Canvas do pośredniego formatu JSON, który można importować"
   canvas_cartridge_display: "Canvas Common Cartridge"
   canvas_cartridge_file_description: "Paczka eksportu kursu Canvas"
@@ -17290,7 +17290,7 @@ pl:
     android_banner_author: "Instructure Inc."
     android_banner_in_google_play: "W sklepie Google Play"
     android_banner_price: BEZPŁATNIE
-    android_banner_title: "Canvas by Instructure"
+    android_banner_title: "Courseware by StrongMind"
     android_banner_view_button: WIDOK
   snapshots_6e1806b4: Migawki
   snapshots_are_backups_of_your_canvas_trial_taking__f18bd571: "Migawki są kopiami zapasowymi samouczka Canvas. Migawka pozwoli stworzyć unikalną „wersję”, a to zapewni idealny zapis stanu samouczka z chwili wykonywania migawki."

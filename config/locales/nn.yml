@@ -3102,7 +3102,7 @@ nn:
   canvas_alert_invited_course_as_role_type_9ed79ce3: "Canvas-varsel – invitasjon: %{course} som %{role_type}"
   canvas_alert_invited_course_as_role_type_ea825937: "Canvas-varsel – invitasjon: emne som %{role_type}"
   canvas_attribute_eaa7e31a: Canvas-attributt
-  canvas_by_instructure_1490381: "Canvas by Instructure"
+  canvas_by_instructure_1490381: "Courseware by StrongMind"
   canvas_cartridge_description: "Dette gjer at du kan konvertere Canvas-eksport til mellombels JSON-format som kan importerast"
   canvas_cartridge_display: "Canvas Common Cartridge"
   canvas_cartridge_file_description: "Canvas emneeksportpakke"
@@ -15133,7 +15133,7 @@ nn:
     android_banner_author: "Instructure Inc."
     android_banner_in_google_play: "I Google Play"
     android_banner_price: GRATIS
-    android_banner_title: "Canvas by Instructure"
+    android_banner_title: "Courseware by StrongMind"
     android_banner_view_button: VIS
   some_assignments_could_not_be_created_because_they_d91f2f21: "Nokre oppgåver kunne ikkje opprettast fordi dei fell innanfor ein lukka karaktersetjingsperiode."
   some_conferences_on_this_page_are_hidden_because_o_789684fd: "Nokre av konferansane på denne sida er skjulte på grunn av feil under korrigering av status"
