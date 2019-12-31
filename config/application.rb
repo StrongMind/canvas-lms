@@ -54,17 +54,14 @@ module CanvasRails
     config.autoload_paths << File.expand_path("app/services", __dir__)
     ActiveSupport.to_time_preserves_timezone = true
 
-    # config.after_initialize do
-    #   cors_domains = SettingsService.get_settings(object: "school", id: 1)['cors_domains']
-    #   if cors_domains
-    #     config.middleware.insert_before 0, Rack::Cors do
-    #       allow do
-    #         origins(*cors_domains.split(','))
-    #         resource '*', headers: :any, methods: :any
-    #       end
-    #     end
-    #   end
-    # end
+    if ENV["CORS_DOMAINS"]
+      config.middleware.insert_before 0, Rack::Cors do
+        allow do
+          origins(*ENV["CORS_DOMAINS"].split(','))
+          resource '*', headers: :any, methods: :any
+        end
+      end
+    end
 
     config.app_generators do |c|
       c.test_framework :rspec

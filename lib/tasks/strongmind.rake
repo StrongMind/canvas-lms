@@ -116,18 +116,4 @@ namespace :strongmind do
     end
   end
 
-  desc "Add domain to CORS whitelist"
-  task :add_cors_domain, [:domain]  => :environment do |t, args|
-    cors_domains = SettingsService.get_settings(object: "school", id: 1)['cors_domains']
-    cors_domains = cors_domains ? cors_domains += ",#{args[:domain]}" : args[:domain]
-
-    SettingsService.update_settings(
-      id: '1',
-      setting: 'cors_domains',
-      value: cors_domains,
-      object: "school"
-    )
-
-    puts cors_domains
-  end
 end
