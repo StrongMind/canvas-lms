@@ -23,6 +23,7 @@ end
 
 gem 'turnout', '~> 2.5'
 gem 'rack', '2.0.3'
+gem 'rack-cors', '1.1.1'
 gem 'oauth2', '1.2.0', require: false
 
 gem 'rails-observers', '0.1.5'
