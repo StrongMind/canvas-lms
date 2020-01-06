@@ -137,9 +137,9 @@
               <% if true %>
                 <%= button_to 'http://example.com',
                   params: { username: "myname", last_name: "name", first_name: "my", email: "mail@example.com" },
-                  class: "btn-link" do %>
-                  <div class="menu-item-icon-container" aria-hidden="true">
-                      <%= svg_icon :instructor %>
+                  class: "btn-link", style: "padding: 0 !important;", target: "_blank" do %>
+                  <div class="menu-item-icon-container" aria-hidden="true" id="tutapoint-icon">
+                      <%= svg_icon :educators %>
                   </div>
                   <div class="menu-item__text"><%= t('Tutors') %></div>
                 <% end %>

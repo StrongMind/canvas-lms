@@ -75,6 +75,15 @@ $ic-tooltip-arrow-size: 0.375rem;
   width: 200px;
 }
 
+#tutapoint-icon {
+  &::before {
+    content: "\EA42";
+    font-family: "InstructureIcons-Line";
+    display: inline;
+    position: relative;
+  }
+}
+
 li.ic-app-header__menu-list-item {
   box-sizing: border-box;
   margin-bottom: 10px;
