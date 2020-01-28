@@ -87,6 +87,10 @@ Rails.configuration.after_initialize do
      GradesService.zero_out_grades!
   end
 
+  Delayed::Periodic.cron 'Update course progress cache', '0 13 * * *' do
+    Course.update_course_progress_cache
+ end
+
   Delayed::Periodic.cron 'Account.update_all_update_account_associations', '0 10 * * 0' do
     with_each_shard_by_database(Account, :update_all_update_account_associations)
   end
