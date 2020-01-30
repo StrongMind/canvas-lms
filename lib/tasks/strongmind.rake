@@ -122,6 +122,16 @@ namespace :strongmind do
     )
   end
 
+  desc "Enable Zendesk Chat Widget"
+  task :disable_submission_comment_messages => :environment do
+    SettingsService.update_settings(
+      id: '1',
+      setting: 'chat_widget',
+      value: true,
+      object: "school"
+    )
+  end
+
   desc "redistribute due dates on courses after X start date"
   task :redistribute_date_dates_after => :environment do
     abort("No date specified in ENV") unless ENV['REDISTRIBUTE_AFTER']
