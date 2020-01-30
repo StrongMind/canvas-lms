@@ -114,8 +114,9 @@
           <% end %>
         </ul>
 
-        <% if SettingsService.get_settings(object: 'school', id: 1)['chat_widget'] %>
-          <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=6f496b2b-6cad-48ff-a7e1-a4b947d200eb"> </script>
+        <% chat_widget = SettingsService.get_settings(object: 'school', id: 1)['chat_widget'] %>
+        <% if chat_widget %>
+          <%= chat_widget.html_safe %>
         <% else %>
           <% if @current_user %>
           <hr class="sm-divider" />

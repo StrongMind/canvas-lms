@@ -122,11 +122,12 @@ namespace :strongmind do
     )
   end
 
-  desc "Enable Zendesk Chat Widget"
-  task :disable_submission_comment_messages => :environment do
+  desc "Enable Chat Widget"
+  task :enqueue_chat_widget, [:widget_script] => :environment do |task, args|
+    chat_widget = args[:widget_script]
     SettingsService.update_settings(
       id: '1',
-      setting: 'chat_widget',
+      setting: chat_widget,
       value: true,
       object: "school"
     )
