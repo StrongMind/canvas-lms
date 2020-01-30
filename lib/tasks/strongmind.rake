@@ -123,14 +123,16 @@ namespace :strongmind do
   end
 
   desc "Enable Chat Widget"
-  task :enqueue_chat_widget, [:widget_script] => :environment do |task, args|
+  task :enable_chat_widget, [:widget_script] => :environment do |task, args|
     chat_widget = args[:widget_script]
     SettingsService.update_settings(
       id: '1',
-      setting: chat_widget,
-      value: true,
+      setting: "chat_widget",
+      value: chat_widget,
       object: "school"
     )
+
+    puts "Chat widget set to: #{chat_widget}"
   end
 
   desc "redistribute due dates on courses after X start date"
