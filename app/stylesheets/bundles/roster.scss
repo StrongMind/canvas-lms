@@ -24,8 +24,14 @@
   width: $ic-sp*2;
   height: $ic-sp*2;
 
+  &:hover {
+    text-decoration: none;
+  }
+
     &.online-now {
       border-color: #24a936;
+      display: inline-block;
+      margin-right: 5px;
 
       &::after {
         content: 'online';
