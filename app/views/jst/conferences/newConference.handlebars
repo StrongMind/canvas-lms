@@ -94,10 +94,10 @@
               <div class="ig-info">
                 <div class="ig-details">
                   <a href="{{playback_url}}" target="_blank" class="ig-title">
-                    {{title}}
+                    {{#if title}}{{title}}{{else}}Recording{{/if}}
                   </a>
                   <a href="{{statistics_url}}" target="_blank" class="ig-title">
-                    statistics
+                    Statistics
                   </a>
                   {{dateString created_at}}
                   &nbsp;&#124;&nbsp;
