@@ -44,6 +44,7 @@ define [
       'sortupdate' : 'handleSortUpdate'
       'change #lock' : 'toggleLockingSelectedTopics'
       'click #delete' : 'destroySelectedTopics'
+      'click #pin' : 'togglePinningSelectedTopics'
       'click #edit_discussions_settings': 'toggleSettingsView'
 
     initialize: ->
@@ -170,6 +171,25 @@ define [
       if confirm message
         _(selectedTopics).invoke 'destroy'
         @toggleActionsForSelectedDiscussions()
+
+    togglePinningSelectedTopics: ->
+      selectedTopics = @selectedTopics().map (ann) -> ann.id
+
+      $.ajax({
+        url: "/api/v1/courses/" + ENV.COURSE_ID + "/announcements/bulk_pin",
+        data: selectedTopics,
+        type: 'POST',
+        success: () ->
+          $.flashMessage(
+            "WE DEED IT"
+          )
+        ,
+        error: () ->
+          $.flashError(
+            "Something went wrong!"
+          )
+        ,
+      });
 
     selectedTopics: ->
       @collection.filter (model) -> model.selected
