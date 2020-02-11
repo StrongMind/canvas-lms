@@ -177,11 +177,23 @@ define [
 
       $.ajax({
         url: "/api/v1/courses/" + ENV.COURSE_ID + "/announcements/bulk_pin",
-        data: selectedTopics,
+        data: {"announcement_ids[]": selectedTopics},
         type: 'POST',
         dataType: "json",
         success: (response) ->
-          console.log(response)
+          reordered = []
+          children = $('.discussionTopicIndexList').children()
+
+          $('.discussionTopicIndexList').children().each (child) ->
+            childID = $(this).data("id")
+            idx = response.findIndex (resp) ->
+                    resp.discussion_topic.id == childID
+            reordered[idx] = $(this)
+            $(this).detach()
+
+          reordered.forEach (jq) ->
+            $('.discussionTopicIndexList').append(jq)
+
           $.flashMessage(
             "WE DEED IT"
           )
