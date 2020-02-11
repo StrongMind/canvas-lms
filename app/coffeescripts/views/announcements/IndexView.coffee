@@ -179,7 +179,9 @@ define [
         url: "/api/v1/courses/" + ENV.COURSE_ID + "/announcements/bulk_pin",
         data: selectedTopics,
         type: 'POST',
-        success: () ->
+        dataType: "json",
+        success: (response) ->
+          console.log(response)
           $.flashMessage(
             "WE DEED IT"
           )
