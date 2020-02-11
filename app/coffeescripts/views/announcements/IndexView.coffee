@@ -188,15 +188,18 @@ define [
             childID = $(this).data("id")
             idx = response.findIndex (resp) ->
                     resp.discussion_topic.id == childID
+
+            if response[idx] && response[idx].discussion_topic.pinned
+              $(this).find(".icon-pin").text("Unpin")
+            else
+              $(this).find(".icon-pin").text("Pin to Top")
+
             reordered[idx] = $(this)
-            $(this).detach()
+
+          $('.discussionTopicIndexList').children().detach()
 
           reordered.forEach (jq) ->
             $('.discussionTopicIndexList').append(jq)
-
-          $.flashMessage(
-            "WE DEED IT"
-          )
         ,
         error: () ->
           $.flashError(
