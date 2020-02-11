@@ -97,8 +97,8 @@
     color: $ic-color-light;
     &:hover, &:focus { background-color: var(--ic-brand-primary); }
     .nav-badge {
-      background: var(--ic-brand-secondary);
-      color: var(--ic-brand-primary);
+      background: var(--ic-brand-tertiary);
+      color: white;
     }
   }
 }
