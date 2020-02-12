@@ -101,8 +101,7 @@ define [
       e.preventDefault()
       e.stopPropagation()
       locked = !@model.get('locked')
-      pinned = if locked then false else @model.get('pinned')
-      @model.save({locked: locked, pinned: pinned}, { success: (model, response, options) =>
+      @model.save({locked: locked}, { success: (model, response, options) =>
         @$gearButton.focus()
       })
 
