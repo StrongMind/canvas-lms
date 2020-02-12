@@ -119,7 +119,7 @@ define [
       e.preventDefault()
       e.stopPropagation()
 
-      unpinning = ($(e.target).text().trim() == "Unpin")
+      unpinning = ($(".discussion-topic[data-id=" + @model.id + "]").hasClass("pinned-announcement"))
 
       $.ajax({
         url: "/api/v1/courses/" + ENV.COURSE_ID + "/announcements/bulk_pin",
@@ -137,11 +137,11 @@ define [
                     resp.discussion_topic.id == childID
 
             if response[idx] && response[idx].discussion_topic.pinned
-              $(this).find("#individual-pin").text("Unpin")
+              $(this).find(".individual-pin").text("Unpin")
               $(this).addClass("pinned-announcement")
               $(this).find(".discussion-info-icons-pin").removeClass("invisible-pin")
             else
-              $(this).find("#individual-pin").text("Pin to Top")
+              $(this).find(".individual-pin").text("Pin to Top")
               $(this).removeClass("pinned-announcement")
               $(this).find(".discussion-info-icons-pin").addClass("invisible-pin")
 
@@ -154,7 +154,7 @@ define [
         ,
         error: () ->
           $.flashError(
-            "Something went wrong!"
+            "Something went wrong. Your announcement was not pinned."
           )
         ,
       });
