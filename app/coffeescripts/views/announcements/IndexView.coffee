@@ -190,9 +190,13 @@ define [
                     resp.discussion_topic.id == childID
 
             if response[idx] && response[idx].discussion_topic.pinned
-              $(this).find(".icon-pin").text("Unpin")
+              $(this).find("#individual-pin").text("Unpin")
+              $(this).addClass("pinned-announcement")
+              $(this).find(".discussion-info-icons-pin").removeClass("invisible-pin")
             else
-              $(this).find(".icon-pin").text("Pin to Top")
+              $(this).find("#individual-pin").text("Pin to Top")
+              $(this).removeClass("pinned-announcement")
+              $(this).find(".discussion-info-icons-pin").addClass("invisible-pin")
 
             reordered[idx] = $(this)
 
