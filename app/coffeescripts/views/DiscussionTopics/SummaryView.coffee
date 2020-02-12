@@ -41,6 +41,7 @@ define [
       'click' : 'openOnClick'
       'click .icon-lock':  'toggleLocked'
       'click .icon-trash': 'onDelete'
+      'click .icon-pin': 'togglePinned'
 
     els:
       '.discussion-actions .al-trigger' : '$gearButton'
@@ -114,6 +115,46 @@ define [
         @goToPrevItem()
       else
         @$gearButton.focus()
+
+    togglePinned: (e) =>
+      e.preventDefault()
+      e.stopPropagation()
+
+      unpinning = ($(e.target).text().trim() == "Unpin")
+
+      $.ajax({
+        url: "/api/v1/courses/" + ENV.COURSE_ID + "/announcements/bulk_pin",
+        data: {"announcement_ids[]": [@model.id], unpin: unpinning},
+        type: 'POST',
+        dataType: "json",
+        success: (response) ->
+          reordered = []
+          children = $('.discussionTopicIndexList').children()
+
+          $('.discussionTopicIndexList').children().each (child) ->
+            childID = $(this).data("id")
+            pinned = false
+            idx = response.findIndex (resp) ->
+                    resp.discussion_topic.id == childID
+
+            if response[idx] && response[idx].discussion_topic.pinned
+              $(this).find(".icon-pin").text("Unpin")
+            else
+              $(this).find(".icon-pin").text("Pin to Top")
+
+            reordered[idx] = $(this)
+
+          $('.discussionTopicIndexList').children().detach()
+
+          reordered.forEach (jq) ->
+            $('.discussionTopicIndexList').append(jq)
+        ,
+        error: () ->
+          $.flashError(
+            "Something went wrong!"
+          )
+        ,
+      });
 
     delete: ->
       @model.destroy
