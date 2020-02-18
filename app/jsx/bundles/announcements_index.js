@@ -23,14 +23,6 @@ import ExternalFeedsIndexView from 'compiled/views/ExternalFeeds/IndexView'
 
 const collection = new AnnouncementsCollection()
 
-new IndexView({
-  collection,
-  permissions: ENV.permissions,
-  atom_feed_url: ENV.atom_feed_url
-})
-
-collection.fetch()
-
 if (ENV.permissions.create) {
   const externalFeeds = new ExternalFeedCollection()
   externalFeeds.fetch()
@@ -39,3 +31,12 @@ if (ENV.permissions.create) {
     collection: externalFeeds
   })
 }
+
+new IndexView({
+  collection,
+  permissions: ENV.permissions,
+  atom_feed_url: ENV.atom_feed_url,
+  expired_announcements: ENV.expired_announcements
+})
+
+collection.fetch()
