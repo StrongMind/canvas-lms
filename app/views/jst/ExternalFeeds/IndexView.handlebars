@@ -24,6 +24,22 @@
       {{#t "links.add_external_feed"}}Add External Feed{{/t}}
     </a>
   </li>
+  {{#if ENV.expired_announcements}}
+    <li>
+      <a href="#" class="element_toggler" aria-expanded='false' role="button" aria-controls="expired_announcements">
+        <i class="icon-x"></i>
+        {{#t "links.add_external_feed"}}View Expired Announcements{{/t}}
+      </a>
+    </li>
+  {{/if}}
+</ul>
+
+<ul id="expired_announcements" style="display: none">
+  {{#if ENV.expired_announcements}}
+    {{#each ENV.expired_announcements}}
+      <li>Insert Expired Announcement</li>
+    {{/each}}
+  {{/if}}
 </ul>
 
 <form class="bootstrap-form" id="add_external_feed_form" style="display: none">

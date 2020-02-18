@@ -50,6 +50,7 @@ define [
     initialize: ->
       super
       @attachCollection()
+      @attachExpiredAnnouncements()
       @render()
 
     attachCollection: ->
@@ -72,6 +73,23 @@ define [
       else
         new UserSettingsView()
       @settingsView.toggle()
+
+    attachExpiredAnnouncements: ->
+      expired_url = @collection.url() + "&expired_announcements=true"
+
+      $.ajax({
+        url: expired_url,
+        type: 'GET',
+        dataType: "json",
+        success: (response) ->
+          ENV.expired_announcements = response
+        ,
+        error: () ->
+          $.flashError(
+            "Something went wrong!"
+          )
+        ,
+      });
 
     screenreaderSearchResultCount: ->
       # if count < page limit and we've got the last page, then we've got all the results

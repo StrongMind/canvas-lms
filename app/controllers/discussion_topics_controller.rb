@@ -288,7 +288,9 @@ class DiscussionTopicsController < ApplicationController
 
     return child_topic if is_child_topic?
 
-    scope = if params[:only_announcements]
+    scope = if params[:expired_announcements] && @context.is_a?(Course)
+              @context.expired_announcements.order(created_at: :desc)
+            elsif params[:only_announcements]
               ancmts = @context.is_a?(Course) ? @context.non_expired_announcements : @context.active_announcements
               params[:order_by] ? ancmts : ancmts.order("pinned DESC NULLS LAST")
             else
