@@ -77,12 +77,12 @@
       <li>{{#t "try_disabling_the_unread_filters"}}Try disabling the "Unread" filter.{{/t}}</li>
     </ul>
   </div>
-  <h2>Active</h2>
+  <h3 class="announcement-heading">Active</h3>
   <ul class="discussionTopicIndexList" role="list" aria-label="announcements"></ul>
 
-  <h2>Expired</h2>
-  {{#if options.expired_announcements}}
-    <ul id="expired_announcements"></ul>
+  {{#if options.expired_announcements.length}}
+    <h3 class="announcement-heading expired">Expired</h3>
+    <ul id="expired-announcements"></ul>
   {{/if}}
 {{else}}
   {{#if lastPageFetched}}

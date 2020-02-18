@@ -137,7 +137,7 @@ define [
         view = new ExpiredAnnouncementsSummaryView
           model: discussionTopic
           permissions: @options.permissions
-        @$('#expired_announcements').append view.render().el
+        @$('#expired-announcements').append view.render().el
 
     fetchedNextPage: =>
       $list = @$('.discussionTopicIndexList')
