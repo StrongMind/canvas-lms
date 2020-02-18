@@ -428,6 +428,10 @@ class DiscussionTopicsController < ApplicationController
         hash[:ATTRIBUTES] = discussion_topic_api_json(@topic, @context, @current_user, session, override_dates: false)
       end
       (hash[:ATTRIBUTES] ||= {})[:is_announcement] = @topic.is_announcement
+      if @topic.is_announcement
+        expiration_date = SettingsService.get_settings(object: 'announcement', id: @topic.id)["expiration_date"]
+        hash[:ATTRIBUTES][:expiration_date] = DateTime.parse(expiration_date) if expiration_date
+      end
       hash[:ATTRIBUTES][:can_group] = @topic.can_group?
       handle_assignment_edit_params(hash[:ATTRIBUTES])
 
