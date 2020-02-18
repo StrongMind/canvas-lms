@@ -40,7 +40,7 @@ class AnnouncementsController < ApplicationController
         }
         js_env is_showing_announcements: true
         js_env atom_feed_url: feeds_announcements_format_path((@context_enrollment || @context).feed_code, :atom)
-        js_env(COURSE_ID: @context.id.to_s, expired_announcements: @context.expired_announcements) if @context.is_a?(Course)
+        js_env(COURSE_ID: @context.id.to_s) if @context.is_a?(Course)
         set_tutorial_js_env
       end
     end

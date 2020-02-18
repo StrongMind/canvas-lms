@@ -21,7 +21,7 @@
 
 $announcements_disscussion-summary-color: $ic-font-color-dark;
 
-.discussionTopicIndexList {
+.discussionTopicIndexList, #expired_announcements {
   .discussion-actions {
     display: inline-block;
     padding: $ic-sp 0 0;

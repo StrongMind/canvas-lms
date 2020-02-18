@@ -17,11 +17,13 @@
  */
 
 import AnnouncementsCollection from 'compiled/collections/AnnouncementsCollection'
+import ExpiredAnnouncementsCollection from 'compiled/collections/ExpiredAnnouncementsCollection'
 import ExternalFeedCollection from 'compiled/collections/ExternalFeedCollection'
 import IndexView from 'compiled/views/announcements/IndexView'
 import ExternalFeedsIndexView from 'compiled/views/ExternalFeeds/IndexView'
 
 const collection = new AnnouncementsCollection()
+const expiredCollection = new ExpiredAnnouncementsCollection()
 
 if (ENV.permissions.create) {
   const externalFeeds = new ExternalFeedCollection()
@@ -36,7 +38,8 @@ new IndexView({
   collection,
   permissions: ENV.permissions,
   atom_feed_url: ENV.atom_feed_url,
-  expired_announcements: ENV.expired_announcements
+  expired_announcements: expiredCollection
 })
 
+expiredCollection.fetch()
 collection.fetch()

@@ -82,11 +82,7 @@
 
   <h2>Expired</h2>
   {{#if options.expired_announcements}}
-    <ul id="expired_announcements">
-      {{#each options.expired_announcements}}
-        <li>Insert Expired Announcement</li>
-      {{/each}}
-    </ul>
+    <ul id="expired_announcements"></ul>
   {{/if}}
 {{else}}
   {{#if lastPageFetched}}
