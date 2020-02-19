@@ -41,5 +41,6 @@ new IndexView({
   expired_announcements: expiredCollection
 })
 
-expiredCollection.fetch()
-collection.fetch()
+expiredCollection.fetch().then(() => {
+  collection.fetch()
+})
