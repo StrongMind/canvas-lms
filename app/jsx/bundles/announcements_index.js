@@ -23,7 +23,7 @@ import IndexView from 'compiled/views/announcements/IndexView'
 import ExternalFeedsIndexView from 'compiled/views/ExternalFeeds/IndexView'
 
 const collection = new AnnouncementsCollection()
-const expiredCollection = new ExpiredAnnouncementsCollection()
+const expiredCollection = ENV.current_user_roles.includes("student") ? undefined : new ExpiredAnnouncementsCollection()
 
 if (ENV.permissions.create) {
   const externalFeeds = new ExternalFeedCollection()
@@ -41,6 +41,10 @@ new IndexView({
   expired_announcements: expiredCollection
 })
 
-expiredCollection.fetch().then(() => {
+if (expiredCollection) {
+  expiredCollection.fetch().then(() => {
+    collection.fetch()
+  })
+} else {
   collection.fetch()
-})
+}

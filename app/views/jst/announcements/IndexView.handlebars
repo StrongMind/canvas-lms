@@ -80,13 +80,15 @@
   <h3 class="announcement-heading">Active</h3>
   <ul class="discussionTopicIndexList" role="list" aria-label="announcements"></ul>
 
-  <h3 class="announcement-heading expired">Expired</h3>
-  {{#if options.expired_announcements.length}}
-    <ul id="expired-announcements"></ul>
-  {{else}}
-    <h5 style="padding-left: 1.5rem;">
-      {{#t "no_announcements_have_expired"}}No announcements have expired{{/t}}
-    </h5>
+  {{#if options.expired_announcements}}
+    <h3 class="announcement-heading expired">Expired</h3>
+    {{#if options.expired_announcements.length}}
+      <ul id="expired-announcements"></ul>
+    {{else}}
+      <h5 style="padding-left: 1.5rem;">
+        {{#t "there_are_no_announcements_show"}}No announcements have expired{{/t}}
+      </h5>
+    {{/if}}
   {{/if}}
 {{else}}
   {{#if options.expired_announcements.length }}
