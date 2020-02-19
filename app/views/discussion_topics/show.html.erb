@@ -55,7 +55,15 @@
   css_bundle :tinymce, :discussions, :learning_outcomes
 %>
 
+
+<% ancmt_expiration_date = SettingsService.get_settings(object: 'announcement', id: @topic.id)["expiration_date"] if @topic.is_a?(Announcement) %>
+
 <% if @unlock_at && @unlock_at > Time.now && !can_do(@context, @current_user, :moderate_forum) %>
+  <% if ancmt_expiration_date && DateTime.parse(ancmt_expiration_date) < Time.now %>
+    <div class='ic-notification' style='background: rgba(255, 0, 0, .05);'>
+    <h1 style='padding:1rem;'>This announcement is dead.</h1></div>
+  <% end %>
+
   <div id="discussion-managebar" class="toolbarView">
     <div class="headerBar">
       <div class="topic">
@@ -76,6 +84,7 @@
   <div id="keyboard-shortcut-modal"></div>
 <% else %>
   <div id="discussion-managebar" class="toolbarView">
+  <h1>euguiqgheoghqewoigjweoig</h1>
     <div class="headerBar">
       <div class="form-inline" style="overflow: visible;">
         <div id="keyboard-shortcut-modal-info" tabindex="0">
@@ -190,6 +199,8 @@
   </div>
 
   <div id="discussion_container">
+    <div class='ic-notification' style='background: rgba(255, 0, 0, .05);'>
+    <h1 style='padding:1rem;'>This announcement is dead.</h1></div>
     <article id="discussion_topic" class="admin-link-hover-area topic discussion_entry <%= @topic.class.to_s.underscore %> <%= 'has_podcast' if @topic.podcast_enabled %> <%= 'has_unread_entries' if @topic.unread_count(@current_user) > 0 %> can_be_marked_as_read <%= @topic.read_state(@current_user) %>" data-mark-read-url="<%= context_url(@topic.context, :api_v1_context_discussion_topic_mark_read_url, @topic) %>">
       <div class="entry-content">
         <% if @topic.for_assignment? %>
