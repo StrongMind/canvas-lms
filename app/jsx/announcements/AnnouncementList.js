@@ -47,9 +47,8 @@ export default class AnnouncementList extends React.Component {
     }
 
     renderAnnouncement () {
-      const pinned = this.props.pinned
       return this.props.announcements.map(c => (
-        <tr key={c.id} className={pinned ? "AnnouncementList__pinned" : ""}>
+        <tr key={c.id} className={c.pinned ? "AnnouncementList__pinned" : ""}>
           <td>
             <ToggleDetails summary={TextHelper.truncateText(c.title, { max: 100 })} className="AnnouncementList__message">
               <p dangerouslySetInnerHTML={{__html: c.message}}/>
