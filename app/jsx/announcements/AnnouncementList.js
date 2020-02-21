@@ -64,7 +64,7 @@ export default class AnnouncementList extends React.Component {
     renderTable () {
       if (this.props.announcements.length) {
         return (
-          <Table caption={I18n.t('Recent Announcements')} striped="rows">
+          <Table caption={I18n.t('Active Announcements')} striped="rows">
             <tbody>
               {this.renderAnnouncement()}
             </tbody>
