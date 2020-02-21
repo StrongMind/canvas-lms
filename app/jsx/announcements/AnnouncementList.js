@@ -36,7 +36,8 @@ export default class AnnouncementList extends React.Component {
           title: PropTypes.string.isRequired,
           message: PropTypes.string.isRequired,
           posted_at: PropTypes.string.isRequired,
-          url: PropTypes.string.isRequired
+          url: PropTypes.string.isRequired,
+          pinned: PropTypes.bool.isRequired
         })
       )
     }
