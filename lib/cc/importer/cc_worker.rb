@@ -78,6 +78,7 @@ class Canvas::Migration::Worker::CCWorker < Canvas::Migration::Worker::Base
        end
 
       AssignmentsService.distribute_due_dates(course: cm.context)
+      RequirementsService.set_third_party_requirements(course: cm.context)
       if Rails.cache.read('current_import_vendor') != 'StrongMind'
         #do third party stuff here
       end
