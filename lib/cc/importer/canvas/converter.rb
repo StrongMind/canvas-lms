@@ -74,7 +74,10 @@ module CC::Importer::Canvas
 
       # for master course sync
       @course[:deletions] = @settings[:deletions] if @settings[:deletions].present?
-
+      vendor =  @manifest.at_xpath('//vendor/name')
+      vendor = vendor.try(:children).try(:first).try(:text)
+      Rails.cache.write('current_import_vendor', vendor) if vendor
+      
       #close up shop
       save_to_file
       set_progress(90)

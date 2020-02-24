@@ -78,6 +78,10 @@ class Canvas::Migration::Worker::CCWorker < Canvas::Migration::Worker::Base
        end
 
       AssignmentsService.distribute_due_dates(course: cm.context)
+      if Rails.cache.read('current_import_vendor') != 'StrongMind'
+        #do third party stuff here
+      end
+
       saved
     rescue Canvas::Migration::Error
       cm.add_error($!.message, :exception => $!)
