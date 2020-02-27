@@ -175,8 +175,7 @@ module AuthenticationMethods
       if sis_id
         unless Rails.cache.read("unlocked_#{sis_id}")
           begin
-            school_id = ENV["PSP_ID"]
-            if school_id && attendance_lockout_request(school_id, sis_id)
+            if call_to_strongmind_psp(sis_id)
               redirect_to('https://flms.flipswitch.com')
             else
               Rails.cache.write("unlocked_#{sis_id}", true, :expires_in => 5.minutes)
@@ -358,4 +357,10 @@ module AuthenticationMethods
     ).body == 'true'
   end
 
+  def call_to_strongmind_psp(sis_id)
+    school_psp_ids = ENV["PSP_ID"]
+    if school_psp_ids
+      school_psp_ids.split(",").any? { |school_id| attendance_lockout_request(school_id, sis_id) }
+    end
+  end
 end
