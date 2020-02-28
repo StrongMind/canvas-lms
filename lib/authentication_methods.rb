@@ -352,7 +352,7 @@ module AuthenticationMethods
 
   def attendance_lockout_request(school_id, sis_id)
     HTTParty.get(
-      "https://flms.flipswitch.com/AttendanceTwo/IsLockedOut?schoolId=#{school_id}&studentId=#{sis_id}",
+      "https://stageflms.flipswitch.com/AttendanceTwo/IsLockedOut?schoolId=#{school_id}&studentId=#{sis_id}",
       headers: {"CanvasAuth" => ENV['ATTENDANCE_API_KEY']}
     ).body == 'true'
   end
