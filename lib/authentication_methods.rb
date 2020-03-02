@@ -358,7 +358,7 @@ module AuthenticationMethods
   end
 
   def call_to_strongmind_psp(sis_id)
-    school_psp_ids = ENV["PSP_ID"]
+    school_psp_ids = ENV["PSP_IDS"]
     if school_psp_ids
       school_psp_ids.split(",").any? { |school_id| attendance_lockout_request(school_id, sis_id) }
     end
