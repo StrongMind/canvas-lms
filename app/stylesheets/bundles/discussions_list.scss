@@ -35,6 +35,28 @@ $announcements_disscussion-summary-color: $ic-font-color-dark;
   }
 }
 
+
+.sm-announcements {
+  .image-block-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .sm-announcement-content {
+      flex: 1;
+    }
+
+    .discussion-actions-container {
+      margin-top: 0;
+      float: none;
+
+      > * {
+        padding-top: 0;
+      }
+    }
+  }
+}
+
 .discussionTopicIndexList, #expired-announcements {
   .discussion-actions {
     display: inline-block;
@@ -80,20 +102,15 @@ $announcements_disscussion-summary-color: $ic-font-color-dark;
     @media screen and (max-width: 1100px) { max-width: 520px; }
   }
 
-  .discussion-actions-container {
-    float: right;
-    margin-top: -50px;
-  }
   .discussion-unread-container, .discussion-last-reply {
     display: inline-block;
-    padding: $ic-sp 10px 0;
+    padding: 0 10px 0;
     // 'not-important' styles
     color: $announcements_disscussion-summary-color;
     @include fontSize(11px);
   }
   .discussion-info-icons {
     display: inline-block;
-    padding: $ic-sp 0 0;
     i {
       padding: 0 $ic-sp/2;
     }
