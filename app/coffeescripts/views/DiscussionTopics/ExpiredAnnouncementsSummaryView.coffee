@@ -68,7 +68,7 @@ define [
           other: '%{count} replies.'
         }, count: @model.get('discussion_subentry_count'))
 
-        summary: @model.summary()
+        summary: $.trim(@model.summary())
 
     render: ->
       super
