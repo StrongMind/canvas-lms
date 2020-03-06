@@ -92,6 +92,11 @@ define [
       @$el.attr @attributes()
       this
 
+    afterRender: ->
+      $('.discussion-summary').each (index, item) ->
+        if item.offsetHeight < item.scrollHeight
+          $(this).addClass('truncated-summary')
+
     toggleSelected: ->
       @model.selected = !@model.selected
       @model.trigger 'change:selected'

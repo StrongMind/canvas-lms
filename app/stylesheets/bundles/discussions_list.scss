@@ -81,14 +81,16 @@ $announcements-description-line-height: 16px;
         }
 
         .discussion-summary {
-          &:after {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: $announcements-description-line-height;
-            background: linear-gradient(0deg, $lightBackground, transparent);
-            content: '';
+          &.truncated-summary {
+            &:after {
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 100%;
+              height: $announcements-description-line-height / 2;
+              background: linear-gradient(0deg, $lightBackground, transparent);
+              content: '';
+            }
           }
         }
       }
@@ -114,21 +116,23 @@ $announcements-description-line-height: 16px;
     max-width: 740px;
     @media screen and (max-width: 1140px) { max-width: 520px; }
 
-    &:after {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: $announcements-description-line-height;
-      background: linear-gradient(0deg, $ic-color-light, transparent);
-      content: '';
+    &.truncated-summary {
+      &:after {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: $announcements-description-line-height / 2;
+        background: linear-gradient(0deg, $ic-color-light, transparent);
+        content: '';
+      }
     }
 
     &.ellipsis {
       position: relative;
       white-space: normal;
       line-height: $announcements-description-line-height;
-      height: $announcements-description-line-height * 3;
+      max-height: $announcements-description-line-height * 3;
     }
   }
 
