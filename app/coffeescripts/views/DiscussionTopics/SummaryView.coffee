@@ -94,7 +94,8 @@ define [
 
     afterRender: ->
       $('.discussion-summary').each (index, item) ->
-        if item.offsetHeight < item.scrollHeight
+        # This +1 is to account for a discrepancy in the scrollHeight of a single-line announcement in Firefox.
+        if item.scrollHeight && (item.offsetHeight + 1) < item.scrollHeight
           $(this).addClass('truncated-summary')
 
     toggleSelected: ->

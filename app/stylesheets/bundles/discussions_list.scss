@@ -76,8 +76,22 @@ $announcements-description-line-height: 16px;
     @if $use_high_contrast == false {
       &:nth-child(odd) {
         background-color: $lightBackground;
-        body.ff & {
-          .ellipsis::after { @include firefox-white-space-bug-fix-gradient($lightBackground); }
+        body.ff {
+          &.ellipsis::after { @include firefox-white-space-bug-fix-gradient($lightBackground); }
+
+          .discussion-summary {
+            &.truncated-summary {
+              &:after {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: $announcements-description-line-height / 2;
+                background: linear-gradient(0deg, rgba(245, 245, 245, 1), rgba(255, 255, 255, 0));
+                content: '';
+              }
+            }
+          }
         }
 
         .discussion-summary {
@@ -88,7 +102,7 @@ $announcements-description-line-height: 16px;
               left: 0;
               width: 100%;
               height: $announcements-description-line-height / 2;
-              background: linear-gradient(0deg, $lightBackground, transparent);
+              background: linear-gradient(0deg, rgba(245, 245, 245, 1), rgba(255, 255, 255, 0));
               content: '';
             }
           }
@@ -115,6 +129,10 @@ $announcements-description-line-height: 16px;
   .discussion-summary {
     max-width: 740px;
     @media screen and (max-width: 1140px) { max-width: 520px; }
+    position: relative;
+    overflow: hidden;
+    line-height: $announcements-description-line-height;
+    max-height: $announcements-description-line-height * 3;
 
     &.truncated-summary {
       &:after {
@@ -123,16 +141,9 @@ $announcements-description-line-height: 16px;
         left: 0;
         width: 100%;
         height: $announcements-description-line-height / 2;
-        background: linear-gradient(0deg, $ic-color-light, transparent);
+        background: linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
         content: '';
       }
-    }
-
-    &.ellipsis {
-      position: relative;
-      white-space: normal;
-      line-height: $announcements-description-line-height;
-      max-height: $announcements-description-line-height * 3;
     }
   }
 
