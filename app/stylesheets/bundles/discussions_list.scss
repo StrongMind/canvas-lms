@@ -20,6 +20,7 @@
 @import "pages/shared/move_dialog";
 
 $announcements_disscussion-summary-color: $ic-font-color-dark;
+$announcements-description-line-height: 16px;
 
 .announcement-heading {
   font-weight: 600;
@@ -78,6 +79,18 @@ $announcements_disscussion-summary-color: $ic-font-color-dark;
         body.ff & {
           .ellipsis::after { @include firefox-white-space-bug-fix-gradient($lightBackground); }
         }
+
+        .discussion-summary {
+          &:after {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: $announcements-description-line-height;
+            background: linear-gradient(0deg, $lightBackground, transparent);
+            content: '';
+          }
+        }
       }
     }
     &.unread .discussion-title{ font-weight: 500; }
@@ -99,7 +112,24 @@ $announcements_disscussion-summary-color: $ic-font-color-dark;
   }
   .discussion-summary {
     max-width: 740px;
-    @media screen and (max-width: 1100px) { max-width: 520px; }
+    @media screen and (max-width: 1140px) { max-width: 520px; }
+
+    &:after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: $announcements-description-line-height;
+      background: linear-gradient(0deg, $ic-color-light, transparent);
+      content: '';
+    }
+
+    &.ellipsis {
+      position: relative;
+      white-space: normal;
+      line-height: $announcements-description-line-height;
+      height: $announcements-description-line-height * 3;
+    }
   }
 
   .discussion-unread-container, .discussion-last-reply {
