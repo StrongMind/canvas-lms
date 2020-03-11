@@ -35,20 +35,24 @@ define [
     positionAfter: (otherId) ->
       reorderURL = _.result(@collection, 'url').split('discussion_topics')[0] + 'announcements/reorder_pinned'    
       pinned = @collection.where(pinned: true)
-      otherIndex = pinned.indexOf(@collection.get(otherId))
       pinned = pinned.filter((ancmt) => ancmt != this)
+      otherIndex = pinned.indexOf(@collection.get(otherId))
+      if otherIndex == -1
+        otherIndex = pinned.length
       pinned.splice(otherIndex, 0, this)
 
       info = {};
       pinned.forEach((ancmt, idx) => info[ancmt.attributes.id] = idx + 1)
-      collection = @collection
 
       $.ajax
+        context: @
         type: 'POST'
         data: announcements: info
         url: reorderURL
         dataType: "json"
         success: (response) ->
-          console.log(response)
+          @collection.reset(pinned.concat(@collection.where(pinned: false)))
           return
-
+        error: (response) ->
+          @collection.reset(@collection.map())
+          return
