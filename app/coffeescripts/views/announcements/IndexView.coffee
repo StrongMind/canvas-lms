@@ -199,6 +199,9 @@ define [
           reordered = []
           children = $('.discussionTopicIndexList').children()
 
+          pinnedDiv = '<div class="discussion-column"><span class="discussion-drag-handle"' +
+          'tabindex="0" data-tooltip title="{{#t}}Drag up or down to reorder{{/t}}"></span></div>'
+
           $('.discussionTopicIndexList').children().each (child) ->
             childID = $(this).data("id")
             idx = response.findIndex (resp) ->
@@ -208,10 +211,12 @@ define [
               $(this).find(".individual-pin").text("Unpin")
               $(this).addClass("pinned-announcement")
               $(this).find(".discussion-info-icons-pin").removeClass("invisible-pin")
+              $(this).prepend(pinnedDiv) unless $(this).find("span.discussion-drag-handle").length
             else
               $(this).find(".individual-pin").text("Pin to Top")
               $(this).removeClass("pinned-announcement")
               $(this).find(".discussion-info-icons-pin").addClass("invisible-pin")
+              $(this).find("span.discussion-drag-handle").parents("div.discussion-column").remove()
 
             reordered[idx] = $(this)
 
