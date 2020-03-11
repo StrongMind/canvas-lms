@@ -18,7 +18,8 @@
 define [
   'compiled/models/DiscussionTopic'
   'underscore'
-], (DiscussionTopic, _) ->
+  'jquery'
+], (DiscussionTopic, _, $) ->
 
   class Announcement extends DiscussionTopic
 
@@ -30,4 +31,24 @@ define [
 
     defaults:
       is_announcement: true
+
+    positionAfter: (otherId) ->
+      reorderURL = _.result(@collection, 'url').split('discussion_topics')[0] + 'announcements/reorder_pinned'    
+      pinned = @collection.where(pinned: true)
+      otherIndex = pinned.indexOf(@collection.get(otherId))
+      pinned = pinned.filter((ancmt) => ancmt != this)
+      pinned.splice(otherIndex, 0, this)
+
+      info = {};
+      pinned.forEach((ancmt, idx) => info[ancmt.attributes.id] = idx + 1)
+      collection = @collection
+
+      $.ajax
+        type: 'POST'
+        data: announcements: info
+        url: reorderURL
+        dataType: "json"
+        success: (response) ->
+          console.log(response)
+          return
 
