@@ -42,7 +42,7 @@ define [
       pinned.splice(otherIndex, 0, this)
 
       info = {};
-      pinned.forEach((ancmt, idx) => info[ancmt.attributes.id] = idx + 1)
+      pinned.forEach((ancmt, idx) => info[ancmt.id] = idx + 1)
 
       $.ajax
         context: @
@@ -58,7 +58,23 @@ define [
               result.push collection.get(ancmt.discussion_topic.id)
             return
           @collection.reset(result)
+          @renderPinnings(response)
           return
         error: (response) ->
           @collection.reset(@collection.map())
           return
+    
+    renderPinnings: (response) ->
+      response.forEach (ancmt) ->
+        jq = $(".discussion-topic[data-id=" + ancmt.discussion_topic.id.toString() + "]")
+        if ancmt.discussion_topic.pinned
+          jq.addClass('pinned-announcement')
+          jq.find(".discussion-info-icons-pin").removeClass("invisible-pin")
+          jq.prepend(
+            '<div class="discussion-column"><span class="discussion-drag-handle"tabindex="0" data-tooltip title="{{#t}}Drag up or down to reorder{{/t}}"></span></div>'
+          ) unless $(jq).find("span.discussion-drag-handle").length
+        else
+          jq.find(".individual-pin").text("Pin to Top")
+          jq.removeClass("pinned-announcement")
+          jq.find(".discussion-info-icons-pin").addClass("invisible-pin")
+          jq.find("span.discussion-drag-handle").parents("div.discussion-column").remove()
