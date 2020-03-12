@@ -55,8 +55,12 @@ define [
           collection = @collection
           response.forEach (ancmt) ->
             if ancmt.discussion_topic && collection.get(ancmt.discussion_topic.id)
-              result.push collection.get(ancmt.discussion_topic.id)
+              newAnnouncement = collection.get(ancmt.discussion_topic.id)
+              newAnnouncement.attributes.pinned = ancmt.discussion_topic.pinned
+              newAnnouncement.attributes.position = ancmt.discussion_topic.position
+              result.push newAnnouncement
             return
+
           @collection.reset(result)
           @renderPinnings(response)
           return
