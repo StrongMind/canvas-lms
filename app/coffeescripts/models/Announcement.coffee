@@ -51,7 +51,13 @@ define [
         url: reorderURL
         dataType: "json"
         success: (response) ->
-          @collection.reset(pinned.concat(@collection.where(pinned: false)))
+          result = []
+          collection = @collection
+          response.forEach (ancmt) ->
+            if ancmt.discussion_topic && collection.get(ancmt.discussion_topic.id)
+              result.push collection.get(ancmt.discussion_topic.id)
+            return
+          @collection.reset(result)
           return
         error: (response) ->
           @collection.reset(@collection.map())
