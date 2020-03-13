@@ -107,7 +107,7 @@ define [
                      !filtering &&
                      !@isShowingAnnouncements() &&
                      @options.permissions.moderate
-    # if makeSortable
+
       $list.sortable
         axis: 'y'
         cancel: 'a'
@@ -115,9 +115,6 @@ define [
         cursor: 'ns-resize'
         handle: '.discussion-drag-handle'
         tolerance: 'pointer'
-
-      # else if $list.is(':ui-sortable')
-        # $list.sortable('destroy')
 
     addDiscussionTopicToList: (discussionTopic) =>
       if @modelMeetsFilterRequirements(discussionTopic)
