@@ -1,11 +1,11 @@
-{{#if pinned}}
+{{#ifAll pinned ENV.permissions.moderate}}
   <div class="discussion-column">
     <span class="discussion-drag-handle"
           tabindex="0"
           data-tooltip
           title="{{#t}}Drag up or down to reorder{{/t}}"></span>
   </div>
-{{/if}}
+{{/ifAll}}
 
 {{#if permissions.delete}}
   <label class="discussion-column">
