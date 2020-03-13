@@ -68,14 +68,15 @@ define [
           @collection.reset(@collection.map())
           return
     
-    renderPinnings: (response) ->
+    renderPinnings: (response) ->  
       response.forEach (ancmt) ->
         jq = $(".discussion-topic[data-id=" + ancmt.discussion_topic.id.toString() + "]")
         if ancmt.discussion_topic.pinned
           jq.addClass('pinned-announcement')
           jq.find(".discussion-info-icons-pin").removeClass("invisible-pin")
           jq.prepend(
-            '<div class="discussion-column"><span class="discussion-drag-handle"tabindex="0" data-tooltip title="{{#t}}Drag up or down to reorder{{/t}}"></span></div>'
+            '<div class="discussion-column"><span class="discussion-drag-handle"tabindex="0" data-tooltip title="{{#t}}Drag up or down to reorder{{/t}}">' +
+            '<i class="icon-drag-handle" aria-hidden="true"></i></span></div>'
           ) unless $(jq).find("span.discussion-drag-handle").length
         else
           jq.find(".individual-pin").text("Pin to Top")

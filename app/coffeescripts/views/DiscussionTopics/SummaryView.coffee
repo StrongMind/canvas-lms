@@ -137,7 +137,8 @@ define [
           children = $('.discussionTopicIndexList').children()
 
           pinnedDiv = '<div class="discussion-column"><span class="discussion-drag-handle"' +
-          'tabindex="0" data-tooltip title="{{#t}}Drag up or down to reorder{{/t}}"></span></div>'
+          'tabindex="0" data-tooltip title="{{#t}}Drag up or down to reorder{{/t}}">' +
+          '<i class="icon-drag-handle" aria-hidden="true"></i></span></div>'
 
           $('.discussionTopicIndexList').children().each (child) ->
             childID = $(this).data("id")
