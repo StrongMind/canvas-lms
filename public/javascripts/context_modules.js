@@ -889,6 +889,8 @@ import 'compiled/jquery.rails_flash_notifications'
           var total_items_count = $activities_container.find('li.context_module_item').length;
           var completed_items_count = $activities_container.find('li.context_module_item.completed_item').length;
           var overdue_items_count = $activities_container.find('li.context_module_item.overdue_item').length;
+          var total_requirements_count = $activities_container.find('li.context_module_item .module-item-status-icon').length;
+          console.log(total_requirements_count);
 
           if (total_items_count === completed_items_count) {
             $subheader.addClass('completed_item');
