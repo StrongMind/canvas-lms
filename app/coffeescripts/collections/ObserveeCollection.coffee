@@ -4,8 +4,7 @@ define [
 ], (Backbone, Observee) ->
 
   class ObserveeCollection extends Backbone.Collection
-    resourceName: 'observer_enrollments'
-
-    url: -> super
+  
+    url: -> 'api/v1/users/' + ENV.current_user_id + '/observer_enrollments'
 
     model: Observee

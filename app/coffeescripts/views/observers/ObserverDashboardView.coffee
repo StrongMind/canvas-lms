@@ -1,6 +1,6 @@
 define [
     'backbone',
-    'app/views/jst/observers/ObserverDashboard.handlebars'
+    'jst/observers/ObserverDashboard'
 ], (Backbone, template) ->
 
     class ObserverDashboardView extends Backbone.View
@@ -10,7 +10,7 @@ define [
             '#observees-card': '$observees-card'
 
         initialize: (options) ->
-            @observee = @model.get("observee")
+            console.log(@collection)
 
         render: () ->
             super
