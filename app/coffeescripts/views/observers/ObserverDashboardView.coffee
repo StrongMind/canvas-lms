@@ -1,7 +1,10 @@
 define [
     'backbone',
-    'jst/observers/ObserverDashboard'
-], (Backbone, template) ->
+    'jst/observers/ObserverDashboard',
+    'jsx/observers/ObserversCard',
+    'react',
+    'react-dom'
+    ], (Backbone, template, ObserveeDashboard, React, ReactDOM) ->
 
     class ObserverDashboardView extends Backbone.View
       template: template
@@ -11,6 +14,16 @@ define [
 
       initialize: (options) ->
         console.log(@collection)
-        @renderEl()
+        # @renderEl()
+        @render()
+
+      render: ->
+        div = @el[0]
+        return unless div
+        ObserveeDashboardElement = React.createElement(
+          ObserveeDashboard,
+          observees: @collection
+        )
+        ReactDOM.render(ObserveeDashboardElement, div)
 
 
