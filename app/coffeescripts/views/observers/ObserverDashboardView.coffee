@@ -10,7 +10,7 @@ define [
       template: template
 
       el:
-        $('#observees-card')
+        document.getElementById('observees-card')
 
       initialize: (options) ->
         console.log(@collection)
@@ -18,12 +18,10 @@ define [
         @render()
 
       render: ->
-        div = @el[0]
-        return unless div
         ObserveeDashboardElement = React.createElement(
           ObserveeDashboard,
           observees: @collection
         )
-        ReactDOM.render(ObserveeDashboardElement, div)
+        ReactDOM.render(ObserveeDashboardElement, @el)
 
 
