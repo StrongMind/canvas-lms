@@ -4,13 +4,13 @@ define [
 ], (Backbone, template) ->
 
     class ObserverDashboardView extends Backbone.View
-        template: template
+      template: template
 
-        el:
-            '#observees-card': '$observees-card'
+      el:
+        $('#observees-card')
 
-        initialize: (options) ->
-            console.log(@collection)
+      initialize: (options) ->
+        console.log(@collection)
+        @renderEl()
 
-        render: () ->
-            super
+
