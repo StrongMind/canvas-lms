@@ -12,7 +12,7 @@ import PropTypes from 'prop-types'
 
 const { arrayOf } = PropTypes
 
-class ObserversCard extends React.Component {
+class ObserverDashboard extends React.Component {
   static defaultProps = {
     observees: [],
   };
@@ -29,11 +29,11 @@ class ObserversCard extends React.Component {
     // const order = this.props.order
 
     return (
-      <div className="observee-card">
+      <div className="observer-dashboard">
         <p>I'm being observed! #nointerruption</p>
       </div>
     )
   }
   }
 
-export default ObserversCard
+export default ObserverDashboard
