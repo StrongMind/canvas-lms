@@ -3,11 +3,9 @@ define [
     'jsx/observers/ObserverDashboard',
     'react',
     'react-dom'
-    ], (Backbone, template, ObserverDashboard, React, ReactDOM) ->
+    ], (Backbone, ObserverDashboard, React, ReactDOM) ->
 
     class ObserverDashboardView extends Backbone.View
-      template: template
-
       el:
         document.getElementById('observer-dashboard-container')
 
