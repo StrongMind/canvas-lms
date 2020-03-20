@@ -16,18 +16,23 @@ class ObserveeCard extends React.Component {
 
   render() {
     return (
-      <div
+      <div 
        className="observee-card content-box pad-box-mini border border-trbl border-round-b"
        style={{display: 'inline-block', margin: '1rem'}} >
         <p>{this.state.user.name}</p>
         <img src={this.state.user.avatar_image_source}></img>
-        <p>{this.state.enrollments.map(enr => {(
-          <span>
-          <p>{enr.course_name}</p>
-          <p>{enr.score ? enr.score.final_score : null}</p>
-          </span>
-          )}
-          )}</p>
+        <p>
+          {
+            this.state.enrollments.map(enr => {
+              return (
+                <span>
+                  <p>{enr.course_name}</p>
+                  <p>{enr.score ? enr.score.final_score : null}</p>
+                </span>
+              )
+            })
+          }
+        </p>
       </div>
     )
   }
