@@ -15,6 +15,7 @@ class ObserverDashboard extends React.Component {
   };
 
   renderObserveeCards() {
+    if (!this.state.observees) { return }
     return this.state.observees.map((student, i) => { 
       return (<ObserveeCard key={i} student={student} />) 
     })
