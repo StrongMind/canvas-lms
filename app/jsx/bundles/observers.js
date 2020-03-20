@@ -3,8 +3,9 @@ import ObserverDashboardView from 'compiled/views/observers/ObserverDashboardVie
 
 const collection = new ObserveeCollection()
 
-new ObserverDashboardView({
-  collection
-})
 
-collection.fetch()
+collection.fetch().then(function() {
+  new ObserverDashboardView({
+    collection
+  })
+})

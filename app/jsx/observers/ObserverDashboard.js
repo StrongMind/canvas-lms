@@ -16,16 +16,13 @@ class ObserverDashboard extends React.Component {
 
   renderObserveeCards() {
     return this.state.observees.map((student, i) => { 
-      console.log("hello")
       return (<ObserveeCard key={i} student={student} />) 
     })
   }
 
   render() {
-    console.log(this.props.observees.models)
     return (
       <div className="observer-dashboard">
-        <p>HI EVERYONE</p>
         {this.renderObserveeCards()}
       </div>
     )

@@ -10,7 +10,6 @@ define [
         document.getElementById('observer-dashboard-container')
 
       initialize: (options) ->
-        console.log(@collection)
         @render()
 
       render: ->
