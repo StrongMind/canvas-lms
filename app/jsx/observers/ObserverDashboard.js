@@ -1,5 +1,10 @@
 import React from 'react'
+import styled from 'styled-components'
 import ObserveeCard from './ObserveeCard'
+
+const Dashboard = styled.div`
+  display: flex;
+`
 
 class ObserverDashboard extends React.Component {
   constructor(props) {
@@ -23,9 +28,9 @@ class ObserverDashboard extends React.Component {
 
   render() {
     return (
-      <div className="observer-dashboard">
+      <Dashboard>
         {this.renderObserveeCards()}
-      </div>
+      </Dashboard>
     )
   }
 }
