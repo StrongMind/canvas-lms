@@ -73,7 +73,11 @@ class ObserveeCard extends React.Component {
   };
 
   formatScore(score) {
-    return score + '%';
+    if (score && score.final_score) {
+      return score.final_score + '%'
+    } else {
+      return "--";
+    }
   }
 
   render() {
@@ -89,7 +93,7 @@ class ObserveeCard extends React.Component {
                 return (
                   <p>
                     <a className="course-name" href={'/courses/' + enr.course_id}>{enr.course_name}</a>
-                    <span className="course-score">{this.formatScore(enr.score) ? this.formatScore(enr.score.final_score) : null}</span>
+                    <span className="course-score">{this.formatScore(enr.score)}</span>
                   </p>
                 )
               })
