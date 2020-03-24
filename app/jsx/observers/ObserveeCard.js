@@ -3,10 +3,7 @@ import styled from 'styled-components'
 
 const Card = styled.div`
   border: 1px solid #D7D7D7;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
   width: 100%;
 
   .observee-info {
@@ -36,11 +33,17 @@ const Card = styled.div`
     p {
       font-size: 12px;
       box-sizing: border-box;
+      border-bottom: 1px solid #e4e4e4;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 1rem;
+      margin: 0;
+      padding: 0.7rem 1rem;
       width: 100%;
+
+      &:last-of-type {
+        border-bottom: 0;
+      }
 
       .course-name {
         color: #1e1e1e;
