@@ -4,6 +4,7 @@ import styled from 'styled-components'
 const Card = styled.div`
   border: 1px solid #D7D7D7;
   text-align: center;
+  height: 100%;
   width: 100%;
 
   .observee-info {
