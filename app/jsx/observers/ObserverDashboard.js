@@ -14,6 +14,7 @@ const Dashboard = styled.div`
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
+  margin: 0 -0.75rem;
 `
 
 class ObserverDashboard extends React.Component {
