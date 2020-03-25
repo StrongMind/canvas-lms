@@ -48,6 +48,8 @@ const Card = styled.div`
 
       .course-name {
         color: #1e1e1e;
+        text-align: left;
+        word-break: break-word;
 
         &:hover {
           color: #1e1e1e;
@@ -57,6 +59,8 @@ const Card = styled.div`
 
       .course-score {
         font-weight: bold;
+        text-align: right;
+        flex-basis: 25%;
       }
     }
   }
