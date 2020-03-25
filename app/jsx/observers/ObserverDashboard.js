@@ -3,19 +3,17 @@ import styled from 'styled-components'
 import ObserveeCard from './ObserveeCard'
 
 const CardWrapper = styled.div`
-  max-width: 32%;
+  flex-basis: 33.33%;
   width: 100%;
-  margin-right: 10px;
-
-  &:nth-of-type(3n) {
-    margin-right: 0;
-  }
+  padding: 0.75rem;
+  box-sizing: border-box;
+  position: relative;
 `
 
 const Dashboard = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex-flow: row wrap;
+  justify-content: flex-start;
 `
 
 class ObserverDashboard extends React.Component {
