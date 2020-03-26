@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import ObserveeCard from './ObserveeCard'
+import ObserverZeroState from './ObserverZeroState'
 
 const CardWrapper = styled.div`
   flex-basis: 33.33%;
@@ -31,7 +32,7 @@ class ObserverDashboard extends React.Component {
   };
 
   renderObserveeCards() {
-    if (!this.state.observees) { return }
+    if (!this.state.observees.length) { return (<ObserverZeroState></ObserverZeroState>) }
     return this.state.observees.map((student, i) => { 
       return (<CardWrapper><ObserveeCard key={i} student={student} /></CardWrapper>) 
     })
