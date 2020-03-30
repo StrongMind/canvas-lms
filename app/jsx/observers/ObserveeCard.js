@@ -1,11 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
+import axios from 'axios'
+import ObserveeCourseDetails from './ObserveeCourseDetails'
 
 const Card = styled.div`
   border: 1px solid #D7D7D7;
   text-align: center;
   height: 100%;
   width: 100%;
+  position: relative;
 
   .observee-info {
     text-align: center;
@@ -72,7 +75,8 @@ class ObserveeCard extends React.Component {
 
     this.state = {
       user: this.props.student.attributes.user,
-      enrollments: this.props.student.attributes.enrollments
+      enrollments: this.props.student.attributes.enrollments,
+      showDetails: 0,
     }
   }
 
@@ -88,6 +92,17 @@ class ObserveeCard extends React.Component {
     }
   }
 
+  showCourseInfo(enr) {
+    axios.get(`api/v1/courses/${enr.course_id}/enrollments/${enr.id}/course_info`).then(response => {
+      console.log(response)
+      this.setState({showDetails: enr.id})
+    })
+  }
+
+  renderCourseDetails(enr) {
+    return <ObserveeCourseDetails enrollment={enr}></ObserveeCourseDetails>
+  }
+
   render() {
     return (
       <Card>
@@ -99,8 +114,9 @@ class ObserveeCard extends React.Component {
             {
               this.state.enrollments.map(enr => {
                 return (
-                  <p>
-                    <a className="course-name" href={'/courses/' + enr.course_id}>{enr.course_name}</a>
+                  <p onClick={this.showCourseInfo.bind(this, enr)}>
+                    { this.state.showDetails === enr.id ? this.renderCourseDetails(enr) : undefined }
+                    <span className="course-name">{enr.course_name}</span>
                     <span className="course-score">{this.formatScore(enr.score)}</span>
                   </p>
                 )
