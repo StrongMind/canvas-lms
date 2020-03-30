@@ -73,16 +73,38 @@ class ObserveeCard extends React.Component {
   constructor(props) {
     super(props);
 
+    this.reset = this.reset.bind(this);
+
     this.state = {
       user: this.props.student.attributes.user,
       enrollments: this.props.student.attributes.enrollments,
       showDetails: 0,
+      courseDetails: {},
     }
   }
 
   static defaultProps = {
     student: {},
   };
+
+  
+  reset() {
+    this.setState({showDetails: 0})
+  }
+
+  getCustomColor(enr) {
+    if (this.state.user) {
+      let colors = this.state.user.preferences.custom_colors;
+      for (const k in colors) {
+        if (k.toString() === `course_${enr.course_id}`) {
+          return colors[k]
+        }
+      }
+      return "#ffffff";
+    } else {
+      return "#ffffff";
+    }
+  }
 
   formatScore(score) {
     if (score && score.final_score) {
@@ -94,13 +116,13 @@ class ObserveeCard extends React.Component {
 
   showCourseInfo(enr) {
     axios.get(`api/v1/courses/${enr.course_id}/enrollments/${enr.id}/course_info`).then(response => {
-      console.log(response)
-      this.setState({showDetails: enr.id})
+      this.setState({showDetails: enr.id, courseDetails: response.data})
     })
   }
 
-  renderCourseDetails(enr) {
-    return <ObserveeCourseDetails enrollment={enr}></ObserveeCourseDetails>
+  renderCourseDetails(enr, color, course_details) {
+    return <ObserveeCourseDetails enrollment={enr} color={color} 
+      course_details={course_details} reset_action={this.reset}></ObserveeCourseDetails>
   }
 
   render() {
@@ -114,11 +136,13 @@ class ObserveeCard extends React.Component {
             {
               this.state.enrollments.map(enr => {
                 return (
-                  <p onClick={this.showCourseInfo.bind(this, enr)}>
-                    { this.state.showDetails === enr.id ? this.renderCourseDetails(enr) : undefined }
-                    <span className="course-name">{enr.course_name}</span>
-                    <span className="course-score">{this.formatScore(enr.score)}</span>
-                  </p>
+                  <div>
+                    { this.state.showDetails === enr.id ? this.renderCourseDetails(enr, this.getCustomColor(enr), this.state.courseDetails) : undefined }
+                    <p onClick={this.showCourseInfo.bind(this, enr)}>
+                      <span className="course-name">{enr.course_name}</span>
+                      <span className="course-score">{this.formatScore(enr.score)}</span>
+                    </p>
+                  </div>
                 )
               })
             }
