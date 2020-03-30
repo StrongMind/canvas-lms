@@ -34,36 +34,39 @@ const Card = styled.div`
   .observee-courses {
     width: 100%;
 
-    p {
-      font-size: 12px;
-      box-sizing: border-box;
+    > div {
       border-bottom: 1px solid #e4e4e4;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 0;
-      padding: 0.7rem 1rem;
-      width: 100%;
 
-      &:last-of-type {
-        border-bottom: 0;
-      }
-
-      .course-name {
-        color: #1e1e1e;
-        text-align: left;
-        word-break: break-word;
-
-        &:hover {
+      p {
+        font-size: 12px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0;
+        padding: 0.7rem 1rem;
+        width: 100%;
+  
+        .course-name {
           color: #1e1e1e;
-          text-decoration: underline;
+          text-align: left;
+          word-break: break-word;
+  
+          &:hover {
+            color: #1e1e1e;
+            text-decoration: underline;
+          }
+        }
+  
+        .course-score {
+          font-weight: bold;
+          text-align: right;
+          flex-basis: 25%;
         }
       }
-
-      .course-score {
-        font-weight: bold;
-        text-align: right;
-        flex-basis: 25%;
+  
+      &:last-of-type {
+        border-bottom: 0;
       }
     }
   }
@@ -100,9 +103,9 @@ class ObserveeCard extends React.Component {
           return colors[k]
         }
       }
-      return "#ffffff";
+      return "#006ba6";
     } else {
-      return "#ffffff";
+      return "#006ba6";
     }
   }
 
