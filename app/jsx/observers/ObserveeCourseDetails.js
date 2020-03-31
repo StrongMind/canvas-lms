@@ -4,12 +4,14 @@ import styled from 'styled-components'
 const Card = styled.div`
   box-sizing: border-box;
   background: #f5f5f6;
+  color: #212329;
   z-index: 2;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  overflow-y: scroll;
 
   .course-title {
     padding: 0.5rem;
@@ -20,7 +22,7 @@ const Card = styled.div`
 
     h4 {
       font-weight: bold;
-      font-size: 16px;
+      font-size: 18px;
       flex-grow: 1;
       padding: 0 0.5rem;
       width: 100%;
@@ -32,13 +34,40 @@ const Card = styled.div`
         font-size: 14px;
       }
     }
+  }
 
-    p {
-      text-align: center;
+  p {
+    text-align: center;
+  }
+
+  span {
+    font-size: 12px;
+    
+    &.title {
+      font-weight: bold;
     }
+  }
 
+  .course-teachers {
+    color: #696969;
+    font-style: italic;
+    font-weight: bold;
+    
     span {
-      font-size: 12px;
+      font-weight: normal;
+    }
+  }
+
+  .course-score {
+    font-family: "Montserrat", sans-serif; 
+    font-size: 30px;
+    font-weight: bold;
+    color: #006ba6;
+  }
+
+  .submission-date, .last-active {
+    span {
+      display: block;
     }
   }
 `
@@ -51,6 +80,7 @@ class ObserveeCourseDetails extends React.Component {
   static defaultProps = {
     enrollment: {},
     color: "",
+    score: "",
     course_details: {}
   };
 
@@ -63,12 +93,19 @@ class ObserveeCourseDetails extends React.Component {
           </a>
           <h4>{this.props.enrollment.course_name}</h4>
         </div>
-        <p>Teachers:</p>
-        {
-          this.props.course_details.teachers.map(teacher => {
-            return <span>{teacher}</span>
-          })
-        }
+        <p className="course-teachers">
+          <span className="title">Teachers: </span>
+          {this.props.course_details.teachers.join()}
+        </p>
+        <p className="course-score">{this.props.score}</p>
+        <p className="submission-date">
+          <span className="title">Date of last submission:</span>
+          <span>{this.props.course_details.last_submission}</span>
+        </p>
+        <p className="last-active">
+          <span className="title">Days since last active:</span>
+          <span>{this.props.course_details.last_active}</span>
+        </p>
       </Card>
     )
   }

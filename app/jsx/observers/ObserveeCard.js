@@ -6,6 +6,8 @@ import ObserveeCourseDetails from './ObserveeCourseDetails'
 const Card = styled.div`
   border: 1px solid #D7D7D7;
   text-align: center;
+  // I'm sorry, future Jessic ):
+  min-height: 310px;
   height: 100%;
   width: 100%;
   position: relative;
@@ -37,7 +39,7 @@ const Card = styled.div`
     > div {
       border-bottom: 1px solid #e4e4e4;
 
-      p {
+      .course-list-item {
         font-size: 12px;
         box-sizing: border-box;
         display: flex;
@@ -123,9 +125,12 @@ class ObserveeCard extends React.Component {
     })
   }
 
-  renderCourseDetails(enr, color, course_details) {
-    return <ObserveeCourseDetails enrollment={enr} color={color} 
-      course_details={course_details} reset_action={this.reset}></ObserveeCourseDetails>
+  renderCourseDetails(enr, color, score, course_details) {
+    return <ObserveeCourseDetails enrollment={enr}
+      color={color}
+      score={score} 
+      course_details={course_details}
+      reset_action={this.reset}></ObserveeCourseDetails>
   }
 
   render() {
@@ -140,8 +145,8 @@ class ObserveeCard extends React.Component {
               this.state.enrollments.map(enr => {
                 return (
                   <div>
-                    { this.state.showDetails === enr.id ? this.renderCourseDetails(enr, this.getCustomColor(enr), this.state.courseDetails) : undefined }
-                    <p onClick={this.showCourseInfo.bind(this, enr)}>
+                    { this.state.showDetails === enr.id ? this.renderCourseDetails(enr, this.getCustomColor(enr), this.formatScore(enr.score), this.state.courseDetails) : undefined }
+                    <p className="course-list-item" onClick={this.showCourseInfo.bind(this, enr)}>
                       <span className="course-name">{enr.course_name}</span>
                       <span className="course-score">{this.formatScore(enr.score)}</span>
                     </p>
