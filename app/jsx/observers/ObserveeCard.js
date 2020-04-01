@@ -11,6 +11,7 @@ const Card = styled.div`
   height: 100%;
   width: 100%;
   position: relative;
+  overflow-x: hidden;
 
   .observee-info {
     text-align: center;
@@ -85,6 +86,7 @@ class ObserveeCard extends React.Component {
       enrollments: this.props.student.attributes.enrollments,
       showDetails: 0,
       courseDetails: {},
+      detailClicked: false,
     }
   }
 
@@ -94,7 +96,7 @@ class ObserveeCard extends React.Component {
 
   
   reset() {
-    this.setState({showDetails: 0})
+    this.setState({showDetails: 0, detailClicked: false})
   }
 
   getCustomColor(enr) {
@@ -121,7 +123,7 @@ class ObserveeCard extends React.Component {
 
   showCourseInfo(enr) {
     axios.get(`api/v1/courses/${enr.course_id}/enrollments/${enr.id}/course_info`).then(response => {
-      this.setState({showDetails: enr.id, courseDetails: response.data})
+      this.setState({showDetails: enr.id, detailClicked: true, courseDetails: response.data})
     })
   }
 
@@ -130,7 +132,8 @@ class ObserveeCard extends React.Component {
       color={color}
       score={score} 
       course_details={course_details}
-      reset_action={this.reset}></ObserveeCourseDetails>
+      reset_action={this.reset}
+      is_showing={this.state.detailClicked}></ObserveeCourseDetails>
   }
 
   render() {

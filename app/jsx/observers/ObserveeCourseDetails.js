@@ -5,7 +5,6 @@ const Card = styled.div`
   box-sizing: border-box;
   background: #f5f5f6;
   color: #212329;
-  z-index: 2;
   position: absolute;
   top: 0;
   left: 0;
@@ -70,6 +69,21 @@ const Card = styled.div`
       display: block;
     }
   }
+
+  &.animate-card {
+		animation: card-slide 0.7s 1;
+  }
+
+  @keyframes card-slide {
+    0% {
+      transform: translateX(100%);
+      z-index: 2;
+    }
+
+    100% {
+      transform: translateX(0);
+    }
+  }
 `
 
 class ObserveeCourseDetails extends React.Component {
@@ -81,12 +95,13 @@ class ObserveeCourseDetails extends React.Component {
     enrollment: {},
     color: "",
     score: "",
-    course_details: {}
+    course_details: {},
+    is_showing: false,
   };
 
   render() {
     return (
-      <Card course_color={this.props.color}>
+      <Card course_color={this.props.color} className={this.props.is_showing ? 'animate-card' : ''}>
         <div className="course-title">
           <a className="back-button" href="#" onClick={this.props.reset_action}>
             <i className="icon-arrow-open-left"></i>
