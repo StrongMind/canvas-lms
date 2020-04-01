@@ -49,6 +49,7 @@ const Card = styled.div`
         margin: 0;
         padding: 0.7rem 1rem;
         width: 100%;
+        cursor: pointer;
   
         .course-name {
           color: #1e1e1e;
