@@ -7,7 +7,7 @@ const Card = styled.div`
   border: 1px solid #D7D7D7;
   text-align: center;
   // I'm sorry, future Jessic ):
-  min-height: 310px;
+  min-height: 340px;
   height: 100%;
   width: 100%;
   position: relative;

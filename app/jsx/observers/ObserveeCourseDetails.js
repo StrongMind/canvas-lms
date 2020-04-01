@@ -47,14 +47,23 @@ const Card = styled.div`
     }
   }
 
+  .course-info {
+    display: flex;
+    flex-direction: column;
+
+    .gradebook-link {
+      color: #006ba6;
+      font-family: "Open Sans", sans-serif;
+      font-size: 12px;
+      margin-top: auto;
+      padding: 0.5rem 0;
+      text-decoration: underline;
+    }
+  }
+
   .course-teachers {
     color: #696969;
     font-style: italic;
-    font-weight: bold;
-    
-    span {
-      font-weight: normal;
-    }
   }
 
   .course-score {
@@ -102,25 +111,32 @@ class ObserveeCourseDetails extends React.Component {
   render() {
     return (
       <Card course_color={this.props.color} className={this.props.is_showing ? 'animate-card' : ''}>
-        <div className="course-title">
+        <section className="course-title">
           <a className="back-button" href="#" onClick={this.props.reset_action}>
             <i className="icon-arrow-open-left"></i>
           </a>
           <h4>{this.props.enrollment.course_name}</h4>
-        </div>
-        <p className="course-teachers">
-          <span className="title">Teachers: </span>
-          {this.props.course_details.teachers.join()}
-        </p>
-        <p className="course-score">{this.props.score}</p>
-        <p className="submission-date">
-          <span className="title">Date of last submission:</span>
-          <span>{this.props.course_details.last_submission}</span>
-        </p>
-        <p className="last-active">
-          <span className="title">Days since last active:</span>
-          <span>{this.props.course_details.last_active}</span>
-        </p>
+        </section>
+        <section className="course-info">
+          <p className="course-teachers">
+            <span className="title">Teachers: </span>
+            {this.props.course_details.teachers.join(', ')}
+          </p>
+          <p className="course-score">{this.props.score}</p>
+          <p className="submission-date">
+            <span className="title">Date of last submission:</span>
+            <span>{this.props.course_details.last_submission}</span>
+          </p>
+          <p className="last-active">
+            <span className="title">Days since last active:</span>
+            <span>{this.props.course_details.last_active}</span>
+          </p>
+          <a className="gradebook-link"
+            href={`/courses/${this.props.enrollment.course_id}/gradebook`}
+            title={`${this.props.enrollment.course_name} gradebook`}>
+              View Gradebook
+          </a>
+        </section>
       </Card>
     )
   }
