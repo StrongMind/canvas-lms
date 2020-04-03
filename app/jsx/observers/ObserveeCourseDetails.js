@@ -61,6 +61,18 @@ const Card = styled.div`
     }
   }
 
+  .missing-assignments {
+    background: ${props => props.assignment_color};
+    border-radius: 25px;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 0.2rem 0.5rem;
+
+    span {
+      font-size: 11px;
+    }
+  }
+
   .course-teachers {
     color: #696969;
     font-style: italic;
@@ -108,9 +120,35 @@ class ObserveeCourseDetails extends React.Component {
     is_showing: false,
   };
 
+  missingAssignmentColor(missing, total) {
+    let num = missing / total;
+  
+    // yellow: EBB64C
+    if (num <= 0.05) {
+      return '#EBB64C'
+    }
+
+    // orange: EB814C
+    if (num > 0.05 && num <= 0.1) {
+      return '#EB814C'
+    }
+
+    // red: EB4C4C
+    if (num > 0.1 ) {
+      return '#EB4C4C'
+    }
+  }
+
+  renderMissingAssignments(num) {
+    if (num > 0) {
+      return <div><span className="missing-assignments">{this.props.course_details.missing_assignments} missing assignments</span></div>;
+    }
+  }
+
   render() {
+    console.log(this.props.course_details)
     return (
-      <Card course_color={this.props.color} className={this.props.is_showing ? 'animate-card' : ''}>
+      <Card course_color={this.props.color} className={this.props.is_showing ? 'animate-card' : ''} assignment_color={this.missingAssignmentColor(this.props.course_details.missing_assignments, this.props.course_details.total_assignment_count)}>
         <section className="course-title">
           <a className="back-button" href="#" onClick={this.props.reset_action}>
             <i className="icon-arrow-open-left"></i>
@@ -122,6 +160,7 @@ class ObserveeCourseDetails extends React.Component {
             <span className="title">Teachers: </span>
             {this.props.course_details.teachers.join(', ')}
           </p>
+          { this.renderMissingAssignments(this.props.course_details.missing_assignments) }
           <p className="course-score">{this.props.score}</p>
           <p className="submission-date">
             <span className="title">Date of last submission:</span>
