@@ -5,6 +5,8 @@ import ObserveeCourseDetails from './ObserveeCourseDetails'
 
 const Card = styled.div`
   border: 1px solid #D7D7D7;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
   text-align: center;
   // I'm sorry, future Jessic ):
   min-height: 360px;
