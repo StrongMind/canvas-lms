@@ -178,11 +178,10 @@ class ObserveeCourseDetails extends React.Component {
   determineLastActive(days) {
     if (days === 'N/A') {
       return 'Never';
-    } else if (days === 0) {
+    } else if (days == 0) {
       return 'Today';
-    } else {
-      return days + ' days ago';
-    }
+    } 
+    return days + ' days ago';
   }
 
   renderMissingAssignments(num) {

@@ -27,12 +27,19 @@ const Card = styled.div`
       font-weight: bold;
     }
 
-    img {
+    .avatar {
+      background-image: url(${props => props.avatar_image});
       width: 50px;
       height: 50px;
-      border-radius: 100%;
-      border: 1px solid #d7d7d7;
-      overflow: hidden;
+      max-width: 50px;
+      max-height: 50px;
+      margin: 0 auto;
+
+      &.online-now {
+        &:after {
+          margin-left: 40px;
+        }
+      }
     }
   }
 
@@ -141,9 +148,9 @@ class ObserveeCard extends React.Component {
 
   render() {
     return (
-      <Card>
+      <Card avatar_image={this.state.user.avatar_image_url}>
         <div className="observee-info">
-          <img src={this.state.user.avatar_image_url}></img>
+          <div className={`avatar ${this.state.user.is_online ? 'online-now' : ''}`}></div>
           <p>{this.state.user.name}</p>
         </div>
         <div className="observee-courses">
