@@ -159,23 +159,34 @@ class ObserveeCourseDetails extends React.Component {
   missingAssignmentColor(missing, total) {
     let num = missing / total;
   
-    // yellow: EBB64C
+    // yellow: less than 5% of total assignments missing
     if (num <= 0.05) {
       return '#EBB64C'
     }
 
-    // orange: EB814C
+    // orange: between 5% and 10% of total assignments missing
     if (num > 0.05 && num <= 0.1) {
       return '#EB814C'
     }
 
-    // red: EB4C4C
+    // red: more than 10% of total assignments missing
     if (num > 0.1 ) {
       return '#EB4C4C'
     }
   }
 
+  determineLastActive(days) {
+    if (days === 'N/A') {
+      return 'Never';
+    } else if (days === 0) {
+      return 'Today';
+    } else {
+      return days + ' days ago';
+    }
+  }
+
   renderMissingAssignments(num) {
+    // only render this element if there are missing assignments
     if (num > 0) {
       return <div><span className="missing-assignments">{this.props.course_details.missing_assignments} missing assignments</span></div>;
     }
@@ -207,7 +218,7 @@ class ObserveeCourseDetails extends React.Component {
             <div>
               <p className="last-active">
                 <span className="title">Last active:</span>
-                <span>{this.props.course_details.last_active} days ago</span>
+                <span>{this.determineLastActive(this.props.course_details.last_active)}</span>
               </p>
             </div>
           </div>

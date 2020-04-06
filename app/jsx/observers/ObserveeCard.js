@@ -97,7 +97,7 @@ class ObserveeCard extends React.Component {
     student: {},
   };
 
-  
+  // pass a state change from child so we can hide the child on an event inside the child component
   reset() {
     this.setState({showDetails: 0, detailClicked: false})
   }
