@@ -49,6 +49,7 @@ const Card = styled.div`
     align-items: center;
     justify-content: center;
     margin-bottom: -1rem;
+    padding: 0 1rem;
 
     > * {
       color: #5F0D13;
