@@ -21,7 +21,7 @@ const Card = styled.div`
     padding: 1rem 0;
     border-bottom: 1px solid #d7d7d7;
     
-    p {
+    > p {
       color: #006ba6;
       font-size: 14px;
       font-weight: bold;
@@ -40,6 +40,27 @@ const Card = styled.div`
           margin-left: 40px;
         }
       }
+    }
+  }
+
+  .attendance-lockout {
+    background-color: #F68F92;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: -1rem;
+
+    > * {
+      color: #5F0D13;
+    }
+
+    i {
+      margin-right: 1rem;
+    }
+
+    p {
+      display: inline-block;
+      font-weight: bold;
     }
   }
 
@@ -146,12 +167,19 @@ class ObserveeCard extends React.Component {
       is_showing={this.state.detailClicked}></ObserveeCourseDetails>
   }
 
+  renderAttendanceLockout(status) {
+    if (status) {
+      return <div className="attendance-lockout"><i className="icon-lock"></i><p>Student locked out of courses</p></div>;
+    }
+  }
+
   render() {
     return (
       <Card avatar_image={this.state.user.avatar_image_url}>
         <div className="observee-info">
           <div className={`avatar ${this.state.user.is_online ? 'online-now' : ''}`}></div>
           <p>{this.state.user.name}</p>
+          {this.renderAttendanceLockout(this.state.user.locked_out)}
         </div>
         <div className="observee-courses">
             {
