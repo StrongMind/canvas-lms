@@ -33,6 +33,16 @@ const Card = styled.div`
         color: #212329;
         font-size: 14px;
       }
+
+      &.icon-info {
+        font-size: 12px;
+        margin-right: 5px;
+
+        &:before {
+          color: #005888;
+          font-size: 12px;
+        }
+      }
     }
   }
 
@@ -199,6 +209,9 @@ class ObserveeCourseDetails extends React.Component {
             <i className="icon-arrow-open-left"></i>
           </a>
           <h4>{this.props.enrollment.course_name}</h4>
+          <a className="show-tooltip" href="#" title="More information about this card">
+            <i className="icon-info"></i>
+          </a>
         </section>
         <section className="course-info">
           <p className="course-teachers">
