@@ -72,6 +72,10 @@ const Card = styled.div`
     }
   }
 
+  .missing-assignments-placeholder {
+    height: 0;
+  }
+
   .missing-assignments {
     background: ${props => props.assignment_color};
     border-radius: 25px;
@@ -218,6 +222,7 @@ class ObserveeCourseDetails extends React.Component {
             <span className="title">Teachers: </span>
             {this.props.course_details.teachers.join(', ')}
           </p>
+          <div className="missing-assignments-placeholder" aria-hidden="true"></div>
           { this.renderMissingAssignments(this.props.course_details.missing_assignments) }
           <p className="course-score">{this.props.score}</p>
           <div className="flex-widgets">
