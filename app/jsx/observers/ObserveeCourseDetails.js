@@ -73,7 +73,7 @@ const Card = styled.div`
   }
 
   .missing-assignments-placeholder {
-    height: 0;
+    height: 1px;
   }
 
   .missing-assignments {
