@@ -100,7 +100,9 @@ module LtiOutbound
       hash['roles'] = user.current_role_types # AccountAdmin, Student, Faculty or Observer
       hash['ext_roles'] = '$Canvas.xuser.allRoles'
 
-      hash['custom_canvas_enrollment_state'] = '$Canvas.enrollment.enrollmentState'
+      unless SettingsService.get_settings(object: :school, id: 1)['third_party_imports']
+        hash['custom_canvas_enrollment_state'] = '$Canvas.enrollment.enrollmentState'
+      end
 
       if tool.include_name?
         hash['lis_person_name_given'] = user.first_name
