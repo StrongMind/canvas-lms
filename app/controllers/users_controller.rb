@@ -2468,7 +2468,12 @@ class UsersController < ApplicationController
       else
         @pseudonym.send(:skip_session_maintenance=, true)
       end
-      @user.save!
+
+      if SettingsService.get_setting(object: 'school', id: 1)["identity_server_enabled"]
+        @user.save!(validations: false)
+      else
+        @user.save!
+      end
 
       if @observee && !@user.user_observees.where(user_id: @observee).exists?
         @user.user_observees << @user.user_observees.create_or_restore(user_id: @observee)
