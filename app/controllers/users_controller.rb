@@ -2470,10 +2470,10 @@ class UsersController < ApplicationController
       end
 
       if SettingsService.get_settings(object: 'school', id: 1)["identity_server_enabled"]
-        @user.save!(validate: false)
-      else
-        @user.save!
+        @user.run_identity_validations = true
       end
+
+      @user.save!
 
       if @observee && !@user.user_observees.where(user_id: @observee).exists?
         @user.user_observees << @user.user_observees.create_or_restore(user_id: @observee)
