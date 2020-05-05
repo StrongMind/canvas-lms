@@ -2469,8 +2469,8 @@ class UsersController < ApplicationController
         @pseudonym.send(:skip_session_maintenance=, true)
       end
 
-      if SettingsService.get_setting(object: 'school', id: 1)["identity_server_enabled"]
-        @user.save!(validations: false)
+      if SettingsService.get_settings(object: 'school', id: 1)["identity_server_enabled"]
+        @user.save!(validate: false)
       else
         @user.save!
       end
