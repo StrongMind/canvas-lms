@@ -2457,6 +2457,8 @@ class UsersController < ApplicationController
       @cc.workflow_state = skip_confirmation ? 'active' : 'unconfirmed' unless @cc.workflow_state == 'confirmed'
     end
 
+    @user.skip_identity_validations = true
+
     if @user.valid? && @pseudonym.valid? && @invalid_observee_creds.nil?
       # saving the user takes care of the @pseudonym and @cc, so we can't call
       # save_without_session_maintenance directly. we don't want to auto-log-in
@@ -2469,9 +2471,7 @@ class UsersController < ApplicationController
         @pseudonym.send(:skip_session_maintenance=, true)
       end
 
-      if SettingsService.get_settings(object: 'school', id: 1)["identity_server_enabled"]
-        @user.run_identity_validations = true
-      end
+      @user.skip_identity_validations = false
 
       @user.save!
 
