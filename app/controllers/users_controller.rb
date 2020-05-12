@@ -2470,7 +2470,7 @@ class UsersController < ApplicationController
       end
 
       if SettingsService.get_settings(object: 'school', id: 1)["identity_server_enabled"]
-        @user.identity_email = cc_addr if EmailAddressValidator.valid?(cc_addr)
+        @user.identity_email = @pseudonym.unique_id if EmailAddressValidator.valid?(@pseudonym.unique_id)
         @user.save_with_identity_server_create!
       else
         @user.save!
