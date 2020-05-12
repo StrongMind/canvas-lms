@@ -227,7 +227,10 @@ module SIS
                   end
                 end
 
-                user.save_with_identity_server_create! if SettingsService.get_settings(object: 'school', id: 1)['identity_server_enabled']
+                if SettingsService.get_settings(object: 'school', id: 1)['identity_server_enabled']
+                  user.identity_email = user_row.email if EmailAddressValidator.valid?(user_row.email)
+                  user.save_with_identity_server_create!
+                end
               end
             rescue => e
               Canvas::Errors.capture_exception(:sis_import, e)
