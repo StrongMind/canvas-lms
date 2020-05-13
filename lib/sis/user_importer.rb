@@ -228,8 +228,7 @@ module SIS
                 end
 
                 if SettingsService.get_settings(object: 'school', id: 1)['identity_server_enabled']
-                  user.identity_email = user_row.email if EmailAddressValidator.valid?(user_row.email)
-                  user.save_with_identity_server_create!
+                  user.save_with_identity_server_create!(user_row.email)
                 end
               end
             rescue => e

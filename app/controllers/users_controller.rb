@@ -2133,7 +2133,7 @@ class UsersController < ApplicationController
          {:address => address, :user_id => user_id, :user_name => user_name, :account_id => account_id, :account_name => account_name}
         end
         errored_users << user_hash.merge(:errors => [{:message => "Matching user(s) already exist"}], :existing_users => existing_users)
-      elsif SettingsService.get_settings(object: 'school', id: 1)['identity_server_enabled'] && saved_with_identity?(user, user_hash[:email])
+      elsif SettingsService.get_settings(object: 'school', id: 1)['identity_server_enabled'] && user.save_with_identity_server_create!(user_hash[:email])
         invited_users << user_hash.merge(:id => user.id)
       elsif user.save
         invited_users << user_hash.merge(:id => user.id)
@@ -2145,11 +2145,6 @@ class UsersController < ApplicationController
   end
 
   protected
-
-  def saved_with_identity?(user, email)
-    user.identity_email = email
-    user.save_with_identity_server_create!
-  end
 
   def teacher_activity_report(teacher, course, student_enrollments)
     ids = student_enrollments.map(&:user_id)
@@ -2477,8 +2472,7 @@ class UsersController < ApplicationController
       end
 
       if SettingsService.get_settings(object: 'school', id: 1)["identity_server_enabled"]
-        @user.identity_email = @pseudonym.unique_id if EmailAddressValidator.valid?(@pseudonym.unique_id)
-        @user.save_with_identity_server_create!
+        @user.save_with_identity_server_create!(@pseudonym.unique_id)
       else
         @user.save!
       end
