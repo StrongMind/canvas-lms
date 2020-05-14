@@ -621,7 +621,7 @@ class ContentMigration < ActiveRecord::Base
       self.migration_settings[:date_shift_options] = opts.slice(:shift_dates, :remove_dates, :old_start_date, :old_end_date, :new_start_date, :new_end_date, :day_substitutions, :time_zone)
     end
     self.migration_settings[:date_shift_options] ||= {}
-    self.migration_settings[:date_shift_options].merge({"remove_dates" => "1"})
+    self.migration_settings[:date_shift_options].merge!({remove_dates: "1", shift_dates: nil})
   end
 
   def date_shift_options
