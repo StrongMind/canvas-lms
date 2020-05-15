@@ -91,7 +91,7 @@
           <td><%= text_field :pseudonym, :sis_user_id %></td>
         </tr>
       <% end %>
-      <% if identity_server_enabled %>
+      <% unless identity_server_enabled %>
         <tr>
           <td colspan="2">
             <%= check_box :pseudonym, :send_confirmation, :checked => true %>
