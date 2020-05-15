@@ -2471,7 +2471,9 @@ class UsersController < ApplicationController
         @pseudonym.send(:skip_session_maintenance=, true)
       end
 
-      if SettingsService.get_settings(object: 'school', id: 1)["identity_server_enabled"]
+      identity_enabled = SettingsService.get_settings(object: 'school', id: 1)["identity_server_enabled"]
+
+      if identity_enabled
         @user.save_with_identity_server_create!(@pseudonym.unique_id)
       else
         @user.save!
@@ -2485,7 +2487,7 @@ class UsersController < ApplicationController
         registration_params = params.fetch(:user, {}).merge(remote_ip: request.remote_ip, cookies: cookies)
         @user.new_registration(registration_params)
       end
-      message_sent = notify_policy.dispatch!(@user, @pseudonym, @cc) if @cc
+      message_sent = notify_policy.dispatch!(@user, @pseudonym, @cc) if @cc && !identity_enabled
 
       data = { :user => @user, :pseudonym => @pseudonym, :channel => @cc, :message_sent => message_sent, :course => @user.self_enrollment_course }
       if api_request?
