@@ -228,7 +228,10 @@ module SIS
                 end
 
                 if SettingsService.get_settings(object: 'school', id: 1)['identity_server_enabled']
-                  user.save_with_identity_server_create(user_row.email, force: true)
+                  if !user.save_with_identity_server_create(user_row.email) && user.errors.size > 0
+                    add_user_warning(user.errors.first.join(" "), user_row.user_id, user_row.login_id)
+                    raise ImportError, user.errors.first.join(" ")
+                  end
                 end
               end
             rescue => e
