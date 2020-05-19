@@ -46,7 +46,8 @@ class AssignObservers extends React.Component {
       next: collection.urls.next,
       current: collection.urls.current,
       observer: {},
-      obvervees: [],
+      observees: [],
+      step: 1,
     }
   }
   
@@ -81,29 +82,107 @@ class AssignObservers extends React.Component {
     })
   }
 
-  assignObserver(user) {
-    this.setState({observer: user})
-    setTimeout(() => { console.log(this.state.observer), 500 })
+  assign(user) {
+    if (this.state.step === 2) {
+      this.state.observees.push(user)
+    } else {
+      this.setState({observer: user})
+    }
+
+    setTimeout(() => { 
+      console.log(this.state.observer);
+      console.log(this.state.observees);
+      }, 500 
+    )
+  }
+
+  setName(user) {
+    if (user.attributes) {
+      return user.attributes.name
+    } else {
+      return user.name
+    }
+  }
+
+  setObserverName() {
+    return this.setName(this.state.observer)
   }
 
   renderUsers() {
     return this.state.users.map(user => {
       return (
-        <ListUser onClick={(() => this.assignObserver(user))}>{(user.attributes || user).name}</ListUser>
+        <ListUser onClick={(() => this.assign(user))}>{this.setName(user)}</ListUser>
       )
     });
   }
 
-  render() {
+  incrementStep() {
+    this.setState({step: this.state.step + 1})
+    setTimeout(() => { console.log(this.state.step), 500 })
+  }
+
+  chooseStep() {
+    switch (this.state.step) {
+      case 1:
+        return this.stepOne()
+      case 2:
+        return this.stepTwo()
+      case 3:
+        return this.stepThree()
+      default:
+        return this.stepOne()
+    }
+  }
+  
+  stepOne() {
     return (
-      <Card>
+      <div>
         <h1>Choose an Observer</h1>
         {this.renderUsers()}
         <footer>
           <Previous onClick={this.clickPrevious.bind(this)}><a>Previous</a></Previous>
           <Next onClick={this.clickNext.bind(this)}><a>Next</a></Next>
         </footer>
-      </Card>
+      </div>
+    )
+  }
+
+  stepTwo() {
+    return (
+      <div>
+        <h1>Choose Observees for {this.setObserverName()}</h1>
+        {this.renderUsers()}
+        <footer>
+          <Previous onClick={this.clickPrevious.bind(this)}><a>Previous</a></Previous>
+          <Next onClick={this.clickNext.bind(this)}><a>Next</a></Next>
+        </footer>
+      </div>
+    )
+  }
+
+  stepThree() {
+    return (
+      <div>
+        <h1>Observer: {this.setObserverName()}</h1>
+        <div>
+          <h3>Observees:</h3>
+          {this.state.observees.map(obs => {
+            return (<p>{this.setName(obs)}</p>)
+          })}
+        </div>
+        <button className="btn btn-block">Set Observer</button>
+      </div>
+    )
+  }
+  
+  render() {
+    return (
+      <div>
+        <Card>
+          {this.chooseStep()}
+        </Card>
+        <button className="btn btn-block btn-primary" onClick={this.incrementStep.bind(this)}>Next Step</button>
+      </div>
     )
   }
 }
