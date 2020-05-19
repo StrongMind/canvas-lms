@@ -15,6 +15,14 @@ const Card = styled.div`
   overflow-x: hidden;
 `
 
+const ListUser = styled.p`
+  &:hover {
+    background: #00314C;
+    cursor: pointer;
+    color: #ffffff;
+  }
+`
+
 const Previous = styled.span`
   float: left;
   cursor: pointer;
@@ -34,8 +42,11 @@ class AssignObservers extends React.Component {
     this.state = {
       users: collection.models,
       urls: collection.urls,
-      previous: collection.urls.previous,
+      previous: collection.urls.prev,
       next: collection.urls.next,
+      current: collection.urls.current,
+      observer: {},
+      obvervees: [],
     }
   }
   
@@ -65,14 +76,20 @@ class AssignObservers extends React.Component {
     this.setState({
       users: response.data,
       previous: links.prev,
-      next: links.next
+      next: links.next,
+      current: links.current,
     })
+  }
+
+  assignObserver(user) {
+    this.setState({observer: user})
+    setTimeout(() => { console.log(this.state.observer), 500 })
   }
 
   renderUsers() {
     return this.state.users.map(user => {
       return (
-        <p>{(user.attributes || user).name}</p>
+        <ListUser onClick={(() => this.assignObserver(user))}>{(user.attributes || user).name}</ListUser>
       )
     });
   }
@@ -80,6 +97,7 @@ class AssignObservers extends React.Component {
   render() {
     return (
       <Card>
+        <h1>Choose an Observer</h1>
         {this.renderUsers()}
         <footer>
           <Previous onClick={this.clickPrevious.bind(this)}><a>Previous</a></Previous>
