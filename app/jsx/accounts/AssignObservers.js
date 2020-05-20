@@ -49,7 +49,6 @@ class AssignObservers extends React.Component {
 
     this.state = {
       users: collection.models.map(model => model.attributes),
-      urls: collection.urls,
       first: collection.urls.first,
       previous: collection.urls.prev,
       next: collection.urls.next,
@@ -230,17 +229,11 @@ class AssignObservers extends React.Component {
   filterBySearch(search_term) {
     if (search_term.length >= 3) {
       this.state.searchTerm = search_term
-      return axios.get(this.state.current + `&search_term=${this.state.searchTerm}`).then(response => {
-        this.setState({
-          users: response.data
-          previous: collection.urls.prev,
-          next: collection.urls.next,
-          current: collection.urls.current,
-        })
-        console.log(this.state.users)
+      return axios.get(this.state.first + `&search_term=${this.state.searchTerm}`).then(response => {
+        parseResponseLinks(response)
       })
     } else {
-      console.log("not enough")
+      console.log("Not enough characters")
     }
   }
   
