@@ -16,7 +16,7 @@ const Card = styled.div`
 `
 
 const ListUser = styled.p`
-  &:hover {
+  &:hover, &.active {
     background: #00314C;
     cursor: pointer;
     color: #ffffff;
@@ -65,7 +65,7 @@ class AssignObservers extends React.Component {
   restart() {
     this.setState({
       observer: {},
-      observees: {},
+      observees: [],
       step: 1,
     })
   }
@@ -100,27 +100,26 @@ class AssignObservers extends React.Component {
   filteredUsers() {
     let observer_id = this.state.observer.id
     if (!observer_id) { return this.state.users }
-    return this.state.users.filter(user => user.id != observer_id)
+    return this.state.users.filter(user => user.id !== observer_id)
   }
 
   assign(user) {
     if (this.state.step === 2) {
-      this.state.observees.push(user)
+      this.setState({observees: this.state.observees.concat(user)})
     } else {
       this.setState({observer: user})
     }
-
-    setTimeout(() => { 
-      console.log(this.state.observer);
-      console.log(this.state.observees);
-      }, 500 
-    )
   }
 
+  isActive(user) {
+    return (user.id === this.state.observer.id || this.state.observees.some(obs => obs.id === user.id))
+  }
+  
   renderUsers(users) {
     return users.map(user => {
+      let clsname = this.isActive(user) ? "active" : ""
       return (
-        <ListUser onClick={(() => this.assign(user))}>{user.name}</ListUser>
+        <ListUser className={clsname} onClick={(() => this.assign(user))}>{user.name}</ListUser>
       )
     });
   }
