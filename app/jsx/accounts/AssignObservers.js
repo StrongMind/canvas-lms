@@ -54,6 +54,7 @@ class AssignObservers extends React.Component {
       current: collection.urls.current,
       observer: {},
       observees: [],
+      currentObserversObservees: [],
       step: 1,
     }
   }
@@ -100,7 +101,9 @@ class AssignObservers extends React.Component {
   filteredUsers() {
     let observer_id = this.state.observer.id
     if (!observer_id) { return this.state.users }
-    return this.state.users.filter(user => user.id !== observer_id)
+    return this.state.users.filter(user => {
+      return user.id !== observer_id && !this.state.currentObserversObservees.some(obs => obs.id === user.id)
+    })
   }
 
   assign(user) {
@@ -125,7 +128,13 @@ class AssignObservers extends React.Component {
   }
 
   incrementStep() {
-    this.setState({step: this.state.step + 1})
+    if (this.state.step === 1 && this.state.observer.id) {
+      this.getCurrentObservees().then(() => {
+        this.setState({step: this.state.step + 1})
+      })
+    } else {
+      this.setState({step: this.state.step + 1})
+    }
   }
 
   decrementStep() {
@@ -212,10 +221,19 @@ class AssignObservers extends React.Component {
     }
   }
 
+  getCurrentObservees() {
+    return axios.get(`${ENV.BASE_URL}/api/v1/users/${this.state.observer.id}/observees`).then(response => {
+      this.setState({currentObserversObservees: response.data})
+    })
+  }
+  
   submitObserver() {
     let observer_id = this.state.observer.id
     if (!observer_id) { return false }
-    axios.post(`${ENV.BASE_URL}/api/v1/users/${observer_id}/bulk_create_observees`, {observee_ids: this.state.observees.map(obs => obs.id)}).then(response => {
+    axios.post(
+      `${ENV.BASE_URL}/api/v1/users/${observer_id}/bulk_create_observees`,
+      { observee_ids: this.state.observees.map(obs => obs.id) }
+    ).then(response => {
       console.log(response)
     })
   }
