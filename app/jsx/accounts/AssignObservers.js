@@ -213,7 +213,11 @@ class AssignObservers extends React.Component {
   }
 
   submitObserver() {
-    console.log("We Deed It!")
+    let observer_id = this.state.observer.id
+    if (!observer_id) { return false }
+    axios.post(`${ENV.BASE_URL}/api/v1/users/${observer_id}/bulk_create_observees`, {observee_ids: this.state.observees.map(obs => obs.id)}).then(response => {
+      console.log(response)
+    })
   }
   
   render() {
