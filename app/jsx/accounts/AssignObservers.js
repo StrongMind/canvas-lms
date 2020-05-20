@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import parseLinkHeader from 'jsx/shared/helpers/parseLinkHeader'
+import IcInput from 'jsx/account_course_user_search/IcInput'
 
 const Card = styled.div`
   border: 1px solid #D7D7D7;
@@ -49,6 +50,7 @@ class AssignObservers extends React.Component {
     this.state = {
       users: collection.models.map(model => model.attributes),
       urls: collection.urls,
+      first: collection.urls.first,
       previous: collection.urls.prev,
       next: collection.urls.next,
       current: collection.urls.current,
@@ -56,6 +58,7 @@ class AssignObservers extends React.Component {
       observees: [],
       currentObserversObservees: [],
       step: 1,
+      searchTerm: '',
     }
   }
   
@@ -158,6 +161,8 @@ class AssignObservers extends React.Component {
     return (
       <div>
         <h1>Choose an Observer</h1>
+        <IcInput type="search" placeholder="Please enter 3 or more characters of the user you would like to search."
+        ref="userSearch" onKeyUp={e => this.filterBySearch(e.target.value)}></IcInput>
         {this.renderUsers(this.state.users)}
         <footer>
           <Previous onClick={this.clickPrevious.bind(this)}><a>Previous</a></Previous>
@@ -171,6 +176,7 @@ class AssignObservers extends React.Component {
     return (
       <div>
         <h1>Choose Observees for {this.state.observer.name}</h1>
+        <IcInput type="search" placeholder="Please enter 3 or more characters of the user you would like to search." ref="userSearch"></IcInput>
         {this.renderUsers(this.filteredUsers())}
         <footer>
           <Previous onClick={this.clickPrevious.bind(this)}><a>Previous</a></Previous>
@@ -221,6 +227,23 @@ class AssignObservers extends React.Component {
     }
   }
 
+  filterBySearch(search_term) {
+    if (search_term.length >= 3) {
+      this.state.searchTerm = search_term
+      return axios.get(this.state.current + `&search_term=${this.state.searchTerm}`).then(response => {
+        this.setState({
+          users: response.data
+          previous: collection.urls.prev,
+          next: collection.urls.next,
+          current: collection.urls.current,
+        })
+        console.log(this.state.users)
+      })
+    } else {
+      console.log("not enough")
+    }
+  }
+  
   getCurrentObservees() {
     return axios.get(`${ENV.BASE_URL}/api/v1/users/${this.state.observer.id}/observees`).then(response => {
       this.setState({currentObserversObservees: response.data})
