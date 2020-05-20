@@ -33,6 +33,13 @@ const Next = styled.span`
   cursor: pointer;
 `
 
+const Button = styled.button`
+  &.btn-block {
+    width: 50%;
+    display: inline-block;
+  }
+`
+
 class AssignObservers extends React.Component {
   constructor(props) {
     super(props);
@@ -54,6 +61,14 @@ class AssignObservers extends React.Component {
   static defaultProps = {
     users: [],
   };
+
+  restart() {
+    this.setState({
+      observer: {},
+      observees: {},
+      step: 1,
+    })
+  }
 
   clickPrevious() {
     if (this.state.previous) {
@@ -79,6 +94,14 @@ class AssignObservers extends React.Component {
       previous: links.prev,
       next: links.next,
       current: links.current,
+    })
+  }
+
+  filteredUsers() {
+    let observer_id = this.state.observer.id
+    if (!observer_id) { return this.state.users }
+    return this.state.users.filter(user => {
+      return user.attributes ? user.attributes.id != observer_id : user.id != observer_id
     })
   }
 
@@ -108,8 +131,8 @@ class AssignObservers extends React.Component {
     return this.setName(this.state.observer)
   }
 
-  renderUsers() {
-    return this.state.users.map(user => {
+  renderUsers(users) {
+    return users.map(user => {
       return (
         <ListUser onClick={(() => this.assign(user))}>{this.setName(user)}</ListUser>
       )
@@ -118,7 +141,10 @@ class AssignObservers extends React.Component {
 
   incrementStep() {
     this.setState({step: this.state.step + 1})
-    setTimeout(() => { console.log(this.state.step), 500 })
+  }
+
+  decrementStep() {
+    this.setState({step: this.state.step - 1})
   }
 
   chooseStep() {
@@ -138,7 +164,7 @@ class AssignObservers extends React.Component {
     return (
       <div>
         <h1>Choose an Observer</h1>
-        {this.renderUsers()}
+        {this.renderUsers(this.state.users)}
         <footer>
           <Previous onClick={this.clickPrevious.bind(this)}><a>Previous</a></Previous>
           <Next onClick={this.clickNext.bind(this)}><a>Next</a></Next>
@@ -151,7 +177,7 @@ class AssignObservers extends React.Component {
     return (
       <div>
         <h1>Choose Observees for {this.setObserverName()}</h1>
-        {this.renderUsers()}
+        {this.renderUsers(this.filteredUsers())}
         <footer>
           <Previous onClick={this.clickPrevious.bind(this)}><a>Previous</a></Previous>
           <Next onClick={this.clickNext.bind(this)}><a>Next</a></Next>
@@ -163,16 +189,46 @@ class AssignObservers extends React.Component {
   stepThree() {
     return (
       <div>
-        <h1>Observer: {this.setObserverName()}</h1>
+        <div>
+          <h1>Observer:</h1>
+          <h5>{this.setObserverName()}</h5>
+        </div>
         <div>
           <h3>Observees:</h3>
           {this.state.observees.map(obs => {
             return (<p>{this.setName(obs)}</p>)
           })}
         </div>
-        <button className="btn btn-block">Set Observer</button>
       </div>
     )
+  }
+
+  setPreviousStepButton() {
+    if (this.state.step === 3) {
+      return (
+        <Button className="btn btn-block btn-secondary" onClick={this.restart.bind(this)}>Start Over</Button>
+      )
+    } else {
+      return (
+        <Button className="btn btn-block btn-secondary" onClick={this.decrementStep.bind(this)} disabled={this.state.step === 1}>Prev Step</Button>
+      )
+    }
+  }
+  
+  setNextStepButton() {
+    if (this.state.step === 3) {
+      return (
+        <Button className="btn btn-block btn-primary" onClick={this.submitObserver.bind(this)}>Finish</Button>
+      )
+    } else {
+      return (
+        <Button className="btn btn-block btn-primary" onClick={this.incrementStep.bind(this)} disabled={!this.state.observer.id}>Next Step</Button>
+      )
+    }
+  }
+
+  submitObserver() {
+    console.log("We Deed It!")
   }
   
   render() {
@@ -181,7 +237,10 @@ class AssignObservers extends React.Component {
         <Card>
           {this.chooseStep()}
         </Card>
-        <button className="btn btn-block btn-primary" onClick={this.incrementStep.bind(this)}>Next Step</button>
+       <div>
+         {this.setPreviousStepButton()}
+         {this.setNextStepButton()}
+       </div>
       </div>
     )
   }
