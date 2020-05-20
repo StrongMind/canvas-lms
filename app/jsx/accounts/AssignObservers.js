@@ -47,7 +47,7 @@ class AssignObservers extends React.Component {
     let collection = this.props.users;
 
     this.state = {
-      users: collection.models,
+      users: collection.models.map(model => model.attributes),
       urls: collection.urls,
       previous: collection.urls.prev,
       next: collection.urls.next,
@@ -100,9 +100,7 @@ class AssignObservers extends React.Component {
   filteredUsers() {
     let observer_id = this.state.observer.id
     if (!observer_id) { return this.state.users }
-    return this.state.users.filter(user => {
-      return user.attributes ? user.attributes.id != observer_id : user.id != observer_id
-    })
+    return this.state.users.filter(user => user.id != observer_id)
   }
 
   assign(user) {
@@ -119,22 +117,10 @@ class AssignObservers extends React.Component {
     )
   }
 
-  setName(user) {
-    if (user.attributes) {
-      return user.attributes.name
-    } else {
-      return user.name
-    }
-  }
-
-  setObserverName() {
-    return this.setName(this.state.observer)
-  }
-
   renderUsers(users) {
     return users.map(user => {
       return (
-        <ListUser onClick={(() => this.assign(user))}>{this.setName(user)}</ListUser>
+        <ListUser onClick={(() => this.assign(user))}>{user.name}</ListUser>
       )
     });
   }
@@ -176,7 +162,7 @@ class AssignObservers extends React.Component {
   stepTwo() {
     return (
       <div>
-        <h1>Choose Observees for {this.setObserverName()}</h1>
+        <h1>Choose Observees for {this.state.observer.name}</h1>
         {this.renderUsers(this.filteredUsers())}
         <footer>
           <Previous onClick={this.clickPrevious.bind(this)}><a>Previous</a></Previous>
@@ -191,12 +177,12 @@ class AssignObservers extends React.Component {
       <div>
         <div>
           <h1>Observer:</h1>
-          <h5>{this.setObserverName()}</h5>
+          <h5>{this.state.observer.name}</h5>
         </div>
         <div>
           <h3>Observees:</h3>
           {this.state.observees.map(obs => {
-            return (<p>{this.setName(obs)}</p>)
+            return (<p>{obs.name}</p>)
           })}
         </div>
       </div>
