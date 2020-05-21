@@ -48,7 +48,7 @@ class AssignObservers extends React.Component {
     let collection = this.props.users;
 
     this.state = {
-      users: collection.models.map(model => model.attributes),
+      users: [],
       first: collection.urls.first,
       previous: collection.urls.prev,
       next: collection.urls.next,
