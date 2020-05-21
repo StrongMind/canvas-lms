@@ -35,7 +35,7 @@ const Next = styled.span`
 `
 
 const Button = styled.button`
-  &.btn-block {
+  &.btn-block:not(.start-over-button) {
     width: 50%;
     display: inline-block;
   }
@@ -158,6 +158,8 @@ class AssignObservers extends React.Component {
         return this.stepTwo()
       case 3:
         return this.stepThree()
+      case 4:
+        return this.stepFour()
       default:
         return this.stepOne()
     }
@@ -208,10 +210,20 @@ class AssignObservers extends React.Component {
     )
   }
 
+  stepFour() {
+    return (
+      <div>
+        <div>
+          <h2>Congratulations! You assigned {this.state.observees.length} observees to {this.state.observer.name}.</h2>
+        </div>
+      </div>
+    )
+  }
+
   setPreviousStepButton() {
-    if (this.state.step === 3) {
+    if (this.state.step === 4) {
       return (
-        <Button className="btn btn-block btn-secondary" onClick={this.restart.bind(this)}>Start Over</Button>
+        <Button className="btn btn-block start-over-button btn-primary" onClick={this.restart.bind(this)}>Start Over</Button>
       )
     } else {
       return (
@@ -221,9 +233,11 @@ class AssignObservers extends React.Component {
   }
   
   setNextStepButton() {
-    if (this.state.step === 3) {
+    if (this.state.step === 4) {
+      return
+    } else if (this.state.step === 3) {
       return (
-        <Button className="btn btn-block btn-primary" onClick={this.submitObserver.bind(this)}>Finish</Button>
+        <Button className="btn btn-block btn-primary" onClick={this.submitObserver.bind(this)}>Submit</Button>
       )
     } else {
       return (
@@ -252,7 +266,7 @@ class AssignObservers extends React.Component {
       `${ENV.BASE_URL}/api/v1/users/${observer_id}/bulk_create_observees`,
       { observee_ids: this.state.observees.map(obs => obs.id) }
     ).then(response => {
-      console.log(response)
+      this.setState({step: 4})
     })
   }
   
