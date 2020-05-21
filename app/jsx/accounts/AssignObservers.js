@@ -3,17 +3,117 @@ import styled from 'styled-components'
 import axios from 'axios'
 import parseLinkHeader from 'jsx/shared/helpers/parseLinkHeader'
 import IcInput from 'jsx/account_course_user_search/IcInput'
+import IconUserSolid from 'instructure-icons/lib/Solid/IconUserSolid'
+import IconGroupSolid from 'instructure-icons/lib/Solid/IconGroupSolid'
+import IconCheckSolid from 'instructure-icons/lib/Solid/IconCheckSolid'
+import IconEndSolid from 'instructure-icons/lib/Solid/IconEndSolid'
 
 const Card = styled.div`
   border: 1px solid #D7D7D7;
   border-radius: 4px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.3);
   text-align: center;
-  min-height: 360px;
   height: 100%;
   width: 100%;
+  max-width: 760px;
   position: relative;
   overflow-x: hidden;
+
+  h3 {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+
+  fieldset {
+    min-width: 50%;
+  }
+
+  label {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    margin-right: 10px;
+  }
+
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+  }
+
+  .descriptive-text {
+    color: #5e5e5e;
+    font-size: 12px;
+    font-style: italic;
+    font-family: 'Open Sans', sans-serif;
+    margin-top: 0;
+  }
+
+  .ic-Form-control {
+    display: inline-block;
+    width: 70%;
+  }
+`
+
+const Step = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  background: #5CA0C6;
+  border-radius: 100%;
+
+  &.active-step {
+    background: #006ba6;
+  }
+
+  > * {
+    color: #ffffff;
+    font-size: 16px;
+  }
+`
+
+const Icon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  width: 48px;
+  background: #006ba6;
+  border-radius: 100%;
+  margin-bottom: 0.5rem;
+
+  > * {
+    color: #ffffff;
+    font-size: 24px;
+  }
+`
+
+const Pill = styled.div`
+  background: #006ba6;
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 25px;
+
+  > * {
+    color: #ffffff;
+  }
+  
+  p {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  svg {
+    font-size: 10px;
+  }
 `
 
 const ListUser = styled.p`
@@ -54,7 +154,7 @@ class AssignObservers extends React.Component {
       next: collection.urls.next,
       current: collection.urls.current,
       observer: {},
-      observees: [],
+      observeesToAdd: [],
       currentObserversObservees: [],
       step: 1,
       searchTerm: '',
@@ -68,7 +168,7 @@ class AssignObservers extends React.Component {
   restart() {
     this.setState({
       observer: {},
-      observees: [],
+      observeesToAdd: [],
       step: 1,
     })
   }
@@ -110,14 +210,14 @@ class AssignObservers extends React.Component {
 
   assign(user) {
     if (this.state.step === 2) {
-      this.setState({observees: this.state.observees.concat(user)})
+      this.setState({observeesToAdd: this.state.observeesToAdd.concat(user)})
     } else {
       this.setState({observer: user})
     }
   }
 
   isActive(user) {
-    return (user.id === this.state.observer.id || this.state.observees.some(obs => obs.id === user.id))
+    return (user.id === this.state.observer.id || this.state.observeesToAdd.some(obs => obs.id === user.id))
   }
   
   renderUsers() {
@@ -145,8 +245,11 @@ class AssignObservers extends React.Component {
 
   searchInput() {
     return (
-      <IcInput type="search" placeholder="Enter the name of the user you would like to search."
-        ref="userSearch" onKeyUp={e => this.filterBySearch(e.target.value)}></IcInput>
+      <fieldset>
+        <label>Find a user:</label>
+        <IcInput type="search" placeholder="Search"
+          ref="userSearch" onKeyUp={e => this.filterBySearch(e.target.value)}></IcInput>
+      </fieldset>
     )
   }
 
@@ -167,8 +270,12 @@ class AssignObservers extends React.Component {
   
   stepOne() {
     return (
-      <div>
-        <h1>Choose an Observer</h1>
+      <div className="card-content">
+        <Icon>
+          <IconUserSolid/>
+        </Icon>
+        <h3>Choose an Observer</h3>
+        <p className="descriptive-text">This is the person that will be observing multiple students at one time.</p>
         {this.searchInput()}
         {this.renderUsers()}
         <footer>
@@ -181,8 +288,19 @@ class AssignObservers extends React.Component {
 
   stepTwo() {
     return (
-      <div>
-        <h1>Choose Observees for {this.state.observer.name}</h1>
+      <div className="card-content">
+        <Icon>
+          <IconGroupSolid/>
+        </Icon>
+        <h3>Choose Observees for {this.state.observer.name}</h3>
+        {this.state.observeesToAdd.map(obs => {
+          return (
+            <Pill>
+              <p>{obs.name}</p>
+              <IconEndSolid/>
+            </Pill>
+          )
+        })}
         {this.searchInput()}
         {this.renderUsers()}
         <footer>
@@ -195,14 +313,17 @@ class AssignObservers extends React.Component {
 
   stepThree() {
     return (
-      <div>
+      <div className="card-content">
+        <Icon>
+          <IconCheckSolid/>
+        </Icon>
         <div>
           <h1>Observer:</h1>
           <h5>{this.state.observer.name}</h5>
         </div>
         <div>
           <h3>Observees:</h3>
-          {this.state.observees.map(obs => {
+          {this.state.observeesToAdd.map(obs => {
             return (<p>{obs.name}</p>)
           })}
         </div>
@@ -214,7 +335,7 @@ class AssignObservers extends React.Component {
     return (
       <div>
         <div>
-          <h2>Congratulations! You assigned {this.state.observees.length} observees to {this.state.observer.name}.</h2>
+          <h2>Congratulations! You assigned {this.state.observeesToAdd.length} observees to {this.state.observer.name}.</h2>
         </div>
       </div>
     )
@@ -264,7 +385,7 @@ class AssignObservers extends React.Component {
     if (!observer_id) { return false }
     axios.post(
       `${ENV.BASE_URL}/api/v1/users/${observer_id}/bulk_create_observees`,
-      { observee_ids: this.state.observees.map(obs => obs.id) }
+      { observee_ids: this.state.observeesToAdd.map(obs => obs.id) }
     ).then(response => {
       this.setState({step: 4})
     })
