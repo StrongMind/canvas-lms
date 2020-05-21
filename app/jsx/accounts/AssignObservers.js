@@ -143,6 +143,13 @@ class AssignObservers extends React.Component {
     this.setState({step: this.state.step - 1})
   }
 
+  searchInput() {
+    return (
+      <IcInput type="search" placeholder="Enter the name of the user you would like to search."
+        ref="userSearch" onKeyUp={e => this.filterBySearch(e.target.value)}></IcInput>
+    )
+  }
+
   chooseStep() {
     switch (this.state.step) {
       case 1:
@@ -160,8 +167,7 @@ class AssignObservers extends React.Component {
     return (
       <div>
         <h1>Choose an Observer</h1>
-        <IcInput type="search" placeholder="Please enter 3 or more characters of the user you would like to search."
-        ref="userSearch" onKeyUp={e => this.filterBySearch(e.target.value)}></IcInput>
+        {this.searchInput()}
         {this.renderUsers(this.state.users)}
         <footer>
           <Previous onClick={this.clickPrevious.bind(this)}><a>Previous</a></Previous>
@@ -175,7 +181,7 @@ class AssignObservers extends React.Component {
     return (
       <div>
         <h1>Choose Observees for {this.state.observer.name}</h1>
-        <IcInput type="search" placeholder="Please enter 3 or more characters of the user you would like to search." ref="userSearch"></IcInput>
+        {this.searchInput()}
         {this.renderUsers(this.filteredUsers())}
         <footer>
           <Previous onClick={this.clickPrevious.bind(this)}><a>Previous</a></Previous>
@@ -227,14 +233,10 @@ class AssignObservers extends React.Component {
   }
 
   filterBySearch(search_term) {
-    if (search_term.length >= 3) {
-      this.state.searchTerm = search_term
-      return axios.get(this.state.first + `&search_term=${this.state.searchTerm}`).then(response => {
-        parseResponseLinks(response)
-      })
-    } else {
-      console.log("Not enough characters")
-    }
+    this.state.searchTerm = search_term
+    return axios.get(this.state.first + `&search_term=${this.state.searchTerm}&assign_observers=true`).then(response => {
+      this.parseResponseLinks(response)
+    })
   }
   
   getCurrentObservees() {
