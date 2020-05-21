@@ -100,9 +100,9 @@ class AssignObservers extends React.Component {
     })
   }
 
-  filteredUsers() {
+  filterUsers() {
     let observer_id = this.state.observer.id
-    if (!observer_id) { return this.state.users }
+    if (this.state.step === 1 || !observer_id) { return this.state.users }
     return this.state.users.filter(user => {
       return user.id !== observer_id && !this.state.currentObserversObservees.some(obs => obs.id === user.id)
     })
@@ -120,8 +120,8 @@ class AssignObservers extends React.Component {
     return (user.id === this.state.observer.id || this.state.observees.some(obs => obs.id === user.id))
   }
   
-  renderUsers(users) {
-    return users.map(user => {
+  renderUsers() {
+    return this.filterUsers().map(user => {
       let clsname = this.isActive(user) ? "active" : ""
       return (
         <ListUser className={clsname} onClick={(() => this.assign(user))}>{user.name}</ListUser>
@@ -168,7 +168,7 @@ class AssignObservers extends React.Component {
       <div>
         <h1>Choose an Observer</h1>
         {this.searchInput()}
-        {this.renderUsers(this.state.users)}
+        {this.renderUsers()}
         <footer>
           <Previous onClick={this.clickPrevious.bind(this)}><a>Previous</a></Previous>
           <Next onClick={this.clickNext.bind(this)}><a>Next</a></Next>
@@ -182,7 +182,7 @@ class AssignObservers extends React.Component {
       <div>
         <h1>Choose Observees for {this.state.observer.name}</h1>
         {this.searchInput()}
-        {this.renderUsers(this.filteredUsers())}
+        {this.renderUsers()}
         <footer>
           <Previous onClick={this.clickPrevious.bind(this)}><a>Previous</a></Previous>
           <Next onClick={this.clickNext.bind(this)}><a>Next</a></Next>
