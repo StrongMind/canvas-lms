@@ -217,7 +217,11 @@ class AssignObservers extends React.Component {
   }
 
   isActive(user) {
-    return (user.id === this.state.observer.id || this.state.observeesToAdd.some(obs => obs.id === user.id))
+    if (this.state.step === 1) {
+      return user.id === this.state.observer.id 
+    } else if (this.state.step === 2) {
+      return this.state.observeesToAdd.some(obs => obs.id === user.id)
+    }
   }
   
   renderUsers() {
