@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import axios from 'axios'
 import parseLinkHeader from 'jsx/shared/helpers/parseLinkHeader'
 import IcInput from 'jsx/account_course_user_search/IcInput'
+import $ from 'jquery'
+import I18n from 'i18n!profile'
 import IconUserSolid from 'instructure-icons/lib/Solid/IconUserSolid'
 import IconGroupSolid from 'instructure-icons/lib/Solid/IconGroupSolid'
 import IconCheckSolid from 'instructure-icons/lib/Solid/IconCheckSolid'
@@ -392,6 +394,8 @@ class AssignObservers extends React.Component {
       { observee_ids: this.state.observeesToAdd.map(obs => obs.id) }
     ).then(response => {
       this.setState({step: 4})
+    }).catch(error => {
+      $.flashError(I18n.t('failed_to_assign_observers', 'Request failed. Try again.'))
     })
   }
   
