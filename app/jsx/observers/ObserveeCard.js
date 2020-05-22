@@ -208,8 +208,8 @@ class ObserveeCard extends React.Component {
                   <div>
                     { this.state.showDetails === enr.id ? this.renderCourseDetails(enr, this.getCustomColor(enr), this.formatScore(enr.score), this.state.courseDetails) : undefined }
                     <a className="course-list-item" onClick={this.showCourseInfo.bind(this, enr)} href="#">
-                      <span className="course-name" aria-label="Course Name">{enr.course_name}</span>
-                      <span className="course-score" aria-label="Course Grade">
+                      <span className="course-name" aria-label={enr.course_name}>{enr.course_name}</span>
+                      <span className="course-score" aria-label={this.formatScore(enr.score)}>
                         {this.formatScore(enr.score)}
                         <i className="icon-arrow-open-right" aria-hidden="true"></i>
                       </span>
