@@ -9,6 +9,8 @@ import IconUserSolid from 'instructure-icons/lib/Solid/IconUserSolid'
 import IconGroupSolid from 'instructure-icons/lib/Solid/IconGroupSolid'
 import IconCheckSolid from 'instructure-icons/lib/Solid/IconCheckSolid'
 import IconEndSolid from 'instructure-icons/lib/Solid/IconEndSolid'
+import IconArrowOpenLeftSolid from 'instructure-icons/lib/Solid/IconArrowOpenLeftSolid'
+import IconArrowOpenRightSolid from 'instructure-icons/lib/Solid/IconArrowOpenRightSolid'
 
 const Card = styled.div`
   border: 1px solid #D7D7D7;
@@ -18,17 +20,15 @@ const Card = styled.div`
   height: 100%;
   width: 100%;
   max-width: 760px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   position: relative;
-  overflow-x: hidden;
 
   h3 {
     font-family: 'Open Sans', sans-serif;
     font-weight: 600;
     letter-spacing: 0.2px;
-  }
-
-  fieldset {
-    min-width: 50%;
   }
 
   label {
@@ -42,6 +42,7 @@ const Card = styled.div`
     flex-direction: column;
     align-items: center;
     padding: 2rem;
+    width: 100%;
   }
 
   .descriptive-text {
@@ -52,9 +53,8 @@ const Card = styled.div`
     margin-top: 0;
   }
 
-  .ic-Form-control {
-    display: inline-block;
-    width: 70%;
+  .font-bold {
+    font-weight: bold;
   }
 `
 
@@ -93,11 +93,21 @@ const Icon = styled.div`
   }
 `
 
+const PillContainer = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+
+  > * {
+    margin: 0.2rem;
+  }
+`
+
 const Pill = styled.div`
   background: #006ba6;
   display: flex;
   align-items: center;
-  padding: 0.25rem 0.5rem;
+  padding: 0 0.5rem;
   border-radius: 25px;
 
   > * {
@@ -106,7 +116,7 @@ const Pill = styled.div`
   
   p {
     font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
     margin-right: 10px;
     margin-top: 0;
@@ -114,32 +124,98 @@ const Pill = styled.div`
   }
 
   svg {
-    font-size: 10px;
+    font-size: 9px;
   }
 `
 
-const ListUser = styled.p`
-  &:hover, &.active {
-    background: #00314C;
+const Observer = styled.p`
+  color: #5e5e5e;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  margin-top: 0;
+`
+
+const UserSearchResults = styled.div`
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-top: 0;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 3;
+  width: 100%;
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+  }
+`
+
+const UserSearch = styled.div`
+  width: 100%;
+  margin-top: 2rem;
+  position: relative;
+
+  .ic-Form-control {
+    margin-bottom: 0;
+
+    input {
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    label {
+      text-align: left;
+    }
+  }
+`
+
+const UserList = styled.ul`
+  font-size: 12px;
+  list-style-type: none;
+  margin-left: 0;
+
+  li {
+    padding: 0.2rem;
+    transition: all 0.2s ease-in-out;
+
+    &:hover, &.active {
+      background: #006ba6;
+      cursor: pointer;
+      color: #ffffff;
+    }
+  }
+`
+
+const Previous = styled.a`
+  color: #006ba6;
+  display: inline-block;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 0.25rem;
+
+  &:hover {
     cursor: pointer;
-    color: #ffffff;
   }
 `
 
-const Previous = styled.span`
-  float: left;
-  cursor: pointer;
-`
+const Next = styled.a`
+  color: #006ba6;
+  display: inline-block;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 0.25rem;
 
-const Next = styled.span`
-  float: right;
-  cursor: pointer;
+  &:hover {
+    cursor: pointer;
+  }
 `
 
 const Button = styled.button`
-  &.btn-block:not(.start-over-button) {
-    width: 50%;
-    display: inline-block;
+  &.submit-button {
+    margin-top: 2rem;
   }
 `
 
@@ -218,6 +294,10 @@ class AssignObservers extends React.Component {
     }
   }
 
+  remove(user) {
+    this.setState({observeesToAdd: this.state.observeesToAdd.filter(obs =>  obs.id !== user.id)});
+  }
+
   isActive(user) {
     if (this.state.step === 1) {
       return user.id === this.state.observer.id 
@@ -230,9 +310,29 @@ class AssignObservers extends React.Component {
     return this.filterUsers().map(user => {
       let clsname = this.isActive(user) ? "active" : ""
       return (
-        <ListUser className={clsname} onClick={(() => this.assign(user))}>{user.name}</ListUser>
+        <li className={clsname} onClick={(() => this.assign(user))}>{user.name}</li>
       )
     });
+  }
+
+  searchInput() {
+    return (
+      <fieldset>
+          <IcInput type="search" placeholder="Search"
+            ref="userSearch" label="Find a user:" onKeyUp={e => this.filterBySearch(e.target.value)}></IcInput>
+          {this.state.users.length > 0 &&
+            <UserSearchResults>
+              <UserList>
+                {this.renderUsers()}
+              </UserList>
+              <footer>
+                <Previous onClick={this.clickPrevious.bind(this)}>Previous</Previous>
+                <Next onClick={this.clickNext.bind(this)}>Next</Next>
+              </footer>
+            </UserSearchResults>
+          }
+      </fieldset>
+    )
   }
 
   incrementStep() {
@@ -247,16 +347,6 @@ class AssignObservers extends React.Component {
 
   decrementStep() {
     this.setState({step: this.state.step - 1})
-  }
-
-  searchInput() {
-    return (
-      <fieldset>
-        <label>Find a user:</label>
-        <IcInput type="search" placeholder="Search"
-          ref="userSearch" onKeyUp={e => this.filterBySearch(e.target.value)}></IcInput>
-      </fieldset>
-    )
   }
 
   chooseStep() {
@@ -282,12 +372,12 @@ class AssignObservers extends React.Component {
         </Icon>
         <h3>Choose an Observer</h3>
         <p className="descriptive-text">This is the person that will be observing multiple students at one time.</p>
-        {this.searchInput()}
-        {this.renderUsers()}
-        <footer>
-          <Previous onClick={this.clickPrevious.bind(this)}><a>Previous</a></Previous>
-          <Next onClick={this.clickNext.bind(this)}><a>Next</a></Next>
-        </footer>
+        {this.state.observer.name &&
+          <Observer>Selected: <span className="font-bold">{this.state.observer.name}</span></Observer>
+        }
+        <UserSearch>
+          {this.searchInput()}
+        </UserSearch>
       </div>
     )
   }
@@ -298,21 +388,23 @@ class AssignObservers extends React.Component {
         <Icon>
           <IconGroupSolid/>
         </Icon>
-        <h3>Choose Observees for {this.state.observer.name}</h3>
-        {this.state.observeesToAdd.map(obs => {
-          return (
-            <Pill>
-              <p>{obs.name}</p>
-              <IconEndSolid/>
-            </Pill>
-          )
-        })}
-        {this.searchInput()}
-        {this.renderUsers()}
-        <footer>
-          <Previous onClick={this.clickPrevious.bind(this)}><a>Previous</a></Previous>
-          <Next onClick={this.clickNext.bind(this)}><a>Next</a></Next>
-        </footer>
+        <h3>Choose Observees</h3>
+        <p className="descriptive-text">These are the users that <span className="font-bold">{this.state.observer.name}</span> will be observing.</p>
+        <PillContainer>
+          {this.state.observeesToAdd.map(obs => {
+            return (
+                <Pill>
+                  <p>{obs.name}</p>
+                  <a alt={"Remove " + obs.name} onClick={(() => this.remove(obs))}>
+                    <IconEndSolid/>
+                  </a>
+                </Pill>
+            )
+          })}
+        </PillContainer>
+        <UserSearch>
+          {this.searchInput()}
+        </UserSearch>
       </div>
     )
   }
@@ -324,15 +416,22 @@ class AssignObservers extends React.Component {
           <IconCheckSolid/>
         </Icon>
         <div>
-          <h1>Observer:</h1>
-          <h5>{this.state.observer.name}</h5>
+          <h3>Confirm and Submit</h3>
+          <Observer><span className="font-bold">{this.state.observer.name}</span> will be observing the following users:</Observer>
         </div>
-        <div>
-          <h3>Observees:</h3>
+        <PillContainer>
           {this.state.observeesToAdd.map(obs => {
-            return (<p>{obs.name}</p>)
+            return (
+                <Pill>
+                  <p>{obs.name}</p>
+                  <a alt={"Remove " + obs.name} onClick={(() => this.remove(obs))}>
+                    <IconEndSolid/>
+                  </a>
+                </Pill>
+            )
           })}
-        </div>
+        </PillContainer>
+        <Button className="btn btn-primary submit-button" onClick={this.submitObserver.bind(this)}>Submit</Button>
       </div>
     )
   }
@@ -342,6 +441,7 @@ class AssignObservers extends React.Component {
       <div>
         <div>
           <h2>Congratulations! You assigned {this.state.observeesToAdd.length} observees to {this.state.observer.name}.</h2>
+          <Button className="btn start-over-button btn-primary" onClick={this.restart.bind(this)}>Start Over</Button>
         </div>
       </div>
     )
@@ -349,12 +449,12 @@ class AssignObservers extends React.Component {
 
   setPreviousStepButton() {
     if (this.state.step === 4) {
-      return (
-        <Button className="btn btn-block start-over-button btn-primary" onClick={this.restart.bind(this)}>Start Over</Button>
-      )
+      return
     } else {
       return (
-        <Button className="btn btn-block btn-secondary" onClick={this.decrementStep.bind(this)} disabled={this.state.step === 1}>Prev Step</Button>
+        <Button className="btn btn-secondary" alt="Previous Step" onClick={this.decrementStep.bind(this)} disabled={this.state.step === 1}>
+          <IconArrowOpenLeftSolid/>
+        </Button>
       )
     }
   }
@@ -362,13 +462,11 @@ class AssignObservers extends React.Component {
   setNextStepButton() {
     if (this.state.step === 4) {
       return
-    } else if (this.state.step === 3) {
-      return (
-        <Button className="btn btn-block btn-primary" onClick={this.submitObserver.bind(this)}>Submit</Button>
-      )
     } else {
       return (
-        <Button className="btn btn-block btn-primary" onClick={this.incrementStep.bind(this)} disabled={!this.state.observer.id}>Next Step</Button>
+        <Button className="btn btn-primary" alt="Next Step" onClick={this.incrementStep.bind(this)} disabled={!this.state.observer.id || this.state.step === 3}>
+          <IconArrowOpenRightSolid/>
+        </Button>
       )
     }
   }
@@ -401,15 +499,11 @@ class AssignObservers extends React.Component {
   
   render() {
     return (
-      <div>
-        <Card>
-          {this.chooseStep()}
-        </Card>
-       <div>
-         {this.setPreviousStepButton()}
-         {this.setNextStepButton()}
-       </div>
-      </div>
+      <Card>
+        {this.setPreviousStepButton()}
+        {this.chooseStep()}
+        {this.setNextStepButton()}
+      </Card>
     )
   }
 }
