@@ -79,7 +79,7 @@ class Login::OauthBaseController < ApplicationController
 
     identity_server_user = User.find_for_identity_auth(unique_ids.first)
     if identity_server_user && identity_server_user.pseudonyms.any?
-      pseudonym = identity_server_user.pseudonyms.first
+      pseudonym = identity_server_user.pseudonyms.active.first
     end
 
     if pseudonym
