@@ -1,5 +1,11 @@
 h2 {
-    margin-bottom: 0;
+    margin-bottom: 2rem;
+}
+
+#assign-observers-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 .subtitle {

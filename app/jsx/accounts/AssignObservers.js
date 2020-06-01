@@ -19,7 +19,7 @@ const Card = styled.div`
   text-align: center;
   height: 100%;
   width: 100%;
-  max-width: 760px;
+  max-width: 920px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -118,12 +118,12 @@ const Pill = styled.div`
     font-family: 'Open Sans', sans-serif;
     font-size: 10px;
     font-weight: 600;
-    margin-right: 10px;
     margin-top: 0;
     margin-bottom: 0;
   }
 
   svg {
+    margin-left: 10px;
     font-size: 9px;
   }
 `
@@ -150,10 +150,14 @@ const UserSearchResults = styled.div`
     display: flex;
     justify-content: space-between;
   }
+
+  &.hidden {
+    display: none;
+  }
 `
 
 const UserSearch = styled.div`
-  width: 100%;
+  width: 70%;
   margin-top: 2rem;
   position: relative;
 
@@ -183,6 +187,23 @@ const UserList = styled.ul`
       background: #006ba6;
       cursor: pointer;
       color: #ffffff;
+    }
+  }
+`
+
+const ClearSearch = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 3;
+  
+  svg {
+    color: #5e5e5e;
+    font-size: 12px;
+    padding: 0.5rem;
+
+    &:hover {
+      cursor: pointer;
     }
   }
 `
@@ -217,6 +238,23 @@ const Button = styled.button`
   &.submit-button {
     margin-top: 2rem;
   }
+
+  &.invisible {
+    visibility: hidden;
+  }
+`
+
+const Zero = styled.div`
+  padding: 2rem;
+  margin: 0 auto;
+
+  object {
+      max-width: 13rem;
+  }
+
+  ${PillContainer} {
+    margin-bottom: 2rem;
+  }
 `
 
 class AssignObservers extends React.Component {
@@ -248,6 +286,7 @@ class AssignObservers extends React.Component {
       observer: {},
       observeesToAdd: [],
       step: 1,
+      searchTerm: ''
     })
   }
 
@@ -286,6 +325,10 @@ class AssignObservers extends React.Component {
     })
   }
 
+  clearSearch() {
+    this.setState({ searchTerm: '' })
+  }
+
   assign(user) {
     if (this.state.step === 2) {
       this.setState({observeesToAdd: this.state.observeesToAdd.concat(user)})
@@ -318,10 +361,15 @@ class AssignObservers extends React.Component {
   searchInput() {
     return (
       <fieldset>
-          <IcInput type="search" placeholder="Search"
-            ref="userSearch" label="Find a user:" onKeyUp={e => this.filterBySearch(e.target.value)}></IcInput>
+          <IcInput type="search" placeholder="Search" value={this.state.searchTerm}
+            ref="userSearch" label="Find a user:" onInput={e => this.filterBySearch(e.target.value)}></IcInput>
+          {this.state.searchTerm !== '' &&
+            <ClearSearch onClick={() => this.clearSearch()}>
+              <IconEndSolid/>
+            </ClearSearch>
+          }
           {this.state.users.length > 0 &&
-            <UserSearchResults>
+            <UserSearchResults className={this.state.searchTerm === '' ? 'hidden' : ''}>
               <UserList>
                 {this.renderUsers()}
               </UserList>
@@ -367,7 +415,7 @@ class AssignObservers extends React.Component {
   stepOne() {
     return (
       <div className="card-content">
-        <Icon>
+        <Icon role="presentation">
           <IconUserSolid/>
         </Icon>
         <h3>Choose an Observer</h3>
@@ -385,11 +433,14 @@ class AssignObservers extends React.Component {
   stepTwo() {
     return (
       <div className="card-content">
-        <Icon>
+        <Icon role="presentation">
           <IconGroupSolid/>
         </Icon>
         <h3>Choose Observees</h3>
-        <p className="descriptive-text">These are the users that <span className="font-bold">{this.state.observer.name}</span> will be observing.</p>
+        <p className="descriptive-text">These are the users that will be observed.  You may select multiple users.</p>
+        {this.state.observer.name &&
+          <Observer>Observer: <span className="font-bold">{this.state.observer.name}</span></Observer>
+        }
         <PillContainer>
           {this.state.observeesToAdd.map(obs => {
             return (
@@ -412,7 +463,7 @@ class AssignObservers extends React.Component {
   stepThree() {
     return (
       <div className="card-content">
-        <Icon>
+        <Icon role="presentation">
           <IconCheckSolid/>
         </Icon>
         <div>
@@ -431,19 +482,30 @@ class AssignObservers extends React.Component {
             )
           })}
         </PillContainer>
-        <Button className="btn btn-primary submit-button" onClick={this.submitObserver.bind(this)}>Submit</Button>
+        <Button className="btn btn-primary submit-button" onClick={this.submitObserver.bind(this)} disabled={this.state.observeesToAdd.length === 0}>Submit</Button>
       </div>
     )
   }
 
   stepFour() {
     return (
-      <div>
-        <div>
-          <h2>Congratulations! You assigned {this.state.observeesToAdd.length} observees to {this.state.observer.name}.</h2>
-          <Button className="btn start-over-button btn-primary" onClick={this.restart.bind(this)}>Start Over</Button>
-        </div>
-      </div>
+      <Zero>
+        <object type="image/svg+xml" data="../images/svg_illustrations/sunny.svg"></object>
+        <h3>Assignments Complete!</h3>
+        <p className="descriptive-text">
+          A total of <span className="font-bold">{this.state.observeesToAdd.length}</span> observees were successfully assigned to <span className="font-bold">{this.state.observer.name}:</span>
+        </p>
+        <PillContainer>
+          {this.state.observeesToAdd.map(obs => {
+            return(
+              <Pill>
+                <p>{obs.name}</p>
+              </Pill>
+            )
+          })}
+        </PillContainer>
+        <Button className="btn start-over-button btn-primary" onClick={this.restart.bind(this)}>Start over</Button>
+      </Zero>
     )
   }
 
@@ -464,7 +526,7 @@ class AssignObservers extends React.Component {
       return
     } else {
       return (
-        <Button className="btn btn-primary" alt="Next Step" onClick={this.incrementStep.bind(this)} disabled={!this.state.observer.id || this.state.step === 3}>
+        <Button className={`btn btn-primary ${this.state.step === 3 ? 'invisible' : ''}`} alt="Next Step" onClick={this.incrementStep.bind(this)} disabled={!this.state.observer.id}>
           <IconArrowOpenRightSolid/>
         </Button>
       )
