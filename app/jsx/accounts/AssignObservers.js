@@ -216,8 +216,16 @@ const Previous = styled.a`
   font-weight: bold;
   padding: 0.25rem;
 
-  &:hover {
+  &:hover:not(.disabled) {
     cursor: pointer;
+  }
+
+  &.disabled {
+    color: #7e7e7e;
+
+    &:hover {
+      text-decoration: none;
+    }
   }
 `
 
@@ -229,8 +237,16 @@ const Next = styled.a`
   font-weight: bold;
   padding: 0.25rem;
 
-  &:hover {
+  &:hover:not(.disabled) {
     cursor: pointer;
+  }
+
+  &.disabled {
+    color: #7e7e7e;
+
+    &:hover {
+      text-decoration: none;
+    }
   }
 `
 
@@ -266,6 +282,7 @@ class AssignObservers extends React.Component {
     this.state = {
       users: [],
       first: collection.urls.first,
+      last: collection.urls.last,
       previous: collection.urls.prev,
       next: collection.urls.next,
       current: collection.urls.current,
@@ -314,6 +331,8 @@ class AssignObservers extends React.Component {
       previous: links.prev,
       next: links.next,
       current: links.current,
+      first: links.first,
+      last: links.last
     })
   }
 
@@ -353,11 +372,21 @@ class AssignObservers extends React.Component {
     return this.filterUsers().map(user => {
       let clsname = this.isActive(user) ? "active" : ""
       return (
-        <li className={clsname} onClick={(() => this.assign(user))}>{user.name}</li>
+        <li className={clsname} onClick={(() => clsname ? undefined : this.assign(user))}>{user.name}</li>
       )
     });
   }
 
+  paginationDisabledCheck(direction) {
+    if (direction === "previous" && this.state.first === this.state.current) {
+      return "disabled"
+    } else if (direction === "next" && this.state.last === this.state.current) {
+      return "disabled"
+    } else {
+      return ""
+    }
+  }
+  
   searchInput() {
     return (
       <fieldset>
@@ -374,8 +403,8 @@ class AssignObservers extends React.Component {
                 {this.renderUsers()}
               </UserList>
               <footer>
-                <Previous onClick={this.clickPrevious.bind(this)}>Previous</Previous>
-                <Next onClick={this.clickNext.bind(this)}>Next</Next>
+                <Previous className={this.paginationDisabledCheck("previous")} onClick={this.clickPrevious.bind(this)}>Previous</Previous>
+                <Next className={this.paginationDisabledCheck("next")} onClick={this.clickNext.bind(this)}>Next</Next>
               </footer>
             </UserSearchResults>
           }
