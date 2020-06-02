@@ -361,7 +361,7 @@ class AssignObservers extends React.Component {
   searchInput() {
     return (
       <fieldset>
-          <IcInput type="search" placeholder="Search" value={this.state.searchTerm}
+          <IcInput type="search" placeholder="Search" defaultValue={this.state.searchTerm}
             ref="userSearch" label="Find a user:" onInput={e => this.filterBySearch(e.target.value)}></IcInput>
           {this.state.searchTerm !== '' &&
             <ClearSearch onClick={() => this.clearSearch()}>
