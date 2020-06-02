@@ -490,7 +490,7 @@ class AssignObservers extends React.Component {
   stepFour() {
     return (
       <Zero>
-        <object type="image/svg+xml" data="../images/svg_illustrations/sunny.svg"></object>
+        <object type="image/svg+xml" data="../../images/svg_illustrations/sunny.svg"></object>
         <h3>Assignments Complete!</h3>
         <p className="descriptive-text">
           A total of <span className="font-bold">{this.state.observeesToAdd.length}</span> observees were successfully assigned to <span className="font-bold">{this.state.observer.name}:</span>
