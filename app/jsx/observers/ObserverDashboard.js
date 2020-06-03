@@ -33,13 +33,17 @@ class ObserverDashboard extends React.Component {
     observees: [],
   };
 
-  updateProgressGradeSetting(setting) {
+  updateProgressGradeSetting() {
     let self = this
+    let value = self.refs.showProgressGrades.checked
+    console.log(self.refs.showProgressGrades.value)
+
     axios.post(
       `api/v1/users/${ENV.current_user.id}/toggle_progress_grade`,
-      {params: {show_progress_grades: setting}}
+      {show_progress_grades: value}
     ).then((response) => {
-      self.setState({showProgressGrades: response.body.show_progress_grades})
+      console.log(response)
+      self.setState({showProgressGrades: response.data.show_progress_grades})
     })
   }
 
@@ -53,9 +57,9 @@ class ObserverDashboard extends React.Component {
   render() {
     return (
       <Dashboard>
-        <IcInput type="checkbox" placeholder="Search" value={this.state.showProgressGrades}
-          ref="showProgressGrades" label="CLICK ME TO CHANGE GRADE SETTING" checked={this.state.showProgressGrades}
-          onChange={e => this.updateProgressGradeSetting(e.target.value)}></IcInput>
+        <label>CLICK ME TO CHANGE GRADE SETTING</label>
+        <input type="checkbox" checked={this.state.showProgressGrades}
+          ref="showProgressGrades" onChange={this.updateProgressGradeSetting.bind(this)} />
         {this.renderObserveeCards()}
       </Dashboard>
     )
