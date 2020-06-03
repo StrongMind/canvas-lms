@@ -352,7 +352,10 @@ class AssignObservers extends React.Component {
     if (this.state.step === 2) {
       this.setState({observeesToAdd: this.state.observeesToAdd.concat(user)})
     } else {
-      this.setState({observer: user})
+      this.setState({
+        observer: user,
+        observeesToAdd: this.state.observeesToAdd.filter(obs => obs.id !== user.id)
+      })
     }
   }
 
