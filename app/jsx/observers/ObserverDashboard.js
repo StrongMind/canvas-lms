@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import ObserveeCard from './ObserveeCard'
 import ObserverZeroState from './ObserverZeroState'
+import axios from 'axios'
 
 const CardWrapper = styled.div`
   flex-basis: 33.33%;
@@ -24,12 +25,23 @@ class ObserverDashboard extends React.Component {
 
     this.state = {
       observees: this.props.observees.models,
+      showProgressGrades: ENV.show_progress_grades
     }
   }
   
   static defaultProps = {
     observees: [],
   };
+
+  updateProgressGradeSetting(setting) {
+    let self = this
+    axios.post(
+      `api/v1/users/${ENV.current_user.id}/toggle_progress_grade`,
+      {params: {show_progress_grades: setting}}
+    ).then((response) => {
+      self.setState({showProgressGrades: response.body.show_progress_grades})
+    })
+  }
 
   renderObserveeCards() {
     if (!this.state.observees.length) { return (<ObserverZeroState></ObserverZeroState>) }
@@ -41,6 +53,9 @@ class ObserverDashboard extends React.Component {
   render() {
     return (
       <Dashboard>
+        <IcInput type="checkbox" placeholder="Search" value={this.state.showProgressGrades}
+          ref="showProgressGrades" label="CLICK ME TO CHANGE GRADE SETTING" checked={this.state.showProgressGrades}
+          onChange={e => this.updateProgressGradeSetting(e.target.value)}></IcInput>
         {this.renderObserveeCards()}
       </Dashboard>
     )
