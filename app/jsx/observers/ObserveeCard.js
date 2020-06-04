@@ -183,7 +183,8 @@ class ObserveeCard extends React.Component {
       score={score} 
       course_details={course_details}
       reset_action={this.reset}
-      is_showing={this.state.detailClicked}></ObserveeCourseDetails>
+      is_showing={this.state.detailClicked}
+      showProgressGrades={this.props.showProgressGrades}></ObserveeCourseDetails>
   }
 
   renderAttendanceLockout(status) {
