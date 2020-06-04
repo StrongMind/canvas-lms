@@ -50,7 +50,7 @@ class ObserverDashboard extends React.Component {
   renderObserveeCards() {
     if (!this.state.observees.length) { return (<ObserverZeroState></ObserverZeroState>) }
     return this.state.observees.map((student, i) => { 
-      return (<CardWrapper><ObserveeCard key={i} student={student} /></CardWrapper>) 
+      return (<CardWrapper><ObserveeCard key={i} student={student} showProgressGrades={this.state.showProgressGrades} /></CardWrapper>) 
     })
   }
 
