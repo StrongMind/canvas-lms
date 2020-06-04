@@ -12,6 +12,34 @@ const CardWrapper = styled.div`
   position: relative;
 `
 
+const DashboardContainer = styled.div`
+  .dashboard-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .ic-Form-control {
+      margin-bottom: 0;
+    }
+
+    .ic-Super-toggle--ui-switch .ic-Super-toggle__switch {
+      margin: 0 10px;
+    }
+
+    .ic-Super-toggle--ui-switch .ic-Super-toggle__input:checked ~ .ic-Super-toggle__container {
+      .ic-Super-toggle__option--RIGHT, .ic-Super-toggle__option--LEFT {
+        transform: none;
+      }
+    }
+    
+    .ic-Super-toggle__option--RIGHT, .ic-Super-toggle__option--LEFT {
+      font-size: 12px;
+      transform: none;
+    }
+  }
+`
+
 const Dashboard = styled.div`
   display: flex;
   flex-flow: row wrap;
@@ -36,13 +64,11 @@ class ObserverDashboard extends React.Component {
   updateProgressGradeSetting() {
     let self = this
     let value = self.refs.showProgressGrades.checked
-    console.log(self.refs.showProgressGrades.value)
 
     axios.post(
       `api/v1/users/${ENV.current_user.id}/toggle_progress_grade`,
       {show_progress_grades: value}
     ).then((response) => {
-      console.log(response)
       self.setState({showProgressGrades: response.data.show_progress_grades})
     })
   }
@@ -56,12 +82,30 @@ class ObserverDashboard extends React.Component {
 
   render() {
     return (
-      <Dashboard>
-        <label>CLICK ME TO CHANGE GRADE SETTING</label>
-        <input type="checkbox" checked={this.state.showProgressGrades}
-          ref="showProgressGrades" onChange={this.updateProgressGradeSetting.bind(this)} />
-        {this.renderObserveeCards()}
-      </Dashboard>
+      <DashboardContainer>
+        <div className="dashboard-title">
+          <h2>Observed Students</h2>
+          <div className="ic-Form-control">
+            <label className="ic-Super-toggle--ui-switch" htmlFor="super-toggle-grades">
+              <span className="screenreader-only">Grades Toggle</span>
+              <input type="checkbox" id="super-toggle-grades" className="ic-Super-toggle__input" checked={this.state.showProgressGrades}
+              ref="showProgressGrades" onChange={this.updateProgressGradeSetting.bind(this)} />
+              <div className="ic-Super-toggle__container" aria-hidden="true" data-checked="Show Current Grade" data-unchecked="Show Final Grade">
+                <div className="ic-Super-toggle__option--LEFT">
+                  <span>Final Grade</span>
+                </div>
+                <div className="ic-Super-toggle__switch"></div>
+                <div className="ic-Super-toggle__option--RIGHT">
+                  <span>Current Grade</span>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+        <Dashboard>
+          {this.renderObserveeCards()}
+        </Dashboard>
+      </DashboardContainer>
     )
   }
 }
