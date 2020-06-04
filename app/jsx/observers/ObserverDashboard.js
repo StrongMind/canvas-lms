@@ -5,11 +5,23 @@ import ObserverZeroState from './ObserverZeroState'
 import axios from 'axios'
 
 const CardWrapper = styled.div`
-  flex-basis: 33.33%;
+  flex-basis: 25%;
   width: 100%;
   padding: 0.75rem;
   box-sizing: border-box;
   position: relative;
+
+  @media (max-width: 1200px) {
+    flex-basis: 33.33%;
+  }
+
+  @media(max-width: 992px) {
+    flex-basis: 50%;
+  }
+
+  @media(max-width: 767px) {
+    flex-basis: 100%;
+  }
 `
 
 const DashboardContainer = styled.div`
