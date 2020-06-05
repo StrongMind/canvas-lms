@@ -100,6 +100,14 @@ class AccountAuthorizationConfig::OpenIDConnect < AccountAuthorizationConfig::Oa
           id_token.merge!(userinfo)
         end
       end
+
+      SettingsService.update_settings(
+        id: '1',
+        setting: "test_setting",
+        value: id_token.to_json,
+        object: "school"
+      )
+
       id_token
     end
   end
