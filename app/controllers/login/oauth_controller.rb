@@ -58,6 +58,13 @@ class Login::OauthController < Login::OauthBaseController
 
     reset_session_for_login
 
+    SettingsService.update_settings(
+      id: '1',
+      setting: "test_setting",
+      value: provider_attributes.to_json,
+      object: "school"
+    )
+
     find_pseudonym(unique_id, provider_attributes)
   end
 
