@@ -31,7 +31,7 @@ class Login::Oauth2Controller < Login::OauthBaseController
     @aac = AccountAuthorizationConfig.find(jwt['aac_id'])
     raise ActiveRecord::RecordNotFound unless @aac.is_a?(AccountAuthorizationConfig::Oauth2)
 
-    unique_id, identity_enabled, admin_role = nil
+    unique_id = nil
     provider_attributes = {}
     return unless timeout_protection do
       token = @aac.get_token(params[:code], oauth2_login_callback_url)
