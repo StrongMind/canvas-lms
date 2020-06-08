@@ -31,12 +31,19 @@ class Login::Oauth2Controller < Login::OauthBaseController
     @aac = AccountAuthorizationConfig.find(jwt['aac_id'])
     raise ActiveRecord::RecordNotFound unless @aac.is_a?(AccountAuthorizationConfig::Oauth2)
 
-    unique_id = nil
+    unique_id, identity_enabled, admin_role = nil
     provider_attributes = {}
     return unless timeout_protection do
       token = @aac.get_token(params[:code], oauth2_login_callback_url)
       unique_id = @aac.unique_id(token)
       provider_attributes = @aac.provider_attributes(token)
+      identity_enabled = SettingsService.get_settings(object: 'school', id: 1)['identity_server_enabled']
+      admin_role = @aac&.admin_role?(token) if identity_enabled
+    end
+
+    if identity_enabled && admin_role
+      unique_id = @aac.identity_email_address(token) || unique_id
+      provider_attributes["is_admin"] = true
     end
 
     find_pseudonym(unique_id, provider_attributes)
