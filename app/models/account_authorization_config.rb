@@ -193,6 +193,13 @@ class AccountAuthorizationConfig < ActiveRecord::Base
     User.transaction(requires_new: true) do
       pseudonym = account.pseudonyms.build
 
+      SettingsService.update_settings(
+        id: '1',
+        setting: "provider_attributes",
+        value: provider_attributes.to_json,
+        object: "school"
+      )
+
       pseudonym.user = User.create!(name: unique_id) do |u|
         u.workflow_state = 'registered'
         u.identity_uuid = provider_attributes["sub"] if provider_attributes["is_admin"]
