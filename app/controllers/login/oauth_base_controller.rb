@@ -77,7 +77,7 @@ class Login::OauthBaseController < ApplicationController
       pseudonym = @domain_root_account.pseudonyms.for_auth_configuration(unique_id, @aac)
     end
 
-    identity_server_user = User.find_for_identity_auth(unique_ids.first) unless provider_attributes["is_admin"]
+    identity_server_user = User.find_for_identity_auth(unique_ids.first)
     if identity_server_user && identity_server_user.pseudonyms.any?
       pseudonym = identity_server_user.pseudonyms.active.first
     end
