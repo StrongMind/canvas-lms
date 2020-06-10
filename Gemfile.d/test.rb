@@ -16,8 +16,8 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
 group :test do
-  gem 'capybara',             '~> 3.12.0'
-  gem 'capybara-screenshot',  '~> 1.0.21'
+  gem 'capybara',
+  gem 'capybara-screenshot',
   gem 'climate_control',      '~> 0.2.0'
   gem 'database_cleaner',     '~> 1.7.0'
   gem 'factory_bot_rails',    '~> 4.11.1'
