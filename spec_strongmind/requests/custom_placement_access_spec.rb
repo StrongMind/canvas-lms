@@ -5,6 +5,8 @@ RSpec.describe 'Enrollments API Controller - Custom Placement', type: :request d
   include_context 'stubbed_network'
 
   before(:each) do
+    allow_any_instance_of(TeacherEnrollment).to_receive(:has_permission_to?).with(:custom_placement).and_return(true)
+    allow_any_instance_of(TAEnrollment).to_receive(:has_permission_to?).with(:custom_placement).and_return(true)
     course_with_teacher_logged_in()
 
     @student    = user_with_pseudonym
