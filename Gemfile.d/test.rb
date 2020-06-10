@@ -62,7 +62,7 @@ group :test do
     gem 'childprocess', '0.7.1', require: false
     gem 'websocket', '1.2.4', require: false
   gem 'chromedriver-helper', require: false
-  gem 'selinimum', '0.0.1', require: false, path: 'gems/selinimum'
+  #gem 'selinimum', '0.0.1', require: false, path: 'gems/selinimum'
   gem 'test-queue', github: 'jenseng/test-queue', ref: '1b92ebbca70705599c78a1bad5b16d6a37f741f2', require: false
   gem 'testrailtagging', '0.3.8.3', require: false
 
