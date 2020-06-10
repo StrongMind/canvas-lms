@@ -21,15 +21,15 @@ group :test do
   gem 'climate_control',      '~> 0.2.0'
   gem 'database_cleaner',     '~> 1.7.0'
   gem 'factory_bot_rails',    '~> 4.11.1'
-  gem 'rspec-rails',          '~> 3.8.1'
-  gem 'rspec-expectations',   '~> 3.8.1'
-  gem 'rspec-retry',          '~> 0.6.1'
+  # gem 'rspec-rails',          '~> 3.8.1'
+  gem 'rspec-expectations'
+  gem 'rspec-retry'
   gem 'safe_yaml', '1.0.4', require: false
-  gem 'selenium-webdriver',   '~> 3.14.0'
-  gem 'shoulda-matchers',     '~> 3.1.2'
-  gem 'timecop',              '~> 0.9.1'
+  # gem 'selenium-webdriver',   '~> 3.14.0'
+  #gem 'shoulda-matchers',     '~> 3.1.2'
+  # gem 'timecop',              '~> 0.9.1'
   gem 'vcr',                  '~> 4.0.0'
-  gem 'webmock',              '~> 3.4.2'
+  # gem 'webmock',              '~> 3.4.2'
 
 
   gem 'rails-dom-testing', '2.0.3'
