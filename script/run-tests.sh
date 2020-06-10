@@ -14,4 +14,4 @@ if [ ! -z "$SHIM_BRANCH" ]; then
   cd $TRAVIS_BUILD_DIR
 fi
 
-bundle exec rspec spec_strongmind
+bundle _1.15.1_ exec rspec spec_strongmind

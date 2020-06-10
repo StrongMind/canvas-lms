@@ -31,7 +31,6 @@ end
 
 # StrongMind Added
 group :development, :test do
-  gem 'pry'
   gem 'pry-rails'
   gem 'pry-byebug'
   gem 'better_errors'
