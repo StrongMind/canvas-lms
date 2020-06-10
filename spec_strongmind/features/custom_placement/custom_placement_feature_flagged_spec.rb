@@ -24,8 +24,8 @@ RSpec.describe 'As a System with custom placement behind feature flag', type: :f
     end
 
     # Turn on feature flag!
-    allow_any_instance_of(TeacherEnrollment).to_receive(:has_permission_to?).with(:custom_placement).and_return(true)
-    allow_any_instance_of(TAEnrollment).to_receive(:has_permission_to?).with(:custom_placement).and_return(true)
+    allow_any_instance_of(TeacherEnrollment).to receive(:has_permission_to?).with(:custom_placement).and_return(true)
+    allow_any_instance_of(TAEnrollment).to receive(:has_permission_to?).with(:custom_placement).and_return(true)
 
     visit "/courses/#{@course.id}"
 
