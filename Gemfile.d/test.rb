@@ -16,7 +16,7 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
 group :test do
-  gem 'capybara', '~> 3.5'
+  gem 'capybara'
   gem 'capybara-screenshot'
   gem 'climate_control',      '~> 0.2.0'
   gem 'database_cleaner',     '~> 1.7.0'
@@ -25,7 +25,7 @@ group :test do
   gem 'rspec-expectations'
   gem 'rspec-retry'
   gem 'safe_yaml', '1.0.4', require: false
-  # gem 'selenium-webdriver',   '~> 3.14.0'
+  gem 'selenium-webdriver',   '~> 3.14.0'
   #gem 'shoulda-matchers',     '~> 3.1.2'
   # gem 'timecop',              '~> 0.9.1'
   gem 'vcr',                  '~> 4.0.0'
@@ -58,9 +58,9 @@ group :test do
   gem 'once-ler', '0.1.2'
 
   # Keep this gem synced with docker-compose/seleniumff/Dockerfile
-  gem 'selenium-webdriver', '2.53.4'
-    gem 'childprocess', '0.7.1', require: false
-    gem 'websocket', '1.2.4', require: false
+  # gem 'selenium-webdriver', '2.53.4'
+  #   gem 'childprocess', '0.7.1', require: false
+  #   gem 'websocket', '1.2.4', require: false
   gem 'chromedriver-helper', require: false
   gem 'selinimum', '0.0.1', require: false, path: 'gems/selinimum'
   gem 'test-queue', github: 'jenseng/test-queue', ref: '1b92ebbca70705599c78a1bad5b16d6a37f741f2', require: false
