@@ -6,22 +6,8 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
   include_context 'stubbed_network'
 
   before(:each) do
-    Permissions.register(
-      {
-        :custom_placement => {
-          :label => lambda { "Apply Custom Placement to Courses" },
-          :available_to => [
-            'TaEnrollment',
-            'TeacherEnrollment',
-            'AccountAdmin',
-          ],
-          :true_for => [
-            'AccountAdmin',
-            'TeacherEnrollment'
-          ]
-        }
-      }
-    )
+    allow_any_instance_of(TeacherEnrollment).to_receive(:has_permission_to?).with(:custom_placement).and_return(true)
+    allow_any_instance_of(TAEnrollment).to_receive(:has_permission_to?).with(:custom_placement).and_return(true)
 
     course_with_teacher_logged_in()
 

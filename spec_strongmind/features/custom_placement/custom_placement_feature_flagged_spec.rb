@@ -24,22 +24,8 @@ RSpec.describe 'As a System with custom placement behind feature flag', type: :f
     end
 
     # Turn on feature flag!
-    Permissions.register(
-      {
-        :custom_placement => {
-          :label => lambda { "Apply Custom Placement to Courses" },
-          :available_to => [
-            'TaEnrollment',
-            'TeacherEnrollment',
-            'AccountAdmin',
-          ],
-          :true_for => [
-            'AccountAdmin',
-            'TeacherEnrollment'
-          ]
-        }
-      }
-    )
+    allow_any_instance_of(TeacherEnrollment).to_receive(:has_permission_to?).with(:custom_placement).and_return(true)
+    allow_any_instance_of(TAEnrollment).to_receive(:has_permission_to?).with(:custom_placement).and_return(true)
 
     visit "/courses/#{@course.id}"
 
