@@ -10,11 +10,14 @@ addons:
     packages:
       # This is required to run new chrome on old trusty
       - libnss3
+      - xvfb
 cache:
   directories:
     - node_modules
     - vendor/bundle
 before_install:
+  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x24"
+  - sleep 3
   - sudo apt-get install -y libxmlsec1 libxmlsec1-dev imagemagick
   - "find /home/travis/.rvm/rubies -wholename '*default/bundler-*.gemspec' -delete"
   - gem uninstall bundler -x || gem uninstall bundler -a || true
