@@ -32,7 +32,7 @@ end
 # StrongMind Added
 group :development, :test do
   gem 'pry-rails'
-  gem 'pry-byebug', '3.4.3'
+  gem 'pry-byebug'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'dotenv-rails'

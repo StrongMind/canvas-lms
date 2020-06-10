@@ -43,7 +43,7 @@ install:
 before_script:
   - psql -c 'create database canvas_test;' -U postgres;
   - psql -U postgres -q -d $DB_NAME -f db/structure.sql # faster than db:test:prepare
-  - bundle _1.15.1_ exec rake canvas:compile_assets_dev # skip build of styleguide, api docs, npm install
+  - STRONGMIND_SPEC=1 bundle _1.15.1_ exec rake canvas:compile_assets_dev # skip build of styleguide, api docs, npm install
   - rm Gemfile.lock
   - STRONGMIND_SPEC=1 bundle _1.15.1_ install --path vendor/bundle --without production --jobs=3 --retry=1
 script: 'STRONGMIND_SPEC=1 HEADLESS=1 ./script/run-tests.sh'
