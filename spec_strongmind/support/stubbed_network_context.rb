@@ -7,5 +7,6 @@ RSpec.shared_context "stubbed_network" do
     allow(PipelineService::HTTPClient).to receive(:post)
     allow(PipelineService::HTTPClient).to receive(:get).and_return(double('response', parsed_response: ''))
     allow(PipelineService::V2).to receive(:publish)
+    ENV["AWS_REGION"] = "us-west-2"
   end
 end
