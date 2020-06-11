@@ -6,8 +6,8 @@ RSpec.describe 'As a Teacher I can force advance student module progress', type:
   include_context 'stubbed_network'
 
   before(:each) do
-    allow_any_instance_of(TeacherEnrollment).to receive(:has_permission_to?).with(:custom_placement).and_return(true)
-    allow_any_instance_of(TaEnrollment).to receive(:has_permission_to?).with(:custom_placement).and_return(true)
+    allow_any_instance_of(TeacherEnrollment).to receive(:has_permission_to?).and_return(true)
+    allow_any_instance_of(TaEnrollment).to receive(:has_permission_to?).and_return(true)
 
     course_with_teacher_logged_in()
 
