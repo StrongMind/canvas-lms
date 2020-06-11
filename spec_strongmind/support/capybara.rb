@@ -119,7 +119,7 @@ end
 Capybara.configure do |config|
   config.server                = :thin # :strongmind/:puma/:webrick
   config.javascript_driver     = ENV['HEADLESS'] ? :headless_chrome : :chrome
-  config.default_max_wait_time = 100
+  config.default_max_wait_time = 15
 end
 
 # better looking screenshots (fixes relative paths when desired)
