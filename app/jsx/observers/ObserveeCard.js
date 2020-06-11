@@ -159,9 +159,7 @@ class ObserveeCard extends React.Component {
     }
   }
 
-  formatScore(score = {}) {
-    let result = '--';
-    
+  formatScore(score = {}, result = '--') {
     if (this.props.showProgressGrades) {
       if (score && score.current_score) {
         result = score.current_score + '%'
