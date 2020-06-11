@@ -19,23 +19,21 @@ RSpec.describe 'As a System with custom placement behind feature flag', type: :f
 
     within find("#user_#{@student.id}") do
       find('.al-trigger').click()
-      sleep 1
+      sleep 2
       expect(page).to_not have_selector('a[href="#"][data-event=editEnrollments]', text: 'Custom Placement')
     end
 
-    # Turn on feature flag!
-    allow_any_instance_of(TeacherEnrollment).to receive(:has_permission_to?).and_return(true)
-    allow_any_instance_of(TaEnrollment).to receive(:has_permission_to?).and_return(true)
-
     visit "/courses/#{@course.id}"
 
-    expect(page).to have_selector('a.home.active')
+    # expect(page).to have_selector('a.home.active')
+    allow_any_instance_of(TeacherEnrollment).to receive(:has_permission_to?).and_return(true)
+    allow_any_instance_of(TaEnrollment).to receive(:has_permission_to?).and_return(true)
 
     click_link 'People'
 
     within find("#user_#{@student.id}") do
       find('.al-trigger').click()
-      sleep 1
+      sleep 2
       expect(page).to have_selector('a[href="#"][data-event=editEnrollments]', text: 'Custom Placement')
     end
   end
