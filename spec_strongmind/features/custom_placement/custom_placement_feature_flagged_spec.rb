@@ -5,6 +5,11 @@ RSpec.describe 'As a System with custom placement behind feature flag', type: :f
 
   include_context 'stubbed_network'
 
+  before(:each) do
+    student_in_course(active_all: true)
+    course_with_teacher_logged_in(course: @course)
+  end
+
   it "can be turned on with a 'enable_custom_placement' feature flag" do
     visit "/courses/#{@course.id}"
 

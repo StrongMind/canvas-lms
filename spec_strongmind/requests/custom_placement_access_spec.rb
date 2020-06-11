@@ -5,8 +5,6 @@ RSpec.describe 'Enrollments API Controller - Custom Placement', type: :request d
   include_context 'stubbed_network'
 
   before(:each) do
-    allow_any_instance_of(TeacherEnrollment).to receive(:has_permission_to?).and_return(true)
-    allow_any_instance_of(TaEnrollment).to receive(:has_permission_to?).and_return(true)
     course_with_teacher_logged_in()
 
     @student    = user_with_pseudonym
@@ -34,6 +32,7 @@ RSpec.describe 'Enrollments API Controller - Custom Placement', type: :request d
   context 'when custom placement setting turned on' do
     describe 'access based on settings service' do
       it "it processes the action and return success status" do
+        allow_any_instance_of(TeacherEnrollment).to receive(:has_permission_to?).and_return(true)
         allow(SettingsService).to receive(:get_settings).and_return({enable_custom_placement: true})
 
         content_tag = instance_double(ContentTag)
