@@ -33,7 +33,6 @@ RSpec.describe 'Enrollments API Controller - Custom Placement', type: :request d
     describe 'access based on settings service' do
       it "it processes the action and return success status" do
         allow_any_instance_of(TeacherEnrollment).to receive(:has_permission_to?).and_return(true)
-        allow(SettingsService).to receive(:get_settings).and_return({enable_custom_placement: true})
 
         content_tag = instance_double(ContentTag)
         expect(ContentTag).to receive(:find).with(anything).and_return(content_tag)
