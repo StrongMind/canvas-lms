@@ -30,7 +30,6 @@ group :test do
   # gem 'timecop',              '~> 0.9.1'
   gem 'vcr',                  '~> 4.0.0'
   # gem 'webmock',              '~> 3.4.2'
-  gem 'sentry-raven'
 
 
   gem 'rails-dom-testing', '2.0.3'

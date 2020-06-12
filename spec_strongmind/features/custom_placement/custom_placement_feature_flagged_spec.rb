@@ -12,10 +12,7 @@ RSpec.describe 'As a System with custom placement behind feature flag', type: :f
 
   it "should be off by default" do
     visit "/courses/#{@course.id}"
-    allow(SettingsService).to receive(:get_settings).and_return({})
-    allow(@teacher.teacher_enrollments.last).to receive(:has_permission_to?).with(:read_roster).and_return(true)
-    allow(@teacher.teacher_enrollments.last).to receive(:has_permission_to?).with(:manage_grades).and_return(true)
-    allow(@course.teacher_enrollments.last).to receive(:has_permission_to?).with(:custom_placement).and_return(false)
+    allow_any_instance_of(ContextController).to receive(:custom_placement_enabled?).and_return(false)
 
     click_link 'People'
 
