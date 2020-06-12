@@ -50,7 +50,6 @@ RSpec.describe 'Speedgrader improvements for teacher productivity', type: :featu
   it "displays discussion topic title and content to give the teacher more context when grading discussion boards responses" do
     visit "/courses/#{@course.id}/gradebook/speed_grader?assignment_id=#{@assignment.id}"
 
-    puts page.body
     expect(page).to have_selector('#speedgrader_iframe', visible: true)
     sleep 2
 
