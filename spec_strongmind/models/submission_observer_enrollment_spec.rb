@@ -6,10 +6,6 @@ RSpec.describe Submission do
 
   let(:observer) { User.create }
 
-  let(:student_enrollment) do
-    StudentEnrollment.create!(user: student, course: @course)
-  end
-
   before do
     course_with_student_submissions(:active_all => true)
     @course.enroll_user(observer, "ObserverEnrollment", {:allow_multiple_enrollments => true, :associated_user_id => @student.id})
