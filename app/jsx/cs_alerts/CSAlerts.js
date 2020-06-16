@@ -4,7 +4,7 @@ class CSAlerts extends React.Component {
   constructor(props) {
     super(props);
 
-    let alerts = this.props.users;
+    let alerts = this.props.alerts;
 
     this.state = {
       alerts: alerts,
@@ -16,6 +16,7 @@ class CSAlerts extends React.Component {
   };
 
   render() {
+    console.log(this.props.alerts)
     return (
       <div>
         I BE RENDERED YARRRR!

@@ -5,10 +5,14 @@ import CSAlerts from 'jsx/cs_alerts/CSAlerts'
 import axios from 'axios'
 
 const $el = document.getElementById('cs-alerts-container')
+let alerts = []
 
-ReactDOM.render(
-  <CSAlerts
-    alerts={[]}
-  />,
-  $el
-)
+axios.get("/cs_alerts/teacher_alerts").then((response) => {
+  alerts = response.data
+  ReactDOM.render(
+    <CSAlerts
+      alerts={alerts}
+    />,
+    $el
+  )
+})
