@@ -26,11 +26,7 @@ class CSAlerts extends React.Component {
     $(this.el)
     .DataTable()
     .destroy(true);
- }
-
- shouldComponentUpdate() {
-   return false;
- }
+  }
 
   renderRows() {
     return this.state.alerts.map(alert => {
