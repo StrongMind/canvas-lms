@@ -101,7 +101,7 @@ class CSAlerts extends React.Component {
               <th>Details</th>
               <th>Time</th>
               <th>Type</th>
-              <th id="delete-column-header" className="visibility-hidden">
+              <th id="delete-column-header" className={this.state.bulk_checks ? "" : "visibility-hidden"}>
                 <label htmlFor="bulk-delete-select">Select All</label>
                 <input id="bulk-delete-select" name="bulk-delete-select" type="checkbox" />
               </th>
