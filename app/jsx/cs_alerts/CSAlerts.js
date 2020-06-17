@@ -13,6 +13,7 @@ class CSAlerts extends React.Component {
     this.state = {
       alerts: alerts,
       bulk_checks: false,
+      loading: false,
     }
   }
   
@@ -68,7 +69,8 @@ class CSAlerts extends React.Component {
           </td>
           <td className="delete-column">
             <i className="icon-x" style={{cursor: "pointer"}} onClick={() => this.deleteAlert(alert)}></i>
-            <input className="hidden bulk-delete-checks" type="checkbox" name="alert_ids[]" value={alert.alert_id} />
+            <input className={this.state.bulk_checks ? "bulk-delete-checks" : "hidden bulk-delete-checks"}
+              type="checkbox" name="alert_ids[]" value={alert.alert_id} />
           </td>
         </tr>
       )
@@ -82,10 +84,11 @@ class CSAlerts extends React.Component {
         <div className="alerts-table-heading">
           <h2>Alerts {this.state.alerts.length}</h2>
           <div className="flex-row-reverse">
-              <button className="Button Button--small Button--primary" id="bulk-delete-btn">Delete Multiple Messages</button>
-              <button className="Button Button--small Button--danger hidden" id="bulk-delete-confirm"
-              data-url='<%= bulk_delete_cs_alerts_path %>'>Confirm Deletion</button>
-              <div className="dot-loader hidden"></div>
+            <button className="Button Button--small Button--primary"
+              onClick={() => {this.setState({bulk_checks: !this.state.bulk_checks})}}>
+              {this.state.bulk_checks ? "Confirm Deletion" : "Delete Multiple Messages"}
+            </button>
+            <div className={this.state.loading ? "dot-loader" : "dot-loader hidden"}></div>
           </div>
         </div>
 
