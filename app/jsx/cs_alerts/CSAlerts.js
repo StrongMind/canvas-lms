@@ -13,6 +13,7 @@ class CSAlerts extends React.Component {
     this.state = {
       alerts: alerts,
       bulk_checks: false,
+      all_checked: false,
       loading: false,
     }
   }
@@ -20,6 +21,16 @@ class CSAlerts extends React.Component {
   static defaultProps = {
     alerts: [],
   };
+
+  selectAll() {
+    let alert_ids = this.state.alerts.map(alert => `alert-${alert.alert_id}`)
+
+    alert_ids.forEach(id => {
+      this.refs[id].checked = !this.state.all_checked
+    })
+
+    this.setState({all_checked: !this.state.all_checked})
+  }
 
   deleteAlert(alert) {
     let url = `/cs_alerts/${alert.alert_id}`
@@ -30,6 +41,7 @@ class CSAlerts extends React.Component {
         alerts: self.state.alerts.filter(alrt => alrt.alert_id !== alert.alert_id)
       })
     }).catch(error => {
+      console.log(error)
       $.flashError(I18n.t('failed_to_assign_observers', 'Request failed. Try again.'))
     })
   }
@@ -70,7 +82,7 @@ class CSAlerts extends React.Component {
           <td className="delete-column">
             <i className="icon-x" style={{cursor: "pointer"}} onClick={() => this.deleteAlert(alert)}></i>
             <input className={this.state.bulk_checks ? "bulk-delete-checks" : "hidden bulk-delete-checks"}
-              type="checkbox" name="alert_ids[]" value={alert.alert_id} />
+              type="checkbox" name="alert_ids[]" value={alert.alert_id} ref={`alert-${alert.alert_id}`} />
           </td>
         </tr>
       )
@@ -103,7 +115,7 @@ class CSAlerts extends React.Component {
               <th>Type</th>
               <th id="delete-column-header" className={this.state.bulk_checks ? "" : "visibility-hidden"}>
                 <label htmlFor="bulk-delete-select">Select All</label>
-                <input id="bulk-delete-select" name="bulk-delete-select" type="checkbox" />
+                <input id="bulk-delete-select" name="bulk-delete-select" type="checkbox" onChange={this.selectAll.bind(this)} />
               </th>
             </tr>
           </thead>
