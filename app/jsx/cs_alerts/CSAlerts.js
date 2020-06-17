@@ -1,6 +1,8 @@
 import React from 'react'
 import $ from 'jquery'
+import I18n from 'i18n!profile'
 import 'DataTables'
+import axios from 'axios';
 
 class CSAlerts extends React.Component {
   constructor(props) {
@@ -10,12 +12,26 @@ class CSAlerts extends React.Component {
 
     this.state = {
       alerts: alerts,
+      bulk_checks: false,
     }
   }
   
   static defaultProps = {
     alerts: [],
   };
+
+  deleteAlert(alert) {
+    let url = `/cs_alerts/${alert.alert_id}`
+    let self = this
+
+    axios.delete(url).then(response => {
+      self.setState({
+        alerts: self.state.alerts.filter(alrt => alrt.alert_id !== alert.alert_id)
+      })
+    }).catch(error => {
+      $.flashError(I18n.t('failed_to_assign_observers', 'Request failed. Try again.'))
+    })
+  }
 
   componentDidMount() {
     this.$el = $(this.el);
@@ -51,8 +67,7 @@ class CSAlerts extends React.Component {
             {alert.description}
           </td>
           <td className="delete-column">
-            <i className="icon-x" style={{cursor: "pointer"}}
-            data-alert={alert.alert_id} data-url={`/cs_alerts/${alert.alert_id}`}></i>
+            <i className="icon-x" style={{cursor: "pointer"}} onClick={() => this.deleteAlert(alert)}></i>
             <input className="hidden bulk-delete-checks" type="checkbox" name="alert_ids[]" value={alert.alert_id} />
           </td>
         </tr>
