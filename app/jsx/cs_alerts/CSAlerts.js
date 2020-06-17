@@ -18,22 +18,19 @@ class CSAlerts extends React.Component {
   };
 
   componentDidMount() {
-    $(this.refs.main).DataTable(
-      {
-        "columnDefs": [
-          {
-            "targets": [5, 6],
-            "orderable": false,
-            "searchable": false,
-          },
-          {
-            targets: [ 0, 1, 2, 3 ],
-            className: 'mdl-data-alertsTable__cell--non-numeric'
-          }
-        ]
-      }
-    );
+    this.$el = $(this.el);
+    this.$el.DataTable();
   }
+
+  componentWillUnmount(){
+    $(this.el)
+    .DataTable()
+    .destroy(true);
+ }
+
+ shouldComponentUpdate() {
+   return false;
+ }
 
   renderRows() {
     return this.state.alerts.map(alert => {
@@ -81,7 +78,7 @@ class CSAlerts extends React.Component {
           </div>
         </div>
 
-        <table id="alertsTable" ref="main">
+        <table id="alertsTable" ref={el => this.el = el}>
           <thead>
             <tr>
               <th>Student</th>
