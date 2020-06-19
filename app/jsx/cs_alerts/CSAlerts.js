@@ -1,7 +1,7 @@
 import React from 'react'
 import $ from 'jquery'
 import I18n from 'i18n!profile'
-import 'react-jquery-datatables'
+import 'DataTables'
 import axios from 'axios';
 
 class CSAlerts extends React.Component {
@@ -52,7 +52,9 @@ class CSAlerts extends React.Component {
   }
 
   componentWillUnmount(){
-    $(this.el).DataTable().destroy(true);
+    $(this.el)
+    .DataTable()
+    .destroy(true);
   }
 
   renderRows() {
