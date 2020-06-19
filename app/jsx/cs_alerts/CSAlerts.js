@@ -16,7 +16,6 @@ class CSAlerts extends React.Component {
       bulk_checks: false,
       all_checked: false,
       loading: false,
-      shouldUpdate: false,
       dataTable: undefined,
     }
   }
@@ -51,6 +50,16 @@ class CSAlerts extends React.Component {
     })
   }
 
+  bulkCheck(target) {
+    this.setState({bulk_checks: !this.state.bulk_checks})
+    setTimeout(() => {
+      $(target).text(this.state.bulk_checks ? "Confirm Deletion" : "Delete Multiple Messages")
+      $(".icon-x").toggleClass("hidden", this.state.bulk_checks)
+      $(".bulk-delete-checks").toggleClass("hidden", !this.state.bulk_checks)
+      $("#delete-column-header").toggleClass("visibility-hidden", !this.state.bulk_checks)
+    }, 0)
+  }
+
   removeRow(id) {
     this.state.dataTable.row($(this.refs[`row-${id}`])).remove().draw()
     $(this.refs["alertCount"]).text(this.state.alerts.length)
@@ -70,7 +79,7 @@ class CSAlerts extends React.Component {
   }
 
   shouldComponentUpdate() {
-    return this.state.shouldUpdate
+    return false;
   }
 
   renderRows() {
@@ -112,9 +121,9 @@ class CSAlerts extends React.Component {
         <div className="alerts-table-heading">
           <h2>Alerts <span ref="alertCount">{this.state.alerts.length}</span></h2>
           <div className="flex-row-reverse">
-            <button className="Button Button--small Button--primary"
-              onClick={() => {this.setState({bulk_checks: !this.state.bulk_checks})}}>
-              {this.state.bulk_checks ? "Confirm Deletion" : "Delete Multiple Messages"}
+            <button className="Button Button--small Button--primary" type="button"
+              onClick={(e) => { this.bulkCheck(e.target) }}>
+              Delete Multiple Messages
             </button>
             <div className={this.state.loading ? "dot-loader" : "dot-loader hidden"}></div>
           </div>
@@ -129,7 +138,7 @@ class CSAlerts extends React.Component {
               <th>Details</th>
               <th>Time</th>
               <th>Type</th>
-              <th id="delete-column-header" className={this.state.bulk_checks ? "" : "visibility-hidden"}>
+              <th id="delete-column-header" className="visibility-hidden">
                 <label htmlFor="bulk-delete-select">Select All</label>
                 <input id="bulk-delete-select" name="bulk-delete-select" type="checkbox" onChange={this.selectAll.bind(this)} />
               </th>
