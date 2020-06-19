@@ -1,7 +1,7 @@
 import React from 'react'
 import $ from 'jquery'
 import I18n from 'i18n!profile'
-import 'DataTables'
+import 'datatables.net'
 import axios from 'axios';
 
 class CSAlerts extends React.Component {
@@ -15,6 +15,8 @@ class CSAlerts extends React.Component {
       bulk_checks: false,
       all_checked: false,
       loading: false,
+      shouldUpdate: false,
+      dataTable: undefined,
     }
   }
   
@@ -40,27 +42,36 @@ class CSAlerts extends React.Component {
       self.setState({
         alerts: self.state.alerts.filter(alrt => alrt.alert_id !== alert.alert_id)
       })
+
+      self.removeRow(alert.alert_id)
     }).catch(error => {
       console.log(error)
       $.flashError(I18n.t('failed_to_assign_observers', 'Request failed. Try again.'))
     })
   }
 
+  removeRow(id) {
+    this.state.dataTable.row($(this.refs[`row-${id}`])).remove().draw()
+    $(this.refs["alertCount"]).text(this.state.alerts.length)
+  }
+
   componentDidMount() {
     this.$el = $(this.el);
-    this.$el.DataTable();
+    this.setState({dataTable: this.$el.DataTable()});
   }
 
   componentWillUnmount(){
-    $(this.el)
-    .DataTable()
-    .destroy(true);
+    this.state.dataTable.destroy(true);
+  }
+
+  shouldComponentUpdate() {
+    return this.state.shouldUpdate
   }
 
   renderRows() {
     return this.state.alerts.map(alert => {
       return (
-        <tr>
+        <tr ref={`row-${alert.alert_id}`}>
           <td>
             {alert.student_name}
           </td>
@@ -94,7 +105,7 @@ class CSAlerts extends React.Component {
     return (
       <div>
         <div className="alerts-table-heading">
-          <h2>Alerts {this.state.alerts.length}</h2>
+          <h2>Alerts <span ref="alertCount">{this.state.alerts.length}</span></h2>
           <div className="flex-row-reverse">
             <button className="Button Button--small Button--primary"
               onClick={() => {this.setState({bulk_checks: !this.state.bulk_checks})}}>
