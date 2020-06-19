@@ -12,6 +12,7 @@ class CSAlerts extends React.Component {
 
     this.state = {
       alerts: alerts,
+      alertType: 'normal',
       bulk_checks: false,
       all_checked: false,
       loading: false,
@@ -56,6 +57,10 @@ class CSAlerts extends React.Component {
   }
 
   componentDidMount() {
+    this.initializeDataTable();
+  }
+
+  initializeDataTable() {
     this.$el = $(this.el);
     this.setState({dataTable: this.$el.DataTable()});
   }
@@ -103,7 +108,7 @@ class CSAlerts extends React.Component {
   render() {
     console.log(this.props.alerts)
     return (
-      <div>
+      <div key={this.state.alertType}>
         <div className="alerts-table-heading">
           <h2>Alerts <span ref="alertCount">{this.state.alerts.length}</span></h2>
           <div className="flex-row-reverse">
