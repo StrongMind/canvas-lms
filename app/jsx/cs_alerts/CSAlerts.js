@@ -188,7 +188,7 @@ class CSAlerts extends React.Component {
     return (
       <div key={this.state.alertType}>
         <div className="alerts-table-heading">
-          <h2>Alerts <span ref="alertCount">{this.state.alerts.length}</span></h2>
+          <h2>Alerts (<span ref="alertCount">{this.state.alerts.length}</span>)</h2>
           <div className="flex-row-reverse">
             <button id="bulk-delete-btn" className="Button Button--small Button--primary" type="button"
               onClick={this.bulkCheck.bind(this)}>
