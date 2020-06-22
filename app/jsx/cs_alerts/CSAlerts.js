@@ -1,6 +1,5 @@
 import React from 'react'
 import $ from 'jquery'
-import I18n from 'i18n!profile'
 import 'datatables.net'
 import axios from 'axios';
 
@@ -76,8 +75,7 @@ class CSAlerts extends React.Component {
 
       self.removeRow(alert.alert_id)
     }).catch(error => {
-      console.log(error)
-      $.flashError(I18n.t('failed_to_assign_observers', 'Request failed. Try again.'))
+      $.flashError('Request failed. Please Try again.')
     })
   }
 
@@ -102,19 +100,23 @@ class CSAlerts extends React.Component {
   }
 
   bulkDelete() {
-    axios.post("/cs_alerts/bulk_delete", { alert_ids: this.state.deletable_ids }).then((response) => {
-      this.setState({
-        alerts: this.state.alerts.filter(alert => !this.state.deletable_ids.includes(alert.alert_id)),
-      }, () => {
-        this.state.deletable_ids.forEach(id => {
-          this.removeRow(id);
-        })
+    if (this.state.deletable_ids.length) {
+      axios.post("/cs_alerts/bulk_delete", { alert_ids: this.state.deletable_ids }).then((response) => {
+        this.setState({
+          alerts: this.state.alerts.filter(alert => !this.state.deletable_ids.includes(alert.alert_id)),
+        }, () => {
+          this.state.deletable_ids.forEach(id => {
+            this.removeRow(id);
+          })
 
-        this.setState({deletable_ids: []})
+          this.setState({deletable_ids: []})
+        })
+      }).catch((error) => {
+        $.flashError('Request failed. Please Try again.')
       })
-    }).catch((error) => {
-      alert("YOU DEEDNT DO IT")
-    })
+    } else {
+      $.flashError("Please select at least one alert to delete.")
+    }
   }
 
   componentDidMount() {
