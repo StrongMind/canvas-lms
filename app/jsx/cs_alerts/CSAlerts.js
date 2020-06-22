@@ -12,11 +12,12 @@ class CSAlerts extends React.Component {
 
     this.state = {
       alerts: alerts,
+      dataTable: undefined,
       bulk_checks: false,
       all_checked: false,
       deletable_ids: [],
+      recently_deleted: [],
       loading: false,
-      dataTable: undefined,
     }
   }
   
@@ -96,6 +97,14 @@ class CSAlerts extends React.Component {
     $(this.refs["alertCount"]).text(this.state.alerts.length)
   }
 
+  bulkDelete() {
+    axios.post("/cs_alerts/bulk_delete", { alert_ids: this.state.deletable_ids }).then((response) => {
+      alert("YOU DEED IT")
+    }).catch((error) => {
+      alert("YOU DEEDNT DO IT")
+    })
+  }
+
   componentDidMount() {
     this.initializeDataTable();
   }
@@ -104,6 +113,17 @@ class CSAlerts extends React.Component {
     this.$el = $(this.el);
     let self = this;
     this.setState({dataTable: this.$el.DataTable({
+        "columnDefs": [
+          {
+            "targets": [5, 6],
+            "orderable": false,
+            "searchable": false,
+          },
+          {
+            targets: [ 0, 1, 2, 3 ],
+            className: 'mdl-data-alertsTable__cell--non-numeric'
+          }
+        ],
         "fnDrawCallback": self.toggleBulkHidden.bind(self)
       })
     });
@@ -161,7 +181,8 @@ class CSAlerts extends React.Component {
               Delete Multiple Messages
             </button>
 
-            <button className="Button Button--small Button--danger hidden" id="bulk-delete-confirm">
+            <button className="Button Button--small Button--danger hidden" id="bulk-delete-confirm"
+              onClick={this.bulkDelete.bind(this)}>
               Confirm Deletion
             </button>
             <div className="dot-loader hidden"></div>
