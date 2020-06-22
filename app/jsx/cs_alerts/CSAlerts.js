@@ -12,7 +12,6 @@ class CSAlerts extends React.Component {
 
     this.state = {
       alerts: alerts,
-      alertType: 'normal',
       bulk_checks: false,
       all_checked: false,
       loading: false,
@@ -51,13 +50,15 @@ class CSAlerts extends React.Component {
   }
 
   bulkCheck(target) {
-    this.setState({bulk_checks: !this.state.bulk_checks})
-    setTimeout(() => {
-      $(target).text(this.state.bulk_checks ? "Confirm Deletion" : "Delete Multiple Messages")
-      $(".icon-x").toggleClass("hidden", this.state.bulk_checks)
-      $(".bulk-delete-checks").toggleClass("hidden", !this.state.bulk_checks)
-      $("#delete-column-header").toggleClass("visibility-hidden", !this.state.bulk_checks)
-    }, 0)
+    this.setState({bulk_checks: !this.state.bulk_checks}, this.toggleBulkHidden)
+  }
+
+  toggleBulkHidden() {
+    $("#bulk-delete-btn").text(this.state.bulk_checks ? "Go Back" : "Delete Multiple Messages")
+    $(".icon-x").toggleClass("hidden", this.state.bulk_checks)
+    $(".bulk-delete-checks").toggleClass("hidden", !this.state.bulk_checks)
+    $('#bulk-delete-confirm').toggleClass("hidden", !this.state.bulk_checks)
+    $("#delete-column-header").toggleClass("visibility-hidden", !this.state.bulk_checks)
   }
 
   removeRow(id) {
@@ -121,11 +122,15 @@ class CSAlerts extends React.Component {
         <div className="alerts-table-heading">
           <h2>Alerts <span ref="alertCount">{this.state.alerts.length}</span></h2>
           <div className="flex-row-reverse">
-            <button className="Button Button--small Button--primary" type="button"
-              onClick={(e) => { this.bulkCheck(e.target) }}>
+            <button id="bulk-delete-btn" className="Button Button--small Button--primary" type="button"
+              onClick={this.bulkCheck.bind(this)}>
               Delete Multiple Messages
             </button>
-            <div className={this.state.loading ? "dot-loader" : "dot-loader hidden"}></div>
+
+            <button className="Button Button--small Button--danger hidden" id="bulk-delete-confirm">
+              Confirm Deletion
+            </button>
+            <div className="dot-loader hidden"></div>
           </div>
         </div>
 
