@@ -29,8 +29,18 @@ class CSAlerts extends React.Component {
   }
 
   domSelectAll() {
-    $("label[for=bulk-delete-select]").text( this.state.all_checked ? `Deselect All (${this.state.alerts.length} Selected)` : "Select All");
-    $(':checkbox:visible').prop({checked: this.state.all_checked, disabled: this.state.all_checked})
+    $("label[for=bulk-delete-select]").text(
+      this.state.all_checked ? `Deselect All (${this.state.alerts.length} Selected)` : `Select All (${this.state.deletable_ids.length} Selected)`
+    );
+    if (this.state.all_checked) {
+      $(':checkbox:visible').prop({checked: true, disabled: true})
+    } else {
+      $(':checkbox:visible').get().forEach(box => {
+        let bool = this.state.deletable_ids.includes($(box).val())
+        $(box).prop({checked: bool, disabled: false})
+      })
+    }
+
     $('#bulk-delete-select').prop({disabled: false})
   }
 
@@ -44,7 +54,11 @@ class CSAlerts extends React.Component {
       deletable_ids.push(alert.alert_id)
     }
 
-    this.setState({deletable_ids: deletable_ids})
+    this.setState({deletable_ids: deletable_ids}, () => {
+      $("label[for=bulk-delete-select]").text(
+        `Select All (${this.state.deletable_ids.length} Selected)`
+      )
+    })
   }
 
   deleteAlert(alert) {
