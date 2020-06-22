@@ -92,7 +92,7 @@ class CSAlerts extends React.Component {
   }
 
   removeRow(id) {
-    this.state.dataTable.row($(this.refs[`row-${id}`])).remove().draw()
+    this.state.dataTable.row($(this.refs[`row-${id}`])).remove().draw(false)
     $(this.refs["alertCount"]).text(this.state.alerts.length)
   }
 
