@@ -29,9 +29,22 @@ class CSAlerts extends React.Component {
   }
 
   domSelectAll() {
-    $("label[for=bulk-delete-select]").text( this.state.all_checked ? "Deselect All" : "Select All");
+    $("label[for=bulk-delete-select]").text( this.state.all_checked ? `Deselect All (${this.state.alerts.length} Selected)` : "Select All");
     $(':checkbox:visible').prop({checked: this.state.all_checked, disabled: this.state.all_checked})
     $('#bulk-delete-select').prop({disabled: false})
+  }
+
+  toggleDeletable(alert) {
+    let deletable_ids = this.state.deletable_ids
+    let index = deletable_ids.indexOf(alert.alert_id)
+
+    if (index !== -1) {
+      deletable_ids.splice(index, 1)
+    } else {
+      deletable_ids.push(alert.alert_id)
+    }
+
+    this.setState({deletable_ids: deletable_ids})
   }
 
   deleteAlert(alert) {
@@ -115,7 +128,7 @@ class CSAlerts extends React.Component {
           <td className="delete-column">
             <i className="icon-x" style={{cursor: "pointer"}} onClick={() => this.deleteAlert(alert)}></i>
             <input className={this.state.bulk_checks ? "bulk-delete-checks" : "hidden bulk-delete-checks"}
-              type="checkbox" name="alert_ids[]" value={alert.alert_id} ref={`alert-${alert.alert_id}`} />
+              type="checkbox" name="alert_ids[]" value={alert.alert_id} onChange={() => this.toggleDeletable(alert)} />
           </td>
         </tr>
       )
