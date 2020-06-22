@@ -30,8 +30,11 @@ class CSAlerts extends React.Component {
   }
 
   domSelectAll() {
+    let deletabeIdLength = this.state.deletable_ids.length
+    let selectAllText = deletabeIdLength ? `Select All (${deletabeIdLength} Selected)` : "Select All"
+
     $("label[for=bulk-delete-select]").text(
-      this.state.all_checked ? `Deselect All (${this.state.alerts.length} Selected)` : `Select All (${this.state.deletable_ids.length} Selected)`
+      this.state.all_checked ? `Deselect All (${this.state.alerts.length} Selected)` : selectAllText
     );
     if (this.state.all_checked) {
       $(':checkbox:visible').prop({checked: true, disabled: true})
@@ -95,11 +98,20 @@ class CSAlerts extends React.Component {
   removeRow(id) {
     this.state.dataTable.row($(this.refs[`row-${id}`])).remove().draw(false)
     $(this.refs["alertCount"]).text(this.state.alerts.length)
+    $("label[for=bulk-delete-select]").text("Select All")
   }
 
   bulkDelete() {
     axios.post("/cs_alerts/bulk_delete", { alert_ids: this.state.deletable_ids }).then((response) => {
-      alert("YOU DEED IT")
+      this.setState({
+        alerts: this.state.alerts.filter(alert => !this.state.deletable_ids.includes(alert.alert_id)),
+      }, () => {
+        this.state.deletable_ids.forEach(id => {
+          this.removeRow(id);
+        })
+
+        this.setState({deletable_ids: []})
+      })
     }).catch((error) => {
       alert("YOU DEEDNT DO IT")
     })
@@ -124,7 +136,7 @@ class CSAlerts extends React.Component {
             className: 'mdl-data-alertsTable__cell--non-numeric'
           }
         ],
-        "fnDrawCallback": self.toggleBulkHidden.bind(self)
+        "fnDrawCallback": this.toggleBulkHidden.bind(this)
       })
     });
   }
