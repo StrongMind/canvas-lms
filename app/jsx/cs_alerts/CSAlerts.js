@@ -14,6 +14,7 @@ class CSAlerts extends React.Component {
       alerts: alerts,
       bulk_checks: false,
       all_checked: false,
+      deletable_ids: [],
       loading: false,
       dataTable: undefined,
     }
@@ -24,13 +25,13 @@ class CSAlerts extends React.Component {
   };
 
   selectAll() {
-    let alert_ids = this.state.alerts.map(alert => `alert-${alert.alert_id}`)
+    this.setState({all_checked: !this.state.all_checked}, this.domSelectAll)
+  }
 
-    alert_ids.forEach(id => {
-      this.refs[id].checked = !this.state.all_checked
-    })
-
-    this.setState({all_checked: !this.state.all_checked})
+  domSelectAll() {
+    $("label[for=bulk-delete-select]").text( this.state.all_checked ? "Deselect All" : "Select All");
+    $(':checkbox:visible').prop({checked: this.state.all_checked, disabled: this.state.all_checked})
+    $('#bulk-delete-select').prop({disabled: false})
   }
 
   deleteAlert(alert) {
@@ -49,7 +50,7 @@ class CSAlerts extends React.Component {
     })
   }
 
-  bulkCheck(target) {
+  bulkCheck() {
     this.setState({bulk_checks: !this.state.bulk_checks}, this.toggleBulkHidden)
   }
 
@@ -59,6 +60,8 @@ class CSAlerts extends React.Component {
     $(".bulk-delete-checks").toggleClass("hidden", !this.state.bulk_checks)
     $('#bulk-delete-confirm').toggleClass("hidden", !this.state.bulk_checks)
     $("#delete-column-header").toggleClass("visibility-hidden", !this.state.bulk_checks)
+
+    this.domSelectAll()
   }
 
   removeRow(id) {
@@ -72,7 +75,11 @@ class CSAlerts extends React.Component {
 
   initializeDataTable() {
     this.$el = $(this.el);
-    this.setState({dataTable: this.$el.DataTable()});
+    let self = this;
+    this.setState({dataTable: this.$el.DataTable({
+        "fnDrawCallback": self.toggleBulkHidden.bind(self)
+      })
+    });
   }
 
   componentWillUnmount(){
