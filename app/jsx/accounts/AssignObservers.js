@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import styled from 'styled-components'
 import axios from 'axios'
 import parseLinkHeader from 'jsx/shared/helpers/parseLinkHeader'
@@ -12,6 +13,7 @@ import IconEndSolid from 'instructure-icons/lib/Solid/IconEndSolid'
 import IconArrowOpenLeftSolid from 'instructure-icons/lib/Solid/IconArrowOpenLeftSolid'
 import IconArrowOpenRightSolid from 'instructure-icons/lib/Solid/IconArrowOpenRightSolid'
 import IconDocumentSolid from 'instructure-icons/lib/Solid/IconDocumentSolid'
+import IconWarningSolid from 'instructure-icons/lib/Solid/IconWarningSolid'
 
 const Card = styled.div`
   border: 1px solid #D7D7D7;
@@ -56,6 +58,55 @@ const Card = styled.div`
 
   .font-bold {
     font-weight: bold;
+  }
+
+  .review-users {
+    border-color: #5e5e5e;
+    color: #5e5e5e;
+    font-weight: bold;
+  }
+
+  .clear-all {
+    background-color: #ae0734;
+    border-color: #ae0734;
+    color: #ffffff;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: #C8254F;
+      border-color: #C8254F;
+    }
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .button-container {
+    .submit-button {
+      margin-right: 1rem;
+    }
+  }
+
+  // transitions
+  .warning-enter {
+    opacity: 0.01;
+    height: 0;
+  }
+  
+  .warning-enter.warning-enter-active {
+    opacity: 1;
+    transition: opacity 500ms ease-in;
+    height: auto;
+  }
+  
+  .warning-leave {
+    opacity: 1;
+  }
+  
+  .warning-leave.warning-leave-active {
+    opacity: 0.01;
+    transition: opacity 300ms ease-in;
   }
 `
 
@@ -110,6 +161,30 @@ const Pill = styled.div`
   align-items: center;
   padding: 0 0.5rem;
   border-radius: 25px;
+
+  &.observees-to-remove {
+    background: transparent;
+    border: 2px solid #006ba6;
+
+    > * {
+      color: #006ba6;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    &.selected {
+      background: #006ba6;
+
+      > * {
+        color: #ffffff;
+      }
+    }
+  }
 
   > * {
     color: #ffffff;
@@ -252,7 +327,7 @@ const Next = styled.a`
 `
 
 const Button = styled.button`
-  &.submit-button {
+  &:not(.traverse) {
     margin-top: 2rem;
   }
 
@@ -271,6 +346,36 @@ const Zero = styled.div`
 
   ${PillContainer} {
     margin-bottom: 2rem;
+  }
+`
+const ObserveeWarning = styled.div`
+  background: #eaeaea;
+  padding: 1rem;
+
+  > * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:first-child {
+      margin-bottom: 15px;
+    }
+  }
+
+  p {
+    color: #AE0734;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    margin: 0;
+  }
+
+  svg {
+    color: #AE0734;
+    margin-right: 10px;
+  }
+
+  button:not(:last-of-type) {
+    margin-right: 10px;
   }
 `
 
@@ -461,12 +566,39 @@ class AssignObservers extends React.Component {
         </Icon>
         <h3>Choose an Observer</h3>
         <p className="descriptive-text">This is the person that will be observing multiple students at one time.</p>
-        {this.state.observer.name &&
-          <Observer>Selected: <span className="font-bold">{this.state.observer.name}</span></Observer>
-        }
-        {this.state.currentObserversObservees.length > 0 && 
-          <p>I have observees</p>
-        }
+
+        <ReactCSSTransitionGroup
+          component="div"
+          className="full-width"
+          transitionName="warning"
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}>
+          {this.state.observer.name &&
+            <Observer>Selected: <span className="font-bold">{this.state.observer.name}</span></Observer>
+          }
+        </ReactCSSTransitionGroup>
+
+        <ReactCSSTransitionGroup
+          component="div"
+          className="full-width"
+          transitionName="warning"
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}>
+          {this.state.currentObserversObservees.length > 0 && 
+            <ObserveeWarning>
+              <div>
+                <IconWarningSolid />
+                <p>
+                  <span className="font-bold">{this.state.observer.name}</span> is already observing <span className="font-bold">{this.state.currentObserversObservees.length} users</span>
+                </p>
+              </div>
+              <div>
+                <button className="btn btn-small review-users" onClick={() => this.setState({step: 5})}>Review Users</button>
+                <button className="btn btn-small clear-all font-bold">Clear All</button>
+              </div>
+            </ObserveeWarning>
+          }
+        </ReactCSSTransitionGroup>
         <UserSearch>
           {this.searchInput()}
         </UserSearch>
@@ -567,19 +699,22 @@ class AssignObservers extends React.Component {
           <Observer>Observer: <span className="font-bold">{this.state.observer.name}</span></Observer>
         </div>
         <PillContainer>
-          {this.state.observeesToRemove.map(obs => {
+          {this.state.currentObserversObservees.map(obs => {
             return (
-              <Pill>
-                <p>{obs.name}</p>
-                <a alt={"Remove " + obs.name} onClick={(() => this.remove(obs))}>
-                  <IconEndSolid/>
+              <Pill className={`observees-to-remove ${this.state.observeesToRemove.some(obj => obj.id === obs.id) ? 'selected' : ''}`}>
+                <a alt={"Remove " + obs.name}
+                   onClick={() => this.setState({observeesToRemove: this.state.observeesToRemove.concat(obs)})}>
+                  <p>{obs.name}</p>
+                  <IconCheckSolid/>
                 </a>
               </Pill>
             )
           })}
         </PillContainer>
-        <Button className="btn btn-primary submit-button" onClick={this.submitObserver.bind(this)} disabled={this.state.observeesToRemove.length === 0}>Save and Continue</Button>
-        <Button className="btn clear-all-button" onClick={this.submitObserver.bind(this)} disabled={this.state.observeesToRemove.length === 0}>Save and Continue</Button>
+        <div className="button-container">
+          <Button className="btn btn-primary submit-button" onClick={this.submitObserver.bind(this)} disabled={this.state.observeesToRemove.length === 0}>Remove Selected</Button>
+          <Button className="btn clear-all" onClick={this.submitObserver.bind(this)}>Clear All</Button>
+        </div>
       </div>
     )
   }
@@ -611,7 +746,7 @@ class AssignObservers extends React.Component {
       return
     } else {
       return (
-        <Button className="btn btn-secondary" alt="Previous Step" onClick={this.decrementStep.bind(this)} disabled={this.state.step === 1}>
+        <Button className="btn btn-secondary traverse" alt="Previous Step" onClick={this.decrementStep.bind(this)} disabled={this.state.step === 1}>
           <IconArrowOpenLeftSolid/>
         </Button>
       )
@@ -623,7 +758,7 @@ class AssignObservers extends React.Component {
       return
     } else {
       return (
-        <Button className={`btn btn-primary ${this.state.step === 3 ? 'invisible' : ''}`} alt="Next Step" onClick={this.incrementStep.bind(this)} disabled={!this.state.observer.id}>
+        <Button className={`btn btn-primary traverse ${this.state.step === 3 ? 'invisible' : ''}`} alt="Next Step" onClick={this.incrementStep.bind(this)} disabled={!this.state.observer.id}>
           <IconArrowOpenRightSolid/>
         </Button>
       )
