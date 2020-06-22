@@ -409,6 +409,8 @@ class AssignObservers extends React.Component {
     this.setState({
       observer: {},
       observeesToAdd: [],
+      observeesToRemove: [],
+      currentObserversObservees: [],
       step: 1,
       searchTerm: ''
     })
@@ -594,7 +596,7 @@ class AssignObservers extends React.Component {
               </div>
               <div>
                 <button className="btn btn-small review-users" onClick={() => this.setState({step: 5})}>Review Users</button>
-                <button className="btn btn-small clear-all font-bold">Clear All</button>
+                <button className="btn btn-small clear-all font-bold" onClick={() => this.deleteAllObservees.bind(this)}>Clear All</button>
               </div>
             </ObserveeWarning>
           }
@@ -712,8 +714,8 @@ class AssignObservers extends React.Component {
           })}
         </PillContainer>
         <div className="button-container">
-          <Button className="btn btn-primary submit-button" onClick={this.submitObserver.bind(this)} disabled={this.state.observeesToRemove.length === 0}>Remove Selected</Button>
-          <Button className="btn clear-all" onClick={this.submitObserver.bind(this)}>Clear All</Button>
+          <Button className="btn btn-primary submit-button" onClick={this.deleteObservees.bind(this)} disabled={this.state.observeesToRemove.length === 0}>Remove Selected</Button>
+          <Button className="btn clear-all" onClick={this.deleteAllObservees.bind(this)}>Clear All</Button>
         </div>
       </div>
     )
@@ -792,18 +794,21 @@ class AssignObservers extends React.Component {
   }
 
   deleteObservees() {
-    // For testing
-    this.setState({step: 6})
+    let observer_id = this.state.observer.id
+    if (!observer_id) { return false }
+    console.log(this.state.observeesToRemove)
+    axios.post(
+      `${ENV.BASE_URL}/api/v1/users/${observer_id}/bulk_destroy_observees`,
+      { observee_ids: this.state.observeesToRemove.map(obs => obs.id) }
+    ).then(response => {
+      this.setState({step: 6})
+    }).catch(error => {
+      $.flashError(I18n.t('failed_to_remove_observers', 'There was a problem removing these users.  Please try again.'))
+    })
+  }
 
-    // TODO: Once the delete endpoint is ready, uncomment this and use it instead
-    // axios.delete(
-    //   `${ENV.BASE_URL}/api/v1/users/${observer_id}/bulk_delete_observees`,
-    //   { observee_ids: this.state.observeesToRemove.map(obs => obs.id) }
-    // ).then(response => {
-    //   this.setState({step: 6})
-    // }).catch(error => {
-    //   $.flashError(I18n.t('failed_to_remove_observers', 'There was a problem removing these users.  Please try again.'))
-    // })
+  deleteAllObservees() {
+    this.setState({observeesToRemove: this.state.observeesToRemove.concat(this.state.currentObserversObservees)}, () => this.deleteObservees)
   }
   
   render() {
