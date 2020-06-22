@@ -11,6 +11,7 @@ import IconCheckSolid from 'instructure-icons/lib/Solid/IconCheckSolid'
 import IconEndSolid from 'instructure-icons/lib/Solid/IconEndSolid'
 import IconArrowOpenLeftSolid from 'instructure-icons/lib/Solid/IconArrowOpenLeftSolid'
 import IconArrowOpenRightSolid from 'instructure-icons/lib/Solid/IconArrowOpenRightSolid'
+import IconDocumentSolid from 'instructure-icons/lib/Solid/IconDocumentSolid'
 
 const Card = styled.div`
   border: 1px solid #D7D7D7;
@@ -288,6 +289,7 @@ class AssignObservers extends React.Component {
       current: collection.urls.current,
       observer: {},
       observeesToAdd: [],
+      observeesToRemove: [],
       currentObserversObservees: [],
       step: 1,
       searchTerm: '',
@@ -356,6 +358,8 @@ class AssignObservers extends React.Component {
         observer: user,
         observeesToAdd: this.state.observeesToAdd.filter(obs => obs.id !== user.id),
         searchTerm: ''
+      }, () => {
+        this.getCurrentObservees()
       })
     }
   }
@@ -440,6 +444,10 @@ class AssignObservers extends React.Component {
         return this.stepThree()
       case 4:
         return this.stepFour()
+      case 5:
+        return this.bulkRemove()
+      case 6:
+        return this.bulkRemoveSuccess()
       default:
         return this.stepOne()
     }
@@ -455,6 +463,9 @@ class AssignObservers extends React.Component {
         <p className="descriptive-text">This is the person that will be observing multiple students at one time.</p>
         {this.state.observer.name &&
           <Observer>Selected: <span className="font-bold">{this.state.observer.name}</span></Observer>
+        }
+        {this.state.currentObserversObservees.length > 0 && 
+          <p>I have observees</p>
         }
         <UserSearch>
           {this.searchInput()}
@@ -542,6 +553,59 @@ class AssignObservers extends React.Component {
     )
   }
 
+  bulkRemove() {
+    return (
+      <div className="card-content">
+        <Icon role="presentation">
+          <IconDocumentSolid/>
+        </Icon>
+        <div>
+          <h3>Review Observees</h3>
+          <p className="descriptive-text">
+            These are the users that are currently being observed.
+          </p>
+          <Observer>Observer: <span className="font-bold">{this.state.observer.name}</span></Observer>
+        </div>
+        <PillContainer>
+          {this.state.observeesToRemove.map(obs => {
+            return (
+              <Pill>
+                <p>{obs.name}</p>
+                <a alt={"Remove " + obs.name} onClick={(() => this.remove(obs))}>
+                  <IconEndSolid/>
+                </a>
+              </Pill>
+            )
+          })}
+        </PillContainer>
+        <Button className="btn btn-primary submit-button" onClick={this.submitObserver.bind(this)} disabled={this.state.observeesToRemove.length === 0}>Save and Continue</Button>
+        <Button className="btn clear-all-button" onClick={this.submitObserver.bind(this)} disabled={this.state.observeesToRemove.length === 0}>Save and Continue</Button>
+      </div>
+    )
+  }
+
+  bulkRemoveSuccess() {
+    return (
+      <Zero>
+        <object type="image/svg+xml" data="../../images/svg_illustrations/sunny.svg"></object>
+        <h3>All Clear!</h3>
+        <p className="descriptive-text">
+          A total of <span className="font-bold">{this.state.observeesToRemove.length}</span> observees were removed from <span className="font-bold">{this.state.observer.name}:</span>
+        </p>
+        <PillContainer>
+          {this.state.observeesToRemove.map(obs => {
+            return(
+              <Pill>
+                <p>{obs.name}</p>
+              </Pill>
+            )
+          })}
+        </PillContainer>
+        <Button className="btn start-over-button btn-primary" onClick={this.restart.bind(this)}>Back</Button>
+      </Zero>
+    )
+  }
+
   setPreviousStepButton() {
     if (this.state.step === 4) {
       return
@@ -588,8 +652,23 @@ class AssignObservers extends React.Component {
     ).then(response => {
       this.setState({step: 4})
     }).catch(error => {
-      $.flashError(I18n.t('failed_to_assign_observers', 'Request failed. Try again.'))
+      $.flashError(I18n.t('failed_to_assign_observers', 'There was a problem adding these users.  Please try again.'))
     })
+  }
+
+  deleteObservees() {
+    // For testing
+    this.setState({step: 6})
+
+    // TODO: Once the delete endpoint is ready, uncomment this and use it instead
+    // axios.delete(
+    //   `${ENV.BASE_URL}/api/v1/users/${observer_id}/bulk_delete_observees`,
+    //   { observee_ids: this.state.observeesToRemove.map(obs => obs.id) }
+    // ).then(response => {
+    //   this.setState({step: 6})
+    // }).catch(error => {
+    //   $.flashError(I18n.t('failed_to_remove_observers', 'There was a problem removing these users.  Please try again.'))
+    // })
   }
   
   render() {
