@@ -1,6 +1,6 @@
 import React from 'react'
 import $ from 'jquery'
-import 'datatables.net'
+import 'datatables.min'
 import axios from 'axios';
 
 class CSAlerts extends React.Component {
@@ -184,7 +184,6 @@ class CSAlerts extends React.Component {
   }
 
   render() {
-    console.log(this.props.alerts)
     return (
       <div key={this.state.alertType}>
         <div className="alerts-table-heading">
