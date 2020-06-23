@@ -748,7 +748,7 @@ class AssignObservers extends React.Component {
       return
     } else {
       return (
-        <Button className="btn btn-secondary traverse" alt="Previous Step" onClick={this.decrementStep.bind(this)} disabled={this.state.step === 1}>
+        <Button className={`btn btn-secondary traverse ${this.state.step === 6 ? 'invisible' : ''}`} alt="Previous Step" onClick={this.decrementStep.bind(this)} disabled={this.state.step === 1}>
           <IconArrowOpenLeftSolid/>
         </Button>
       )
@@ -760,7 +760,7 @@ class AssignObservers extends React.Component {
       return
     } else {
       return (
-        <Button className={`btn btn-primary traverse ${this.state.step === 3 ? 'invisible' : ''}`} alt="Next Step" onClick={this.incrementStep.bind(this)} disabled={!this.state.observer.id}>
+        <Button className={`btn btn-primary traverse ${[3, 5, 6].includes(this.state.step) ? 'invisible' : ''}`} alt="Next Step" onClick={this.incrementStep.bind(this)} disabled={!this.state.observer.id}>
           <IconArrowOpenRightSolid/>
         </Button>
       )
@@ -808,7 +808,8 @@ class AssignObservers extends React.Component {
   }
 
   deleteAllObservees() {
-    this.setState({observeesToRemove: this.state.observeesToRemove.concat(this.state.currentObserversObservees)}, () => this.deleteObservees)
+    // WHY DON'T YOU WORK!?!?!?!??
+    this.setState({observeesToRemove: [...this.state.observeesToRemove, ...this.state.currentObserversObservees]}, this.deleteObservees())
   }
   
   render() {
