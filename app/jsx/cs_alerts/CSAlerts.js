@@ -37,8 +37,6 @@ class CSAlerts extends React.Component {
     );
     if (this.state.all_checked) {
       $(':checkbox:visible').prop({checked: true, disabled: true})
-      let allAlertIds = this.state.alerts.map(alert => alert.alert_id)
-      this.setState({deletable_ids: allAlertIds})
     } else {
       $(':checkbox:visible').get().forEach(box => {
         let bool = this.state.deletable_ids.includes($(box).val())
@@ -106,6 +104,15 @@ class CSAlerts extends React.Component {
   }
 
   bulkDelete() {
+    if (this.state.all_checked) {
+      let allAlertIds = this.state.alerts.map(alert => alert.alert_id)
+      this.setState({deletable_ids: allAlertIds}, this.sendBulkDelete)
+    } else {
+      this.sendBulkDelete()
+    }
+  }
+
+  sendBulkDelete() {
     if (this.state.deletable_ids.length) {
       let loader = $(".dot-loader.lil-dots")
       loader.removeClass("hidden")
