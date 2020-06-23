@@ -15,7 +15,6 @@ class CSAlerts extends React.Component {
       bulk_checks: false,
       all_checked: false,
       deletable_ids: [],
-      recently_deleted: [],
       loading: false,
     }
   }
@@ -59,7 +58,7 @@ class CSAlerts extends React.Component {
 
     this.setState({deletable_ids: deletable_ids}, () => {
       $("label[for=bulk-delete-select]").text(
-        `Select All (${this.state.deletable_ids.length} Selected)`
+        this.state.deletable_ids.length ? `Select All (${this.state.deletable_ids.length} Selected)` : "Select All"
       )
     })
   }
@@ -127,7 +126,8 @@ class CSAlerts extends React.Component {
             this.removeRow(id);
           })
 
-          this.setState({deletable_ids: []})
+          $('#bulk-delete-select').prop({checked: false})
+          this.setState({deletable_ids: [], all_checked: false})
         })
       }).catch((error) => {
         $.flashError('Request failed. Please Try again.')
@@ -143,7 +143,7 @@ class CSAlerts extends React.Component {
 
   initializeDataTable() {
     this.$el = $(this.el);
-    let self = this;
+
     this.setState({dataTable: this.$el.DataTable({
         "columnDefs": [
           {
