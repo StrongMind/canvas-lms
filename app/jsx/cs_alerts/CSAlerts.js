@@ -37,6 +37,8 @@ class CSAlerts extends React.Component {
     );
     if (this.state.all_checked) {
       $(':checkbox:visible').prop({checked: true, disabled: true})
+      let allAlertIds = this.state.alerts.map(alert => alert.alert_id)
+      this.setState({deletable_ids: allAlertIds})
     } else {
       $(':checkbox:visible').get().forEach(box => {
         let bool = this.state.deletable_ids.includes($(box).val())
@@ -94,17 +96,26 @@ class CSAlerts extends React.Component {
   }
 
   removeRow(id) {
-    this.state.dataTable.row($(this.refs[`row-${id}`])).remove().draw(false)
+    let fadeRow = $(this.refs[`row-${id}`])
+    fadeRow.fadeOut(400, () => {
+      this.state.dataTable.row(fadeRow).remove().draw(false)
+    })
+
     $(this.refs["alertCount"]).text(this.state.alerts.length)
     $("label[for=bulk-delete-select]").text("Select All")
   }
 
   bulkDelete() {
     if (this.state.deletable_ids.length) {
+      let loader = $(".dot-loader.lil-dots")
+      loader.removeClass("hidden")
+
       axios.post("/cs_alerts/bulk_delete", { alert_ids: this.state.deletable_ids }).then((response) => {
         this.setState({
           alerts: this.state.alerts.filter(alert => !this.state.deletable_ids.includes(alert.alert_id)),
         }, () => {
+          loader.addClass("hidden")
+
           this.state.deletable_ids.forEach(id => {
             this.removeRow(id);
           })
@@ -198,7 +209,7 @@ class CSAlerts extends React.Component {
               onClick={this.bulkDelete.bind(this)}>
               Confirm Deletion
             </button>
-            <div className="dot-loader hidden"></div>
+            <div className="lil-dots dot-loader hidden"></div>
           </div>
         </div>
 

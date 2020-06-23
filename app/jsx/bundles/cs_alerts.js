@@ -8,6 +8,8 @@ const $el = document.getElementById('cs-alerts-container')
 let alerts = []
 
 axios.get("/cs_alerts/teacher_alerts").then((response) => {
+  $(".dot-overlay").fadeOut();
+
   alerts = response.data
   ReactDOM.render(
     <CSAlerts
