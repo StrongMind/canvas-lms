@@ -808,8 +808,7 @@ class AssignObservers extends React.Component {
   }
 
   deleteAllObservees() {
-    // WHY DON'T YOU WORK!?!?!?!??
-    this.setState({observeesToRemove: [...this.state.observeesToRemove, ...this.state.currentObserversObservees]}, this.deleteObservees())
+    this.setState({observeesToRemove: [...this.state.observeesToRemove, ...this.state.currentObserversObservees]}, this.deleteObservees)
   }
   
   render() {
