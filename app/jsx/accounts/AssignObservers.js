@@ -602,7 +602,9 @@ class AssignObservers extends React.Component {
                 </p>
               </div>
               <div>
-                <button className="btn btn-small review-users" onClick={() => this.setState({step: 5, removeAllDisabled: false})}>Review Users</button>
+                <button className="btn btn-small review-users" 
+                  onClick={() => this.setState({step: 5})}
+                  disabled={this.state.removeAllDisabled}>Review Users</button>
                 <button className="btn btn-small clear-all font-bold"
                  onClick={() => { this.setState({removeAllDisabled: true}, this.deleteAllObservees) }} 
                  disabled={this.state.removeAllDisabled}>Clear All</button>
