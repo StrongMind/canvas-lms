@@ -703,9 +703,9 @@ class AssignObservers extends React.Component {
         <PillContainer>
           {this.state.currentObserversObservees.map(obs => {
             return (
-              <Pill className={`observees-to-remove ${this.state.observeesToRemove.some(obj => obj.id === obs.id) ? 'selected' : ''}`}>
+              <Pill className={`observees-to-remove ${this.observeeAlreadyBeingRemoved(obs) ? 'selected' : ''}`}>
                 <a alt={"Remove " + obs.name}
-                   onClick={() => this.setState({observeesToRemove: this.state.observeesToRemove.concat(obs)})}>
+                   onClick={() => this.addToRemoveIfNecessary(obs)}>
                   <p>{obs.name}</p>
                   <IconCheckSolid/>
                 </a>
@@ -719,6 +719,18 @@ class AssignObservers extends React.Component {
         </div>
       </div>
     )
+  }
+
+  // Helpers for bulkremove
+  observeeAlreadyBeingRemoved(obs) {
+    return this.state.observeesToRemove.some(obj => obj.id === obs.id)
+  }
+
+  // Helpers for bulkremove
+  addToRemoveIfNecessary(obs) {
+    if (!this.observeeAlreadyBeingRemoved(obs)) {
+      this.setState({observeesToRemove: this.state.observeesToRemove.concat(obs)})
+    }
   }
 
   bulkRemoveSuccess() {
@@ -808,6 +820,7 @@ class AssignObservers extends React.Component {
   }
 
   deleteAllObservees() {
+    // works now
     this.setState({observeesToRemove: [...this.state.observeesToRemove, ...this.state.currentObserversObservees]}, this.deleteObservees)
   }
   
