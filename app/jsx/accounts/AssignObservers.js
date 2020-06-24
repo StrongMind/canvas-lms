@@ -596,7 +596,7 @@ class AssignObservers extends React.Component {
               </div>
               <div>
                 <button className="btn btn-small review-users" onClick={() => this.setState({step: 5})}>Review Users</button>
-                <button className="btn btn-small clear-all font-bold" onClick={() => this.deleteAllObservees.bind(this)}>Clear All</button>
+                <button className="btn btn-small clear-all font-bold" onClick={this.deleteAllObservees.bind(this)}>Clear All</button>
               </div>
             </ObserveeWarning>
           }
@@ -808,7 +808,6 @@ class AssignObservers extends React.Component {
   deleteObservees() {
     let observer_id = this.state.observer.id
     if (!observer_id) { return false }
-    console.log(this.state.observeesToRemove)
     axios.post(
       `${ENV.BASE_URL}/api/v1/users/${observer_id}/bulk_destroy_observees`,
       { observee_ids: this.state.observeesToRemove.map(obs => obs.id) }
