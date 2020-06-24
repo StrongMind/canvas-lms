@@ -729,7 +729,8 @@ class AssignObservers extends React.Component {
         <div className="button-container">
           <Button className="btn btn-primary submit-button"
             onClick={() => { this.setState({removeDisabled: true}, this.deleteObservees) }} 
-            disabled={this.state.removeDisabled || this.state.observeesToRemove.length === 0}>Remove Selected</Button>
+            disabled={this.state.removeDisabled || this.state.removeAllDisabled || this.state.observeesToRemove.length === 0}
+          >Remove Selected</Button>
           <Button className="btn clear-all"
             onClick={() => { this.setState({removeAllDisabled: true}, this.deleteAllObservees) }} 
             disabled={this.state.removeAllDisabled}>Clear All</Button>
@@ -836,7 +837,7 @@ class AssignObservers extends React.Component {
   }
 
   deleteAllObservees() {
-    this.setState({observeesToRemove: [...this.state.observeesToRemove, ...this.state.currentObserversObservees]}, this.deleteObservees)
+    this.setState({observeesToRemove: this.state.currentObserversObservees}, this.deleteObservees)
   }
   
   render() {
