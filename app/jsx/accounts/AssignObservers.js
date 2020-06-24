@@ -400,6 +400,7 @@ class AssignObservers extends React.Component {
       searchTerm: '',
       addDisabled: false,
       removeDisabled: false,
+      removeAllDisabled: false,
     }
   }
   
@@ -417,6 +418,7 @@ class AssignObservers extends React.Component {
       searchTerm: '',
       addDisabled: false,
       removeDisabled: false,
+      removeAllDisabled: false,
     })
   }
 
@@ -542,7 +544,8 @@ class AssignObservers extends React.Component {
   }
 
   decrementStep() {
-    this.setState({step: this.state.step - 1})
+    // need to go back to step 1 if on review removals step
+    this.setState({step: this.state.step === 5 ? 1 : this.state.step - 1})
   }
 
   chooseStep() {
@@ -599,8 +602,10 @@ class AssignObservers extends React.Component {
                 </p>
               </div>
               <div>
-                <button className="btn btn-small review-users" onClick={() => this.setState({step: 5})}>Review Users</button>
-                <button className="btn btn-small clear-all font-bold" onClick={this.deleteAllObservees.bind(this)}>Clear All</button>
+                <button className="btn btn-small review-users" onClick={() => this.setState({step: 5, removeAllDisabled: false})}>Review Users</button>
+                <button className="btn btn-small clear-all font-bold"
+                 onClick={() => { this.setState({removeAllDisabled: true}, this.deleteAllObservees) }} 
+                 disabled={this.state.removeAllDisabled}>Clear All</button>
               </div>
             </ObserveeWarning>
           }
@@ -665,7 +670,7 @@ class AssignObservers extends React.Component {
           })}
         </PillContainer>
         <Button className="btn btn-primary submit-button" 
-          onClick={() => { this.setState({addDisabled: true}, this.submitObserver()) }} 
+          onClick={() => { this.setState({addDisabled: true}, this.submitObserver) }} 
           disabled={this.state.addDisabled || this.state.observeesToAdd.length === 0}>Submit</Button>
       </div>
     )
@@ -721,9 +726,11 @@ class AssignObservers extends React.Component {
         </PillContainer>
         <div className="button-container">
           <Button className="btn btn-primary submit-button"
-            onClick={() => { this.setState({removeDisabled: true}, this.deleteObservees()) }} 
+            onClick={() => { this.setState({removeDisabled: true}, this.deleteObservees) }} 
             disabled={this.state.removeDisabled || this.state.observeesToRemove.length === 0}>Remove Selected</Button>
-          <Button className="btn clear-all" onClick={this.deleteAllObservees.bind(this)}>Clear All</Button>
+          <Button className="btn clear-all"
+            onClick={() => { this.setState({removeAllDisabled: true}, this.deleteAllObservees) }} 
+            disabled={this.state.removeAllDisabled}>Clear All</Button>
         </div>
       </div>
     )
@@ -764,7 +771,7 @@ class AssignObservers extends React.Component {
   }
 
   setPreviousStepButton() {
-    if (this.state.step === 4) {
+    if (this.state.step === 4 || this.state.removeAllDisabled) {
       return
     } else {
       return (
@@ -776,7 +783,7 @@ class AssignObservers extends React.Component {
   }
   
   setNextStepButton() {
-    if (this.state.step === 4) {
+    if (this.state.step === 4 || this.state.removeAllDisabled) {
       return
     } else {
       return (
@@ -827,7 +834,6 @@ class AssignObservers extends React.Component {
   }
 
   deleteAllObservees() {
-    // works now
     this.setState({observeesToRemove: [...this.state.observeesToRemove, ...this.state.currentObserversObservees]}, this.deleteObservees)
   }
   
