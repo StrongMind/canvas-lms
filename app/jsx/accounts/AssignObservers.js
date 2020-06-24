@@ -398,6 +398,8 @@ class AssignObservers extends React.Component {
       currentObserversObservees: [],
       step: 1,
       searchTerm: '',
+      addDisabled: false,
+      removeDisabled: false,
     }
   }
   
@@ -412,7 +414,9 @@ class AssignObservers extends React.Component {
       observeesToRemove: [],
       currentObserversObservees: [],
       step: 1,
-      searchTerm: ''
+      searchTerm: '',
+      addDisabled: false,
+      removeDisabled: false,
     })
   }
 
@@ -660,7 +664,9 @@ class AssignObservers extends React.Component {
             )
           })}
         </PillContainer>
-        <Button className="btn btn-primary submit-button" onClick={this.submitObserver.bind(this)} disabled={this.state.observeesToAdd.length === 0}>Submit</Button>
+        <Button className="btn btn-primary submit-button" 
+          onClick={() => { this.setState({addDisabled: true}, this.submitObserver()) }} 
+          disabled={this.state.addDisabled || this.state.observeesToAdd.length === 0}>Submit</Button>
       </div>
     )
   }
@@ -714,7 +720,9 @@ class AssignObservers extends React.Component {
           })}
         </PillContainer>
         <div className="button-container">
-          <Button className="btn btn-primary submit-button" onClick={this.deleteObservees.bind(this)} disabled={this.state.observeesToRemove.length === 0}>Remove Selected</Button>
+          <Button className="btn btn-primary submit-button"
+            onClick={() => { this.setState({removeDisabled: true}, this.deleteObservees()) }} 
+            disabled={this.state.removeDisabled || this.state.observeesToRemove.length === 0}>Remove Selected</Button>
           <Button className="btn clear-all" onClick={this.deleteAllObservees.bind(this)}>Clear All</Button>
         </div>
       </div>
@@ -737,7 +745,7 @@ class AssignObservers extends React.Component {
     return (
       <Zero>
         <object type="image/svg+xml" data="../../images/svg_illustrations/sunny.svg"></object>
-        <h3>All Clear!</h3>
+        <h3>Success!</h3>
         <p className="descriptive-text">
           A total of <span className="font-bold">{this.state.observeesToRemove.length}</span> observees were removed from <span className="font-bold">{this.state.observer.name}:</span>
         </p>
