@@ -13,7 +13,7 @@
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^4.0.8",
     "sanitize.css": "^5.0.0",
-    "strongmind-icons": "6.0.1",
+    "strongmind-icons": "https://github.com/StrongMind/strongmind-icons.git#2981d09634e6255b520622f7a05b2152fe4f0294",
     "styled-components": "^2.4.0",
     "tinymce": "4.5.7"
   },
