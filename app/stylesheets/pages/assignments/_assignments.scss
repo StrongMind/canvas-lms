@@ -172,6 +172,9 @@
   .details {
     border: none;
     padding: 0;
+    svg {
+      max-width: 100px;
+    }
     h3 {
       margin: 0;
     }
@@ -210,6 +213,9 @@
           }
         }
       }
+    }
+
+    &.assignment-submitted {
     }
   }
 }
