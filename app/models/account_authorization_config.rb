@@ -245,7 +245,7 @@ class AccountAuthorizationConfig < ActiveRecord::Base
         roles_to_add.each do |role|
           account.account_users.create!(user: user, role: role)
         end
-        account_users_to_delete.each(&:destroy)
+        account_users_to_delete.each(&:destroy) unless SettingsService.get_settings(object: 'school', id: 1)['identity_server_enabled']
         account_users_to_activate.each(&:reactivate)
       when 'sis_user_id', 'integration_id'
         pseudonym[attribute] = value
