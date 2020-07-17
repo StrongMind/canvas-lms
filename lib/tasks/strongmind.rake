@@ -240,7 +240,7 @@ namespace :strongmind do
 
     SettingsService.update_settings(
         id: '1',
-        setting: "identity_domain",
+        setting: "identity_provider_id",
         value: id,
         object: "school"
       )
