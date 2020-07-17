@@ -229,4 +229,22 @@ namespace :strongmind do
       )
     end
   end
+
+  desc "Set Identity Server 2.0 Auth Provider"
+  task :set_id_server_auth, [:id] => :environment do |task, args|
+    id = args[:id] ? args[:id].to_i : AccountAuthorizationConfig.last.id
+    unless id
+      puts "No id found"
+      return
+    end
+
+    SettingsService.update_settings(
+        id: '1',
+        setting: "identity_domain",
+        value: id,
+        object: "school"
+      )
+
+    puts "Set auth provider to id #{id}"
+  end
 end
