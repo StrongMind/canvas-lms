@@ -2480,7 +2480,7 @@ class UsersController < ApplicationController
           @user.save_with_or_without_identity_create(
             @pseudonym.unique_id,
             force: true,
-            provisioned: params[:identity_user_provisioned]
+            provisioned: params[:identity_user_provisioned].present?
           )
         end
       rescue ActiveRecord::RecordInvalid => e
