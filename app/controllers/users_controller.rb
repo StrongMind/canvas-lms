@@ -2477,11 +2477,18 @@ class UsersController < ApplicationController
 
       begin
         identity_user_provisioned = params[:identity_user_provisioned].present?
-        @pseudonym.get_identity_username? if identity_user_provisioned
+        identity_collision = false
+
+        if identity_user_provisioned
+          @pseudonym.get_identity_username?
+        elsif Pseudonym.exists?(unique_id: @pseudonym.unique_id)
+          identity_collision = true
+          @pseudonym.unique_id = SecureRandom.hex(2)
+        end
 
         User.transaction do
           @user.save_with_or_without_identity_create(
-            @pseudonym.unique_id,
+            identity_collision ? params[:pseudonym][:unique_id] : @pseudonym.unique_id,
             force: true,
             provisioned: identity_user_provisioned
           )
