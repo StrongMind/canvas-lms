@@ -252,4 +252,40 @@ namespace :strongmind do
 
     puts "Set auth provider to id #{id}"
   end
+
+  desc "Enable Attendance Lockout Check V2"
+  task :lockout_check_v2, [:auth, :url, :school_name] => :environment do |task, args|
+    if !args[:auth]
+      puts "Please supply an auth token."
+      return
+    end
+
+    SettingsService.update_settings(
+        id: '1',
+        setting: "v2_attendance_lockout_auth",
+        value: args[:auth],
+        object: "school"
+      )
+
+    SettingsService.update_settings(
+      id: '1',
+      setting: "v2_attendance_lockout_url",
+      value: args[:url] || "strongmindappapi.azurewebsites.net",
+      object: "school"
+    )
+
+    SettingsService.update_settings(
+      id: '1',
+      setting: "idmap_school_name",
+      value: args[:school_name] || IdentifierMapperService::Client.instance.get_powerschool_info.try(:fetch, :name, nil) || false,
+      object: "school"
+    )
+
+    SettingsService.update_settings(
+        id: '1',
+        setting: "v2_attendance_lockout_enabled",
+        value: true,
+        object: "school"
+      )
+  end
 end
