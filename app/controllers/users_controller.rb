@@ -2483,7 +2483,7 @@ class UsersController < ApplicationController
           @pseudonym.get_identity_username?
         elsif Pseudonym.exists?(unique_id: @pseudonym.unique_id)
           identity_collision = true
-          @pseudonym.unique_id = SecureRandom.hex(2)
+          @pseudonym.unique_id = "#{SecureRandom.hex(2)} #{@user.name}"
         end
 
         User.transaction do
