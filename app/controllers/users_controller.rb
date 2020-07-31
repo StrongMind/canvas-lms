@@ -2486,7 +2486,7 @@ class UsersController < ApplicationController
 
         User.transaction do
           @user.save_with_or_without_identity_create(
-            identity_user_provisioned ? params[:pseudonym][:unique_id] : @pseudonym.unique_id,
+            params[:pseudonym][:unique_id],
             force: true,
             provisioned: identity_user_provisioned
           )
