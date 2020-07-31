@@ -2481,7 +2481,7 @@ class UsersController < ApplicationController
         if identity_user_provisioned
           @pseudonym.get_identity_username?
         else
-          @pseudonym.unique_id = "#{SecureRandom.hex(2)} #{@user.name}"
+          @pseudonym.unique_id = "#{SecureRandom.hex(2)} #{@user.name.parameterize(separator: ' ')}"
         end
 
         User.transaction do
