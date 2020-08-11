@@ -32,7 +32,7 @@ group :test do
   # gem 'webmock',              '~> 3.4.2'
 
 
-  gem 'rails-dom-testing', '2.0.3'
+  gem 'rails-dom-testing'
   gem 'rails-controller-testing', '1.0.2'
 
   gem 'gergich', '0.1.15', require: false
