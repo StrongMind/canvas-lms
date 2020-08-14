@@ -286,8 +286,8 @@ namespace :strongmind do
         res = HTTParty.post(
           ENV['BAND_AID_SERVER'],
           headers: {
-              "Content-Type": "application/json",
-              "CanvasAuth": ENV['BAND_AID_AUTH']
+              "Content-Type" => "application/json",
+              "CanvasAuth" =>  ENV['BAND_AID_AUTH']
             },
             body: user_data.to_json
         )
