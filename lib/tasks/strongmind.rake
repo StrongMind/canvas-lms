@@ -252,4 +252,34 @@ namespace :strongmind do
 
     puts "Set auth provider to id #{id}"
   end
+
+  desc "hindsight bandaid"
+  task :hingsight_bandaid => :environment do
+    users = StudentEnrollment.where(workflow_state: 'active').map(&:user).uniq
+    users.each do |user|
+      user_data = {
+        partner_name: SettingsService.get_settings(object: :user, id: user.id)['partner_name'],
+        canvasUserId: user.id
+      }
+    
+      #enrollments = user.enrollments.where(workflow_state: 'active').all.map {|en| {canvasId: en.course.id, name: en.course.name, courseStartAt: en.course.start_at.to_s, courseEndAt: en.course.conclude_at.to_s}}
+      enrollments = []
+      user.enrollments.where(workflow_state: 'active').each do |en|
+        cs = CourseSection.where(course_id: en.course.id) do |section|
+          section.users.select {|csu| csu.id == user.id}[0]
+        end[0]
+
+        enrollments << {canvasId: en.course.id, name: en.course.name, courseStartAt: en.course.start_at.to_s, courseEndAt: en.course.conclude_at.to_s, sectionId: cs.sis_source_id, sectionStartAt: cs.start_at.to_s, sectionEndAt: cs.end_at.to_s}
+      end
+
+      user_data['enrollments'] = enrollments
+      guardians = []
+      ObserverEnrollment.where(associated_user_id: user.id, workflow_state: 'active').each do |oe|
+        guardians << {canvasId: oe.user.id, identityIds: oe.user.pseudonyms.map(&:integration_id)}
+      end
+      user_data['guardians'] = guardians
+      puts user_data
+      puts "======="
+    end
+  end
 end
