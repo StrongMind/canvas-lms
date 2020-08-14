@@ -261,28 +261,40 @@ namespace :strongmind do
         partner_name: SettingsService.get_settings(object: :user, id: user.id)['partner_name'],
         canvasUserId: user.id,
         canvasDomain: ENV['CANVAS_DOMAIN'],
-        studentIdentityIds: user.pseudonyms.map(&:integration_id)
+        studentIdentityIds: user.pseudonyms.select(&:identity_pseudonym?).map(&:integration_id)
       }
     
       enrollments = []
       user.enrollments.where(workflow_state: 'active').each do |en|
-        if en.course.start_date > DateTime.parse('8/3/2020')
+        if en.course.start_at > DateTime.parse('8/3/2020')
           cs = CourseSection.where(course_id: en.course.id).find do |section|
             section.users.find {|csu| csu.id == user.id}
           end
 
-          enrollments << {canvasId: en.course.id, name: en.course.name, courseStartAt: en.course.start_at.to_s, courseEndAt: en.course.conclude_at.to_s, sectionId: cs.sis_source_id, sectionStartAt: cs.start_at.to_s, sectionEndAt: cs.end_at.to_s}
+          enrollments << {canvasCourseId: en.course.id, name: en.course.name, courseStartAt: en.course.start_at.to_s, courseEndAt: en.course.conclude_at.to_s, sectionId: cs.sis_source_id, sectionStartAt: cs.start_at.to_s, sectionEndAt: cs.end_at.to_s}
         end
       end
-      next if enrollments.empyty?
+      next if enrollments.empty?
 
       user_data['enrollments'] = enrollments
       guardians = []
       ObserverEnrollment.where(associated_user_id: user.id, workflow_state: 'active').each do |oe|
-        guardians << {canvasId: oe.user.id, identityIds: oe.user.pseudonyms.select(&:identity_pseudonym?).map(&:integration_id)}
+        guardians << {canvasUserId: oe.user.id, identityIds: oe.user.pseudonyms.select(&:identity_pseudonym?).map(&:integration_id)}
       end
-      user_data['guardians'] = guardians.uniq
-      puts user_data
+      user_data['guardians'] = guardians.uniq      
+      begin
+        res = HTTParty.post(
+          ENV['BAND_AID_SERVER'],
+          headers: {
+              "Content-Type": "application/json",
+              "CanvasAuth": ENV['BAND_AID_AUTH']
+            },
+            body: user_data.to_json
+        )
+        puts res
+      rescue => e
+        puts e
+      end
     end
   end
 end
