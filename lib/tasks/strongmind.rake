@@ -266,7 +266,9 @@ namespace :strongmind do
     
       enrollments = []
       user.enrollments.where(workflow_state: 'active').each do |en|
-        if en.course.start_at > DateTime.parse('8/3/2020')
+        if en.course.start_at && en.course.start_at > DateTime.parse('3/8/2020')
+          puts en.course.start_at
+
           cs = CourseSection.where(course_id: en.course.id).find do |section|
             section.users.find {|csu| csu.id == user.id}
           end
@@ -282,6 +284,7 @@ namespace :strongmind do
         guardians << {canvasUserId: oe.user.id, identityIds: oe.user.pseudonyms.select(&:identity_pseudonym?).map(&:integration_id)}
       end
       user_data['guardians'] = guardians.uniq      
+      puts user_data.to_json
       begin
         res = HTTParty.post(
           ENV['BAND_AID_SERVER'],
