@@ -172,7 +172,7 @@ module AuthenticationMethods
       @current_user = @current_pseudonym && @current_pseudonym.user
       current_integration_id = @current_pseudonym.try(:integration_id)
 
-      if current_integration_id && !Rails.cache.read("unlocked_#{current_integration_id}")
+      if current_integration_id && Rails.cache.read("unlocked_#{current_integration_id}")
         begin
           if AttendanceService.check_lockout(pseudonym: @current_pseudonym)
             redirect_to(ENV["ATTENDANCE_V2_REDIRECT_URL"])
