@@ -2488,7 +2488,8 @@ class UsersController < ApplicationController
           @user.save_with_or_without_identity_create(
             params[:pseudonym][:unique_id],
             force: true,
-            provisioned: identity_user_provisioned
+            provisioned: identity_user_provisioned,
+            sis_note: params[:sis_user_note]
           )
         end
       rescue ActiveRecord::RecordInvalid => e
