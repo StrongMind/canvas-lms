@@ -2488,9 +2488,14 @@ class UsersController < ApplicationController
           @user.save_with_or_without_identity_create(
             params[:pseudonym][:unique_id],
             force: true,
-            provisioned: identity_user_provisioned,
-            sis_note: params[:sis_user_note]
+            provisioned: identity_user_provisioned
           )
+
+          UserNote.create!(
+            user: @user,
+            note: params[:sis_user_note],
+            created_by_id: 1
+          ) if params[:sis_user_note].present?
         end
       rescue ActiveRecord::RecordInvalid => e
         errors = {
