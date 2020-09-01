@@ -182,7 +182,7 @@ class PageViewsController < ApplicationController
 
     date_options = {}
     url_options = {user_id: @user}
-    if start_time = CanvasTime.try_parse(params[:start_time]) || CanvasTime.try_parse(1.year.ago.to_s)
+    if start_time = CanvasTime.try_parse(params[:start_time])
       date_options[:oldest] = start_time
       url_options[:start_time] = params[:start_time]
     end

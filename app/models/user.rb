@@ -2871,9 +2871,9 @@ class User < ActiveRecord::Base
   end
 
   def adminable_accounts
-    Account.active.joins(:account_users).
-      where(account_users: {user_id: self.id}).
-      where.not(account_users: {workflow_state: 'deleted'})
+    @adminable_accounts ||= Account.active.joins(:account_users).
+                              where(account_users: {user_id: self.id}).
+                              where.not(account_users: {workflow_state: 'deleted'})
   end
 
   def all_paginatable_accounts
