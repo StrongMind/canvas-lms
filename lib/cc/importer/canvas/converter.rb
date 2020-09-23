@@ -57,7 +57,9 @@ module CC::Importer::Canvas
       set_progress(40)
       lti = CC::Importer::BLTIConverter.new
       res = lti.get_blti_resources(@manifest)
-      @course[:external_tools] = lti.convert_blti_links(res, self)
+      blti_links = lti.convert_blti_links(res, self)
+      filter_out_duplicate_tools!(blti_links)
+      @course[:external_tools] = blti_links
       set_progress(50)
       @course[:tool_profiles] = convert_tool_profiles
       set_progress(52)
@@ -103,6 +105,14 @@ module CC::Importer::Canvas
         end
       end
       @course[:external_content] = external_content
+    end
+
+    def filter_out_duplicate_tools!(blti_links)
+      blti_links.reject! do |blti_link|
+        Account.default.context_external_tools.find_by(
+          blti_link.slice(:url, :domain)
+        )
+      end
     end
   end
 end
