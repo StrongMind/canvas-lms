@@ -154,6 +154,7 @@ module LtiOutbound
       hash['oauth_callback'] = 'about:blank'
 
       @variable_expander.expand_variables!(hash)
+      Rails.logger.info("LTI Tool Launch Hash: #{hash.to_json}")
       hash
     end
 
