@@ -2342,6 +2342,9 @@ class UsersController < ApplicationController
     manage_user_logins = @context.grants_right?(@current_user, session, :manage_user_logins)
     self_enrollment = params[:self_enrollment].present?
     allow_non_email_pseudonyms = !force_validations && manage_user_logins || self_enrollment && params[:pseudonym_type] == 'username'
+    if @user.identity_enabled
+      allow_non_email_pseudonyms = true
+    end
     require_password = self_enrollment && allow_non_email_pseudonyms
     allow_password = require_password || manage_user_logins
 
