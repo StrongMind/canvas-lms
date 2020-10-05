@@ -77,7 +77,7 @@ class Quizzes::QuizEligibility
     course.enrollments.where(
       user: user,
       workflow_state: 'active'
-    ).where('end_at > ?', Time.now) && Time.now > course.end_at
+    ).where('end_at > ?', Time.now).any? && Time.now > course.end_at
   end
 
   def restricted?(section)
