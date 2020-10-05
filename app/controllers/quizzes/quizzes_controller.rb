@@ -936,6 +936,7 @@ class Quizzes::QuizzesController < ApplicationController
                                             session: session,
                                             remote_ip: request.remote_ip,
                                             access_code: params[:access_code])
+    Rails.logger.info "Can take is #{can_take}"
 
     if params[:take]
       reason = can_take.declined_reason_renders
