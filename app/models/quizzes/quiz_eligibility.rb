@@ -73,8 +73,10 @@ class Quizzes::QuizEligibility
     (section.start_at.nil? || section.start_at <= now) && (section.end_at.nil? || section.end_at >= now)
   end
 
-  def enrollment_date_extended?()
-    course.enrollments.where(workflow_state: 'active').where('end_date > ?', Time.now) && Time.now > course.end_date
+  def enrollment_date_extended?
+    course.enrollments.where(
+      workflow_state: 'active'
+    ).where('end_at > ?', Time.now) && Time.now > course.end_at
   end
 
   def restricted?(section)
