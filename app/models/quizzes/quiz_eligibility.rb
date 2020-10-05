@@ -75,6 +75,7 @@ class Quizzes::QuizEligibility
 
   def enrollment_date_extended?
     course.enrollments.where(
+      user: user,
       workflow_state: 'active'
     ).where('end_at > ?', Time.now) && Time.now > course.end_at
   end
