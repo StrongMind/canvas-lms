@@ -91,6 +91,7 @@ class Quizzes::QuizEligibility
   end
 
   def course_restrictions_apply?
+    return false if enrollment_date_extended?
     locked? || restricted_by_date?
   end
 
@@ -109,8 +110,6 @@ class Quizzes::QuizEligibility
     # Term dates override any others unless course date restrictions or
     # section date restrictions are selected.  Section dates override course
     # dates if section date restrictions apply
-
-    return false if enrollment_date_extended?
 
     any_section_restriction = false
 
