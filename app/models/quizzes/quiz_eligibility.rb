@@ -73,8 +73,8 @@ class Quizzes::QuizEligibility
     (section.start_at.nil? || section.start_at <= now) && (section.end_at.nil? || section.end_at >= now)
   end
 
-  def active_enrollment?()
-    course.enrollments.where(workflow_state: 'active').where('end_date > ?', Time.now)
+  def enrollment_date_extended?()
+    course.enrollments.where(workflow_state: 'active').where('end_date > ?', Time.now) && Time.now > course.end_date
   end
 
   def restricted?(section)
@@ -108,6 +108,8 @@ class Quizzes::QuizEligibility
     # section date restrictions are selected.  Section dates override course
     # dates if section date restrictions apply
 
+    return false if enrollment_date_extended?
+
     any_section_restriction = false
 
     term_active = active?(term)
@@ -129,9 +131,6 @@ class Quizzes::QuizEligibility
     return true if any_section_restriction
 
     return !course_active if course_restricted
-
-    #no other restrictions and enrollment later than today
-    return false if active_enrollment?
 
     # fall back to the term if there aren't any other restrictions
     !term_active
