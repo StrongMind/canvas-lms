@@ -35,7 +35,7 @@ class Quizzes::QuizEligibility
   def potentially_eligible?
     return true if quiz.grants_right?(user, session, :manage)
     return false unless course
-    return false if enrollment_date_extended?
+    return true if enrollment_date_extended?
     return false if inactive_student_with_private_course?
     !(course_restrictions_apply? || user_restrictions_apply?)
   end
