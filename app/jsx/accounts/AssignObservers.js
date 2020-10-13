@@ -508,11 +508,12 @@ class AssignObservers extends React.Component {
     }
   }
   
-  searchInput(obverver_step) {
+  searchInput(obverver_step=false) {
+    let observerStep = obverver_step;
     return (
       <fieldset>
           <IcInput type="search" placeholder="Search" value={this.state.searchTerm}
-            ref="userSearch" label="Find a user:" onInput={e => this.filterBySearch(e.target.value, observer_step)}></IcInput>
+            ref="userSearch" label="Find a user:" onInput={e => this.filterBySearch(e.target.value, observerStep)}></IcInput>
           {this.state.searchTerm !== '' &&
             <ClearSearch onClick={() => this.clearSearch()}>
               <IconEndSolid/>
@@ -613,7 +614,7 @@ class AssignObservers extends React.Component {
           }
         </ReactCSSTransitionGroup>
         <UserSearch>
-          {this.searchInput()}
+          {this.searchInput(true)}
         </UserSearch>
       </div>
     )
