@@ -508,12 +508,11 @@ class AssignObservers extends React.Component {
     }
   }
   
-  searchInput(obverver_step=false) {
-    let observerStep = obverver_step;
+  searchInput() {
     return (
       <fieldset>
           <IcInput type="search" placeholder="Search" value={this.state.searchTerm}
-            ref="userSearch" label="Find a user:" onInput={e => this.filterBySearch(e.target.value, observerStep)}></IcInput>
+            ref="userSearch" label="Find a user:" onInput={e => this.filterBySearch(e.target.value)}></IcInput>
           {this.state.searchTerm !== '' &&
             <ClearSearch onClick={() => this.clearSearch()}>
               <IconEndSolid/>
@@ -614,7 +613,7 @@ class AssignObservers extends React.Component {
           }
         </ReactCSSTransitionGroup>
         <UserSearch>
-          {this.searchInput(true)}
+          {this.searchInput()}
         </UserSearch>
       </div>
     )
@@ -798,12 +797,16 @@ class AssignObservers extends React.Component {
     }
   }
 
-  filterBySearch(search_term, observer_step) {
-    this.state.searchTerm = search_term;
+  filterBySearch(search_term) {
+    this.state.searchTerm = search_term
     let queryParams = `&search_term=${this.state.searchTerm}&assign_observers=true`;
-    if (observer_step) { queryParams = queryParams + '&no_students=true' }
+    let path = this.state.first.replaceAll('&no_students=true', '').replaceAll(queryParams, '');
 
-    return axios.get(this.state.first + queryParams).then(response => {
+    if (this.state.step === 1) {
+      queryParams = queryParams + '&no_students=true'
+    }
+
+    return axios.get(path + queryParams).then(response => {
       this.parseResponseLinks(response)
     })
   }
