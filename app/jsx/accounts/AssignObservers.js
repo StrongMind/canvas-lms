@@ -508,11 +508,11 @@ class AssignObservers extends React.Component {
     }
   }
   
-  searchInput() {
+  searchInput(obverver_step) {
     return (
       <fieldset>
           <IcInput type="search" placeholder="Search" value={this.state.searchTerm}
-            ref="userSearch" label="Find a user:" onInput={e => this.filterBySearch(e.target.value)}></IcInput>
+            ref="userSearch" label="Find a user:" onInput={e => this.filterBySearch(e.target.value, observer_step)}></IcInput>
           {this.state.searchTerm !== '' &&
             <ClearSearch onClick={() => this.clearSearch()}>
               <IconEndSolid/>
@@ -797,9 +797,12 @@ class AssignObservers extends React.Component {
     }
   }
 
-  filterBySearch(search_term) {
-    this.state.searchTerm = search_term
-    return axios.get(this.state.first + `&search_term=${this.state.searchTerm}&assign_observers=true`).then(response => {
+  filterBySearch(search_term, observer_step) {
+    this.state.searchTerm = search_term;
+    let queryParams = `&search_term=${this.state.searchTerm}&assign_observers=true`;
+    if (observer_step) { queryParams = queryParams + '&no_students=true' }
+
+    return axios.get(this.state.first + queryParams).then(response => {
       this.parseResponseLinks(response)
     })
   }

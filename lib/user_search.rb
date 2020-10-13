@@ -50,6 +50,11 @@ module UserSearch
         base_scope = base_scope.where("#{options[:role_filter_id]} IN 
                             (SELECT role_id FROM #{Enrollment.quoted_table_name}
                             WHERE #{Enrollment.quoted_table_name}.user_id = #{User.quoted_table_name}.id)")
+      elsif options[:assign_observers] && options[:no_students]
+        base_scope = base_scope.where.not(
+                       "3 IN (SELECT role_id FROM #{Enrollment.quoted_table_name}
+                       WHERE #{Enrollment.quoted_table_name}.user_id = #{User.quoted_table_name}.id)"
+                     )
       end
       base_scope
     end
