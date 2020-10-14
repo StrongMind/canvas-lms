@@ -51,17 +51,8 @@ module UserSearch
                             (SELECT role_id FROM #{Enrollment.quoted_table_name}
                             WHERE #{Enrollment.quoted_table_name}.user_id = #{User.quoted_table_name}.id)")
       elsif options[:assign_observers] && options[:no_students]
-        query = "'enrollments.id' IS NULL OR "
-
-        (1..7).each do |n|
-          next if n == 3
-          query += <<~SQL
-            #{n} IN (SELECT role_id FROM #{Enrollment.quoted_table_name}
-            WHERE #{Enrollment.quoted_table_name}.user_id = #{User.quoted_table_name}.id) #{"OR" if n < 7}
-          SQL
-        end
-
-        base_scope = base_scope.left_joins(:enrollments).where(query).distinct
+        base_scope = base_scope.left_joins(:enrollments)
+                     .where("enrollments.role_id IS NULL OR enrollments.role_id != ?", 3).distinct
       end
 
       base_scope
