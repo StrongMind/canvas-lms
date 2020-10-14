@@ -51,13 +51,22 @@ module UserSearch
                             (SELECT role_id FROM #{Enrollment.quoted_table_name}
                             WHERE #{Enrollment.quoted_table_name}.user_id = #{User.quoted_table_name}.id)")
       elsif options[:assign_observers] && options[:no_students]
-        base_scope = base_scope.where.not(
-                       "3 IN (SELECT role_id FROM #{Enrollment.quoted_table_name}
-                       WHERE #{Enrollment.quoted_table_name}.user_id = #{User.quoted_table_name}.id)"
-                     )
+        query = ""
+        non_student_roles.each do |n|
+          query +=(
+            "#{n} IN (SELECT role_id FROM #{Enrollment.quoted_table_name}
+            WHERE #{Enrollment.quoted_table_name}.user_id = #{User.quoted_table_name}.id) #{"OR" if n < 7} "
+          )
+        end
+
+        base_scope = base_scope.where(query)
       end
       base_scope
     end
+  end
+
+  def self.non_student_roles
+    Role.where(workflow_state: "built_in").where.not(name: "StudentEnrollment").pluck(:id)
   end
 
   def self.conditions_statement(search_term, options={})
