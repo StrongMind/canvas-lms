@@ -415,6 +415,7 @@ class AssignObservers extends React.Component {
       observeesToRemove: [],
       currentObserversObservees: [],
       step: 1,
+      tempSearchTerm: '',
       searchTerm: '',
       addDisabled: false,
       removeDisabled: false,
@@ -511,7 +512,7 @@ class AssignObservers extends React.Component {
   searchInput() {
     return (
       <fieldset>
-          <IcInput type="search" placeholder="Search" value={this.state.searchTerm}
+          <IcInput type="search" placeholder="Search" value={this.state.tempSearchTerm || this.state.searchTerm}
             ref="userSearch" label="Find a user:" onInput={e => this.debouncedFilterBySearch(e.target.value)}></IcInput>
           {this.state.searchTerm !== '' &&
             <ClearSearch onClick={() => this.clearSearch()}>
@@ -541,6 +542,27 @@ class AssignObservers extends React.Component {
     } else {
       this.setState({step: this.state.step + 1})
     }
+  }
+
+  debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+      var context = this, args = arguments;
+      var later = function() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    };
+  }
+
+  debouncedFilterBySearch(search_term) {
+    this.setState({tempSearchTerm: search_term});
+    let debouncedFilter = this.debounce(this.filterBySearch, 0).bind(this);
+    return debouncedFilter(search_term);
   }
 
   decrementStep() {
@@ -797,7 +819,8 @@ class AssignObservers extends React.Component {
     }
   }
 
-  filterBySearch() {
+  filterBySearch(search_term) {
+    this.state.searchTerm = search_term
     let queryParams = `&search_term=${this.state.searchTerm}&assign_observers=true`;
     let path = this.state.first.replaceAll('&no_students=true', '').replaceAll(queryParams, '');
 
@@ -808,27 +831,6 @@ class AssignObservers extends React.Component {
     return axios.get(path + queryParams).then(response => {
       this.parseResponseLinks(response)
     })
-  }
-
-  debounce(func, wait, immediate) {
-    var timeout;
-    return function() {
-      var context = this, args = arguments;
-      var later = function() {
-        timeout = null;
-        if (!immediate) func.apply(context, args);
-      };
-      var callNow = immediate && !timeout;
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-      if (callNow) func.apply(context, args);
-    };
-  }
-
-  debouncedFilterBySearch(search_term) {
-    this.setState({searchTerm: search_term});
-    let debouncedFilter = this.debounce(this.filterBySearch, 0).bind(this);
-    return debouncedFilter();
   }
   
   getCurrentObservees() {
