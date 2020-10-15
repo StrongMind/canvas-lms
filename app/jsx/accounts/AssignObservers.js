@@ -807,8 +807,8 @@ class AssignObservers extends React.Component {
     }
 
     return axios.get(path + queryParams).then(response => {
-      this.searchQueue.pop();
-      if (!this.searchQueue.length) {
+      this.state.searchQueue.pop();
+      if (!this.state.searchQueue.length) {
         this.parseResponseLinks(response);
       }
     })
@@ -830,7 +830,7 @@ class AssignObservers extends React.Component {
   }
 
   debouncedFilterBySearch(search_term) {
-    this.setState({searchTerm: search_term, searchQueue: this.searchQueue.concat([new Date])});
+    this.setState({searchTerm: search_term, searchQueue: this.state.searchQueue.concat([new Date])});
     let debouncedFilter = this.debounce(this.filterBySearch, 250).bind(this);
     return debouncedFilter();
   }
