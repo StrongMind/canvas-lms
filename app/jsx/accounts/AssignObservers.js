@@ -798,9 +798,9 @@ class AssignObservers extends React.Component {
     }
   }
 
-  filterBySearch() {
-    let queryParams = `&search_term=${this.state.searchTerm}&assign_observers=true`;
-    let path = this.state.first.replaceAll('&no_students=true', '').replaceAll(queryParams, '');
+  filterBySearch(search_term) {
+    let queryParams = `&search_term=${search_term}&assign_observers=true`;
+    let path = this.state.first.replaceAll('&no_students=true', '');
 
     if (this.state.step === 1) {
       queryParams = queryParams + '&no_students=true'
@@ -832,10 +832,10 @@ class AssignObservers extends React.Component {
   debouncedFilterBySearch(search_term) {
     this.setState({searchTerm: search_term});
     this.state.searchQueue.push(new Date());
-    let debouncedFilter = this.debounce(this.filterBySearch, 250).bind(this);
-    return debouncedFilter();
+    let debouncedFilter = this.debounce(this.filterBySearch, 0).bind(this);
+    return debouncedFilter(search_term);
   }
-  
+
   getCurrentObservees() {
     return axios.get(`${ENV.BASE_URL}/api/v1/users/${this.state.observer.id}/observees`).then(response => {
       this.setState({currentObserversObservees: response.data})
