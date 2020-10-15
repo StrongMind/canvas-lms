@@ -830,7 +830,8 @@ class AssignObservers extends React.Component {
   }
 
   debouncedFilterBySearch(search_term) {
-    this.setState({searchTerm: search_term, searchQueue: this.state.searchQueue.concat([new Date])});
+    this.setState({searchTerm: search_term});
+    this.state.searchQueue.push(new Date());
     let debouncedFilter = this.debounce(this.filterBySearch, 250).bind(this);
     return debouncedFilter();
   }
