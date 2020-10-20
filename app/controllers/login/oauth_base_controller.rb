@@ -61,6 +61,10 @@ class Login::OauthBaseController < ApplicationController
     false
   end
 
+  def clever_sis_ids?
+    SettingsService.get_settings(object: "school", id: 1)["clever_sis_ids"]
+  end
+
   def find_pseudonym(unique_ids, provider_attributes = {})
     if unique_ids.nil?
       unknown_user_url = @domain_root_account.unknown_user_url.presence || login_url
@@ -73,8 +77,15 @@ class Login::OauthBaseController < ApplicationController
 
     pseudonym = nil
     unique_ids = Array(unique_ids)
-    unique_ids.any? do |unique_id|
-      pseudonym = @domain_root_account.pseudonyms.for_auth_configuration(unique_id, @aac)
+
+    if clever_sis_ids?
+      unique_ids.any? do |unique_id|
+        pseudonym = Pseudonym.active.find_by(sis_user_id: provider_attributes['sis_id'])
+      end
+    else
+      unique_ids.any? do |unique_id|
+        pseudonym = @domain_root_account.pseudonyms.for_auth_configuration(unique_id, @aac)
+      end
     end
 
     if unique_ids.first && identity_v2_applicable?
