@@ -62,7 +62,8 @@ class Login::OauthBaseController < ApplicationController
   end
 
   def clever_sis_ids?
-    SettingsService.get_settings(object: "school", id: 1)["clever_sis_ids"]
+    SettingsService.get_settings(object: "school", id: 1)["clever_sis_ids"] &&
+    @aac.is_a?(AccountAuthorizationConfig::Clever)
   end
 
   def find_pseudonym(unique_ids, provider_attributes = {})
