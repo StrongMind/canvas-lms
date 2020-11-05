@@ -170,7 +170,7 @@ module AuthenticationMethods
         return redirect_to(login_url(:needs_cookies => '1'))
       end
       @current_user = @current_pseudonym && @current_pseudonym.user
-      if @current_user && @current_user.roles(Account.default) == ["user", "student"]
+      if @current_user && @current_user.roles(Account.default).last == "student"
         current_integration_id = @current_pseudonym.try(:integration_id)
 
         if current_integration_id && !Rails.cache.read("unlocked_#{current_integration_id}")
