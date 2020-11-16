@@ -102,6 +102,8 @@ class LoginController < ApplicationController
       # The AAC could have been deleted since the user logged in
       aac = AccountAuthorizationConfig.where(id: session[:login_aac]).first
       redirect = aac.try(:user_logout_redirect, self, @current_user)
+      SettingsService.update_settings(object: :school, id: 1, setting: "logout_url", value: redirect.to_s)
+      SettingsService.update_settings(object: :school, id: 1, setting: "logout_params", value: "?id_token_hint=#{session[:identity_v2_id_token]}")
       if aac.is_a?(AccountAuthorizationConfig::OpenIDConnect) && session[:identity_v2_id_token]
         redirect += "?id_token_hint=#{session[:identity_v2_id_token]}"
       end
