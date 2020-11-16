@@ -35,7 +35,7 @@ class Login::Oauth2Controller < Login::OauthBaseController
     provider_attributes = {}
     return unless timeout_protection do
       token = @aac.get_token(params[:code], oauth2_login_callback_url)
-      unique_id = @aac.unique_id(token, session)
+      unique_id = @aac.unique_id(token)
       provider_attributes = @aac.provider_attributes(token)
 
       if identity_v2_applicable? && @aac&.admin_role?(token)

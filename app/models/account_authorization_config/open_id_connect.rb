@@ -53,11 +53,11 @@ class AccountAuthorizationConfig::OpenIDConnect < AccountAuthorizationConfig::Oa
     super.presence || 'sub'.freeze
   end
 
-  def unique_id(token, session={})
-    claims(token, session)[login_attribute]
+  def unique_id(token)
+    claims(token)[login_attribute]
   end
 
-  def user_logout_redirect(_controller, _current_user, session={})
+  def user_logout_redirect(_controller, _current_user)
     url = end_session_endpoint.presence || super
     if session[:identity_v2_id_token]
       url += "?id_token_hint=#{session[:identity_v2_id_token]}"
@@ -90,7 +90,7 @@ class AccountAuthorizationConfig::OpenIDConnect < AccountAuthorizationConfig::Oa
 
   private
 
-  def claims(token, session={})
+  def claims(token)
     token.options[:claims] ||= begin
       jwt_string = token.params['id_token']
       session[:identity_v2_id_token] = jwt_string
