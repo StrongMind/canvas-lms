@@ -58,7 +58,11 @@ class AccountAuthorizationConfig::OpenIDConnect < AccountAuthorizationConfig::Oa
   end
 
   def user_logout_redirect(_controller, _current_user)
-    end_session_endpoint.presence || super
+    url = end_session_endpoint.presence || super
+    if session[:identity_v2_id_token]
+      url += "?id_token_hint=#{session[:identity_v2_id_token]}"
+    end
+    url
   end
 
   def provider_attributes(token)
@@ -89,6 +93,7 @@ class AccountAuthorizationConfig::OpenIDConnect < AccountAuthorizationConfig::Oa
   def claims(token)
     token.options[:claims] ||= begin
       jwt_string = token.params['id_token']
+      session[:identity_v2_id_token] = jwt_string
       id_token = ::Canvas::Security.decode_jwt(jwt_string, [:skip_verification])
       # we have a userinfo endpoint, and we don't have everything we want,
       # then request more
