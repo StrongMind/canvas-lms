@@ -116,7 +116,7 @@ class LoginController < ApplicationController
 
   def identity_redirect
     "?id_token_hint=#{session[:identity_v2_id_token]}" +
-    "&post_logout_redirect_uri=#{URI.encode('https://' + ENV['CANVAS_DOMAIN'])}"
+    "&post_logout_redirect_uri=#{CGI::escape('https://' + ENV['CANVAS_DOMAIN'])}"
   end
 
   # GET /logout
