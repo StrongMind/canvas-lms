@@ -103,7 +103,7 @@ class LoginController < ApplicationController
       aac = AccountAuthorizationConfig.where(id: session[:login_aac]).first
       redirect = aac.try(:user_logout_redirect, self, @current_user)
       if aac.is_a?(AccountAuthorizationConfig::OpenIDConnect) && session[:identity_v2_id_token]
-        redirect += "?id_token_hint=#{@current_pseudonym.try(:integration_id)}"
+        redirect += identity_redirect
       end
     end
 
@@ -112,6 +112,11 @@ class LoginController < ApplicationController
 
     flash[:logged_out] = true
     redirect_to redirect
+  end
+
+  def identity_redirect
+    "?id_token_hint=#{session[:identity_v2_id_token]}" +
+    "&post_logout_redirect_uri=#{URI.encode('https://' + ENV['CANVAS_DOMAIN'])}"
   end
 
   # GET /logout
