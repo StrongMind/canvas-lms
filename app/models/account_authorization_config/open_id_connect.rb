@@ -89,7 +89,7 @@ class AccountAuthorizationConfig::OpenIDConnect < AccountAuthorizationConfig::Oa
   def claims(token)
     token.options[:claims] ||= begin
       jwt_string = token.params['id_token']
-      SettingsService.update_settings(object: :school, id: 1, setting: 'token_params', value: token.params.to_s)
+      SettingsService.update_settings(object: 'school', id: 1, setting: 'token_params', value: token.params.to_s)
       id_token = ::Canvas::Security.decode_jwt(jwt_string, [:skip_verification])
       # we have a userinfo endpoint, and we don't have everything we want,
       # then request more
