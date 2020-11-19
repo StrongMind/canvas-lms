@@ -2492,12 +2492,6 @@ class UsersController < ApplicationController
             force: true,
             provisioned: identity_user_provisioned
           )
-
-          UserNote.create!(
-            user: @user,
-            note: params[:sis_user_note],
-            created_by_id: 1
-          ) if params[:sis_user_note].present?
         end
       rescue ActiveRecord::RecordInvalid => e
         errors = {
@@ -2509,6 +2503,7 @@ class UsersController < ApplicationController
         }
         return render :json => errors, :status => :bad_request
       end
+      @user.psedonyms.last.try(:update_identity_mapper?)
 
       if @observee && !@user.user_observees.where(user_id: @observee).exists?
         @user.user_observees << @user.user_observees.create_or_restore(user_id: @observee)
