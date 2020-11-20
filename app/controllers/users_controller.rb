@@ -2492,12 +2492,6 @@ class UsersController < ApplicationController
             force: true,
             provisioned: identity_user_provisioned
           )
-
-          UserNote.create!(
-            user: @user,
-            note: params[:sis_user_note],
-            created_by_id: 1
-          ) if params[:sis_user_note].present?
         end
       rescue ActiveRecord::RecordInvalid => e
         errors = {
