@@ -2503,7 +2503,6 @@ class UsersController < ApplicationController
         }
         return render :json => errors, :status => :bad_request
       end
-      @user.pseudonyms.last.try(:update_identity_mapper?)
 
       if @observee && !@user.user_observees.where(user_id: @observee).exists?
         @user.user_observees << @user.user_observees.create_or_restore(user_id: @observee)
