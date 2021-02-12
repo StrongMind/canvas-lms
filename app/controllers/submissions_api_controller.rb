@@ -690,7 +690,10 @@ class SubmissionsApiController < ApplicationController
       end
 
       if @submission.context.is_a?(Course)
-        @submission.context.student_enrollments.where(user: @submission.user).each(&:publish_as_v2)
+        @submission.context.student_enrollments.where(user: @submission.user).each do |student_enrollment|
+          Enrollment.recompute_final_score(student_enrollment.user_id, student_enrollment.course_id)
+          student_enrollment.publish_as_v2
+        end
       end
 
       assessment = params[:rubric_assessment]
