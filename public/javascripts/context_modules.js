@@ -1941,11 +1941,11 @@ import 'compiled/jquery.rails_flash_notifications'
           update_icon_status(button);
         });
       });
-      $("#context_modules").fadeIn(500)
-      modules.goToActivity()
     }
+
     $("#context_modules").fadeIn(500)
 
+    modules.goToActivity()
 
     $('.external_url_link').click(function(event) {
       Helper.externalUrlLinkClick(event, $(this))
