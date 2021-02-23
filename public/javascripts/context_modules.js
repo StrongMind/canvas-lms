@@ -2225,7 +2225,7 @@ import 'compiled/jquery.rails_flash_notifications'
       }
     }
 
-    if (ENV.IS_STUDENT) {
+    if (!ENV.STUDENT_ONLY_MODULE_EXPANSION || ENV.IS_STUDENT) {
       for(var idx in currentModules) {
         let $cm = $("#context_module_" + currentModules[idx])
         $cm.addClass('sm-started').removeClass('collapsed_module');
