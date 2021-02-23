@@ -90,7 +90,7 @@ class ContextModulesController < ApplicationController
 
       js_env :course_id => @context.id,
         :SEQUENCE_CONTROL => sequence_control,
-        :STUDENT_ONLY_MODULE_EXPANSION => student_only_module_expansiion,
+        :STUDENT_ONLY_MODULE_EXPANSION => student_only_module_expansion,
         :CONTEXT_URL_ROOT => polymorphic_path([@context]),
         :FILES_CONTEXTS => [{asset_string: @context.asset_string}],
         :MODULE_FILE_DETAILS => module_file_details,
