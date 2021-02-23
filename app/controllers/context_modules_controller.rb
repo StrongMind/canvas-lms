@@ -81,7 +81,7 @@ class ContextModulesController < ApplicationController
         settings = SettingsService.get_enrollment_settings(id: enrollment.id)
         school_settings = SettingsService.get_settings(id: 1, object: 'school')
         sequence_control = false if !settings["sequence_control"].nil? && settings["sequence_control"] == false
-        student_only_module_expansiion = true if settischool_settingsngs["sequence_control"] == true
+        student_only_module_expansiion = true if settischool_settingsngs["student_only_module_expansiion"] == true
       end
 
       js_env :course_id => @context.id,
