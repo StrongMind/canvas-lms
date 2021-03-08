@@ -27,6 +27,9 @@ class Score < ActiveRecord::Base
   validates :current_score, :final_score, numericality: true, allow_nil: true
   validates_uniqueness_of :enrollment_id, scope: :grading_period_id
 
+  after_commit -> { enrollment.publish_as_v2 }
+
+
   set_policy do
     given { |user, session|
       (user&.id == enrollment.user_id && !course.hide_final_grades?) ||
