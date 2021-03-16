@@ -1944,7 +1944,7 @@ import './vendor/ui.selectmenu'
     resizeImg: function () {
       var iframeContent = $(this).contents().find('body').children();
       if (iframeContent.length === 1 && iframeContent.first().is('img')) {
-        iframeContent.attr('style', 'max-width: 100vw; max-height: 100vh;');
+        $iframe_holder.attr('style', 'max-width: 100%');
       }
     },
 
