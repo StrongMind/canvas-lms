@@ -556,8 +556,8 @@ END
       display_name: -> { I18n.t("GraphQL API") },
       description: -> { I18n.t("EXPERIMENTAL GraphQL API.") },
       applies_to: "RootAccount",
-      state: "hidden",
-      beta: true,
+      state: "enabled",
+      beta: false,
       development: true,
     },
     'hide_inbox' =>
