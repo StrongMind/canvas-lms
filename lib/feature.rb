@@ -558,7 +558,7 @@ END
       applies_to: "RootAccount",
       state: "enabled",
       beta: false,
-      development: true,
+      development: false
     },
     'hide_inbox' =>
     {
