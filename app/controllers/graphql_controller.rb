@@ -2,7 +2,7 @@ class GraphQLController < ApplicationController
   include Api::V1
 
   before_action :require_user, except: :execute
-  before_action :require_graphql_feature_flag
+  #before_action :require_graphql_feature_flag
 
   def execute
     query = params[:query]
