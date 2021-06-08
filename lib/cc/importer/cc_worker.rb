@@ -78,6 +78,11 @@ class Canvas::Migration::Worker::CCWorker < Canvas::Migration::Worker::Base
        end
 
       AssignmentsService.distribute_due_dates(course: cm.context)
+      if RequirementsService.course_has_set_threshold?(cm.context)
+        cm.context.context_modules.each do |mod|
+          RequirementsService.apply_minimum_scores(context_module: mod)
+        end
+      end
       saved
     rescue Canvas::Migration::Error
       cm.add_error($!.message, :exception => $!)
