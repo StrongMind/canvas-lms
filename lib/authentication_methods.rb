@@ -171,7 +171,7 @@ module AuthenticationMethods
       end
       @current_user = @current_pseudonym && @current_pseudonym.user
 
-      if !Rails.cache.read("migrated_to_cloud_#{@current_user.id}")
+      if @current_user && !Rails.cache.read("migrated_to_cloud_#{@current_user.id}")
         begin
           migration_date = SettingsService.get_settings(object: "school", id: 1)['cloud_migration_date']
           if Date.today >= Date.parse(migration_date) && SettingsService.get_settings(id: @current_user.id, object: 'user')['migrated_to_cloud']
