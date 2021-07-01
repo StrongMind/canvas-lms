@@ -170,6 +170,19 @@ module AuthenticationMethods
         return redirect_to(login_url(:needs_cookies => '1'))
       end
       @current_user = @current_pseudonym && @current_pseudonym.user
+
+      if !Rails.cache.read("migrated_to_cloud_#{@current_user.id}")
+        begin
+          migration_date = SettingsService.get_settings(object: "school", id: 1)['cloud_migration_date']
+          if Date.today >= Date.parse(migration_date) && SettingsService.get_settings(id: @current_user.id, object: 'user')['migrated_to_cloud']
+            redirect_to("https://strongmind.instructure.com")
+          else
+            Rails.cache.write("mirated_to_cloud_#{user.id}", true, :expires_id => 5.minutes)
+          end
+        rescue
+        end
+      end
+      
       if @current_user && @current_user.roles(Account.default).last == "student"
         current_integration_id = @current_pseudonym.try(:integration_id)
 
