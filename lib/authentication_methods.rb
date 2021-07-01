@@ -174,7 +174,7 @@ module AuthenticationMethods
       if @current_user && !Rails.cache.read("migrated_to_cloud_#{@current_user.id}")
         begin
           migration_date = SettingsService.get_settings(object: "school", id: 1)['cloud_migration_date']
-          if Date.today >= Date.parse(migration_date) && SettingsService.get_settings(id: @current_user.id, object: 'user')['migrated_to_cloud']
+          if @migration_date && Date.today >= Date.parse(migration_date) && SettingsService.get_settings(id: @current_user.id, object: 'user')['migrated_to_cloud']
             redirect_to("https://strongmind.instructure.com")
           else
             Rails.cache.write("migrated_to_cloud_#{user.id}", true, :expires_in => 5.minutes)
