@@ -27,7 +27,7 @@ module Importers
       data['all_files_export'] ||= {}
       data['all_files_export']['file_path'] ||= data['all_files_zip']
       return unless data['all_files_export']['file_path'] && File.exist?(data['all_files_export']['file_path'])
-
+      byebug
       migration.attachment_path_id_lookup ||= {}
       migration.attachment_path_id_lookup_lower ||= {}
 
