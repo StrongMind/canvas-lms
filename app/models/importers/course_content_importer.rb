@@ -22,10 +22,12 @@ module Importers
 
     self.item_class = Course
     Importers.register_content_importer(self)
+
     def self.process_migration_files(course, data, migration)
       data['all_files_export'] ||= {}
       data['all_files_export']['file_path'] ||= data['all_files_zip']
       return unless data['all_files_export']['file_path'] && File.exist?(data['all_files_export']['file_path'])
+
       migration.attachment_path_id_lookup ||= {}
       migration.attachment_path_id_lookup_lower ||= {}
 
