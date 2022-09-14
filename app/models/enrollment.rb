@@ -426,6 +426,7 @@ class Enrollment < ActiveRecord::Base
     enrollment = linked_enrollment_for(observer)
     return true if enrollment && !enrollment.deleted?
     return false unless observer.can_be_enrolled_in_course?(course)
+    return false if observer_enrollment_exists?
     enrollment ||= observer.observer_enrollments.build
     enrollment.associated_user_id = user_id
     enrollment.shard = shard if enrollment.new_record?
@@ -1358,5 +1359,10 @@ class Enrollment < ActiveRecord::Base
 
   def being_restored?
     workflow_state_changed? && workflow_state_was == 'deleted'
+  end
+
+  def observer_enrollment_exists?
+    ObserverEnrollment.find_by(user_id: self.user_id, type: self.type, role_id: self.course_section_id,
+                               associated_user_id: self.associated_user_id).present?
   end
 end
