@@ -21,7 +21,7 @@ before_install:
   - gem uninstall bundler -x || gem uninstall bundler -a || true
   - gem update --system 2.6.12
   - gem uninstall bundler -x -i /home/travis/.rvm/gems/ruby-2.4.1@global || gem uninstall bundler -a -i /home/travis/.rvm/gems/ruby-2.4.1@global || true
-  - gem install bundler --version=2.3.25
+  - gem install bundler:2.3.25
   - nvm install v6.9
   - yarn install
   - cd $TRAVIS_BUILD_DIR/vendor/canvas_shim
