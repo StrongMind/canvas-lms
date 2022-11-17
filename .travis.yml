@@ -1,5 +1,5 @@
 rvm:
-  - 2.4.4
+  - 2.5.0
 services:
   - redis-server
   - postgresql
@@ -21,7 +21,7 @@ before_install:
   - gem uninstall bundler -x || gem uninstall bundler -a || true
   - gem update --system 2.6.12
   - gem uninstall bundler -x -i /home/travis/.rvm/gems/ruby-2.4.1@global || gem uninstall bundler -a -i /home/travis/.rvm/gems/ruby-2.4.1@global || true
-  - gem install bundler --version=1.15.1
+  - gem install bundler --version=2.3.25
   - nvm install v6.9
   - yarn install
   - cd $TRAVIS_BUILD_DIR/vendor/canvas_shim
@@ -39,9 +39,9 @@ before_install:
   - mkdir -p /home/travis/bin
   - unzip chromedriver_linux64.zip -d /home/travis/bin/
 install:
-  - bundle _1.15.1_ install --path vendor/bundle --without production --jobs=3 --retry=1
+  - bundle _2.3.25_ install --path vendor/bundle --without production --jobs=3 --retry=1
 before_script:
   - psql -c 'create database canvas_test;' -U postgres;
   - psql -U postgres -q -d $DB_NAME -f db/structure.sql # faster than db:test:prepare
-  - bundle _1.15.1_ exec rake canvas:compile_assets_dev # skip build of styleguide, api docs, npm install
+  - bundle _2.3.25_ exec rake canvas:compile_assets_dev # skip build of styleguide, api docs, npm install
 script: 'STRONGMIND_SPEC=1 HEADLESS=1 ./script/run-tests.sh'
