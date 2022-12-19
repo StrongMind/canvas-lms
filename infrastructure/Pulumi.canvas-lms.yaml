@@ -1,0 +1,114 @@
+config:
+  aws:region: us-west-2
+  canvas-lms:env: dev
+  canvas-lms:assume_role_policy:
+    Statement:
+      - Action: sts:AssumeRole
+        Effect: Allow
+        Principal:
+          Service: ecs-tasks.amazonaws.com
+        Sid: ""
+    Version: "2012-10-17"
+  canvas-lms:tags:
+    environment: stage
+    owner: devops
+    product: canvas-lms
+    service: canvas-lms
+  canvas-lms:postgres:
+    master_password:
+      secure: AAABAEgMfmXG4k5ZXLymPm4oLrH/qXfvnP76WRxyNS6uPvunMWYzlA==
+    master_username: sm_admin
+    port: 5432
+  canvas-lms:redis:
+    auto_minor_version_upgrade: "True"
+    maintenance_window: sun:05:00-sun:09:00
+    metrics:
+    - comparison_operator: GreaterThanThreshold
+      metric_name: CPUUtilization
+      period: 300
+      sns_arn: arn:aws:sns:us-west-2:221871915463:DevOps-Opsgenie
+      threshold: 50
+    - comparison_operator: GreaterThanThreshold
+      metric_name: DatabaseMemoryUsagePercentage
+      period: 300
+      sns_arn: arn:aws:sns:us-west-2:221871915463:DevOps-Opsgenie
+      threshold: 30
+    node: cache.t4g.small
+  canvas-lms:security_group:
+  - from_port: 0
+    protocol: -1
+    to_port: 65535
+  canvas-lms:cidr: 10.51.5.0/24
+  canvas-lms:subnets:
+  - availability_zone: us-west-2a
+    cidr_block: 10.51.5.0/27
+  - availability_zone: us-west-2b
+    cidr_block: 10.51.5.32/27
+  - availability_zone: us-west-2c
+    cidr_block: 10.51.5.64/27
+  canvas-lms:role_policy:
+    Statement:
+      - Action:
+          - ecr:GetAuthorizationToken
+          - ecr:BatchCheckLayerAvailability
+          - ecr:GetDownloadUrlForLayer
+          - ecr:BatchGetImage
+          - ecr:GetRepositoryPolicy
+          - ecr:DescribeRepositories
+          - ecr:ListImages
+          - ecr:DescribeImages
+          - ecr:InitiateLayerUpload
+          - ecr:UploadLayerPart
+          - ecr:CompleteLayerUpload
+          - ecr:PutImag
+          - logs:CreateLogStream
+          - logs:PutLogEvents
+        Effect: Allow
+        Resource: '*'
+    Version: "2012-10-17"
+  canvas-lms:ecs:
+    - cpu: "256"
+      entryPoint:
+        - sh
+        - -c
+        - /usr/src/run.sh
+      image: 448312246740.dkr.ecr.us-west-2.amazonaws.com/canvas-web
+      image_tag: latest
+      environment:
+        APP_BASE_URL: https://prod.horseshoes-app.strongmind.com
+      memory: "512"
+      name: web
+      port_mapping:
+        - containerPort: 3000
+          hostPort: 3000
+    - cpu: "256"
+      entryPoint:
+        - sh
+        - -c
+        - /usr/src/worker.sh
+      image: 448312246740.dkr.ecr.us-west-2.amazonaws.com/canvas-worker
+      image_tag: latest
+
+      environment:
+        APP_BASE_URL: https://prod.horseshoes-app.strongmind.com
+      memory: "512"
+      name: worker
+      port_mapping:
+        - containerPort: 3000
+          hostPort: 3000
+
+  canvas-lms:healthcheck:
+    healthy_threshold: 6
+    interval: 120
+    path: /health_check
+    port: 3000
+    timeout: 60
+    unhealthy_threshold: 2
+
+#  canvas-lms:web:
+#    repository_url: 448312246740.dkr.ecr.us-west-2.amazonaws.com/canvas-web
+#    tag: latest
+#
+#  canvas-lms:worker:
+#    repository_url: 448312246740.dkr.ecr.us-west-2.amazonaws.com/canvas-web
+#    tag: latest
