@@ -21,7 +21,7 @@
 # references to SMTP exception classes in the code.
 require 'net/smtp'
 
-return if Rails.env != "production"
+return if Rails.env != "production" || ENV['DISABLE_OUTGOING_MAIL']
 
 config = {
   :domain => "unknowndomain.example.com",
