@@ -60,7 +60,7 @@ config:
           - ecr:InitiateLayerUpload
           - ecr:UploadLayerPart
           - ecr:CompleteLayerUpload
-          - ecr:PutImag
+          - ecr:PutImage
           - logs:CreateLogStream
           - logs:PutLogEvents
         Effect: Allow
@@ -73,9 +73,6 @@ config:
         - -c
         - /usr/src/run.sh
       image: 448312246740.dkr.ecr.us-west-2.amazonaws.com/canvas-web
-      image_tag: latest
-      environment:
-        APP_BASE_URL: https://prod.horseshoes-app.strongmind.com
       memory: "512"
       name: web
       port_mapping:
@@ -87,10 +84,7 @@ config:
         - -c
         - /usr/src/worker.sh
       image: 448312246740.dkr.ecr.us-west-2.amazonaws.com/canvas-worker
-      image_tag: latest
 
-      environment:
-        APP_BASE_URL: https://prod.horseshoes-app.strongmind.com
       memory: "512"
       name: worker
       port_mapping:

@@ -182,6 +182,15 @@ role = iam.create_iam_role_with_policy(
     tags
 )
 ecs_environment_config = config.require_object("ecs")
+# Create an internet gateway attached to our vpc
+internet_gateway = vpc.create_gateway(stack, vpc_object.id, tags)
+
+# Create a route in the vpc route table to the internet gateway
+route = vpc.create_route(
+    stack,
+    vpc_object.main_route_table_id,
+    internet_gateway.id
+)
 
 for container in ecs_environment_config:
     container_name = f"{stack}-{container['name']}"
@@ -195,11 +204,11 @@ for container in ecs_environment_config:
         ',{"name":"DATABASE_HOST","value":"', postgres_server.endpoint, '"}'
     )
 
-    for env_key, env_val in container['environment'].items():
-        ENVIRONMENT_VAR_OUTPUT = pulumi.Output.concat(
-            ENVIRONMENT_VAR_OUTPUT,
-            ',{"name":"', env_key, '","value":"', env_val, '"}'
-        )
+#     for env_key, env_val in container['environment'].items():
+#         ENVIRONMENT_VAR_OUTPUT = pulumi.Output.concat(
+#             ENVIRONMENT_VAR_OUTPUT,
+#             ',{"name":"', env_key, '","value":"', env_val, '"}'
+#         )
 
     ENVIRONMENT_VAR_OUTPUT = pulumi.Output.concat(
         ENVIRONMENT_VAR_OUTPUT,
@@ -212,7 +221,7 @@ for container in ecs_environment_config:
     port_mapping = container["port_mapping"]
 
     image_dict = container["image"]
-    our_image = f"{image_dict}:{os.environ.get('GITHUB_SHA')}"
+    our_image = f"{image_dict}:latest"
 
     Our_json_output = pulumi.Output.concat(
         '[{"name":"', container_name,'"',
