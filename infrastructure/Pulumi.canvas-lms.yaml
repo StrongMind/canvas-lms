@@ -1,19 +1,90 @@
 config:
   aws:region: us-west-2
-  canvas-lms:env: dev
+  canvas-lms:AWS_REGION: us-west-2
+  canvas-lms:CANVAS_DOMAIN: localhost
+  canvas-lms:CANVAS_LMS_ACCOUNT_NAME: admin
+  canvas-lms:CANVAS_LMS_ADMIN_EMAIL: canvas-admin@example.com
+  canvas-lms:CANVAS_LMS_ADMIN_PASSWORD:
+    secure: AAABALfl3udhc/9zy+i5/7nk9QuScf4Qv1LiAL0bmxEmwGMi2B19XuYnYw==
+  canvas-lms:CANVAS_SSL: "false"
+  canvas-lms:CDN_BUCKET: canvas-docker-cdn-prod
+  canvas-lms:CDN_ENABLED: "false"
+  canvas-lms:CDN_HOST: enter_value_here
+  canvas-lms:CDN_REGION: us-west-2
+  canvas-lms:DB_HOST: localhost
+  canvas-lms:DB_NAME: canvas
+  canvas-lms:DB_PASS:
+    secure: AAABADpbrgJLxyomGcv26On9OCJrb4T0R5Buu5KUGtddj0ETQxiWy/4oIQ==
+  canvas-lms:DB_PORT: "5432"
+  canvas-lms:DB_USER: canvas
+  canvas-lms:DYNAMO_DB_SERVER: http://localhost:8000
+  canvas-lms:ENCRYPTION_KEY:
+    secure: AAABACQVdvopxqzPkFXWsZYksfi2pSFxivIJURmASxj6ZNvtOW9aoqJknp8062xVVS/xxgJ3RmM=
+  canvas-lms:LAUNCH_DARKLY_SDK_KEY:
+    secure: AAABALEXV3ZbtfQkh9RpcU2uwmT8fDBRzmSMSXPWdPntmd4A4kF8sE2EGctFfixG/RGagU/JxxvjjBSbFl9/unPNxQkTvk1y
+  canvas-lms:OUTGOING_EMAIL_OUTGOING_ADDRESS: angel.diaz@strongmind.com
+  canvas-lms:OUTGOING_MAIL_ADDRESS: localhost
+  canvas-lms:OUTGOING_MAIL_DEFAULT_NAME: angel
+  canvas-lms:OUTGOING_MAIL_DOMAIN: strongmind.com
+  canvas-lms:OUTGOING_MAIL_PORT: "25"
+  canvas-lms:PIPELINE_ENDPOINT: http://localhost:8080/
+  canvas-lms:PIPELINE_PASSWORD:
+    secure: AAABACSjqDAkhK6awF9ufBdf9zSa1vbspBeUxQYvwUh5Yxk1Iwh89g==
+  canvas-lms:PIPELINE_USER_NAME: user
+  canvas-lms:RAILS_ENV: development
+  canvas-lms:REDIS_SERVER: http://localhost:6379
+  canvas-lms:S3_ACCESS_KEY:
+    secure: AAABALPzmZCeLvRWeo2nlAmu14qqh3KJxy1gGgZb24wuJlJxdUAUEfQXK6/EpENk
+  canvas-lms:S3_ACCESS_KEY_ID:
+    secure: AAABAB8Jc7HPGciveear5hu2GeReHf5Y0ncwBx3z75tNBRqXYBF6zUxcCfna5geR
+  canvas-lms:S3_BUCKET_NAME: center_value_here
+  canvas-lms:S3_REGION: us-west-2
+  canvas-lms:SESSION_EXPIRE_AFTER: "86400"
+  canvas-lms:SESSION_STORE: encrypted_cookie_store
+  canvas-lms:SETTINGS_TABLE_PREFIX: settings
+  canvas-lms:SQS_ENDPOINT: http://sqs:9324
+  canvas-lms:SQS_QUEUE_NAME: canvas-queue
+  canvas-lms:SQS_REGION: us-west-2
   canvas-lms:assume_role_policy:
     Statement:
-      - Action: sts:AssumeRole
-        Effect: Allow
-        Principal:
-          Service: ecs-tasks.amazonaws.com
-        Sid: ""
+    - Action: sts:AssumeRole
+      Effect: Allow
+      Principal:
+        Service: ecs-tasks.amazonaws.com
+      Sid: ""
     Version: "2012-10-17"
-  canvas-lms:tags:
-    environment: stage
-    owner: devops
-    product: canvas-lms
-    service: canvas-lms
+  canvas-lms:cidr: 10.51.5.0/24
+  canvas-lms:ecs:
+  - cpu: "256"
+    entryPoint:
+    - sh
+    - -c
+    - /usr/src/run.sh
+    image: 448312246740.dkr.ecr.us-west-2.amazonaws.com/canvas-web
+    memory: "512"
+    name: web
+    port_mapping:
+    - containerPort: 3000
+      hostPort: 3000
+  - cpu: "256"
+    entryPoint:
+    - sh
+    - -c
+    - /usr/src/worker.sh
+    image: 448312246740.dkr.ecr.us-west-2.amazonaws.com/canvas-worker
+    memory: "512"
+    name: worker
+    port_mapping:
+    - containerPort: 3000
+      hostPort: 3000
+  canvas-lms:env: dev
+  canvas-lms:healthcheck:
+    healthy_threshold: 6
+    interval: 120
+    path: /health_check
+    port: 3000
+    timeout: 60
+    unhealthy_threshold: 2
   canvas-lms:postgres:
     master_password:
       secure: AAABAEgMfmXG4k5ZXLymPm4oLrH/qXfvnP76WRxyNS6uPvunMWYzlA==
@@ -34,11 +105,30 @@ config:
       sns_arn: arn:aws:sns:us-west-2:221871915463:DevOps-Opsgenie
       threshold: 30
     node: cache.t4g.small
+  canvas-lms:role_policy:
+    Statement:
+    - Action:
+      - ecr:GetAuthorizationToken
+      - ecr:BatchCheckLayerAvailability
+      - ecr:GetDownloadUrlForLayer
+      - ecr:BatchGetImage
+      - ecr:GetRepositoryPolicy
+      - ecr:DescribeRepositories
+      - ecr:ListImages
+      - ecr:DescribeImages
+      - ecr:InitiateLayerUpload
+      - ecr:UploadLayerPart
+      - ecr:CompleteLayerUpload
+      - ecr:PutImage
+      - logs:CreateLogStream
+      - logs:PutLogEvents
+      Effect: Allow
+      Resource: '*'
+    Version: "2012-10-17"
   canvas-lms:security_group:
   - from_port: 0
     protocol: -1
     to_port: 65535
-  canvas-lms:cidr: 10.51.5.0/24
   canvas-lms:subnets:
   - availability_zone: us-west-2a
     cidr_block: 10.51.5.0/27
@@ -46,63 +136,8 @@ config:
     cidr_block: 10.51.5.32/27
   - availability_zone: us-west-2c
     cidr_block: 10.51.5.64/27
-  canvas-lms:role_policy:
-    Statement:
-      - Action:
-          - ecr:GetAuthorizationToken
-          - ecr:BatchCheckLayerAvailability
-          - ecr:GetDownloadUrlForLayer
-          - ecr:BatchGetImage
-          - ecr:GetRepositoryPolicy
-          - ecr:DescribeRepositories
-          - ecr:ListImages
-          - ecr:DescribeImages
-          - ecr:InitiateLayerUpload
-          - ecr:UploadLayerPart
-          - ecr:CompleteLayerUpload
-          - ecr:PutImage
-          - logs:CreateLogStream
-          - logs:PutLogEvents
-        Effect: Allow
-        Resource: '*'
-    Version: "2012-10-17"
-  canvas-lms:ecs:
-    - cpu: "256"
-      entryPoint:
-        - sh
-        - -c
-        - /usr/src/run.sh
-      image: 448312246740.dkr.ecr.us-west-2.amazonaws.com/canvas-web
-      memory: "512"
-      name: web
-      port_mapping:
-        - containerPort: 3000
-          hostPort: 3000
-    - cpu: "256"
-      entryPoint:
-        - sh
-        - -c
-        - /usr/src/worker.sh
-      image: 448312246740.dkr.ecr.us-west-2.amazonaws.com/canvas-worker
-
-      memory: "512"
-      name: worker
-      port_mapping:
-        - containerPort: 3000
-          hostPort: 3000
-
-  canvas-lms:healthcheck:
-    healthy_threshold: 6
-    interval: 120
-    path: /health_check
-    port: 3000
-    timeout: 60
-    unhealthy_threshold: 2
-
-#  canvas-lms:web:
-#    repository_url: 448312246740.dkr.ecr.us-west-2.amazonaws.com/canvas-web
-#    tag: latest
-#
-#  canvas-lms:worker:
-#    repository_url: 448312246740.dkr.ecr.us-west-2.amazonaws.com/canvas-web
-#    tag: latest
+  canvas-lms:tags:
+    environment: stage
+    owner: devops
+    product: canvas-lms
+    service: canvas-lms
