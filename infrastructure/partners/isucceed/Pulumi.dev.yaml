@@ -56,3 +56,8 @@ config:
     port_mapping:
     - containerPort: 3000
       hostPort: 3000
+  isucceed:env: dev
+  isucceed:postgres:
+    master_password: test
+    master_username: sm_admin
+    port: 5432

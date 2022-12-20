@@ -6,6 +6,8 @@ from pulumi_aws import s3
 import cloudwatch
 import iam
 import ecs
+import vpc
+import json
 
 # Create an AWS resource (S3 Bucket)
 bucket = s3.Bucket('my-bucket')
@@ -14,14 +16,18 @@ bucket = s3.Bucket('my-bucket')
 stack = pulumi.get_stack()
 region = pulumi_aws.config.region
 config = pulumi.Config()
-# Set our Tags which we pass to every object to ensure that it follows
-# company set practices
+
+vpc_object = pulumi_aws.ec2.Vpc.get('canvas-lms-vpc', 'vpc-037040915e17ff9af')
+internet_gateway = pulumi_aws.ec2.InternetGateway.get('canvas-lms', 'igw-0689144945674f784')
+environment = config.require("env")
 tags = config.require_object("tags")
-###END
 
 # Import shared resources from canvas-lms/canvas-lms
-# parent_stack = pulumi.StackReference(f'strongmind-devops/canvas-lms/canvas-lms')
-# cache_object = parent_stack.get_output('default_redis')
+parent_stack = pulumi.StackReference(f'strongmind-devops/canvas-lms/canvas-lms')
+# subnet_ids = parent_stack.get_output('subnet_ids')
+subnet_ids = pulumi_aws.ec2.get_subnets()
+security_group_ids = parent_stack.get_output('security_group_ids')
+# pulumi.log.info("subnet_ids", subnet_ids)
 
 redis_cluster = pulumi_aws.elasticache.Cluster("redis-cluster",
     availability_zone="us-west-2c",
@@ -53,7 +59,7 @@ redis_cluster = pulumi_aws.elasticache.Cluster("redis-cluster",
     },
     opts=pulumi.ResourceOptions(protect=True))
 
-rds = pulumi_aws.rds.Cluster("rds",
+postgres_server = pulumi_aws.rds.Cluster("rds",
     allocated_storage=1,
     availability_zones=[
         "us-west-2a",
@@ -124,8 +130,9 @@ role = iam.create_iam_role_with_policy(
     tags
 )
 ecs_environment_config = config.require_object("ecs")
-# Create an internet gateway attached to our vpc
-internet_gateway = vpc.create_gateway(stack, vpc_object.id, tags)
+
+# Pull the postgres settings from our yaml
+postgres = config.require_object("postgres")
 
 # Create a route in the vpc route table to the internet gateway
 route = vpc.create_route(
