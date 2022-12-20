@@ -24,8 +24,10 @@ tags = config.require_object("tags")
 
 # Import shared resources from canvas-lms/canvas-lms
 parent_stack = pulumi.StackReference(f'strongmind-devops/canvas-lms/canvas-lms')
-# subnet_ids = parent_stack.get_output('subnet_ids')
-subnet_ids = pulumi_aws.ec2.get_subnets()
+
+subnet_ids = parent_stack.get_output('subnet_ids')
+pulumi.export("subnet_ids", subnet_ids)
+
 security_group_ids = parent_stack.get_output('security_group_ids')
 # pulumi.log.info("subnet_ids", subnet_ids)
 

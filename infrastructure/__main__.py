@@ -158,3 +158,6 @@ redis_url = cache_object.cache_nodes[0]["address"]
 # pulumi.log.info("redis:", cache_object)
 # pulumi.export("redis", stack.redis)
 ###END of redis config
+
+pulumi.export("subnet_ids", subnet_ids)
+pulumi.export("security_group_ids", security_group_ids)

@@ -1,0 +1,1251 @@
+{
+    "version": 3,
+    "deployment": {
+        "manifest": {
+            "time": "2022-12-20T15:01:48.721698-07:00",
+            "magic": "f1194d5aead1ae2387073624bc102473295270bc53005631ad95c566ceb7edf1",
+            "version": "v3.50.0"
+        },
+        "secrets_providers": {
+            "type": "service",
+            "state": {
+                "url": "https://api.pulumi.com",
+                "owner": "strongmind-devops",
+                "project": "canvas-lms",
+                "stack": "canvas-lms"
+            }
+        },
+        "resources": [
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::pulumi:pulumi:Stack::canvas-lms-canvas-lms",
+                "custom": false,
+                "type": "pulumi:pulumi:Stack",
+                "outputs": {
+                    "rds_url": "canvas-lms-dev.cluster-cxfx9jvpx6jn.us-west-2.rds.amazonaws.com"
+                }
+            },
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::pulumi:providers:aws::default_5_24_0",
+                "custom": true,
+                "id": "b05350c9-f4e5-428e-9bcf-01b3bd6f5cf3",
+                "type": "pulumi:providers:aws",
+                "inputs": {
+                    "region": "us-west-2",
+                    "version": "5.24.0"
+                },
+                "outputs": {
+                    "region": "us-west-2",
+                    "version": "5.24.0"
+                }
+            },
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::aws:cloudwatch/logGroup:LogGroup::canvas-lms-rds-log",
+                "custom": true,
+                "id": "/aws/rds/canvas-lms-rds",
+                "type": "aws:cloudwatch/logGroup:LogGroup",
+                "inputs": {
+                    "__defaults": [
+                        "skipDestroy"
+                    ],
+                    "name": "/aws/rds/canvas-lms-rds",
+                    "retentionInDays": 14,
+                    "skipDestroy": false
+                },
+                "outputs": {
+                    "arn": "arn:aws:logs:us-west-2:448312246740:log-group:/aws/rds/canvas-lms-rds",
+                    "id": "/aws/rds/canvas-lms-rds",
+                    "kmsKeyId": "",
+                    "name": "/aws/rds/canvas-lms-rds",
+                    "namePrefix": "",
+                    "retentionInDays": 14,
+                    "skipDestroy": false,
+                    "tags": {},
+                    "tagsAll": {}
+                },
+                "parent": "urn:pulumi:canvas-lms::canvas-lms::pulumi:pulumi:Stack::canvas-lms-canvas-lms",
+                "provider": "urn:pulumi:canvas-lms::canvas-lms::pulumi:providers:aws::default_5_24_0::b05350c9-f4e5-428e-9bcf-01b3bd6f5cf3",
+                "propertyDependencies": {
+                    "name": null,
+                    "retentionInDays": null
+                }
+            },
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/vpc:Vpc::canvas-lms-vpc",
+                "custom": true,
+                "id": "vpc-037040915e17ff9af",
+                "type": "aws:ec2/vpc:Vpc",
+                "inputs": {
+                    "__defaults": [
+                        "instanceTenancy"
+                    ],
+                    "cidrBlock": "10.51.5.0/24",
+                    "enableDnsHostnames": true,
+                    "enableDnsSupport": true,
+                    "instanceTenancy": "default",
+                    "tags": {
+                        "__defaults": [],
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    }
+                },
+                "outputs": {
+                    "__meta": "{\"schema_version\":\"1\"}",
+                    "arn": "arn:aws:ec2:us-west-2:448312246740:vpc/vpc-037040915e17ff9af",
+                    "assignGeneratedIpv6CidrBlock": false,
+                    "cidrBlock": "10.51.5.0/24",
+                    "defaultNetworkAclId": "acl-08c04bd77a02010ec",
+                    "defaultRouteTableId": "rtb-012f6a64ca04c6433",
+                    "defaultSecurityGroupId": "sg-08760377de1025fb7",
+                    "dhcpOptionsId": "dopt-13fd2974",
+                    "enableClassiclink": false,
+                    "enableClassiclinkDnsSupport": false,
+                    "enableDnsHostnames": true,
+                    "enableDnsSupport": true,
+                    "enableNetworkAddressUsageMetrics": false,
+                    "id": "vpc-037040915e17ff9af",
+                    "instanceTenancy": "default",
+                    "ipv6AssociationId": "",
+                    "ipv6CidrBlock": "",
+                    "ipv6CidrBlockNetworkBorderGroup": "",
+                    "ipv6IpamPoolId": "",
+                    "ipv6NetmaskLength": 0,
+                    "mainRouteTableId": "rtb-012f6a64ca04c6433",
+                    "ownerId": "448312246740",
+                    "tags": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "tagsAll": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    }
+                },
+                "parent": "urn:pulumi:canvas-lms::canvas-lms::pulumi:pulumi:Stack::canvas-lms-canvas-lms",
+                "provider": "urn:pulumi:canvas-lms::canvas-lms::pulumi:providers:aws::default_5_24_0::b05350c9-f4e5-428e-9bcf-01b3bd6f5cf3",
+                "propertyDependencies": {
+                    "cidrBlock": null,
+                    "enableDnsHostnames": null,
+                    "enableDnsSupport": null,
+                    "tags": null
+                }
+            },
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::aws:cloudwatch/logGroup:LogGroup::canvas-lms-redis-log",
+                "custom": true,
+                "id": "/aws/redis/canvas-lms-redis",
+                "type": "aws:cloudwatch/logGroup:LogGroup",
+                "inputs": {
+                    "__defaults": [
+                        "skipDestroy"
+                    ],
+                    "name": "/aws/redis/canvas-lms-redis",
+                    "retentionInDays": 14,
+                    "skipDestroy": false
+                },
+                "outputs": {
+                    "arn": "arn:aws:logs:us-west-2:448312246740:log-group:/aws/redis/canvas-lms-redis",
+                    "id": "/aws/redis/canvas-lms-redis",
+                    "kmsKeyId": "",
+                    "name": "/aws/redis/canvas-lms-redis",
+                    "namePrefix": "",
+                    "retentionInDays": 14,
+                    "skipDestroy": false,
+                    "tags": {},
+                    "tagsAll": {}
+                },
+                "parent": "urn:pulumi:canvas-lms::canvas-lms::pulumi:pulumi:Stack::canvas-lms-canvas-lms",
+                "provider": "urn:pulumi:canvas-lms::canvas-lms::pulumi:providers:aws::default_5_24_0::b05350c9-f4e5-428e-9bcf-01b3bd6f5cf3",
+                "propertyDependencies": {
+                    "name": null,
+                    "retentionInDays": null
+                }
+            },
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/securityGroup:SecurityGroup::canvas-lms-sg",
+                "custom": true,
+                "id": "sg-0784eb9b3747f42e0",
+                "type": "aws:ec2/securityGroup:SecurityGroup",
+                "inputs": {
+                    "__defaults": [
+                        "name",
+                        "revokeRulesOnDelete"
+                    ],
+                    "description": "Managed by Pulumi",
+                    "egress": [
+                        {
+                            "__defaults": [
+                                "self"
+                            ],
+                            "cidrBlocks": [
+                                "0.0.0.0/0"
+                            ],
+                            "fromPort": 0,
+                            "protocol": "tcp",
+                            "self": false,
+                            "toPort": 65535
+                        }
+                    ],
+                    "ingress": [
+                        {
+                            "__defaults": [
+                                "self"
+                            ],
+                            "cidrBlocks": [
+                                "0.0.0.0/0"
+                            ],
+                            "fromPort": 0,
+                            "protocol": "tcp",
+                            "self": false,
+                            "toPort": 65535
+                        }
+                    ],
+                    "name": "canvas-lms-sg-0ab2d4a",
+                    "revokeRulesOnDelete": false,
+                    "tags": {
+                        "__defaults": [],
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "vpcId": "vpc-037040915e17ff9af"
+                },
+                "outputs": {
+                    "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":600000000000,\"delete\":900000000000},\"schema_version\":\"1\"}",
+                    "arn": "arn:aws:ec2:us-west-2:448312246740:security-group/sg-0784eb9b3747f42e0",
+                    "description": "Managed by Pulumi",
+                    "egress": [
+                        {
+                            "cidrBlocks": [
+                                "0.0.0.0/0"
+                            ],
+                            "description": "",
+                            "fromPort": 0,
+                            "ipv6CidrBlocks": [],
+                            "prefixListIds": [],
+                            "protocol": "tcp",
+                            "securityGroups": [],
+                            "self": false,
+                            "toPort": 65535
+                        }
+                    ],
+                    "id": "sg-0784eb9b3747f42e0",
+                    "ingress": [
+                        {
+                            "cidrBlocks": [
+                                "0.0.0.0/0"
+                            ],
+                            "description": "",
+                            "fromPort": 0,
+                            "ipv6CidrBlocks": [],
+                            "prefixListIds": [],
+                            "protocol": "tcp",
+                            "securityGroups": [],
+                            "self": false,
+                            "toPort": 65535
+                        }
+                    ],
+                    "name": "canvas-lms-sg-0ab2d4a",
+                    "namePrefix": "",
+                    "ownerId": "448312246740",
+                    "revokeRulesOnDelete": false,
+                    "tags": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "tagsAll": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "vpcId": "vpc-037040915e17ff9af"
+                },
+                "parent": "urn:pulumi:canvas-lms::canvas-lms::pulumi:pulumi:Stack::canvas-lms-canvas-lms",
+                "dependencies": [
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/vpc:Vpc::canvas-lms-vpc"
+                ],
+                "provider": "urn:pulumi:canvas-lms::canvas-lms::pulumi:providers:aws::default_5_24_0::b05350c9-f4e5-428e-9bcf-01b3bd6f5cf3",
+                "propertyDependencies": {
+                    "description": null,
+                    "egress": null,
+                    "ingress": null,
+                    "tags": null,
+                    "vpcId": [
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/vpc:Vpc::canvas-lms-vpc"
+                    ]
+                }
+            },
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/internetGateway:InternetGateway::canvas-lms",
+                "custom": true,
+                "id": "igw-0689144945674f784",
+                "type": "aws:ec2/internetGateway:InternetGateway",
+                "inputs": {
+                    "__defaults": [],
+                    "tags": {
+                        "__defaults": [],
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "vpcId": "vpc-037040915e17ff9af"
+                },
+                "outputs": {
+                    "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":1200000000000,\"delete\":1200000000000,\"update\":1200000000000}}",
+                    "arn": "arn:aws:ec2:us-west-2:448312246740:internet-gateway/igw-0689144945674f784",
+                    "id": "igw-0689144945674f784",
+                    "ownerId": "448312246740",
+                    "tags": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "tagsAll": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "vpcId": "vpc-037040915e17ff9af"
+                },
+                "parent": "urn:pulumi:canvas-lms::canvas-lms::pulumi:pulumi:Stack::canvas-lms-canvas-lms",
+                "dependencies": [
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/vpc:Vpc::canvas-lms-vpc"
+                ],
+                "provider": "urn:pulumi:canvas-lms::canvas-lms::pulumi:providers:aws::default_5_24_0::b05350c9-f4e5-428e-9bcf-01b3bd6f5cf3",
+                "propertyDependencies": {
+                    "tags": null,
+                    "vpcId": [
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/vpc:Vpc::canvas-lms-vpc"
+                    ]
+                }
+            },
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/subnet:Subnet::canvas-lms-us-west-2b-vpc",
+                "custom": true,
+                "id": "subnet-06c9cc372277cf3e0",
+                "type": "aws:ec2/subnet:Subnet",
+                "inputs": {
+                    "__defaults": [
+                        "assignIpv6AddressOnCreation",
+                        "enableDns64",
+                        "enableResourceNameDnsARecordOnLaunch",
+                        "enableResourceNameDnsAaaaRecordOnLaunch",
+                        "ipv6Native",
+                        "mapPublicIpOnLaunch"
+                    ],
+                    "assignIpv6AddressOnCreation": false,
+                    "availabilityZone": "us-west-2b",
+                    "cidrBlock": "10.51.5.32/27",
+                    "enableDns64": false,
+                    "enableResourceNameDnsARecordOnLaunch": false,
+                    "enableResourceNameDnsAaaaRecordOnLaunch": false,
+                    "ipv6Native": false,
+                    "mapPublicIpOnLaunch": false,
+                    "tags": {
+                        "__defaults": [],
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "vpcId": "vpc-037040915e17ff9af"
+                },
+                "outputs": {
+                    "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":600000000000,\"delete\":1200000000000},\"schema_version\":\"1\"}",
+                    "arn": "arn:aws:ec2:us-west-2:448312246740:subnet/subnet-06c9cc372277cf3e0",
+                    "assignIpv6AddressOnCreation": false,
+                    "availabilityZone": "us-west-2b",
+                    "availabilityZoneId": "usw2-az1",
+                    "cidrBlock": "10.51.5.32/27",
+                    "customerOwnedIpv4Pool": "",
+                    "enableDns64": false,
+                    "enableResourceNameDnsARecordOnLaunch": false,
+                    "enableResourceNameDnsAaaaRecordOnLaunch": false,
+                    "id": "subnet-06c9cc372277cf3e0",
+                    "ipv6CidrBlock": "",
+                    "ipv6CidrBlockAssociationId": "",
+                    "ipv6Native": false,
+                    "mapCustomerOwnedIpOnLaunch": false,
+                    "mapPublicIpOnLaunch": false,
+                    "outpostArn": "",
+                    "ownerId": "448312246740",
+                    "privateDnsHostnameTypeOnLaunch": "ip-name",
+                    "tags": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "tagsAll": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "vpcId": "vpc-037040915e17ff9af"
+                },
+                "parent": "urn:pulumi:canvas-lms::canvas-lms::pulumi:pulumi:Stack::canvas-lms-canvas-lms",
+                "dependencies": [
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/vpc:Vpc::canvas-lms-vpc"
+                ],
+                "provider": "urn:pulumi:canvas-lms::canvas-lms::pulumi:providers:aws::default_5_24_0::b05350c9-f4e5-428e-9bcf-01b3bd6f5cf3",
+                "propertyDependencies": {
+                    "availabilityZone": null,
+                    "cidrBlock": null,
+                    "tags": null,
+                    "vpcId": [
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/vpc:Vpc::canvas-lms-vpc"
+                    ]
+                }
+            },
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/subnet:Subnet::canvas-lms-us-west-2c-vpc",
+                "custom": true,
+                "id": "subnet-0c3bdf8e221f14153",
+                "type": "aws:ec2/subnet:Subnet",
+                "inputs": {
+                    "__defaults": [
+                        "assignIpv6AddressOnCreation",
+                        "enableDns64",
+                        "enableResourceNameDnsARecordOnLaunch",
+                        "enableResourceNameDnsAaaaRecordOnLaunch",
+                        "ipv6Native",
+                        "mapPublicIpOnLaunch"
+                    ],
+                    "assignIpv6AddressOnCreation": false,
+                    "availabilityZone": "us-west-2c",
+                    "cidrBlock": "10.51.5.64/27",
+                    "enableDns64": false,
+                    "enableResourceNameDnsARecordOnLaunch": false,
+                    "enableResourceNameDnsAaaaRecordOnLaunch": false,
+                    "ipv6Native": false,
+                    "mapPublicIpOnLaunch": false,
+                    "tags": {
+                        "__defaults": [],
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "vpcId": "vpc-037040915e17ff9af"
+                },
+                "outputs": {
+                    "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":600000000000,\"delete\":1200000000000},\"schema_version\":\"1\"}",
+                    "arn": "arn:aws:ec2:us-west-2:448312246740:subnet/subnet-0c3bdf8e221f14153",
+                    "assignIpv6AddressOnCreation": false,
+                    "availabilityZone": "us-west-2c",
+                    "availabilityZoneId": "usw2-az3",
+                    "cidrBlock": "10.51.5.64/27",
+                    "customerOwnedIpv4Pool": "",
+                    "enableDns64": false,
+                    "enableResourceNameDnsARecordOnLaunch": false,
+                    "enableResourceNameDnsAaaaRecordOnLaunch": false,
+                    "id": "subnet-0c3bdf8e221f14153",
+                    "ipv6CidrBlock": "",
+                    "ipv6CidrBlockAssociationId": "",
+                    "ipv6Native": false,
+                    "mapCustomerOwnedIpOnLaunch": false,
+                    "mapPublicIpOnLaunch": false,
+                    "outpostArn": "",
+                    "ownerId": "448312246740",
+                    "privateDnsHostnameTypeOnLaunch": "ip-name",
+                    "tags": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "tagsAll": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "vpcId": "vpc-037040915e17ff9af"
+                },
+                "parent": "urn:pulumi:canvas-lms::canvas-lms::pulumi:pulumi:Stack::canvas-lms-canvas-lms",
+                "dependencies": [
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/vpc:Vpc::canvas-lms-vpc"
+                ],
+                "provider": "urn:pulumi:canvas-lms::canvas-lms::pulumi:providers:aws::default_5_24_0::b05350c9-f4e5-428e-9bcf-01b3bd6f5cf3",
+                "propertyDependencies": {
+                    "availabilityZone": null,
+                    "cidrBlock": null,
+                    "tags": null,
+                    "vpcId": [
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/vpc:Vpc::canvas-lms-vpc"
+                    ]
+                }
+            },
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/subnet:Subnet::canvas-lms-us-west-2a-vpc",
+                "custom": true,
+                "id": "subnet-077757a7eaf15c27f",
+                "type": "aws:ec2/subnet:Subnet",
+                "inputs": {
+                    "__defaults": [
+                        "assignIpv6AddressOnCreation",
+                        "enableDns64",
+                        "enableResourceNameDnsARecordOnLaunch",
+                        "enableResourceNameDnsAaaaRecordOnLaunch",
+                        "ipv6Native",
+                        "mapPublicIpOnLaunch"
+                    ],
+                    "assignIpv6AddressOnCreation": false,
+                    "availabilityZone": "us-west-2a",
+                    "cidrBlock": "10.51.5.0/27",
+                    "enableDns64": false,
+                    "enableResourceNameDnsARecordOnLaunch": false,
+                    "enableResourceNameDnsAaaaRecordOnLaunch": false,
+                    "ipv6Native": false,
+                    "mapPublicIpOnLaunch": false,
+                    "tags": {
+                        "__defaults": [],
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "vpcId": "vpc-037040915e17ff9af"
+                },
+                "outputs": {
+                    "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":600000000000,\"delete\":1200000000000},\"schema_version\":\"1\"}",
+                    "arn": "arn:aws:ec2:us-west-2:448312246740:subnet/subnet-077757a7eaf15c27f",
+                    "assignIpv6AddressOnCreation": false,
+                    "availabilityZone": "us-west-2a",
+                    "availabilityZoneId": "usw2-az2",
+                    "cidrBlock": "10.51.5.0/27",
+                    "customerOwnedIpv4Pool": "",
+                    "enableDns64": false,
+                    "enableResourceNameDnsARecordOnLaunch": false,
+                    "enableResourceNameDnsAaaaRecordOnLaunch": false,
+                    "id": "subnet-077757a7eaf15c27f",
+                    "ipv6CidrBlock": "",
+                    "ipv6CidrBlockAssociationId": "",
+                    "ipv6Native": false,
+                    "mapCustomerOwnedIpOnLaunch": false,
+                    "mapPublicIpOnLaunch": false,
+                    "outpostArn": "",
+                    "ownerId": "448312246740",
+                    "privateDnsHostnameTypeOnLaunch": "ip-name",
+                    "tags": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "tagsAll": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "vpcId": "vpc-037040915e17ff9af"
+                },
+                "parent": "urn:pulumi:canvas-lms::canvas-lms::pulumi:pulumi:Stack::canvas-lms-canvas-lms",
+                "dependencies": [
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/vpc:Vpc::canvas-lms-vpc"
+                ],
+                "provider": "urn:pulumi:canvas-lms::canvas-lms::pulumi:providers:aws::default_5_24_0::b05350c9-f4e5-428e-9bcf-01b3bd6f5cf3",
+                "propertyDependencies": {
+                    "availabilityZone": null,
+                    "cidrBlock": null,
+                    "tags": null,
+                    "vpcId": [
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/vpc:Vpc::canvas-lms-vpc"
+                    ]
+                }
+            },
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/route:Route::canvas-lms-route",
+                "custom": true,
+                "id": "r-rtb-012f6a64ca04c64331080289494",
+                "type": "aws:ec2/route:Route",
+                "inputs": {
+                    "__defaults": [],
+                    "destinationCidrBlock": "0.0.0.0/0",
+                    "gatewayId": "igw-0689144945674f784",
+                    "routeTableId": "rtb-012f6a64ca04c6433"
+                },
+                "outputs": {
+                    "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":300000000000,\"delete\":300000000000,\"update\":120000000000}}",
+                    "carrierGatewayId": "",
+                    "coreNetworkArn": "",
+                    "destinationCidrBlock": "0.0.0.0/0",
+                    "destinationIpv6CidrBlock": "",
+                    "destinationPrefixListId": "",
+                    "egressOnlyGatewayId": "",
+                    "gatewayId": "igw-0689144945674f784",
+                    "id": "r-rtb-012f6a64ca04c64331080289494",
+                    "instanceId": "",
+                    "instanceOwnerId": "",
+                    "localGatewayId": "",
+                    "natGatewayId": "",
+                    "networkInterfaceId": "",
+                    "origin": "CreateRoute",
+                    "routeTableId": "rtb-012f6a64ca04c6433",
+                    "state": "active",
+                    "transitGatewayId": "",
+                    "vpcEndpointId": "",
+                    "vpcPeeringConnectionId": ""
+                },
+                "parent": "urn:pulumi:canvas-lms::canvas-lms::pulumi:pulumi:Stack::canvas-lms-canvas-lms",
+                "dependencies": [
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/internetGateway:InternetGateway::canvas-lms",
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/vpc:Vpc::canvas-lms-vpc"
+                ],
+                "provider": "urn:pulumi:canvas-lms::canvas-lms::pulumi:providers:aws::default_5_24_0::b05350c9-f4e5-428e-9bcf-01b3bd6f5cf3",
+                "propertyDependencies": {
+                    "destinationCidrBlock": null,
+                    "gatewayId": [
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/internetGateway:InternetGateway::canvas-lms"
+                    ],
+                    "routeTableId": [
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/vpc:Vpc::canvas-lms-vpc"
+                    ]
+                }
+            },
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::aws:rds/subnetGroup:SubnetGroup::canvas-lms-rds-subnetgroup",
+                "custom": true,
+                "id": "canvas-lms-rds-subnetgroup",
+                "type": "aws:rds/subnetGroup:SubnetGroup",
+                "inputs": {
+                    "__defaults": [],
+                    "description": "Managed by Pulumi",
+                    "name": "canvas-lms-rds-subnetgroup",
+                    "subnetIds": [
+                        "subnet-06c9cc372277cf3e0",
+                        "subnet-0c3bdf8e221f14153",
+                        "subnet-077757a7eaf15c27f"
+                    ],
+                    "tags": {
+                        "__defaults": [],
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    }
+                },
+                "outputs": {
+                    "arn": "arn:aws:rds:us-west-2:448312246740:subgrp:canvas-lms-rds-subnetgroup",
+                    "description": "Managed by Pulumi",
+                    "id": "canvas-lms-rds-subnetgroup",
+                    "name": "canvas-lms-rds-subnetgroup",
+                    "namePrefix": "",
+                    "subnetIds": [
+                        "subnet-06c9cc372277cf3e0",
+                        "subnet-0c3bdf8e221f14153",
+                        "subnet-077757a7eaf15c27f"
+                    ],
+                    "supportedNetworkTypes": [
+                        "IPV4"
+                    ],
+                    "tags": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "tagsAll": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    }
+                },
+                "parent": "urn:pulumi:canvas-lms::canvas-lms::pulumi:pulumi:Stack::canvas-lms-canvas-lms",
+                "dependencies": [
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/subnet:Subnet::canvas-lms-us-west-2a-vpc",
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/subnet:Subnet::canvas-lms-us-west-2b-vpc",
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/subnet:Subnet::canvas-lms-us-west-2c-vpc"
+                ],
+                "provider": "urn:pulumi:canvas-lms::canvas-lms::pulumi:providers:aws::default_5_24_0::b05350c9-f4e5-428e-9bcf-01b3bd6f5cf3",
+                "propertyDependencies": {
+                    "description": null,
+                    "name": null,
+                    "subnetIds": [
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/subnet:Subnet::canvas-lms-us-west-2a-vpc",
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/subnet:Subnet::canvas-lms-us-west-2b-vpc",
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/subnet:Subnet::canvas-lms-us-west-2c-vpc"
+                    ],
+                    "tags": null
+                }
+            },
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::aws:elasticache/subnetGroup:SubnetGroup::canvas-lms-redis-subnetgroup",
+                "custom": true,
+                "id": "canvas-lms-redis-subnetgroup",
+                "type": "aws:elasticache/subnetGroup:SubnetGroup",
+                "inputs": {
+                    "__defaults": [],
+                    "description": "Managed by Pulumi",
+                    "name": "canvas-lms-redis-subnetgroup",
+                    "subnetIds": [
+                        "subnet-06c9cc372277cf3e0",
+                        "subnet-077757a7eaf15c27f",
+                        "subnet-0c3bdf8e221f14153"
+                    ],
+                    "tags": {
+                        "__defaults": [],
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    }
+                },
+                "outputs": {
+                    "arn": "arn:aws:elasticache:us-west-2:448312246740:subnetgroup:canvas-lms-redis-subnetgroup",
+                    "description": "Managed by Pulumi",
+                    "id": "canvas-lms-redis-subnetgroup",
+                    "name": "canvas-lms-redis-subnetgroup",
+                    "subnetIds": [
+                        "subnet-06c9cc372277cf3e0",
+                        "subnet-077757a7eaf15c27f",
+                        "subnet-0c3bdf8e221f14153"
+                    ],
+                    "tags": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "tagsAll": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    }
+                },
+                "parent": "urn:pulumi:canvas-lms::canvas-lms::pulumi:pulumi:Stack::canvas-lms-canvas-lms",
+                "dependencies": [
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/subnet:Subnet::canvas-lms-us-west-2a-vpc",
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/subnet:Subnet::canvas-lms-us-west-2b-vpc",
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/subnet:Subnet::canvas-lms-us-west-2c-vpc"
+                ],
+                "provider": "urn:pulumi:canvas-lms::canvas-lms::pulumi:providers:aws::default_5_24_0::b05350c9-f4e5-428e-9bcf-01b3bd6f5cf3",
+                "propertyDependencies": {
+                    "description": null,
+                    "name": null,
+                    "subnetIds": [
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/subnet:Subnet::canvas-lms-us-west-2a-vpc",
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/subnet:Subnet::canvas-lms-us-west-2b-vpc",
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/subnet:Subnet::canvas-lms-us-west-2c-vpc"
+                    ],
+                    "tags": null
+                }
+            },
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::aws:rds/cluster:Cluster::canvas-lms-rds-cluster",
+                "custom": true,
+                "id": "canvas-lms-dev",
+                "type": "aws:rds/cluster:Cluster",
+                "inputs": {
+                    "__defaults": [
+                        "copyTagsToSnapshot",
+                        "enableGlobalWriteForwarding",
+                        "enableHttpEndpoint"
+                    ],
+                    "availabilityZones": [
+                        "us-west-2a",
+                        "us-west-2b",
+                        "us-west-2c"
+                    ],
+                    "backupRetentionPeriod": 5,
+                    "clusterIdentifier": "canvas-lms-dev",
+                    "copyTagsToSnapshot": false,
+                    "databaseName": "dev",
+                    "dbSubnetGroupName": "canvas-lms-rds-subnetgroup",
+                    "enableGlobalWriteForwarding": false,
+                    "enableHttpEndpoint": false,
+                    "engine": "aurora-postgresql",
+                    "engineMode": "serverless",
+                    "masterPassword": {
+                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                        "ciphertext": "AAABAPGom/huGTCuNPjVEWRPddJhD8tZcG9Upsq8wXRanY8pQFwnsZpP"
+                    },
+                    "masterUsername": "sm_admin",
+                    "port": 5432,
+                    "preferredBackupWindow": "07:00-09:00",
+                    "scalingConfiguration": {
+                        "__defaults": [],
+                        "autoPause": true,
+                        "maxCapacity": 384,
+                        "minCapacity": 2,
+                        "secondsUntilAutoPause": 10000,
+                        "timeoutAction": "ForceApplyCapacityChange"
+                    },
+                    "skipFinalSnapshot": true,
+                    "storageEncrypted": true,
+                    "tags": {
+                        "__defaults": [],
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "vpcSecurityGroupIds": [
+                        "sg-0784eb9b3747f42e0"
+                    ]
+                },
+                "outputs": {
+                    "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":7200000000000,\"delete\":7200000000000,\"update\":7200000000000}}",
+                    "allocatedStorage": 1,
+                    "arn": "arn:aws:rds:us-west-2:448312246740:cluster:canvas-lms-dev",
+                    "availabilityZones": [
+                        "us-west-2a",
+                        "us-west-2b",
+                        "us-west-2c"
+                    ],
+                    "backtrackWindow": 0,
+                    "backupRetentionPeriod": 5,
+                    "clusterIdentifier": "canvas-lms-dev",
+                    "clusterMembers": [],
+                    "clusterResourceId": "cluster-RRMBICEA3CDRFNHDZOMHZ42ARU",
+                    "copyTagsToSnapshot": false,
+                    "databaseName": "dev",
+                    "dbClusterInstanceClass": "",
+                    "dbClusterParameterGroupName": "default.aurora-postgresql10",
+                    "dbSubnetGroupName": "canvas-lms-rds-subnetgroup",
+                    "deletionProtection": false,
+                    "enableGlobalWriteForwarding": false,
+                    "enableHttpEndpoint": false,
+                    "enabledCloudwatchLogsExports": [],
+                    "endpoint": "canvas-lms-dev.cluster-cxfx9jvpx6jn.us-west-2.rds.amazonaws.com",
+                    "engine": "aurora-postgresql",
+                    "engineMode": "serverless",
+                    "engineVersion": "10.18",
+                    "engineVersionActual": "10.18",
+                    "globalClusterIdentifier": "",
+                    "hostedZoneId": "Z1PVIF0B656C1W",
+                    "iamDatabaseAuthenticationEnabled": false,
+                    "iamRoles": [],
+                    "id": "canvas-lms-dev",
+                    "iops": 0,
+                    "kmsKeyId": "arn:aws:kms:us-west-2:448312246740:key/c9b474e2-b796-4d8c-beaf-d7ae91b9e2bd",
+                    "masterPassword": {
+                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                        "ciphertext": "AAABAAMxDCkoRgQRJ7Iqm9MPgiNAVxFfomm6sS2+wGivWkrw7hWR5Boj"
+                    },
+                    "masterUsername": "sm_admin",
+                    "networkType": "IPV4",
+                    "port": 5432,
+                    "preferredBackupWindow": "07:00-09:00",
+                    "preferredMaintenanceWindow": "wed:09:46-wed:10:16",
+                    "readerEndpoint": "",
+                    "replicationSourceIdentifier": "",
+                    "restoreToPointInTime": null,
+                    "s3Import": null,
+                    "scalingConfiguration": {
+                        "autoPause": true,
+                        "maxCapacity": 384,
+                        "minCapacity": 2,
+                        "secondsUntilAutoPause": 10000,
+                        "timeoutAction": "ForceApplyCapacityChange"
+                    },
+                    "serverlessv2ScalingConfiguration": null,
+                    "skipFinalSnapshot": true,
+                    "storageEncrypted": true,
+                    "storageType": "",
+                    "tags": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "tagsAll": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "vpcSecurityGroupIds": [
+                        "sg-0784eb9b3747f42e0"
+                    ]
+                },
+                "parent": "urn:pulumi:canvas-lms::canvas-lms::pulumi:pulumi:Stack::canvas-lms-canvas-lms",
+                "dependencies": [
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/securityGroup:SecurityGroup::canvas-lms-sg",
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:rds/subnetGroup:SubnetGroup::canvas-lms-rds-subnetgroup"
+                ],
+                "provider": "urn:pulumi:canvas-lms::canvas-lms::pulumi:providers:aws::default_5_24_0::b05350c9-f4e5-428e-9bcf-01b3bd6f5cf3",
+                "propertyDependencies": {
+                    "availabilityZones": null,
+                    "backupRetentionPeriod": null,
+                    "clusterIdentifier": null,
+                    "databaseName": null,
+                    "dbSubnetGroupName": [
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:rds/subnetGroup:SubnetGroup::canvas-lms-rds-subnetgroup"
+                    ],
+                    "engine": null,
+                    "engineMode": null,
+                    "masterPassword": null,
+                    "masterUsername": null,
+                    "port": null,
+                    "preferredBackupWindow": null,
+                    "scalingConfiguration": null,
+                    "skipFinalSnapshot": null,
+                    "storageEncrypted": null,
+                    "tags": null,
+                    "vpcSecurityGroupIds": [
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/securityGroup:SecurityGroup::canvas-lms-sg"
+                    ]
+                },
+                "additionalSecretOutputs": [
+                    "masterPassword"
+                ]
+            },
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::aws:elasticache/cluster:Cluster::canvas-lms-redis-cluster",
+                "custom": true,
+                "id": "canvas-lms-redis",
+                "type": "aws:elasticache/cluster:Cluster",
+                "inputs": {
+                    "__defaults": [],
+                    "applyImmediately": true,
+                    "autoMinorVersionUpgrade": "true",
+                    "clusterId": "canvas-lms-redis",
+                    "engine": "redis",
+                    "engineVersion": "6.x",
+                    "logDeliveryConfigurations": [
+                        {
+                            "__defaults": [],
+                            "destination": "/aws/redis/canvas-lms-redis",
+                            "destinationType": "cloudwatch-logs",
+                            "logFormat": "json",
+                            "logType": "slow-log"
+                        }
+                    ],
+                    "maintenanceWindow": "sun:05:00-sun:09:00",
+                    "nodeType": "cache.t4g.small",
+                    "numCacheNodes": 1,
+                    "parameterGroupName": "default.redis6.x",
+                    "port": 6379,
+                    "securityGroupIds": [
+                        "sg-0784eb9b3747f42e0"
+                    ],
+                    "subnetGroupName": "canvas-lms-redis-subnetgroup",
+                    "tags": {
+                        "__defaults": [],
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    }
+                },
+                "outputs": {
+                    "applyImmediately": true,
+                    "arn": "arn:aws:elasticache:us-west-2:448312246740:cluster:canvas-lms-redis",
+                    "autoMinorVersionUpgrade": "true",
+                    "availabilityZone": "us-west-2c",
+                    "azMode": "single-az",
+                    "cacheNodes": [
+                        {
+                            "address": "canvas-lms-redis.samxej.0001.usw2.cache.amazonaws.com",
+                            "availabilityZone": "us-west-2c",
+                            "id": "0001",
+                            "outpostArn": "",
+                            "port": 6379
+                        }
+                    ],
+                    "clusterId": "canvas-lms-redis",
+                    "engine": "redis",
+                    "engineVersion": "6.x",
+                    "engineVersionActual": "6.2.6",
+                    "id": "canvas-lms-redis",
+                    "ipDiscovery": "ipv4",
+                    "logDeliveryConfigurations": [
+                        {
+                            "destination": "/aws/redis/canvas-lms-redis",
+                            "destinationType": "cloudwatch-logs",
+                            "logFormat": "json",
+                            "logType": "slow-log"
+                        }
+                    ],
+                    "maintenanceWindow": "sun:05:00-sun:09:00",
+                    "networkType": "ipv4",
+                    "nodeType": "cache.t4g.small",
+                    "numCacheNodes": 1,
+                    "parameterGroupName": "default.redis6.x",
+                    "port": 6379,
+                    "preferredAvailabilityZones": [],
+                    "preferredOutpostArn": "",
+                    "securityGroupIds": [
+                        "sg-0784eb9b3747f42e0"
+                    ],
+                    "securityGroupNames": [],
+                    "snapshotArns": null,
+                    "snapshotRetentionLimit": 0,
+                    "snapshotWindow": "10:30-11:30",
+                    "subnetGroupName": "canvas-lms-redis-subnetgroup",
+                    "tags": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "tagsAll": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    }
+                },
+                "parent": "urn:pulumi:canvas-lms::canvas-lms::pulumi:pulumi:Stack::canvas-lms-canvas-lms",
+                "dependencies": [
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/securityGroup:SecurityGroup::canvas-lms-sg",
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:elasticache/subnetGroup:SubnetGroup::canvas-lms-redis-subnetgroup"
+                ],
+                "provider": "urn:pulumi:canvas-lms::canvas-lms::pulumi:providers:aws::default_5_24_0::b05350c9-f4e5-428e-9bcf-01b3bd6f5cf3",
+                "propertyDependencies": {
+                    "applyImmediately": null,
+                    "autoMinorVersionUpgrade": null,
+                    "clusterId": null,
+                    "engine": null,
+                    "engineVersion": null,
+                    "logDeliveryConfigurations": null,
+                    "maintenanceWindow": null,
+                    "nodeType": null,
+                    "numCacheNodes": null,
+                    "parameterGroupName": null,
+                    "port": null,
+                    "securityGroupIds": [
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:ec2/securityGroup:SecurityGroup::canvas-lms-sg"
+                    ],
+                    "subnetGroupName": [
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:elasticache/subnetGroup:SubnetGroup::canvas-lms-redis-subnetgroup"
+                    ],
+                    "tags": null
+                }
+            },
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::aws:cloudwatch/metricAlarm:MetricAlarm::canvas-lms-CPUUtilization",
+                "custom": true,
+                "id": "canvas-lms-cpuutilization-alarm",
+                "type": "aws:cloudwatch/metricAlarm:MetricAlarm",
+                "inputs": {
+                    "__defaults": [
+                        "actionsEnabled"
+                    ],
+                    "actionsEnabled": true,
+                    "alarmActions": [
+                        "arn:aws:sns:us-west-2:221871915463:DevOps-Opsgenie"
+                    ],
+                    "comparisonOperator": "GreaterThanThreshold",
+                    "datapointsToAlarm": 1,
+                    "dimensions": {
+                        "CacheClusterId": "canvas-lms-redis",
+                        "CacheNodeId": "0001",
+                        "__defaults": []
+                    },
+                    "evaluationPeriods": 1,
+                    "metricName": "CPUUtilization",
+                    "name": "canvas-lms-cpuutilization-alarm",
+                    "namespace": "AWS/ElastiCache",
+                    "okActions": [
+                        "arn:aws:sns:us-west-2:221871915463:DevOps-Opsgenie"
+                    ],
+                    "period": 300,
+                    "statistic": "Average",
+                    "tags": {
+                        "__defaults": [],
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "threshold": 50,
+                    "treatMissingData": "notBreaching"
+                },
+                "outputs": {
+                    "__meta": "{\"schema_version\":\"1\"}",
+                    "actionsEnabled": true,
+                    "alarmActions": [
+                        "arn:aws:sns:us-west-2:221871915463:DevOps-Opsgenie"
+                    ],
+                    "alarmDescription": "",
+                    "arn": "arn:aws:cloudwatch:us-west-2:448312246740:alarm:canvas-lms-cpuutilization-alarm",
+                    "comparisonOperator": "GreaterThanThreshold",
+                    "datapointsToAlarm": 1,
+                    "dimensions": {
+                        "CacheClusterId": "canvas-lms-redis",
+                        "CacheNodeId": "0001"
+                    },
+                    "evaluateLowSampleCountPercentiles": "",
+                    "evaluationPeriods": 1,
+                    "extendedStatistic": "",
+                    "id": "canvas-lms-cpuutilization-alarm",
+                    "insufficientDataActions": [],
+                    "metricName": "CPUUtilization",
+                    "metricQueries": [],
+                    "name": "canvas-lms-cpuutilization-alarm",
+                    "namespace": "AWS/ElastiCache",
+                    "okActions": [
+                        "arn:aws:sns:us-west-2:221871915463:DevOps-Opsgenie"
+                    ],
+                    "period": 300,
+                    "statistic": "Average",
+                    "tags": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "tagsAll": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "threshold": 50,
+                    "thresholdMetricId": "",
+                    "treatMissingData": "notBreaching",
+                    "unit": ""
+                },
+                "parent": "urn:pulumi:canvas-lms::canvas-lms::pulumi:pulumi:Stack::canvas-lms-canvas-lms",
+                "dependencies": [
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:elasticache/cluster:Cluster::canvas-lms-redis-cluster"
+                ],
+                "provider": "urn:pulumi:canvas-lms::canvas-lms::pulumi:providers:aws::default_5_24_0::b05350c9-f4e5-428e-9bcf-01b3bd6f5cf3",
+                "propertyDependencies": {
+                    "alarmActions": null,
+                    "comparisonOperator": null,
+                    "datapointsToAlarm": null,
+                    "dimensions": [
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:elasticache/cluster:Cluster::canvas-lms-redis-cluster"
+                    ],
+                    "evaluationPeriods": null,
+                    "metricName": null,
+                    "name": null,
+                    "namespace": null,
+                    "okActions": null,
+                    "period": null,
+                    "statistic": null,
+                    "tags": null,
+                    "threshold": null,
+                    "treatMissingData": null
+                }
+            },
+            {
+                "urn": "urn:pulumi:canvas-lms::canvas-lms::aws:cloudwatch/metricAlarm:MetricAlarm::canvas-lms-DatabaseMemoryUsagePercentage",
+                "custom": true,
+                "id": "canvas-lms-databasememoryusagepercentage-alarm",
+                "type": "aws:cloudwatch/metricAlarm:MetricAlarm",
+                "inputs": {
+                    "__defaults": [
+                        "actionsEnabled"
+                    ],
+                    "actionsEnabled": true,
+                    "alarmActions": [
+                        "arn:aws:sns:us-west-2:221871915463:DevOps-Opsgenie"
+                    ],
+                    "comparisonOperator": "GreaterThanThreshold",
+                    "datapointsToAlarm": 1,
+                    "dimensions": {
+                        "CacheClusterId": "canvas-lms-redis",
+                        "CacheNodeId": "0001",
+                        "__defaults": []
+                    },
+                    "evaluationPeriods": 1,
+                    "metricName": "DatabaseMemoryUsagePercentage",
+                    "name": "canvas-lms-databasememoryusagepercentage-alarm",
+                    "namespace": "AWS/ElastiCache",
+                    "okActions": [
+                        "arn:aws:sns:us-west-2:221871915463:DevOps-Opsgenie"
+                    ],
+                    "period": 300,
+                    "statistic": "Average",
+                    "tags": {
+                        "__defaults": [],
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "threshold": 30,
+                    "treatMissingData": "notBreaching"
+                },
+                "outputs": {
+                    "__meta": "{\"schema_version\":\"1\"}",
+                    "actionsEnabled": true,
+                    "alarmActions": [
+                        "arn:aws:sns:us-west-2:221871915463:DevOps-Opsgenie"
+                    ],
+                    "alarmDescription": "",
+                    "arn": "arn:aws:cloudwatch:us-west-2:448312246740:alarm:canvas-lms-databasememoryusagepercentage-alarm",
+                    "comparisonOperator": "GreaterThanThreshold",
+                    "datapointsToAlarm": 1,
+                    "dimensions": {
+                        "CacheClusterId": "canvas-lms-redis",
+                        "CacheNodeId": "0001"
+                    },
+                    "evaluateLowSampleCountPercentiles": "",
+                    "evaluationPeriods": 1,
+                    "extendedStatistic": "",
+                    "id": "canvas-lms-databasememoryusagepercentage-alarm",
+                    "insufficientDataActions": [],
+                    "metricName": "DatabaseMemoryUsagePercentage",
+                    "metricQueries": [],
+                    "name": "canvas-lms-databasememoryusagepercentage-alarm",
+                    "namespace": "AWS/ElastiCache",
+                    "okActions": [
+                        "arn:aws:sns:us-west-2:221871915463:DevOps-Opsgenie"
+                    ],
+                    "period": 300,
+                    "statistic": "Average",
+                    "tags": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "tagsAll": {
+                        "environment": "stage",
+                        "owner": "devops",
+                        "product": "canvas-lms",
+                        "service": "canvas-lms"
+                    },
+                    "threshold": 30,
+                    "thresholdMetricId": "",
+                    "treatMissingData": "notBreaching",
+                    "unit": ""
+                },
+                "parent": "urn:pulumi:canvas-lms::canvas-lms::pulumi:pulumi:Stack::canvas-lms-canvas-lms",
+                "dependencies": [
+                    "urn:pulumi:canvas-lms::canvas-lms::aws:elasticache/cluster:Cluster::canvas-lms-redis-cluster"
+                ],
+                "provider": "urn:pulumi:canvas-lms::canvas-lms::pulumi:providers:aws::default_5_24_0::b05350c9-f4e5-428e-9bcf-01b3bd6f5cf3",
+                "propertyDependencies": {
+                    "alarmActions": null,
+                    "comparisonOperator": null,
+                    "datapointsToAlarm": null,
+                    "dimensions": [
+                        "urn:pulumi:canvas-lms::canvas-lms::aws:elasticache/cluster:Cluster::canvas-lms-redis-cluster"
+                    ],
+                    "evaluationPeriods": null,
+                    "metricName": null,
+                    "name": null,
+                    "namespace": null,
+                    "okActions": null,
+                    "period": null,
+                    "statistic": null,
+                    "tags": null,
+                    "threshold": null,
+                    "treatMissingData": null
+                }
+            }
+        ]
+    }
+}
