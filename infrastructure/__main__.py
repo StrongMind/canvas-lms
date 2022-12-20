@@ -147,6 +147,8 @@ for metric in metric_dict:
     )
 
 redis_url = cache_object.cache_nodes[0]["address"]
+pulumi.log.info("redis:", stack.redis.arn)
+pulumi.export("redis", stack.redis)
 ###END of redis config
 
 ###START of ECS config

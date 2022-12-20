@@ -8,3 +8,7 @@ bucket = s3.Bucket('my-bucket')
 
 # Export the name of the bucket
 pulumi.export('bucket_name', bucket.id)
+
+other = pulumi.StackReference(f'strongmind-devops/canvas-lms/canvas-lms')
+redis = other.get_output('redis')
+pulumi.log.info("redis:", redis.arn)
