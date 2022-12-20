@@ -45,6 +45,14 @@ for sec_g in security_group_config:
         vpc_object.id,
         tags
     ).id)
+internet_gateway = vpc.create_gateway(stack, vpc_object.id, tags)
+
+# Create a route in the vpc route table to the internet gateway
+route = vpc.create_route(
+    stack,
+    vpc_object.main_route_table_id,
+    internet_gateway.id
+)
 
 ###START of rds config
 ##REQUIRES: vpc, rds,
@@ -147,131 +155,6 @@ for metric in metric_dict:
     )
 
 redis_url = cache_object.cache_nodes[0]["address"]
-pulumi.log.info("redis:", stack.redis.arn)
-pulumi.export("redis", stack.redis)
+# pulumi.log.info("redis:", cache_object)
+# pulumi.export("redis", stack.redis)
 ###END of redis config
-
-###START of ECS config
-##REQIRES: cloudwatch, redis, iam, ecs, lb,
-aws_cloudwatch_log_group = cloudwatch.create_log_group(stack, "ecs", "ecs")
-
-
-
-"""
-ALRIGHT FOLKS, I HATE WHAT IM ABOUT TO DO, DONT @ ME
-"""
-"""
-Output.concat is 0 indexed, so add 1 to any sequence it gives you.
-"""
-# LOG_CONFIG_OUTPUT = ""
-LOG_CONFIG_OUTPUT = pulumi.Output.concat(
-    '{"logDriver": "awslogs","options": {"awslogs-group":"',
-    aws_cloudwatch_log_group.id,
-    '","awslogs-region":"',
-    region,
-    '","awslogs-stream-prefix": "ecs"}}'
-)
-redis_url = cache_object.cache_nodes[0]["address"]
-
-
-
-assume_role_policy = config.require_object("assume_role_policy")
-role_policy = config.require_object("role_policy")
-role = iam.create_iam_role_with_policy(
-    stack,
-    assume_role_policy,
-    role_policy,
-    tags
-)
-ecs_environment_config = config.require_object("ecs")
-# Create an internet gateway attached to our vpc
-internet_gateway = vpc.create_gateway(stack, vpc_object.id, tags)
-
-# Create a route in the vpc route table to the internet gateway
-route = vpc.create_route(
-    stack,
-    vpc_object.main_route_table_id,
-    internet_gateway.id
-)
-
-for container in ecs_environment_config:
-    container_name = f"{stack}-{container['name']}"
-    # On a time crunch, but we lose information this way ( I.E. We are blindly overwriting the same variable,
-    # with itself plus additional data, hard to tell where the json object may get corrupted.
-    ENVIRONMENT_VAR_OUTPUT = pulumi.Output.concat(
-        '[{"name":"RAILS_ENV","value":"', environment, '"}',
-        ',{"name":"DATABASE_USERNAME","value":"', postgres['master_username'], '"}',
-        ',{"name":"DATABASE_PASSWORD","value":"', postgres['master_password'], '"}',
-        ',{"name":"DATABASE_NAME","value":"', postgres_server.database_name, '"}',
-        ',{"name":"DATABASE_HOST","value":"', postgres_server.endpoint, '"}'
-    )
-
-#     for env_key, env_val in container['environment'].items():
-#         ENVIRONMENT_VAR_OUTPUT = pulumi.Output.concat(
-#             ENVIRONMENT_VAR_OUTPUT,
-#             ',{"name":"', env_key, '","value":"', env_val, '"}'
-#         )
-
-    ENVIRONMENT_VAR_OUTPUT = pulumi.Output.concat(
-        ENVIRONMENT_VAR_OUTPUT,
-        ',{"name":"REDIS_URL","value":"redis://', redis_url, ':6379"}]'
-    )
-
-    memory = container['memory']
-    cpu = container["cpu"]
-    entry_point = container["entryPoint"]
-    port_mapping = container["port_mapping"]
-
-    image_dict = container["image"]
-    our_image = f"{image_dict}:latest"
-
-    Our_json_output = pulumi.Output.concat(
-        '[{"name":"', container_name,'"',
-        ',"image":"', our_image, '"',
-        ',"memory":', memory,
-        ',"cpu":', cpu,
-        ',"logConfiguration":', LOG_CONFIG_OUTPUT,
-        ',"entryPoint":', json.dumps(entry_point),
-        ',"essential": true, "portMappings":[',
-        '{"containerPort":', str(port_mapping[0]['containerPort']),
-        ',"hostPort":', str(port_mapping[0]['hostPort']),'}',
-        '],"environment":', ENVIRONMENT_VAR_OUTPUT,'}]'
-    )
-
-#     if container['name'] == "web":
-#
-#         ecs_lb = ecs.set_loadbalancer_args(
-#             container_name,
-#             port_mapping[0]['containerPort'],
-#             target_group.arn
-#         )
-#     else:
-    ecs_lb = None
-    ecs_network = ecs.set_network_configuration(
-        subnet_ids,
-        security_group_ids,
-        public_ip=True
-    )
-    ecs_object = ecs.create_task_definition(
-        container_name,
-        Our_json_output,
-        role.arn,
-        memory,
-        cpu
-    )
-
-    cluster = ecs.create_cluster(container_name)
-    ecs.create_ecs_service(
-        container_name,
-        cluster,
-        ecs_object,
-        2,
-        ecs_network,
-        ecs_lb,
-        tags
-    )
-
-
-# ecs.create_endpoints(stack, vpc_object, subnet_ids, security_group_ids)
-
-###END of ECS config
