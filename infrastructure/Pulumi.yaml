@@ -1,6 +1,0 @@
-name: canvas-lms
-description: A minimal AWS Python Pulumi program
-runtime:
-    name: python
-    options:
-        virtualenv: venv
