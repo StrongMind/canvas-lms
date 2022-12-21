@@ -9,28 +9,25 @@ import ecs
 import vpc
 import json
 
-# Create an AWS resource (S3 Bucket)
-bucket = s3.Bucket('my-bucket')
+# Import canvas-lms parent stack
+strongmind_stack = pulumi.StackReference(f'strongmind-devops/canvas-lms/canvas-lms')
 
-###GLOBAL VARIABLES
+# Global variables
 stack = pulumi.get_stack()
 region = pulumi_aws.config.region
 config = pulumi.Config()
-
 vpc_object = pulumi_aws.ec2.Vpc.get('canvas-lms-vpc', 'vpc-037040915e17ff9af')
 internet_gateway = pulumi_aws.ec2.InternetGateway.get('canvas-lms', 'igw-0689144945674f784')
 environment = config.require("env")
 tags = config.require_object("tags")
+subnet_ids = strongmind_stack.get_output('subnet_ids')
+security_group_ids = strongmind_stack.get_output('security_group_ids')
 
-# Import shared resources from canvas-lms/canvas-lms
-parent_stack = pulumi.StackReference(f'strongmind-devops/canvas-lms/canvas-lms')
 
-subnet_ids = parent_stack.get_output('subnet_ids')
-pulumi.export("subnet_ids", subnet_ids)
+# Create an AWS resource (S3 Bucket)
+bucket = s3.Bucket('my-bucket')
 
-security_group_ids = parent_stack.get_output('security_group_ids')
-# pulumi.log.info("subnet_ids", subnet_ids)
-
+# Redis (reference) 
 redis_cluster = pulumi_aws.elasticache.Cluster("redis-cluster",
     availability_zone="us-west-2c",
     az_mode="single-az",
@@ -61,6 +58,7 @@ redis_cluster = pulumi_aws.elasticache.Cluster("redis-cluster",
     },
     opts=pulumi.ResourceOptions(protect=True))
 
+# Postgres (reference)
 postgres_server = pulumi_aws.rds.Cluster("rds",
     allocated_storage=1,
     availability_zones=[
@@ -77,7 +75,8 @@ postgres_server = pulumi_aws.rds.Cluster("rds",
     engine_mode="serverless",
     engine_version="10.18",
     kms_key_id="arn:aws:kms:us-west-2:448312246740:key/c9b474e2-b796-4d8c-beaf-d7ae91b9e2bd",
-    master_username="sm_admin",
+    master_username=config.require("DB_USER"),
+    master_password=config.require("DB_PASS"),
     network_type="IPV4",
     port=5432,
     preferred_backup_window="07:00-09:00",
@@ -99,19 +98,9 @@ postgres_server = pulumi_aws.rds.Cluster("rds",
     vpc_security_group_ids=["sg-0784eb9b3747f42e0"],
     opts=pulumi.ResourceOptions(protect=True))
 
-    ###START of ECS config
-##REQIRES: cloudwatch, redis, iam, ecs, lb,
+## ECS ##
 aws_cloudwatch_log_group = cloudwatch.create_log_group(stack, "ecs", "ecs")
 
-
-
-"""
-ALRIGHT FOLKS, I HATE WHAT IM ABOUT TO DO, DONT @ ME
-"""
-"""
-Output.concat is 0 indexed, so add 1 to any sequence it gives you.
-"""
-# LOG_CONFIG_OUTPUT = ""
 LOG_CONFIG_OUTPUT = pulumi.Output.concat(
     '{"logDriver": "awslogs","options": {"awslogs-group":"',
     aws_cloudwatch_log_group.id,
@@ -120,9 +109,6 @@ LOG_CONFIG_OUTPUT = pulumi.Output.concat(
     '","awslogs-stream-prefix": "ecs"}}'
 )
 redis_url = redis_cluster.cache_nodes[0]["address"]
-
-
-
 assume_role_policy = config.require_object("assume_role_policy")
 role_policy = config.require_object("role_policy")
 role = iam.create_iam_role_with_policy(
@@ -150,9 +136,10 @@ for container in ecs_environment_config:
     ENVIRONMENT_VAR_OUTPUT = pulumi.Output.concat(
         '[{"name":"RAILS_ENV","value":"', environment, '"}',
         ',{"name":"DATABASE_USERNAME","value":"', postgres['master_username'], '"}',
-        ',{"name":"DATABASE_PASSWORD","value":"', postgres['master_password'], '"}',
+        ',{"name":"DATABASE_PASSWORD","value":"', config.require("DB_PASS"), '"}',
         ',{"name":"DATABASE_NAME","value":"', postgres_server.database_name, '"}',
-        ',{"name":"DATABASE_HOST","value":"', postgres_server.endpoint, '"}'
+        ',{"name":"DATABASE_HOST","value":"', postgres_server.endpoint, '"}',
+        ',{"name":"REDIS_SERVER","value":"', postgres_server.endpoint, '"}'
     )
 
 #     for env_key, env_val in container['environment'].items():
@@ -215,4 +202,11 @@ for container in ecs_environment_config:
 
 # ecs.create_endpoints(stack, vpc_object, subnet_ids, security_group_ids)
 
-###END of ECS config
+## ECS ##
+
+
+pulumi.export("subnet_ids", subnet_ids)
+pulumi.export("security_group_ids", security_group_ids)
+pulumi.export("rds url", postgres_server.master_password)
+pulumi.export("rds username", postgres_server.master_username)
+pulumi.export("rds password", postgres_server.master_password)

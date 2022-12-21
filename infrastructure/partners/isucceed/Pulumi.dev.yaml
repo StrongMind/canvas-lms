@@ -1,63 +1,138 @@
 config:
   aws:region: us-west-2
+  isucceed:AIRBRAKE_PROJECT_ID: "181014"
+  isucceed:AIRBRAKE_PROJECT_KEY:
+    secure: AAABAIaR+Vp50UmDd+Ieswdf9bG2jnczqj2pIOcGMUDMK6XCzfF9qNLbaGzbhYcLbBE+dc3tPiQY+BVWJ2aOww==
+  isucceed:ALERT_SERVICE_SCHOOL_NAME: isucceed.strongmind.com
+  isucceed:ASSET_OBJECT_STORE: courseware-assets-isucceed
+  isucceed:ATTENDANCE_API_KEY_V2:
+    secure: AAABADKlbeM6inbxdfSMahcBg8OazxJ0Alsuh092ld/Sdqz0L52wK5Nr90+uPqNEqlKeKXHyILeGxGI0YUpNzEEpzs0=
+  isucceed:ATTENDANCE_API_ROOT_V2: https://strongmindappapi.azurewebsites.net/api/Schools
+  isucceed:ATTENDANCE_V2_REDIRECT_URL: https://app.strongmind.com/tabs/overview
+  isucceed:AUTOMATIC_DUE_DATES: "true"
+  isucceed:AWS_REGION: us-west-2
+  isucceed:CANVAS_DOMAIN: isucceed.strongmind.com
+  isucceed:CANVAS_SSL: "true"
+  isucceed:DB_HOST:
+    secure: AAABAED1G9kl5COcz84cR4yTOIUcPzFGhBgOrT7nFE4czJIGqR8kI8C7y0XpAM8bbnwQByoCCJRHz73rECdOJ/BSNYIYw7izUFh1iSv3z97b+evurhXi8ZM7hbBNjSw=
+  isucceed:DB_NAME: canvas
+  isucceed:DB_PASS: &db_pass
+    secure: AAABAGVQ+PFUJ3FBfxm5p+RBBScTHSTpi+u2BdIvkvCq/v9eaT/YTWeAblE=
+  isucceed:DB_POOL: "1"
+  isucceed:DB_PORT: "5432"
+  isucceed:DB_USER: &db_user
+    secure: AAABAPcWEYMYZua0HA/WIxNIJOlCWGEEiQMtVI1AmvNZ8lO1FnQmFA==
+  isucceed:DEPLOYMENT_STAGE: production
+  isucceed:ENCRYPTION_KEY:
+    secure: AAABAIIco1ExWbOWWAJ1yIKV6Xj0yDVSqVIUfWtwbLaq2BnOPjuJxATQ+4Zr/oHrb8HMjjxeMkxD9iuD+G3S4w==
+  isucceed:HIDE_INBOX_LINK: "true"
+  isucceed:HOLIDAYS: 2018-09-03,2018-10-08,2018-10-22,2018-10-23,2018-10-24,2018-10-25,2018-10-26,2018-11-11,2018-11-19,2018-11-20,2018-11-21,2018-11-22,2018-11-23,2018-12-24,2018-12-25,2018-12-26,2018-12-27,2018-12-28,2018-12-29,2018-12-30,2018-12-31,2019-01-01,2019-01-02,2019-01-03,2019-01-04,2019-01-14,2019-01-15,2019-01-16,2019-01-17,2019-01-18,2019-01-21,2019-02-15,2019-02-18,2019-03-22,2019-03-23,2019-03-24,2019-03-25,2019-03-26,2019-03-27,2019-03-28,2019-03-29,2019-03-30,2019-03-31,2019-04-01,2019-05-27
+  isucceed:LAUNCH_DARKLY_API_KEY:
+    secure: AAABAKGwvC7Zcs8itmh9CjiDT4d1NZyveRk74750ejsi/umV2ydpVXrvQoIGzcOSXoN5ti55mD/YOQs9sglRK7KFypaWcObt
+  isucceed:LAUNCH_DARKLY_SDK_KEY:
+    secure: AAABAJQUSRezRORuULoS3oauSalChTFsTgK2u448nayikKxHda7ltTh8G5Q7Q4lv/o24Nt9FyIfKCKoMkhzPUsRwwLDnoF2A
+  isucceed:MASTER_PASSWORD:
+    secure: AAABAOeDojN4uiRXGhPoPNq9tMoC14r+OvvWUi85fSQJ22C8jP4Xef90GKBGEuRhxpTd4C6Y
+  isucceed:MASTER_USENAME: sm_admin
+  isucceed:MATHMAN_BASE_URL: http://EC2Co-EcsEl-10FYDXUS9T624-318173109.us-west-2.elb.amazonaws.com
+  isucceed:NODE: "2"
+  isucceed:OUTGOING_EMAIL_OUTGOING_ADDRESS: donotreply@strongmind.com
+  isucceed:OUTGOING_MAIL_ADDRESS: smtp.sendgrid.net
+  isucceed:OUTGOING_MAIL_AUTHENTICATION: plain
+  isucceed:OUTGOING_MAIL_DEFAULT_AUTO_STARTTLS: "True"
+  isucceed:OUTGOING_MAIL_DEFAULT_NAME: DoNotReply
+  isucceed:OUTGOING_MAIL_DOMAIN: strongmind.com
+  isucceed:OUTGOING_MAIL_FALLBACK: DoNotReply
+  isucceed:OUTGOING_MAIL_PASSWORD:
+    secure: AAABAKPZmbs0yE+jQOhYaJXvqYJ+rhIoosZM/5pdL69zbEYZBZFEseDGQZl9Q+oXN5fhzBXT/tgzt67Ha4xVr+5JucDCY87Kx7H7kCI54K1w0p658bdTBip3e3WEoXGN8KPF+6Y=
+  isucceed:OUTGOING_MAIL_PORT: "587"
+  isucceed:OUTGOING_MAIL_USER_NAME:
+    secure: AAABAGtEdcV8h5ZoRgwBPD4W6PrujZm3O+4B40qRvcaVsAOE3Vw=
+  isucceed:PIPELINE_ENDPOINT: prod-di-data-pipeline-api.strongmind.com
+  isucceed:PIPELINE_PASSWORD:
+    secure: AAABAITBE6yUQummFUnGJBx7IiChl40C8ygRM3/TetUty2Zum0mu6culetl1Qw==
+  isucceed:PIPELINE_USER_NAME: canvas_prod
+  isucceed:RAILS_ENV: production
+  isucceed:RAILS_MAX_THREADS: "1"
+  isucceed:REDIS_SERVER:
+    secure: AAABAA/s+y3lZjC8GkC3b7o3/duH9aXn/93LUb6nFmpJToFe7FPzhZR0De/2B2WZJKfxidD0bBRT0aUHzH1ulnd0cjcY5GrLrahLR2gs3L8yPbuqtQ==
+  isucceed:S3_ACCESS_KEY:
+    secure: AAABACXUDArZSqfESh2BBsNsO3cKiFqzncvbthhAEnlbNpRIsh/89jXXHsgjiENVJk41O8TRhlOSGG19EUJVXn7Bkasyufvx
+  isucceed:S3_ACCESS_KEY_ID:
+    secure: AAABAD53tQPPJTiRTlixBVx6RoPrer4fx0NbYn2A1zikPhYmlgXaswWvPMg09bGB1Hgjqg==
+  isucceed:S3_BUCKET_NAME: isucceed-courseware
+  isucceed:S3_REGION: us-west-2
+  isucceed:SESSION_EXPIRE_AFTER: "86400"
+  isucceed:SESSION_STORE: encrypted_cookie_store
+  isucceed:SETTINGS_TABLE_PREFIX: isucceed.strongmind.com
+  isucceed:SIS_ENROLLMENT_UPDATE_API_KEY:
+    secure: AAABAAaVtToLHchFFurefmxiFxRwi9c/KS3/8ddrvMk+4WMMBD8THj/W/2qnnS3lu12ChOpXuvLI2Mdu/2T/7qJ5W9A=
+  isucceed:SIS_ENROLLMENT_UPDATE_ENDPOINT: https://interopmiddleware.azurewebsites.net/postback/canvas/enrollmentupdate
+  isucceed:STRONGMIND_INTEGRATION_KEY:
+    secure: AAABAM7Zc0xR7uWbaYwon0EmDQvW7tP05bATAHavrF6VLTApgXCEVLSRhMfQ17HHhUnzWleHEXkEmp1I7wAZd/y4STv1iyOgg7/W2LdishXX5A2ifOlCMbhzfddgh2M+
+  isucceed:TOPIC_MICROSERVICE_API_KEY:
+    secure: AAABAIUVWh8Plua9P78wDWn3qwjnGDsle0MV863nCFOLF7jpE3XeUEZbWEcjQCGfxFbUKk6YYiaHAjQ0+IrdIf654IQbcNaX
+  isucceed:TOPIC_MICROSERVICE_ENDPOINT: https://vwyi3a9ps0.execute-api.us-west-2.amazonaws.com/production/
+  isucceed:WEB_CONCURRENCY: "10"
+  isucceed:ZERO_OUT_PASTDUE_ASSIGNMENTS: "true"
   isucceed:assume_role_policy:
     Statement:
-    - Action: sts:AssumeRole
-      Effect: Allow
-      Principal:
-        Service: ecs-tasks.amazonaws.com
-      Sid: ""
+      - Action: sts:AssumeRole
+        Effect: Allow
+        Principal:
+          Service: ecs-tasks.amazonaws.com
+        Sid: ""
     Version: "2012-10-17"
+  isucceed:ecs:
+    - cpu: "256"
+      entryPoint:
+        - sh
+        - -c
+        - /usr/src/run.sh
+      image: 448312246740.dkr.ecr.us-west-2.amazonaws.com/canvas-web
+      memory: "512"
+      name: web
+      port_mapping:
+        - containerPort: 3000
+          hostPort: 3000
+    - cpu: "256"
+      entryPoint:
+        - sh
+        - -c
+        - /usr/src/worker.sh
+      image: 448312246740.dkr.ecr.us-west-2.amazonaws.com/canvas-worker
+      memory: "512"
+      name: worker
+      port_mapping:
+        - containerPort: 3000
+          hostPort: 3000
+  isucceed:env: dev
+  isucceed:postgres:
+    master_password: *db_pass
+    master_username: *db_user
+    port: 5432
   isucceed:role_policy:
     Statement:
-    - Action:
-      - ecr:GetAuthorizationToken
-      - ecr:BatchCheckLayerAvailability
-      - ecr:GetDownloadUrlForLayer
-      - ecr:BatchGetImage
-      - ecr:GetRepositoryPolicy
-      - ecr:DescribeRepositories
-      - ecr:ListImages
-      - ecr:DescribeImages
-      - ecr:InitiateLayerUpload
-      - ecr:UploadLayerPart
-      - ecr:CompleteLayerUpload
-      - ecr:PutImage
-      - logs:CreateLogStream
-      - logs:PutLogEvents
-      Effect: Allow
-      Resource: '*'
+      - Action:
+          - ecr:GetAuthorizationToken
+          - ecr:BatchCheckLayerAvailability
+          - ecr:GetDownloadUrlForLayer
+          - ecr:BatchGetImage
+          - ecr:GetRepositoryPolicy
+          - ecr:DescribeRepositories
+          - ecr:ListImages
+          - ecr:DescribeImages
+          - ecr:InitiateLayerUpload
+          - ecr:UploadLayerPart
+          - ecr:CompleteLayerUpload
+          - ecr:PutImage
+          - logs:CreateLogStream
+          - logs:PutLogEvents
+        Effect: Allow
+        Resource: '*'
     Version: "2012-10-17"
   isucceed:tags:
     environment: stage
     owner: devops
     product: canvas-lms
     service: canvas-lms
-  isucceed:ecs:
-  - cpu: "256"
-    entryPoint:
-    - sh
-    - -c
-    - /usr/src/run.sh
-    image: 448312246740.dkr.ecr.us-west-2.amazonaws.com/canvas-web
-    memory: "512"
-    name: web
-    port_mapping:
-    - containerPort: 3000
-      hostPort: 3000
-  - cpu: "256"
-    entryPoint:
-    - sh
-    - -c
-    - /usr/src/worker.sh
-    image: 448312246740.dkr.ecr.us-west-2.amazonaws.com/canvas-worker
-    memory: "512"
-    name: worker
-    port_mapping:
-    - containerPort: 3000
-      hostPort: 3000
-  isucceed:env: dev
-  isucceed:postgres:
-    master_password: test
-    master_username: sm_admin
-    port: 5432
