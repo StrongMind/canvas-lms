@@ -75,3 +75,5 @@ yarn-error.log
 *.sql
 /vendor/gem_reference
 /test.log
+config/master.key
+canvas.env
