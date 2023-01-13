@@ -24,8 +24,6 @@ module Importers
 
     MAX_URL_LENGTH = 2000
 
-    ASSIGNMENT_GROUP_NAMES = AssignmentGroup.passing_threshold_group_names
-
 
     def self.linked_resource_type_class(type)
       case type
@@ -74,7 +72,7 @@ module Importers
       modules = data['modules'] ? data['modules'] : []
       migration.last_module_position = migration.context.context_modules.maximum(:position) if migration.is_a?(ContentMigration)
 
-      @account_level_thresholds = get_default_course_thresholds(ASSIGNMENT_GROUP_NAMES)
+      @account_level_thresholds = get_default_course_thresholds(passing_threshold_group_names)
 
       modules.each do |mod|
         self.process_module(mod, migration)
@@ -189,7 +187,7 @@ module Importers
 
       item
     end
-    
+
     def self.get_default_course_thresholds(assignment_group_names)
       thresholds = {}
       assignment_group_names.each do |group_name|
@@ -385,6 +383,10 @@ module Importers
       else
         return nil
       end
+    end
+
+    def self.passing_threshold_group_names
+      AssignmentGroup.passing_threshold_group_names
     end
 
   end
