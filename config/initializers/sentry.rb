@@ -22,6 +22,7 @@
 # nothing happens.  If it *does*, we register a callback with Canvas::Errors
 # so that every time an exception is reported, we can fire off a sentry
 # call to track it and aggregate it for us.
+return 
 settings = ConfigFile.load("sentry")
 
 if settings.present?
