@@ -228,6 +228,15 @@
           </label>
         </div>
 
+        {{#if contextIsCourse}}
+          {{#if isAnnouncement}}
+            <label class="checkbox" for="mark_featured">
+              {{checkbox "mark_featured"}}
+              {{#t "mark_featured"}}Mark featured{{/t}}
+            </label>
+          {{/if}}
+        {{/if}}
+
         {{#if ENV.STUDENT_PLANNER_ENABLED}}
           {{#if isTopic}}
             <div id="todo_options" style="{{hiddenIf set_assignment}}">
