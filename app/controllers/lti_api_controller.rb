@@ -28,13 +28,24 @@ class LtiApiController < ApplicationController
   def grade_passback
     verify_oauth
 
+    Rails.logger.info("Grade Passback Current User: #{@current_user}")
+    Rails.logger.info("Grade Passback Request: #{request}")
+    Rails.logger.info("Grade Passback Request Content Type: #{request.content_type}")
+
     if request.content_type != "application/xml"
       raise BasicLTI::BasicOutcomes::InvalidRequest, "Content-Type must be 'application/xml'"
     end
 
+    Rails.logger.info("Grade Passback Request Body Before Parse: #{request.body}")
+
     @xml = Nokogiri::XML.parse(request.body)
 
+    Rails.logger.info("Grade Passback Request Body After Parse: #{@xml}")
+
     lti_response = check_outcome BasicLTI::BasicOutcomes.process_request(@tool, @xml)
+
+    Rails.logger.info("Grade Passback LTI response: #{lti_response}")
+
     render :body => lti_response.to_xml, :content_type => 'application/xml'
   end
 
@@ -183,6 +194,7 @@ class LtiApiController < ApplicationController
   end
 
   def check_outcome(outcome)
+    Rails.logger.info("Grade Passback Check Outcome Current User: #{@current_user}")
     if ['unsupported', 'failure'].include? outcome.code_major
       opts = {type: :grade_passback}
       error_info = Canvas::Errors::Info.new(request, @domain_root_account, @current_user, opts).to_h
