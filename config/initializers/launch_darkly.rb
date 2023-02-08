@@ -1,6 +1,6 @@
 opts = {}
-opts[:capacity] = 15000
-opts[:flush_interval] = 60
+opts[:capacity] = 5000
+opts[:flush_interval] = 10
 opts[:diagnostic_opt_out] = true
 config = LaunchDarkly::Config.new(opts)
 
