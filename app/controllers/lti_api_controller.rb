@@ -189,13 +189,8 @@ class LtiApiController < ApplicationController
       error_info = Canvas::Errors::Info.new(request, @domain_root_account, @current_user, opts).to_h
       error_info[:extra][:xml] = @xml.to_s if @xml
 
-      error_message = ""
-      locals.variables.each do |var|
-        error_message += "#{var}: #{binding.local_variable_get(var)}"
-      end
-      Sentry.capture("Grade Passback Error Info: OUTCOME #{outcome.inspect}, DOMAIN #{@domain_root_account.inspect}, REQUEST#{request.inspect}, OPTIONS #{opts.inspect}, LOCALS #{error_message}")
-
-      capture_outputs = Canvas::Errors.capture("Grade pass back #{outcome.code_major}", error_info)
+      capture_outputs = Canvas::Errors.capture("Grade Passback Error Info: OUTCOME #{outcome.inspect}, DOMAIN #{@domain_root_account.inspect}, REQUEST#{request.inspect}, OPTIONS #{opts.inspect}", error_info)
+      # capture_outputs = Canvas::Errors.capture("Grade pass back #{outcome.code_major}", error_info)
       puts "ERROR INFO for grade pass back: #{error_info}"
       # Sentry.capture("Grade pass back #{outcome.code_major}", error_info)
       outcome.description += "\n[EID_#{capture_outputs[:error_report]}]"
