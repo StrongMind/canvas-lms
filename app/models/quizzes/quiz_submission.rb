@@ -112,16 +112,19 @@ class Quizzes::QuizSubmission < ActiveRecord::Base
   end
 
   def sanitize_responses
+    MODIFIED_SANITIZE = CanvasSanitize::SANITIZE.deep_dup
+    MODIFIED_SANITIZE[:attributes][:all].delete('style')
+
     questions && questions.select { |q| q['question_type'] == 'essay_question' }.each do |q|
       question_id = q['id']
       if graded?
         if submission = submission_data.find { |s| s[:question_id] == question_id }
-          submission[:text] = Sanitize.clean(submission[:text] || "", CanvasSanitize::SANITIZE)
+          submission[:text] = Sanitize.clean(submission[:text] || "", MODIFIED_SANITIZE)
         end
       else
         question_key = "question_#{question_id}"
         if submission_data[question_key]
-          submission_data[question_key] = Sanitize.clean(submission_data[question_key] || "", CanvasSanitize::SANITIZE)
+          submission_data[question_key] = Sanitize.clean(submission_data[question_key] || "", MODIFIED_SANITIZE)
         end
       end
     end
