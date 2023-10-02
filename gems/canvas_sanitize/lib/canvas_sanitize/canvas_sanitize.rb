@@ -136,7 +136,7 @@ module CanvasSanitize #:nodoc:
                    'aria-valuemax',
                    'aria-valuemin',
                    'aria-valuenow',
-                   'aria-valuetext'].freeze,
+                   'aria-valuetext'],
           'a' => ['href', 'target', 'name'].freeze,
           'blockquote' => ['cite'].freeze,
           'col' => ['span', 'width'].freeze,
