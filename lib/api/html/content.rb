@@ -23,6 +23,7 @@ module Api
     class Content
       def self.process_incoming(html, host: nil, port: nil)
         return html unless html.present?
+        html = sanitize_styles(html)
         content = self.new(html, host: host, port: port)
         # shortcut html documents that definitely don't have anything we're interested in
         return html unless content.might_need_modification?
@@ -132,6 +133,10 @@ module Api
       end
 
       private
+
+      def self.sanitize_styles(html)
+        html.gsub(/(position|z-index|left|right|top|bottom|width|height):\s*[^;]+;/, '')
+      end
 
       APPLICABLE_ATTRS = %w{href src}.freeze
 
