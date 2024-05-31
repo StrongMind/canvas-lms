@@ -2328,9 +2328,7 @@ class UsersController < ApplicationController
       @pseudonym = @context.pseudonyms.where(:sis_user_id => sis_user_id, :workflow_state => 'deleted').first
       if @pseudonym
         @pseudonym.workflow_state = 'active'
-        unless @pseudonym.save
-          return render(:json => {:errors => {:pseudonym => @pseudonym.errors}}, :status => 422)
-        end
+        @pseudonym.save!
         @user = @pseudonym.user
         @user.workflow_state = 'registered'
         @user.update_account_associations
