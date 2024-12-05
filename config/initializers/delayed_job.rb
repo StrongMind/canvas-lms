@@ -112,38 +112,6 @@ Delayed::Worker.lifecycle.around(:pop) do |worker, &block|
   end
 end
 
-def set_task_protection(state)
-  agent_uri = ENV['ECS_AGENT_URI']
-  state_endpoint = "#{agent_uri}/task-protection/v1/state"
-  begin
-    uri = URI.parse(state_endpoint)
-    request = Net::HTTP::Put.new(uri)
-    request['Content-Type'] = 'application/json'
-    request.body = { 'ProtectionEnabled' => state }.to_json
-
-    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-      http.request(request)
-    end
-
-    unless response.is_a?(Net::HTTPSuccess)
-      raise "Failed to update ECS task protection state: #{response.body}"
-    end
-
-  rescue StandardError => e
-    raise "An error occurred: #{e.message}"
-  end
-end
-
-Delayed::Worker.lifecycle.before(:perform) do |worker, job, &block|
-  set_task_protection(true)
-end
-
-Delayed::Worker.lifecycle.after(:perform) do |worker, job, &block|
-  if worker.job_count == 0
-    set_task_protection(false)
-  end
-end
-
 Delayed::Worker.lifecycle.around(:work_queue_pop) do |worker, config, &block|
   CanvasStatsd::Statsd.time(["delayedjob.workqueuepop", "delayedjob.workqueuepop.jobshard.#{Shard.current(:delayed_jobs).id}"]) do
     block.call(worker, config)
