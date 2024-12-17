@@ -84,6 +84,7 @@ define [
     update: =>
       @$('form').submit()
       @close()
+      @$('form').submit() if !@model.isNew()
 
     onClose: =>
       window.router.navigate('')
