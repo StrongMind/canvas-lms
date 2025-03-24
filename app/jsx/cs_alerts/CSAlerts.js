@@ -1,27 +1,54 @@
 import React from 'react'
 import $ from 'jquery'
-import 'datatables.min'
 import axios from 'axios';
 
 class CSAlerts extends React.Component {
   constructor(props) {
     super(props);
 
-    let alerts = this.props.alerts;
-
     this.state = {
-      alerts: alerts,
-      dataTable: undefined,
+      alerts: [],
+      currentPage: 1,
+      totalPages: 1,
+      totalCount: 0,
+      perPage: 25,
+      loading: false,
       bulk_checks: false,
       all_checked: false,
       deletable_ids: [],
-      loading: false,
     }
   }
   
   static defaultProps = {
     alerts: [],
   };
+
+  componentDidMount() {
+    this.fetchAlerts();
+  }
+
+  fetchAlerts() {
+    this.setState({ loading: true });
+    axios.get(`/cs_alerts/teacher_alerts?page=${this.state.currentPage}&per_page=${this.state.perPage}`)
+      .then(response => {
+        this.setState({
+          alerts: response.data.alerts,
+          totalPages: response.data.pagination.total_pages,
+          totalCount: response.data.pagination.total_count,
+          loading: false
+        });
+      })
+      .catch(error => {
+        $.flashError('Failed to fetch alerts. Please try again.');
+        this.setState({ loading: false });
+      });
+  }
+
+  handlePageChange(page) {
+    this.setState({ currentPage: page }, () => {
+      this.fetchAlerts();
+    });
+  }
 
   selectAll() {
     this.setState({all_checked: !this.state.all_checked}, this.domSelectAll)
@@ -71,8 +98,6 @@ class CSAlerts extends React.Component {
       self.setState({
         alerts: self.state.alerts.filter(alrt => alrt.alert_id !== alert.alert_id)
       })
-
-      self.removeRow(alert.alert_id)
     }).catch(error => {
       $.flashError('Request failed. Please Try again.')
     })
@@ -90,16 +115,6 @@ class CSAlerts extends React.Component {
     $("#delete-column-header").toggleClass("visibility-hidden", !this.state.bulk_checks)
 
     this.domSelectAll()
-  }
-
-  removeRow(id) {
-    let fadeRow = $(this.refs[`row-${id}`])
-    fadeRow.fadeOut(400, () => {
-      this.state.dataTable.row(fadeRow).remove().draw(false)
-    })
-
-    $(this.refs["alertCount"]).text(this.state.alerts.length)
-    $("label[for=bulk-delete-select]").text("Select All")
   }
 
   bulkDelete() {
@@ -121,13 +136,9 @@ class CSAlerts extends React.Component {
           alerts: this.state.alerts.filter(alert => !this.state.deletable_ids.includes(alert.alert_id)),
         }, () => {
           loader.addClass("hidden")
-
-          this.state.deletable_ids.forEach(id => {
-            this.removeRow(id);
-          })
-
           $('#bulk-delete-select').prop({checked: false})
           this.setState({deletable_ids: [], all_checked: false})
+          this.fetchAlerts(); // Refresh the current page
         })
       }).catch((error) => {
         $.flashError('Request failed. Please Try again.')
@@ -137,42 +148,30 @@ class CSAlerts extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.initializeDataTable();
-  }
-
-  initializeDataTable() {
-    this.$el = $(this.el);
-
-    this.setState({dataTable: this.$el.DataTable({
-        "columnDefs": [
-          {
-            "targets": [5, 6],
-            "orderable": false,
-            "searchable": false,
-          },
-          {
-            targets: [ 0, 1, 2, 3 ],
-            className: 'mdl-data-alertsTable__cell--non-numeric'
-          }
-        ],
-        "fnDrawCallback": this.toggleBulkHidden.bind(this)
-      })
-    });
-  }
-
-  componentWillUnmount(){
-    this.state.dataTable.destroy(true);
-  }
-
-  shouldComponentUpdate() {
-    return false;
+  renderPagination() {
+    const pages = [];
+    for (let i = 1; i <= this.state.totalPages; i++) {
+      pages.push(
+        <button
+          key={i}
+          className={`Button Button--small ${this.state.currentPage === i ? 'Button--primary' : ''}`}
+          onClick={() => this.handlePageChange(i)}
+        >
+          {i}
+        </button>
+      );
+    }
+    return (
+      <div className="pagination-controls">
+        {pages}
+      </div>
+    );
   }
 
   renderRows() {
     return this.state.alerts.map(alert => {
       return (
-        <tr ref={`row-${alert.alert_id}`}>
+        <tr key={alert.alert_id}>
           <td>
             {alert.student_name}
           </td>
@@ -205,7 +204,7 @@ class CSAlerts extends React.Component {
     return (
       <div key={this.state.alertType}>
         <div className="alerts-table-heading">
-          <h2>Alerts (<span ref="alertCount">{this.state.alerts.length}</span>)</h2>
+          <h2>Alerts (<span>{this.state.totalCount}</span>)</h2>
           <div className="flex-row-reverse">
             <button id="bulk-delete-btn" className="Button Button--small Button--primary" type="button"
               onClick={this.bulkCheck.bind(this)}>
@@ -220,7 +219,7 @@ class CSAlerts extends React.Component {
           </div>
         </div>
 
-        <table id="alertsTable" ref={el => this.el = el}>
+        <table id="alertsTable">
           <thead>
             <tr>
               <th>Student</th>
@@ -240,6 +239,8 @@ class CSAlerts extends React.Component {
             {this.renderRows()}
           </tbody>
         </table>
+
+        {this.renderPagination()}
       </div>
     )
   }
