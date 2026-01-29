@@ -4928,3 +4928,67 @@ describe Course, "#default_home_page" do
     expect(course.default_view).to eq 'modules'
   end
 end
+
+describe Course, "enrollment state invalidation with stranding" do
+  before :once do
+    course_factory(active_all: true)
+    @enrollment = @course.enroll_student(user_factory(:active_all => true))
+  end
+
+  it "should use strand when invalidating enrollment states" do
+    expect(EnrollmentState).to receive(:send_later_if_production_enqueue_args).with(
+      :invalidate_states_for_course_or_section,
+      hash_including(strand: "enrollment_state_invalidation:course:#{@course.id}"),
+      @course
+    )
+    
+    @course.restrict_student_past_view = true
+    @course.save!
+  end
+
+  it "should use same strand for course as its sections" do
+    section = @course.course_sections.create!
+    
+    # Course update should use same strand
+    expect(EnrollmentState).to receive(:send_later_if_production_enqueue_args).with(
+      :invalidate_states_for_course_or_section,
+      hash_including(strand: "enrollment_state_invalidation:course:#{@course.id}"),
+      @course
+    )
+    
+    @course.restrict_student_past_view = true
+    @course.save!
+    
+    # Section update should use same strand
+    section.restrict_enrollments_to_section_dates = true
+    section.save!
+    
+    expect(EnrollmentState).to receive(:send_later_if_production_enqueue_args).with(
+      :invalidate_states_for_course_or_section,
+      hash_including(strand: "enrollment_state_invalidation:course:#{@course.id}"),
+      section
+    )
+    
+    section.start_at = 1.day.from_now
+    section.save!
+  end
+
+  it "should prevent concurrent updates through stranding" do
+    # Simulate multiple rapid updates that would previously cause deadlock
+    expect(EnrollmentState).to receive(:send_later_if_production_enqueue_args).exactly(3).times.with(
+      :invalidate_states_for_course_or_section,
+      hash_including(strand: "enrollment_state_invalidation:course:#{@course.id}"),
+      @course
+    )
+    
+    # All three calls should use the same strand, forcing serialization
+    @course.restrict_student_past_view = true
+    @course.save!
+    
+    @course.restrict_student_future_view = true
+    @course.save!
+    
+    @course.start_at = 1.day.from_now
+    @course.save!
+  end
+end
