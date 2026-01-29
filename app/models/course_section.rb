@@ -236,7 +236,11 @@ class CourseSection < ActiveRecord::Base
     Assignment.joins(:submissions)
       .where(context: [old_course, self.course])
       .where(submissions: { user_id: user_ids }).touch_all
-    EnrollmentState.send_later_if_production(:invalidate_states_for_course_or_section, self)
+    EnrollmentState.send_later_if_production_enqueue_args(
+      :invalidate_states_for_course_or_section,
+      { strand: "enrollment_state_invalidation:course:#{self.course_id}" },
+      self
+    )
     User.send_later_if_production(:update_account_associations, user_ids) if old_course.account_id != course.account_id && !User.skip_updating_account_associations?
     if old_course.id != self.course_id && old_course.id != self.nonxlist_course_id
       old_course.send_later_if_production(:update_account_associations) unless Course.skip_updating_account_associations?
@@ -306,7 +310,11 @@ class CourseSection < ActiveRecord::Base
 
   def update_enrollment_states_if_necessary
     if self.restrict_enrollments_to_section_dates_changed? || (self.restrict_enrollments_to_section_dates? && (changes.keys & %w{start_at end_at}).any?)
-      EnrollmentState.send_later_if_production(:invalidate_states_for_course_or_section, self)
+      EnrollmentState.send_later_if_production_enqueue_args(
+        :invalidate_states_for_course_or_section,
+        { strand: "enrollment_state_invalidation:course:#{self.course_id}" },
+        self
+      )
     end
   end
 end
