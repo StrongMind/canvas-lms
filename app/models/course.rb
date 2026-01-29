@@ -287,7 +287,7 @@ class Course < ActiveRecord::Base
 
       EnrollmentState.send_later_if_production_enqueue_args(
         :invalidate_states_for_course_or_section,
-        { strand: "enrollment_state_invalidation:course:#{self.id}" },
+        {:strand => "enrollment_state_invalidation:course:#{self.id}"},
         self
       ) if self.enrollments.exists?
       # if the course date settings have been changed, we'll end up reprocessing all the access values anyway, so no need to queue below for other setting changes

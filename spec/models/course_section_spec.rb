@@ -452,5 +452,62 @@ describe CourseSection, "moving to new course" do
       expect(EnrollmentState).to receive(:update_enrollment).with(@enrollment).once
       @section.crosslist_to_course(other_course)
     end
+
+    describe "stranding for deadlock prevention" do
+      it "should use strand when updating enrollment states" do
+        @section.restrict_enrollments_to_section_dates = true
+        @section.save!
+        
+        expect(EnrollmentState).to receive(:send_later_if_production_enqueue_args).with(
+          :invalidate_states_for_course_or_section,
+          hash_including(strand: "enrollment_state_invalidation:course:#{@course.id}"),
+          @section
+        )
+        
+        @section.start_at = 1.day.from_now
+        @section.save!
+      end
+
+      it "should use strand when moving section to new course" do
+        other_course = course_factory(active_all: true)
+        
+        expect(EnrollmentState).to receive(:send_later_if_production_enqueue_args).with(
+          :invalidate_states_for_course_or_section,
+          hash_including(strand: "enrollment_state_invalidation:course:#{other_course.id}"),
+          @section
+        )
+        
+        @section.move_to_course(other_course)
+      end
+
+      it "should use same strand for all sections in the same course" do
+        section1 = @course.course_sections.create!
+        section2 = @course.course_sections.create!
+        
+        section1.restrict_enrollments_to_section_dates = true
+        section2.restrict_enrollments_to_section_dates = true
+        section1.save!
+        section2.save!
+        
+        # Both should use the same strand
+        expect(EnrollmentState).to receive(:send_later_if_production_enqueue_args).with(
+          :invalidate_states_for_course_or_section,
+          hash_including(strand: "enrollment_state_invalidation:course:#{@course.id}"),
+          section1
+        )
+        
+        expect(EnrollmentState).to receive(:send_later_if_production_enqueue_args).with(
+          :invalidate_states_for_course_or_section,
+          hash_including(strand: "enrollment_state_invalidation:course:#{@course.id}"),
+          section2
+        )
+        
+        section1.start_at = 1.day.from_now
+        section1.save!
+        
+        section2.start_at = 2.days.from_now
+        section2.save!
+      end
+    end
   end
 end

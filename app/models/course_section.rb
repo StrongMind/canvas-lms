@@ -238,7 +238,7 @@ class CourseSection < ActiveRecord::Base
       .where(submissions: { user_id: user_ids }).touch_all
     EnrollmentState.send_later_if_production_enqueue_args(
       :invalidate_states_for_course_or_section,
-      { strand: "enrollment_state_invalidation:course:#{self.course_id}" },
+      {:strand => "enrollment_state_invalidation:course:#{self.course_id}"},
       self
     )
     User.send_later_if_production(:update_account_associations, user_ids) if old_course.account_id != course.account_id && !User.skip_updating_account_associations?
@@ -312,7 +312,7 @@ class CourseSection < ActiveRecord::Base
     if self.restrict_enrollments_to_section_dates_changed? || (self.restrict_enrollments_to_section_dates? && (changes.keys & %w{start_at end_at}).any?)
       EnrollmentState.send_later_if_production_enqueue_args(
         :invalidate_states_for_course_or_section,
-        { strand: "enrollment_state_invalidation:course:#{self.course_id}" },
+        {:strand => "enrollment_state_invalidation:course:#{self.course_id}"},
         self
       )
     end
