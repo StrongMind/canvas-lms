@@ -145,12 +145,14 @@ if settings.present?
       0.0001
     end
 
-    config.before_send_transaction = lambda do |event, _hint|
-      if event.transaction_info[:source] == :url &&
-         sentry_ignored_urls.any? { |u| event.transaction.match?(u) }
-        return nil
+    if config.respond_to?(:before_send_transaction=)
+      config.before_send_transaction = lambda do |event, _hint|
+        if event.transaction_info[:source] == :url &&
+           sentry_ignored_urls.any? { |u| event.transaction.match?(u) }
+          return nil
+        end
+        scrub_event.call(event)
       end
-      scrub_event.call(event)
     end
   end
 
