@@ -26,22 +26,9 @@ settings = ConfigFile.load("sentry")
 
 if settings.present?
 
-  # Inline PII scrubbing for FERPA compliance purposes.
-  # Mirrors PlatformSdk::Sentry::PiiScrubber::DEFAULT_PII_FIELDS but
-  # implemented inline because strongmind-platform-sdk requires
-  # Rails >= 7.1 / Ruby >= 2.6 (canvas-lms is Rails 5 / Ruby 2.5).
-  PII_FIELDS = [
-    :email, /\Aname\z/i, :first_name, :last_name, :student_name,
-    :username, :phone, :phone_number, :address, :street, :city,
-    :zip, :postal_code, :ssn, :social_security, :date_of_birth,
-    :dob, :birthday, :ip_address, /\Aip\z/i, :remote_ip,
-    :password, :password_confirmation, :token, :secret, :api_key,
-    :authorization
-  ].freeze
-  PII_FILTERED = '[FILTERED]'.freeze
-  PII_EMAIL_REGEX = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/
+  require 'pii'
 
-  pii_filter = ActionDispatch::Http::ParameterFilter.new(PII_FIELDS)
+  pii_filter = ActionDispatch::Http::ParameterFilter.new(Pii::DEFAULT_FIELDS)
 
   scrub_hash = lambda do |hash|
     hash.is_a?(Hash) ? pii_filter.filter(hash) : {}
@@ -62,8 +49,8 @@ if settings.present?
     if request.headers.is_a?(Hash)
       request.headers = scrub_hash.call(request.headers)
     end
-    request.query_string = PII_FILTERED if request.query_string
-    request.cookies = PII_FILTERED if request.cookies
+    request.query_string = Pii::FILTERED if request.query_string
+    request.cookies = Pii::FILTERED if request.cookies
   end
 
   scrub_event = lambda do |event|
@@ -122,7 +109,7 @@ if settings.present?
       end
       if breadcrumb.message
         breadcrumb.message = breadcrumb.message.gsub(
-          PII_EMAIL_REGEX, PII_FILTERED
+          Pii::EMAIL_REGEX, Pii::FILTERED
         )
       end
       breadcrumb
