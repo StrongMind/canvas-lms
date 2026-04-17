@@ -16,32 +16,18 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
 require_relative "../spec_helper"
+require "pii"
 
-# Inline PII scrubbing for Sentry events (for FERPA compliance purposes).
-# Mirrors PlatformSdk::Sentry::PiiScrubber but uses Rails 5-compatible
+# PII scrubbing for Sentry events (for FERPA compliance purposes).
+# Uses shared Pii module with Rails 5-compatible
 # ActionDispatch::Http::ParameterFilter as strongmind-platform-sdk
 # requires Rails >= 7.1.
 describe "Sentry PII Scrubbing" do
-  let(:pii_fields) do
-    [
-      :email, /\Aname\z/i, :first_name, :last_name, :student_name,
-      :username, :phone, :phone_number, :address, :street, :city,
-      :zip, :postal_code, :ssn, :social_security, :date_of_birth,
-      :dob, :birthday, :ip_address, /\Aip\z/i, :remote_ip,
-      :password, :password_confirmation, :token, :secret, :api_key,
-      :authorization
-    ]
-  end
-
   let(:pii_filter) do
-    ActionDispatch::Http::ParameterFilter.new(pii_fields)
+    ActionDispatch::Http::ParameterFilter.new(Pii::DEFAULT_FIELDS)
   end
 
-  let(:pii_email_regex) do
-    /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/
-  end
-
-  let(:filtered) { '[FILTERED]' }
+  let(:filtered) { Pii::FILTERED }
 
   describe "ParameterFilter field scrubbing" do
     it "scrubs email fields" do
@@ -145,13 +131,13 @@ describe "Sentry PII Scrubbing" do
   describe "email regex scrubbing in free text" do
     it "scrubs email addresses from messages" do
       message = "User john.doe@school.edu failed to submit"
-      scrubbed = message.gsub(pii_email_regex, filtered)
+      scrubbed = message.gsub(Pii::EMAIL_REGEX, filtered)
       expect(scrubbed).to eq("User #{filtered} failed to submit")
     end
 
     it "scrubs multiple email addresses" do
       message = "From a@b.com to c@d.org regarding enrollment"
-      scrubbed = message.gsub(pii_email_regex, filtered)
+      scrubbed = message.gsub(Pii::EMAIL_REGEX, filtered)
       expect(scrubbed).to eq(
         "From #{filtered} to #{filtered} regarding enrollment"
       )
@@ -159,7 +145,7 @@ describe "Sentry PII Scrubbing" do
 
     it "does not scrub non-email text" do
       message = "Assignment submitted at 3pm for course 101"
-      scrubbed = message.gsub(pii_email_regex, filtered)
+      scrubbed = message.gsub(Pii::EMAIL_REGEX, filtered)
       expect(scrubbed).to eq(message)
     end
   end
