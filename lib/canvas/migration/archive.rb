@@ -19,6 +19,9 @@ module Canvas::Migration
   class Archive
     attr_reader :warnings
 
+    IMSMANIFEST_XML = 'imsmanifest.xml'.freeze
+    XML_CARTRIDGE_MIME_TYPES = %w[application/xml text/xml].freeze
+
     def initialize(settings={})
       @settings = settings
       @warnings = []
@@ -93,6 +96,12 @@ module Canvas::Migration
     def unzip_archive
       return if @unzipped
       Rails.logger.debug "Extracting #{path} to #{unzipped_file_path}"
+      if bare_xml_cartridge?
+        copy_xml_cartridge_to!(IMSMANIFEST_XML)
+        @unzipped = true
+        return true
+      end
+
       warnings = CanvasUnzip.extract_archive(path, unzipped_file_path)
       @unzipped = true
       unless warnings.empty?
@@ -114,9 +123,10 @@ module Canvas::Migration
 
     # If the file is a zip file, unzip it, if it's an xml file, copy
     # it into the directory with the given file name
-    def prepare_cartridge_file(file_name='imsmanifest.xml')
+    def prepare_cartridge_file(file_name=IMSMANIFEST_XML)
       if self.path.ends_with?('xml')
-        FileUtils::cp(self.path, File.join(self.unzipped_file_path, file_name))
+        copy_xml_cartridge_to!(file_name)
+        @unzipped = true
       else
         unzip_archive
       end
@@ -130,6 +140,20 @@ module Canvas::Migration
 
     def add_warning(warning)
       @warnings << warning
+    end
+
+    private
+
+    def bare_xml_cartridge?
+      return true if path.to_s.end_with?('xml')
+
+      File.open(path, 'rb') do |f|
+        XML_CARTRIDGE_MIME_TYPES.include?(File.mime_type?(f))
+      end
+    end
+
+    def copy_xml_cartridge_to!(dest_name)
+      FileUtils.cp(path, File.join(unzipped_file_path, dest_name))
     end
   end
 end
