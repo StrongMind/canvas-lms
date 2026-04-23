@@ -152,4 +152,27 @@ describe "Migration package importers" do
     end
   end
 
+  context "Canvas::Migration::Archive#unzip_archive" do
+    it "materializes application/xml packages without a .xml filename as imsmanifest.xml" do
+      tmp = Tempfile.new(['migration_pkg', ''])
+      tmp.write('<?xml version="1.0" encoding="UTF-8"?><manifest xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"/>')
+      tmp.close
+      archive = Canvas::Migration::Archive.new(export_archive_path: tmp.path)
+      expect { archive.unzip_archive }.not_to raise_error
+      manifest = File.join(archive.unzipped_file_path, Canvas::Migration::Archive::IMSMANIFEST_XML)
+      expect(File).to be_exist(manifest)
+      expect(File.read(manifest)).to include('imscp_v1p1')
+      archive.delete_unzipped_archive
+      tmp.unlink
+    end
+
+    it "still extracts zip archives normally" do
+      zip_path = File.join(File.dirname(__FILE__), '../../fixtures/migration/whatthebackslash.zip')
+      archive = Canvas::Migration::Archive.new(export_archive_path: zip_path)
+      archive.unzip_archive
+      expect(File).to be_exist(File.join(archive.unzipped_file_path, 'messaging/why oh why.txt'))
+      archive.delete_unzipped_archive
+    end
+  end
+
 end
