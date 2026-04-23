@@ -97,7 +97,7 @@ module Canvas::Migration
       return if @unzipped
       Rails.logger.debug "Extracting #{path} to #{unzipped_file_path}"
       if bare_xml_cartridge?
-        copy_xml_cartridge_to!(IMSMANIFEST_XML)
+        copy_xml_cartridge_to(IMSMANIFEST_XML)
         @unzipped = true
         return true
       end
@@ -125,7 +125,7 @@ module Canvas::Migration
     # it into the directory with the given file name
     def prepare_cartridge_file(file_name=IMSMANIFEST_XML)
       if self.path.ends_with?('xml')
-        copy_xml_cartridge_to!(file_name)
+        copy_xml_cartridge_to(file_name)
         @unzipped = true
       else
         unzip_archive
@@ -145,14 +145,14 @@ module Canvas::Migration
     private
 
     def bare_xml_cartridge?
-      return true if path.to_s.end_with?('xml')
+      return true if path.to_s.ends_with?('xml')
 
       File.open(path, 'rb') do |f|
         XML_CARTRIDGE_MIME_TYPES.include?(File.mime_type?(f))
       end
     end
 
-    def copy_xml_cartridge_to!(dest_name)
+    def copy_xml_cartridge_to(dest_name)
       FileUtils.cp(path, File.join(unzipped_file_path, dest_name))
     end
   end
