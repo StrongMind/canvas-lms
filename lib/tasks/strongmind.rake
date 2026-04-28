@@ -30,16 +30,12 @@ namespace :strongmind do
   task :enqueue_jobs, [:worker_id] => :environment do |task, args|
     worker_id = args[:worker_id]
     puts "RE-ENQUEUE JOBS !!!!!! #{worker_id}"
-    count = Delayed::Job.where("locked_by ILIKE ?", "#{worker_id}%")
-                        .update_all(run_at: Time.now.utc, locked_by: nil, locked_at: nil)
-    puts "Unlocked #{count} orphaned job(s) for #{worker_id}"
+    Delayed::Job.where("locked_by ILIKE ?", "#{worker_id}%").update_all(run_at: Time.now.utc, locked_by: nil, locked_at: nil)
   end
 
   desc "Re-enqueue orphaned jobs after deploy on ECS"
   task :enqueue_jobs_ecs => :environment do |task, args|
-    count = Delayed::Job.where.not(locked_by: nil)
-                        .update_all(run_at: Time.now.utc, locked_by: nil, locked_at: nil)
-    puts "Unlocked #{count} orphaned job(s)"
+    Delayed::Job.where.not(locked_by: nil).update_all(run_at: Time.now.utc, locked_by: nil, locked_at: nil)
   end
 
   desc "Reset EULA accepted"
