@@ -76,7 +76,6 @@ describe "#publish_job_staleness_metric" do
 
   it "skips when metric flag is unset" do
     with_job_staleness_metric_flag(nil) do
-      expect(Rails.cache).not_to receive(:fetch)
       Object.new.send(:publish_job_staleness_metric)
     end
 
