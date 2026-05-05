@@ -43,7 +43,7 @@ describe 'Delayed::Job' do
   end
 end
 
-describe "#publish_job_staleness_metric" do
+describe "JobStalenessMetric.publish" do
   let(:now) { Time.zone.parse("2026-05-01 10:00:00 UTC") }
   let(:cloudwatch_client) { instance_double(Aws::CloudWatch::Client) }
   let(:relation) { instance_double(ActiveRecord::Relation) }
@@ -57,7 +57,7 @@ describe "#publish_job_staleness_metric" do
   end
 
   before do
-    Thread.current[JOB_STALENESS_NEXT_PUBLISH_AT_KEY] = nil
+    Thread.current[JobStalenessMetric::NEXT_PUBLISH_AT_KEY] = nil
     allow(Aws::CloudWatch::Client).to receive(:new).with(region: "us-west-2").and_return(cloudwatch_client)
     allow(cloudwatch_client).to receive(:put_metric_data)
     allow(Rails.logger).to receive(:warn)
@@ -71,12 +71,12 @@ describe "#publish_job_staleness_metric" do
   end
 
   after do
-    Thread.current[JOB_STALENESS_NEXT_PUBLISH_AT_KEY] = nil
+    Thread.current[JobStalenessMetric::NEXT_PUBLISH_AT_KEY] = nil
   end
 
   it "skips when metric flag is unset" do
     with_job_staleness_metric_flag(nil) do
-      Object.new.send(:publish_job_staleness_metric)
+      JobStalenessMetric.publish
     end
 
     expect(cloudwatch_client).not_to have_received(:put_metric_data)
@@ -84,7 +84,7 @@ describe "#publish_job_staleness_metric" do
 
   it "skips when metric flag is not true" do
     with_job_staleness_metric_flag("false") do
-      Object.new.send(:publish_job_staleness_metric)
+      JobStalenessMetric.publish
     end
 
     expect(cloudwatch_client).not_to have_received(:put_metric_data)
@@ -92,7 +92,7 @@ describe "#publish_job_staleness_metric" do
 
   it "publishes once when enabled" do
     with_job_staleness_metric_flag("true") do
-      Object.new.send(:publish_job_staleness_metric)
+      JobStalenessMetric.publish
     end
 
     expect(cloudwatch_client).to have_received(:put_metric_data).once
@@ -100,8 +100,8 @@ describe "#publish_job_staleness_metric" do
 
   it "throttles repeated calls within one minute on the same thread" do
     with_job_staleness_metric_flag("true") do
-      Object.new.send(:publish_job_staleness_metric)
-      Object.new.send(:publish_job_staleness_metric)
+      JobStalenessMetric.publish
+      JobStalenessMetric.publish
     end
 
     expect(cloudwatch_client).to have_received(:put_metric_data).once
@@ -111,8 +111,8 @@ describe "#publish_job_staleness_metric" do
     allow(Time).to receive(:now).and_return(now, now + 61.seconds)
 
     with_job_staleness_metric_flag("true") do
-      Object.new.send(:publish_job_staleness_metric)
-      Object.new.send(:publish_job_staleness_metric)
+      JobStalenessMetric.publish
+      JobStalenessMetric.publish
     end
 
     expect(cloudwatch_client).to have_received(:put_metric_data).twice
@@ -122,7 +122,7 @@ describe "#publish_job_staleness_metric" do
     allow(cloudwatch_client).to receive(:put_metric_data).and_raise(StandardError.new("publish failure"))
 
     with_job_staleness_metric_flag("true") do
-      expect { Object.new.send(:publish_job_staleness_metric) }.not_to raise_error
+      expect { JobStalenessMetric.publish }.not_to raise_error
     end
 
     expect(Rails.logger).to have_received(:warn).with(/JobStaleness/)
@@ -132,7 +132,7 @@ describe "#publish_job_staleness_metric" do
     allow(Delayed::Job).to receive(:where).with(attempts: 0).and_raise(StandardError.new("db failure"))
 
     with_job_staleness_metric_flag("true") do
-      expect { Object.new.send(:publish_job_staleness_metric) }.not_to raise_error
+      expect { JobStalenessMetric.publish }.not_to raise_error
     end
 
     expect(Rails.logger).to have_received(:warn).with(/JobStaleness/)

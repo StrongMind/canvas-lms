@@ -147,49 +147,51 @@ Delayed::Worker.lifecycle.before(:error) do |worker, job, exception|
   end
 end
 
-JOB_STALENESS_METRIC_INTERVAL = 1.minute
-JOB_STALENESS_NEXT_PUBLISH_AT_KEY = :next_job_staleness_metric_publish_at
+module JobStalenessMetric
+  METRIC_INTERVAL = 1.minute
+  NEXT_PUBLISH_AT_KEY = :next_job_staleness_metric_publish_at
 
-def publish_job_staleness_metric
-  return unless ENV["JOB_STALENESS_METRIC_ENABLED"] == "true"
+  def self.publish
+    return unless ENV["JOB_STALENESS_METRIC_ENABLED"] == "true"
 
-  now = Time.now
-  next_publish_at = Thread.current[JOB_STALENESS_NEXT_PUBLISH_AT_KEY]
-  return if next_publish_at && now < next_publish_at
+    now = Time.now
+    next_publish_at = Thread.current[NEXT_PUBLISH_AT_KEY]
+    return if next_publish_at && now < next_publish_at
 
-  # This throttle is intentionally thread-local to avoid any Redis dependency in
-  # this loop callback. The metric is only enabled for iSucceed, where this
-  # per-thread publish frequency is acceptable.
-  Thread.current[JOB_STALENESS_NEXT_PUBLISH_AT_KEY] = now + JOB_STALENESS_METRIC_INTERVAL
+    # This throttle is intentionally thread-local to avoid any Redis dependency in
+    # this loop callback. The metric is only enabled for iSucceed, where this
+    # per-thread publish frequency is acceptable.
+    Thread.current[NEXT_PUBLISH_AT_KEY] = now + METRIC_INTERVAL
 
-  # Log the age in seconds of the oldest runnable job.
-  age = (DateTime.now.utc - (Delayed::Job.where(attempts: 0)
-                                         .where(locked_at: nil)
-                                         .where(next_in_strand: false)
-                                         .where('run_at <= ?', DateTime.now.utc)
-                                         .minimum(:run_at)&.to_datetime || DateTime.now.utc)).to_i
+    # Log the age in seconds of the oldest runnable job.
+    age = (DateTime.now.utc - (Delayed::Job.where(attempts: 0)
+                                           .where(locked_at: nil)
+                                           .where(next_in_strand: false)
+                                           .where('run_at <= ?', DateTime.now.utc)
+                                           .minimum(:run_at)&.to_datetime || DateTime.now.utc)).to_i
 
-  Aws::CloudWatch::Client.new(region: "us-west-2").put_metric_data(
-    namespace: "Canvas",
-    metric_data: [
-      {
-        metric_name: "JobStaleness",
-        dimensions: [
-          {
-            name: "domain",
-            value: ENV["CANVAS_DOMAIN"]
-          },
-        ],
-        timestamp: now,
-        value: age,
-        unit: "Seconds"
-      },
-    ]
-  )
-rescue => e
-  Rails.logger.warn("[JobStaleness] failed to publish: #{e.class}: #{e.message}")
+    Aws::CloudWatch::Client.new(region: "us-west-2").put_metric_data(
+      namespace: "Canvas",
+      metric_data: [
+        {
+          metric_name: "JobStaleness",
+          dimensions: [
+            {
+              name: "domain",
+              value: ENV["CANVAS_DOMAIN"]
+            },
+          ],
+          timestamp: now,
+          value: age,
+          unit: "Seconds"
+        },
+      ]
+    )
+  rescue => e
+    Rails.logger.warn("[JobStaleness] failed to publish: #{e.class}: #{e.message}")
+  end
 end
 
 Delayed::Worker.lifecycle.before(:loop) do |_worker|
-  publish_job_staleness_metric
+  JobStalenessMetric.publish
 end
