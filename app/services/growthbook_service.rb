@@ -8,7 +8,7 @@ class GrowthbookService
     return true if Rails.env.development?
 
     attributes ||= {}
-    new.enabled?(flag_key, attributes:)
+    new.enabled?(flag_key, attributes: attributes)
   end
 
   def enabled?(flag_key, attributes: {})
@@ -23,7 +23,7 @@ class GrowthbookService
 
   def features_json
     Rails.cache.fetch(CACHE_KEY, expires_in: CACHE_TTL) do
-      Growthbook::FeatureRepository.new(endpoint:, decryption_key: nil).fetch || {}
+      Growthbook::FeatureRepository.new(endpoint: endpoint, decryption_key: nil).fetch || {}
     end
   rescue StandardError => e
     Rails.logger.warn("GrowthBook feature fetch failed: #{e.message}")
