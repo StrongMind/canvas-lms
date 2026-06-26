@@ -101,7 +101,7 @@ gem 'net-ldap', '0.16.0', require: false
 gem 'ruby-duration', '3.2.3', require: false
 gem 'ruby-saml-mod', '0.3.6'
 gem 'saml2', '1.1.3', require: false
-  gem 'nokogiri-xmlsec-instructure', '0.9.4', require: false
+  gem 'nokogiri-xmlsec-me-harder', '0.9.3pre', require: false, github: 'instructure/nokogiri-xmlsec-instructure', ref: '57d071040cc4649db9f158e09bbcea028271a4a6'
 gem 'rubycas-client', '2.3.9', require: false
 gem 'rubyzip', '1.2.0', require: 'zip'
 gem 'safe_yaml', '1.0.4', require: false
@@ -177,3 +177,4 @@ gem 'launchdarkly-server-sdk', '~> 6.0.0'
 gem 'growthbook'
 gem 'dotenv-rails', '2.2.1', :groups => [:development, :test]
 gem "rack-timeout", require: "rack/timeout/base"
+gem 'rails-html-sanitizer', '1.5.0'
