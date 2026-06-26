@@ -38,6 +38,6 @@ end
 group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'dotenv-rails', '2.2.1'
+
   gem 'thin'
 end
