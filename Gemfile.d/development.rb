@@ -25,19 +25,19 @@ group :development do
   # The ruby debug gems conflict with the IDE-based debugger gem.
   # Set this option in your dev environment to disable.
   unless ENV['DISABLE_RUBY_DEBUGGING']
-    gem 'byebug', '9.1.0', platform: :mri
+    gem 'byebug', '9.0.6', platform: :mri
   end
 end
 
 # StrongMind Added
 group :development do
   gem 'pry-rails'
-  gem 'pry-byebug'
+  gem 'pry-byebug', '3.4.2'
 end
 
 group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'dotenv-rails'
+  gem 'dotenv-rails', '2.2.1'
   gem 'thin'
 end
