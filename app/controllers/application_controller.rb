@@ -2269,9 +2269,9 @@ class ApplicationController < ActionController::Base
     LiveEvents.clear_context!
   end
 
-  def launch_darkly_user
+  def set_feature_flag_data
     domain = ENV['SETTINGS_TABLE_PREFIX']
-    @launch_darkly_user = {
+    @feature_flag_data = {
                             key: "#{domain.split('.')[0]}-#{@current_user.id}",
                             name: @current_user.name,
                             custom: {
@@ -2280,12 +2280,13 @@ class ApplicationController < ActionController::Base
                             }
                           }
   end
-  before_action :launch_darkly_user, if: Proc.new { @current_user.present? }
+  before_action :set_feature_flag_data, if: Proc.new { @current_user.present? }
 
   def expose_ai_assistant?
-    return false if @launch_darkly_user.nil?
-    Rails.cache.fetch("expose-ai-assistant-#{@launch_darkly_user[:key]}", expires_in: 10.minutes) do
-      Rails.configuration.launch_darkly_client.variation("expose-ai-assistant", @launch_darkly_user, false)
+    return false if @current_user.nil?
+    key = @feature_flag_data[:key]
+    Rails.cache.fetch("expose-ai-assistant-#{key}", expires_in: 10.minutes) do
+      GrowthbookService.enabled?("expose-ai-assistant", attributes: { id: key })
     end
   end
   helper_method :expose_ai_assistant?

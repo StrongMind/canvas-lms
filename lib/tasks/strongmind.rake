@@ -268,35 +268,6 @@ namespace :strongmind do
     end
   end
 
-  GROWTHBOOK_PARITY_FLAGS = %w[
-    expose-ai-assistant
-    expose-discussion-entries-only-if-graded-submission-exists
-    expose-account-level-first-day-start-time
-    expose-course-level-passing-threshold-fields
-    expose-discussion-and-project-threshold-field
-  ].freeze
-
-  desc "Check GrowthBook feature flag parity across users. Pass USER_KEYS=key1,key2,..."
-  task :growthbook_parity => :environment do
-    abort("USER_KEYS is required. Example: USER_KEYS=isucceed-13425,primaverahs-122720") if ENV['USER_KEYS'].blank?
-
-    user_keys = ENV['USER_KEYS'].split(',').map(&:strip)
-    col_width = GROWTHBOOK_PARITY_FLAGS.map(&:length).max + 2
-
-    header = "%-#{col_width}s" % "FLAG" + user_keys.map { |k| "%-20s" % k }.join
-    puts header
-    puts "-" * header.length
-
-    GROWTHBOOK_PARITY_FLAGS.each do |flag|
-      row = "%-#{col_width}s" % flag
-      row += user_keys.map do |key|
-        result = GrowthbookService.enabled?(flag, attributes: { id: key })
-        "%-20s" % (result ? "true" : "false")
-      end.join
-      puts row
-    end
-  end
-
   desc "Set Identity Server 2.0 Auth Provider"
   task :set_id_server_auth, [:id] => :environment do |task, args|
     id = args[:id] ? args[:id].to_i : AccountAuthorizationConfig.last.id
