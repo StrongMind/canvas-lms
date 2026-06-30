@@ -173,7 +173,6 @@ gem 'bootsnap', require: false
 gem 'jquery-rails'
 gem 'rails-ujs'
 gem 'rb-readline'
-gem 'launchdarkly-server-sdk', '~> 6.0.0'
 gem 'growthbook'
 gem 'dotenv-rails', '2.2.1', :groups => [:development, :test]
 gem "rack-timeout", require: "rack/timeout/base"
