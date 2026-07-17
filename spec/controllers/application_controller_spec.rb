@@ -26,6 +26,14 @@ describe ApplicationController do
                                             :headers => {}, :format => double(:html? => true)))
   end
 
+  describe "#expose_ai_assistant?" do
+    it "returns false without raising when @feature_flag_data is unset (e.g. terms-of-use render path)" do
+      controller.instance_variable_set(:@current_user, double())
+      controller.instance_variable_set(:@feature_flag_data, nil)
+      expect(controller.send(:expose_ai_assistant?)).to be false
+    end
+  end
+
   describe "#google_drive_connection" do
     before :each do
       settings_mock = double()
