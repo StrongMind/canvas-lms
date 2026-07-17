@@ -2283,8 +2283,9 @@ class ApplicationController < ActionController::Base
   before_action :set_feature_flag_data, if: Proc.new { @current_user.present? }
 
   def expose_ai_assistant?
-    # @feature_flag_data is set by a later before_action; guard on it, not @current_user
-    return false if @feature_flag_data.nil?
+    # @feature_flag_data is set by a later before_action; nil on early-render/halt paths
+    # (e.g. require_reacceptance_of_terms) and when @current_user is later cleared mid-action
+    return false if @current_user.nil? || @feature_flag_data.nil?
     key = @feature_flag_data[:key]
     Rails.cache.fetch("expose-ai-assistant-#{key}", expires_in: 10.minutes) do
       GrowthbookService.enabled?("expose-ai-assistant", attributes: { id: key })
