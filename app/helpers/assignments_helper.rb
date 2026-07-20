@@ -37,6 +37,8 @@ module AssignmentsHelper
   end
 
   def student_peer_review_link_for(context, assignment, assessment)
+    return '' if assessment.nil?
+    
     options = assessment.completed? ? completed_link_options : in_progress_link_options
     icon_class = assessment.completed? ? 'icon-check' : 'icon-warning'
     text = safe_join [

@@ -119,4 +119,16 @@ describe AssignmentsHelper do
       expect(turnitin_active?).to be_falsey
     end
   end
+
+  describe "#student_peer_review_link_for" do
+    before(:once) do
+      course_with_teacher(active_all: true)
+      student_in_course(active_all: true)
+      assignment_model(course: @course)
+    end
+
+    it "returns empty string when assessment is nil" do
+      expect(student_peer_review_link_for(@course, @assignment, nil)).to eq('')
+    end
+  end
 end
